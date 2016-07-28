@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="10117" systemVersion="15F34" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES">
+    <dependencies>
+        <deployment identifier="iOS"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="10085"/>
+    </dependencies>
+    <objects>
+        <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner"/>
+        <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
+        <tableViewCell contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" reuseIdentifier="buyRedBeanCell" rowHeight="102" id="KGk-i7-Jjw" customClass="BuyRedBeanCell">
+            <rect key="frame" x="0.0" y="0.0" width="414" height="102"/>
+            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+            <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="KGk-i7-Jjw" id="H2p-sc-9uM">
+                <rect key="frame" x="0.0" y="0.0" width="414" height="101.5"/>
+                <autoresizingMask key="autoresizingMask"/>
+                <subviews>
+                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="wLT-e3-Ter">
+                        <rect key="frame" x="30" y="15" width="114" height="24"/>
+                        <constraints>
+                            <constraint firstAttribute="height" constant="24" id="EPX-2L-cLe"/>
+                            <constraint firstAttribute="width" constant="114" id="QZf-4P-z0R"/>
+                        </constraints>
+                        <state key="normal" title="  支付宝" image="支付宝">
+                            <color key="titleColor" white="0.66666666666666663" alpha="1" colorSpace="calibratedWhite"/>
+                        </state>
+                        <state key="selected" image="支付宝（绿）">
+                            <color key="titleColor" red="0.25490196079999999" green="0.7725490196" blue="0.66666666669999997" alpha="1" colorSpace="calibratedRGB"/>
+                        </state>
+                    </button>
+                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="00P-oZ-6G5">
+                        <rect key="frame" x="270" y="15" width="114" height="24"/>
+                        <constraints>
+                            <constraint firstAttribute="width" constant="114" id="KZo-sH-g36"/>
+                            <constraint firstAttribute="height" constant="24" id="hBN-7M-NUW"/>
+                        </constraints>
+                        <state key="normal" title="  微信支付" image="微信支付">
+                            <color key="titleColor" white="0.66666666666666663" alpha="1" colorSpace="calibratedWhite"/>
+                        </state>
+                        <state key="selected" image="微信支付（绿）">
+                            <color key="titleColor" red="0.25490196079999999" green="0.7725490196" blue="0.66666666669999997" alpha="1" colorSpace="calibratedRGB"/>
+                        </state>
+                    </button>
+                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="SBu-TL-flp">
+                        <rect key="frame" x="30" y="69" width="105" height="24"/>
+                        <constraints>
+                            <constraint firstAttribute="height" constant="24" id="l9O-ct-iLd"/>
+                            <constraint firstAttribute="width" constant="105" id="r5N-I2-eWn"/>
+                        </constraints>
+                        <state key="normal" title="  苹果内购" image="苹果">
+                            <color key="titleColor" white="0.66666666666666663" alpha="1" colorSpace="calibratedWhite"/>
+                        </state>
+                        <state key="selected" image="苹果（绿）">
+                            <color key="titleColor" red="0.25490196079999999" green="0.7725490196" blue="0.66666666669999997" alpha="1" colorSpace="calibratedRGB"/>
+                        </state>
+                    </button>
+                </subviews>
+                <constraints>
+                    <constraint firstItem="SBu-TL-flp" firstAttribute="leading" secondItem="H2p-sc-9uM" secondAttribute="leading" constant="30" id="4Xt-io-DaR"/>
+                    <constraint firstItem="00P-oZ-6G5" firstAttribute="top" secondItem="H2p-sc-9uM" secondAttribute="top" constant="15" id="h5B-uA-iQM"/>
+                    <constraint firstItem="wLT-e3-Ter" firstAttribute="top" secondItem="H2p-sc-9uM" secondAttribute="top" constant="15" id="p2R-3i-ZXB"/>
+                    <constraint firstItem="wLT-e3-Ter" firstAttribute="leading" secondItem="H2p-sc-9uM" secondAttribute="leading" constant="30" id="pIg-Tg-Dnr"/>
+                    <constraint firstAttribute="trailing" secondItem="00P-oZ-6G5" secondAttribute="trailing" constant="30" id="pPt-zy-BRo"/>
+                    <constraint firstItem="SBu-TL-flp" firstAttribute="top" secondItem="wLT-e3-Ter" secondAttribute="bottom" constant="30" id="tj5-3f-FMR"/>
+                </constraints>
+            </tableViewCellContentView>
+            <connections>
+                <outlet property="alipayBtn" destination="wLT-e3-Ter" id="GuB-Nv-tC2"/>
+                <outlet property="appleBtn" destination="SBu-TL-flp" id="5Hs-jZ-r7y"/>
+                <outlet property="wxpayBtn" destination="00P-oZ-6G5" id="3Dl-7P-9fu"/>
+            </connections>
+            <point key="canvasLocation" x="388" y="328"/>
+        </tableViewCell>
+    </objects>
+    <resources>
+        <image name="微信支付" width="23" height="21"/>
+        <image name="微信支付（绿）" width="23" height="21"/>
+        <image name="支付宝" width="25" height="20"/>
+        <image name="支付宝（绿）" width="25" height="20"/>
+        <image name="苹果" width="20" height="24"/>
+        <image name="苹果（绿）" width="20" height="24"/>
+    </resources>
+</document>

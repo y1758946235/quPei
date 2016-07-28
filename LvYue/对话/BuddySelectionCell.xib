@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="9531" systemVersion="14F1021" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES">
+    <dependencies>
+        <deployment identifier="iOS"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="9529"/>
+    </dependencies>
+    <objects>
+        <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner"/>
+        <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
+        <tableViewCell contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" rowHeight="60" id="KGk-i7-Jjw" customClass="BuddySelectionCell">
+            <rect key="frame" x="0.0" y="0.0" width="375" height="60"/>
+            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+            <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="KGk-i7-Jjw" id="H2p-sc-9uM">
+                <rect key="frame" x="0.0" y="0.0" width="375" height="59"/>
+                <autoresizingMask key="autoresizingMask"/>
+                <subviews>
+                    <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="contractIcon" translatesAutoresizingMaskIntoConstraints="NO" id="alE-eB-MPN">
+                        <rect key="frame" x="45" y="10" width="40" height="39"/>
+                        <constraints>
+                            <constraint firstAttribute="width" constant="40" id="hsU-5X-TY0"/>
+                        </constraints>
+                    </imageView>
+                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Alex" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="mRO-RE-cEZ">
+                        <rect key="frame" x="105" y="19" width="250" height="20"/>
+                        <constraints>
+                            <constraint firstAttribute="height" constant="20" id="SgU-gr-J44"/>
+                        </constraints>
+                        <fontDescription key="fontDescription" type="system" pointSize="20"/>
+                        <nil key="highlightedColor"/>
+                    </label>
+                    <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="d89-ly-Xki">
+                        <rect key="frame" x="10" y="58" width="355" height="1"/>
+                        <color key="backgroundColor" red="0.87637411980000002" green="0.87380894369999995" blue="0.91447679920000002" alpha="1" colorSpace="calibratedRGB"/>
+                        <constraints>
+                            <constraint firstAttribute="height" constant="1" id="cGa-bv-j6H"/>
+                        </constraints>
+                    </view>
+                    <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="3Va-rH-hoL">
+                        <rect key="frame" x="10" y="20" width="20" height="19"/>
+                        <constraints>
+                            <constraint firstAttribute="width" constant="20" id="qAl-CN-zFU"/>
+                        </constraints>
+                    </imageView>
+                </subviews>
+                <constraints>
+                    <constraint firstItem="mRO-RE-cEZ" firstAttribute="leading" secondItem="alE-eB-MPN" secondAttribute="trailing" constant="20" id="4Z3-em-PEF"/>
+                    <constraint firstItem="alE-eB-MPN" firstAttribute="leading" secondItem="3Va-rH-hoL" secondAttribute="trailing" constant="15" id="7ro-ny-E92"/>
+                    <constraint firstItem="alE-eB-MPN" firstAttribute="centerY" secondItem="mRO-RE-cEZ" secondAttribute="centerY" id="P3N-pr-MBl"/>
+                    <constraint firstAttribute="bottom" secondItem="alE-eB-MPN" secondAttribute="bottom" constant="10" id="R2q-Uy-jO4"/>
+                    <constraint firstAttribute="bottom" secondItem="3Va-rH-hoL" secondAttribute="bottom" constant="20" id="TuF-TM-W4O"/>
+                    <constraint firstItem="alE-eB-MPN" firstAttribute="top" secondItem="H2p-sc-9uM" secondAttribute="top" constant="10" id="bCm-vO-gpj"/>
+                    <constraint firstItem="3Va-rH-hoL" firstAttribute="leading" secondItem="H2p-sc-9uM" secondAttribute="leading" constant="10" id="dQZ-3s-Ucv"/>
+                    <constraint firstAttribute="bottom" secondItem="d89-ly-Xki" secondAttribute="bottom" id="iFq-FS-i58"/>
+                    <constraint firstAttribute="trailing" secondItem="mRO-RE-cEZ" secondAttribute="trailing" constant="20" id="jE5-Xo-FlI"/>
+                    <constraint firstItem="d89-ly-Xki" firstAttribute="leading" secondItem="H2p-sc-9uM" secondAttribute="leading" constant="10" id="l6L-4Y-PM8"/>
+                    <constraint firstAttribute="trailing" secondItem="d89-ly-Xki" secondAttribute="trailing" constant="10" id="rKW-jC-zjD"/>
+                    <constraint firstItem="3Va-rH-hoL" firstAttribute="top" secondItem="H2p-sc-9uM" secondAttribute="top" constant="20" id="yDZ-bx-EDM"/>
+                </constraints>
+            </tableViewCellContentView>
+            <connections>
+                <outlet property="iconView" destination="alE-eB-MPN" id="HRV-lk-tlB"/>
+                <outlet property="nameLabel" destination="mRO-RE-cEZ" id="63z-JV-Yk3"/>
+                <outlet property="selectView" destination="3Va-rH-hoL" id="8vY-a1-djo"/>
+            </connections>
+            <point key="canvasLocation" x="266.5" y="402"/>
+        </tableViewCell>
+    </objects>
+    <resources>
+        <image name="contractIcon" width="30" height="30"/>
+    </resources>
+</document>

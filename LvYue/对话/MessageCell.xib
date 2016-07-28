@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="10117" systemVersion="15E65" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES">
+    <dependencies>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="10085"/>
+    </dependencies>
+    <objects>
+        <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner"/>
+        <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
+        <tableViewCell contentMode="scaleToFill" selectionStyle="none" indentationWidth="10" reuseIdentifier="messageCell" rowHeight="70" id="KGk-i7-Jjw" customClass="MessageCell">
+            <rect key="frame" x="0.0" y="0.0" width="375" height="70"/>
+            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+            <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="KGk-i7-Jjw" id="H2p-sc-9uM">
+                <rect key="frame" x="0.0" y="0.0" width="375" height="69.5"/>
+                <autoresizingMask key="autoresizingMask"/>
+                <subviews>
+                    <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="头像" translatesAutoresizingMaskIntoConstraints="NO" id="AgO-gk-Twp">
+                        <rect key="frame" x="10" y="10" width="50" height="50"/>
+                        <constraints>
+                            <constraint firstAttribute="width" constant="50" id="xIh-GU-tQq"/>
+                        </constraints>
+                    </imageView>
+                    <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" misplaced="YES" translatesAutoresizingMaskIntoConstraints="NO" id="ekS-vz-A38">
+                        <rect key="frame" x="45" y="44" width="15" height="15"/>
+                        <constraints>
+                            <constraint firstAttribute="height" constant="15" id="OrJ-67-J74"/>
+                            <constraint firstAttribute="width" constant="15" id="ccc-Wj-EqU"/>
+                        </constraints>
+                    </imageView>
+                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="爱豆客，爱生活" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="VQM-bZ-NQZ">
+                        <rect key="frame" x="80" y="15" width="275" height="20"/>
+                        <constraints>
+                            <constraint firstAttribute="height" constant="20" id="pey-Wc-BBt"/>
+                        </constraints>
+                        <fontDescription key="fontDescription" type="system" pointSize="16"/>
+                        <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
+                        <nil key="highlightedColor"/>
+                    </label>
+                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="快点成为会员吧~" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Pyj-XL-WbO">
+                        <rect key="frame" x="80" y="39" width="275" height="20"/>
+                        <constraints>
+                            <constraint firstAttribute="height" constant="20" id="YqX-Io-2mZ"/>
+                        </constraints>
+                        <fontDescription key="fontDescription" type="system" pointSize="14"/>
+                        <color key="textColor" white="0.66666666666666663" alpha="1" colorSpace="calibratedWhite"/>
+                        <nil key="highlightedColor"/>
+                    </label>
+                    <button autoresizesSubviews="NO" opaque="NO" userInteractionEnabled="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="w3w-ag-J51">
+                        <rect key="frame" x="45" y="5" width="20" height="20"/>
+                        <color key="backgroundColor" red="0.94041982319999995" green="0.033258123360000003" blue="0.038639282640000001" alpha="1" colorSpace="calibratedRGB"/>
+                        <constraints>
+                            <constraint firstAttribute="height" constant="20" id="AIK-A5-bHj"/>
+                            <constraint firstAttribute="width" constant="20" id="krJ-Dy-elZ"/>
+                        </constraints>
+                        <fontDescription key="fontDescription" type="system" pointSize="14"/>
+                        <state key="normal" title="1">
+                            <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
+                        </state>
+                        <state key="selected" title="1"/>
+                        <state key="highlighted" title="1"/>
+                    </button>
+                </subviews>
+                <constraints>
+                    <constraint firstAttribute="bottom" secondItem="Pyj-XL-WbO" secondAttribute="bottom" constant="10" id="0bw-o6-qX1"/>
+                    <constraint firstAttribute="trailing" secondItem="VQM-bZ-NQZ" secondAttribute="trailing" constant="20" id="1FI-xG-j1f"/>
+                    <constraint firstItem="Pyj-XL-WbO" firstAttribute="leading" secondItem="AgO-gk-Twp" secondAttribute="trailing" constant="20" id="5U4-BT-ddd"/>
+                    <constraint firstItem="w3w-ag-J51" firstAttribute="top" secondItem="AgO-gk-Twp" secondAttribute="top" constant="-5" id="8O7-dH-sMD"/>
+                    <constraint firstAttribute="bottom" secondItem="AgO-gk-Twp" secondAttribute="bottom" constant="10" id="Gx3-CW-Mtd"/>
+                    <constraint firstItem="w3w-ag-J51" firstAttribute="trailing" secondItem="AgO-gk-Twp" secondAttribute="trailing" constant="5" id="HRr-tY-VQa"/>
+                    <constraint firstItem="VQM-bZ-NQZ" firstAttribute="leading" secondItem="AgO-gk-Twp" secondAttribute="trailing" constant="20" id="Roa-OS-Vhu"/>
+                    <constraint firstItem="AgO-gk-Twp" firstAttribute="leading" secondItem="H2p-sc-9uM" secondAttribute="leading" constant="10" id="WVZ-qe-C3A"/>
+                    <constraint firstAttribute="trailing" secondItem="Pyj-XL-WbO" secondAttribute="trailing" constant="20" id="Yjg-aA-Iy8"/>
+                    <constraint firstItem="ekS-vz-A38" firstAttribute="bottom" secondItem="AgO-gk-Twp" secondAttribute="bottom" id="a9K-Lg-5gb"/>
+                    <constraint firstItem="VQM-bZ-NQZ" firstAttribute="top" secondItem="H2p-sc-9uM" secondAttribute="top" constant="15" id="bLK-Wl-B2Z"/>
+                    <constraint firstItem="ekS-vz-A38" firstAttribute="trailing" secondItem="AgO-gk-Twp" secondAttribute="trailing" id="iQt-1P-H5S"/>
+                    <constraint firstItem="AgO-gk-Twp" firstAttribute="top" secondItem="H2p-sc-9uM" secondAttribute="top" constant="10" id="o7q-wU-Dy2"/>
+                </constraints>
+            </tableViewCellContentView>
+            <connections>
+                <outlet property="iconView" destination="AgO-gk-Twp" id="Onu-Io-Mt8"/>
+                <outlet property="lastMessageLabel" destination="Pyj-XL-WbO" id="wrO-UY-Aog"/>
+                <outlet property="nameLabel" destination="VQM-bZ-NQZ" id="38b-Sq-9Oa"/>
+                <outlet property="unReadCountBtn" destination="w3w-ag-J51" id="M4Y-8V-lCt"/>
+                <outlet property="vipIconView" destination="ekS-vz-A38" id="qnq-Ds-OKW"/>
+            </connections>
+            <point key="canvasLocation" x="480.5" y="405"/>
+        </tableViewCell>
+    </objects>
+    <resources>
+        <image name="头像" width="120" height="120"/>
+    </resources>
+</document>

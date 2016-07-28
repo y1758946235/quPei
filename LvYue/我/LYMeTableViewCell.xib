@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="10117" systemVersion="15E65" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES">
+    <dependencies>
+        <deployment identifier="iOS"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="10085"/>
+        <capability name="Aspect ratio constraints" minToolsVersion="5.1"/>
+        <capability name="Constraints to layout margins" minToolsVersion="6.0"/>
+    </dependencies>
+    <objects>
+        <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner"/>
+        <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
+        <tableViewCell contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" id="KGk-i7-Jjw" customClass="LYMeTableViewCell">
+            <rect key="frame" x="0.0" y="0.0" width="320" height="44"/>
+            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+            <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="KGk-i7-Jjw" id="H2p-sc-9uM">
+                <rect key="frame" x="0.0" y="0.0" width="320" height="43.5"/>
+                <autoresizingMask key="autoresizingMask"/>
+                <subviews>
+                    <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="FD6-6d-iRl">
+                        <rect key="frame" x="23" y="7" width="30" height="29.5"/>
+                        <constraints>
+                            <constraint firstAttribute="width" constant="30" id="3Qi-PS-h87"/>
+                            <constraint firstAttribute="width" secondItem="FD6-6d-iRl" secondAttribute="height" id="Cpa-C3-d1V"/>
+                        </constraints>
+                    </imageView>
+                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="我的账户" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="8Vk-f8-o4H">
+                        <rect key="frame" x="73" y="12" width="64" height="20"/>
+                        <fontDescription key="fontDescription" type="system" pointSize="16"/>
+                        <color key="textColor" red="0.20000000000000001" green="0.20000000000000001" blue="0.20000000000000001" alpha="1" colorSpace="calibratedRGB"/>
+                        <nil key="highlightedColor"/>
+                    </label>
+                </subviews>
+                <constraints>
+                    <constraint firstItem="8Vk-f8-o4H" firstAttribute="centerY" secondItem="H2p-sc-9uM" secondAttribute="centerY" id="Fbe-d3-MKo"/>
+                    <constraint firstAttribute="trailingMargin" secondItem="8Vk-f8-o4H" secondAttribute="trailing" constant="20" id="M3e-li-mjE"/>
+                    <constraint firstItem="8Vk-f8-o4H" firstAttribute="leading" secondItem="FD6-6d-iRl" secondAttribute="trailing" constant="20" id="Umd-ZL-5GP"/>
+                    <constraint firstItem="FD6-6d-iRl" firstAttribute="leading" secondItem="H2p-sc-9uM" secondAttribute="leadingMargin" constant="15" id="cTF-pg-GeN"/>
+                    <constraint firstItem="FD6-6d-iRl" firstAttribute="centerY" secondItem="H2p-sc-9uM" secondAttribute="centerY" id="hD6-uj-FY7"/>
+                </constraints>
+                <variation key="default">
+                    <mask key="constraints">
+                        <exclude reference="M3e-li-mjE"/>
+                    </mask>
+                </variation>
+            </tableViewCellContentView>
+            <connections>
+                <outlet property="iconImageView" destination="FD6-6d-iRl" id="lkt-5f-pqm"/>
+                <outlet property="titleLabel" destination="8Vk-f8-o4H" id="EXa-eS-AGq"/>
+            </connections>
+        </tableViewCell>
+    </objects>
+</document>

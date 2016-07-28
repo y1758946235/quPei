@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="10117" systemVersion="15E65" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES">
+    <dependencies>
+        <deployment identifier="iOS"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="10085"/>
+        <capability name="Aspect ratio constraints" minToolsVersion="5.1"/>
+    </dependencies>
+    <objects>
+        <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner"/>
+        <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
+        <view contentMode="scaleToFill" id="iN0-l3-epB" customClass="LYMeHeaderView">
+            <rect key="frame" x="0.0" y="0.0" width="320" height="240"/>
+            <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+            <subviews>
+                <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="bg-1" translatesAutoresizingMaskIntoConstraints="NO" id="5jc-BG-0TD">
+                    <rect key="frame" x="0.0" y="0.0" width="320" height="240"/>
+                </imageView>
+                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="未设置城市" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="hOY-fy-W1O">
+                    <rect key="frame" x="15" y="109" width="85" height="21"/>
+                    <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                    <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
+                    <nil key="highlightedColor"/>
+                </label>
+                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="未登录" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="LiA-lV-7ul">
+                    <rect key="frame" x="134" y="165" width="51" height="21"/>
+                    <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                    <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
+                    <nil key="highlightedColor"/>
+                </label>
+                <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Je0-Iw-ety" customClass="UIControl">
+                    <rect key="frame" x="100" y="39.5" width="120" height="120"/>
+                    <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
+                    <constraints>
+                        <constraint firstAttribute="width" secondItem="Je0-Iw-ety" secondAttribute="height" multiplier="1:1" id="CbZ-Z3-jMW"/>
+                        <constraint firstAttribute="width" constant="120" id="ObJ-RV-QpI"/>
+                    </constraints>
+                    <connections>
+                        <action selector="clickAvatarControlView:" destination="iN0-l3-epB" eventType="touchUpInside" id="TeO-3j-9Tl"/>
+                    </connections>
+                </view>
+                <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="vgo-Kv-Kp3">
+                    <rect key="frame" x="110" y="50" width="100" height="100"/>
+                    <constraints>
+                        <constraint firstAttribute="width" secondItem="vgo-Kv-Kp3" secondAttribute="height" id="ZBH-ms-GJc"/>
+                        <constraint firstAttribute="width" constant="100" id="mgh-Ef-Ypd"/>
+                    </constraints>
+                </imageView>
+            </subviews>
+            <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
+            <constraints>
+                <constraint firstItem="vgo-Kv-Kp3" firstAttribute="top" secondItem="iN0-l3-epB" secondAttribute="top" constant="50" id="0ur-1w-sXd"/>
+                <constraint firstItem="LiA-lV-7ul" firstAttribute="top" secondItem="vgo-Kv-Kp3" secondAttribute="bottom" constant="15" id="89u-3o-kKU"/>
+                <constraint firstItem="vgo-Kv-Kp3" firstAttribute="centerX" secondItem="iN0-l3-epB" secondAttribute="centerX" id="8mc-OW-XhH"/>
+                <constraint firstItem="5jc-BG-0TD" firstAttribute="centerY" secondItem="iN0-l3-epB" secondAttribute="centerY" id="9Tw-cf-cdP"/>
+                <constraint firstItem="5jc-BG-0TD" firstAttribute="centerX" secondItem="iN0-l3-epB" secondAttribute="centerX" id="FFZ-Ea-lb4"/>
+                <constraint firstItem="Je0-Iw-ety" firstAttribute="centerY" secondItem="vgo-Kv-Kp3" secondAttribute="centerY" id="GXh-Uj-cHD"/>
+                <constraint firstItem="5jc-BG-0TD" firstAttribute="width" secondItem="iN0-l3-epB" secondAttribute="width" id="Hxo-ws-dhF"/>
+                <constraint firstItem="hOY-fy-W1O" firstAttribute="bottom" secondItem="vgo-Kv-Kp3" secondAttribute="bottom" constant="-20" id="R5o-pE-dCN"/>
+                <constraint firstItem="LiA-lV-7ul" firstAttribute="centerX" secondItem="vgo-Kv-Kp3" secondAttribute="centerX" id="cmD-Nb-pDA"/>
+                <constraint firstItem="vgo-Kv-Kp3" firstAttribute="leading" secondItem="hOY-fy-W1O" secondAttribute="trailing" constant="10" id="eHE-Yd-PTI"/>
+                <constraint firstItem="Je0-Iw-ety" firstAttribute="centerX" secondItem="vgo-Kv-Kp3" secondAttribute="centerX" id="oxa-ni-ooN"/>
+                <constraint firstItem="5jc-BG-0TD" firstAttribute="height" secondItem="iN0-l3-epB" secondAttribute="height" id="u8q-Ny-6pO"/>
+            </constraints>
+            <nil key="simulatedStatusBarMetrics"/>
+            <nil key="simulatedTopBarMetrics"/>
+            <nil key="simulatedBottomBarMetrics"/>
+            <simulatedOrientationMetrics key="simulatedOrientationMetrics"/>
+            <freeformSimulatedSizeMetrics key="simulatedDestinationMetrics"/>
+            <connections>
+                <outlet property="addressLabel" destination="hOY-fy-W1O" id="9gy-YF-glr"/>
+                <outlet property="avatarControlView" destination="Je0-Iw-ety" id="tvt-tL-kQY"/>
+                <outlet property="avatarImageView" destination="vgo-Kv-Kp3" id="Xc5-f7-KBM"/>
+                <outlet property="bgImageView" destination="5jc-BG-0TD" id="8qs-VX-Qc0"/>
+                <outlet property="userNameLabel" destination="LiA-lV-7ul" id="84l-mf-mZa"/>
+            </connections>
+            <point key="canvasLocation" x="129" y="119"/>
+        </view>
+    </objects>
+    <resources>
+        <image name="bg-1" width="375" height="235"/>
+    </resources>
+</document>

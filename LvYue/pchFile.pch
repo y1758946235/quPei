@@ -1,0 +1,185 @@
+//
+//  pchFile.pch
+//  微贷宝
+//
+//  Created by Vison on 15-4-13.
+//  Copyright (c) 2015年 eage. All rights reserved.
+//
+
+#ifndef ____pchFile_pch
+#define ____pchFile_pch
+
+// Include any system framework and library headers here that should be included in all compilation units.
+// You will also need to set the Prefix Header build setting of one or more of your targets to reference this file.
+
+// 屏幕尺寸宽
+//#define ScreenWidth  [UIScreen mainScreen].bounds.size.width
+// 屏幕尺寸高
+//#define ScreenHeight  [UIScreen mainScreen].bounds.size.height
+//app的高度
+#define AppHeight [UIScreen mainScreen].applicationFrame.size.height
+
+#define ViewWidth  self.view.frame.size.width
+#define ViewHeight  self.view.frame.size.height
+// 获取 KeyWindow
+#define KEYWINDOW [UIApplication sharedApplication].keyWindow
+#define Kinterval 20.0f
+#define ISIPHONE4 (fabs((double)[[UIScreen mainScreen] bounds].size.height) == 480 ? YES : NO)
+#define ISIPHONE5 (fabs((double)[[UIScreen mainScreen] bounds].size.height) == 568 ? YES : NO)
+#define ISIPHONE6 (fabs((double)[[UIScreen mainScreen] bounds].size.height) == 667 ? YES : NO)
+//version  版本号
+#define VERSION  [[[NSBundle mainBundle] infoDictionary] valueForKey:@"CFBundleShortVersionString"]
+
+#define SCREEN_WIDTH                    ([UIScreen mainScreen].bounds.size.width)
+#define SCREEN_HEIGHT                   ([UIScreen mainScreen].bounds.size.height)
+#define VIEW_WIDTH                      self.view.frame.size.width
+#define VIEW_HEIGHT                     self.view.frame.size.height
+
+#define DOT_COORDINATE                  0.0f
+#define STATUS_BAR_HEIGHT               20.0f
+#define BAR_ITEM_WIDTH_HEIGHT           30.0f
+#define NAVIGATION_BAR_HEIGHT           44.0f
+#define TAB_TAB_HEIGHT                  49.0f
+#define TABLE_VIEW_ROW_HEIGHT           NAVIGATION_BAR_HEIGHT
+#define CONTENT_VIEW_HEIGHT_NO_ TAB_BAR  (SCREEN_HEIGHT - STATUS_BAR_HEIGHT - NAVIGATION_BAR_HEIGHT)
+#define CONTENT_VIEW_HEIGHT_TAB_BAR     (CONTENT_VIEW_HEIGHT_NO_TAB_BAR - TAB_TAB_HEIGHT)
+
+#define UIColorFromRGB(rgbValue)        [UIColor colorWithRed:((float)((rgbValue & 0xFF0000) >> 16))/255.0f green:((float)((rgbValue & 0xFF00) >> 8))/255.0f blue:((float)(rgbValue & 0xFF))/255.0f alpha:1.0f]
+#define UIColorWithRGBA(r,g,b,a)        [UIColor colorWithRed:r/255.0f green:g/255.0f blue:b/255.0f alpha:a]
+
+
+//环信集成宏
+#define IS_IPHONE_5 ( fabs( ( double )[ [ UIScreen mainScreen ] bounds ].size.height - ( double )568 ) < DBL_EPSILON )
+
+#define KNOTIFICATION_LOGINCHANGE @"loginStateChange"
+
+#define CHATVIEWBACKGROUNDCOLOR [UIColor colorWithRed:0.936 green:0.932 blue:0.907 alpha:1]
+
+#ifdef __OBJC__
+#import <UIKit/UIKit.h>
+#import <Foundation/Foundation.h>
+
+#import "EMAlertView.h"
+#import "TTGlobalUICommon.h"
+#import "UIViewController+HUD.h"
+#import "UIViewController+DismissKeyboard.h"
+#import "NSString+Valid.h"
+#import "UIView+KFFrame.h"
+#import "EaseMob.h"
+
+#endif
+
+//取色
+#define FONTCOLOR_BLACK                 UIColorWithRGBA(73, 73, 73, 1)
+#define TABLEVIEW_BACKGROUNDCOLOR       UIColorWithRGBA(239, 239, 244, 1)
+#define NavigationBarColor              UIColorWithRGBA(226, 6, 37, 1)
+#define LineColor                       UIColorWithRGBA(227,227,229, 1)
+
+
+#define HUDTIME                         2.0f
+
+//请求头
+//#define REQUESTHEADER     @"http://114.215.184.120:8082" //阿里7云ip1
+//#define REQUESTHEADER     @"http://liang0608.imwork.net" //测试
+//#define REQUESTHEADER     @"http://lianhttp://wangqiaosai.vicp.hk:18165g0608.imwork.net:12485"
+//#define REQUESTHEADER     @"http://182.254.153.99:8080/lvyue-web-1.0.0-RELEASE2"             //gjh测试账号
+
+//测试
+#define REQUESTHEADER     @"http://119.29.0.15:8080"
+//正式
+//#define REQUESTHEADER       @"http://114.215.184.120:8080" //阿里7云ip4
+
+//七牛请求头
+#define IMAGEHEADER         @"http://7xlcz5.com2.z0.glb.qiniucdn.com/"
+
+/******************* SZY *******************/
+
+//*******Main******
+#import "AppDelegate.h"
+#import "ConstPriceEnum.h"
+#import "EageProgressHUD.h"
+#define kAppDelegate ((AppDelegate *)[[UIApplication sharedApplication] delegate])
+#define kKeyWindow [[UIApplication sharedApplication] keyWindow]
+
+//******Device*****
+
+#define kMainScreenHeight [UIScreen mainScreen].bounds.size.height
+#define kMainScreenWidth  [UIScreen mainScreen].bounds.size.width
+#define kMainNavigationBarHeight 44
+#define kMainStateBarHeight 20
+#define kMainTabBarHeight 49
+
+//******LocalDataBasePath******
+#define kDataBasePath [[NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES) objectAtIndex:0] stringByAppendingPathComponent:@"LYDatabase.sqlite"]
+
+
+//******Other******
+#define RGBCOLOR(r,g,b) [UIColor colorWithRed:r/256.0 green:g/256.0 blue:b/256.0 alpha:1]
+#define RGBACOLOR(r,g,b,a) [UIColor colorWithRed:r/256.0 green:g/256.0 blue:b/256.0 alpha:a]
+
+#define THEME_COLOR RGBACOLOR(40, 198, 175, 1)
+
+#define GRAYBG_COLOR RGBACOLOR(241, 240, 246, 1)
+
+#define kSystemVersion [[[UIDevice currentDevice] systemVersion] floatValue]
+#define kSofterViewsion  [[[NSBundle mainBundle] infoDictionary] objectForKey:@"CFBundleVersion"]
+
+#ifdef DEBUG
+#define MLOG(...)  printf("\n\t<%s line%d>\n%s\n", __FUNCTION__,__LINE__,[[NSString stringWithFormat:__VA_ARGS__] UTF8String])
+
+#else
+#define MLOG(...)
+#define NSLog(...) {}
+#endif
+
+#define kFont10 [UIFont systemFontOfSize:10]
+#define kFont11 [UIFont systemFontOfSize:11]
+#define kFont12 [UIFont systemFontOfSize:12]
+#define kFont13 [UIFont systemFontOfSize:13]
+#define kFont14 [UIFont systemFontOfSize:14]
+#define kFont15 [UIFont systemFontOfSize:15]
+#define kFont16 [UIFont systemFontOfSize:16]
+#define kFont17 [UIFont systemFontOfSize:17]
+#define kFont18 [UIFont systemFontOfSize:18]
+#define kFont19 [UIFont systemFontOfSize:19]
+#define kFont20 [UIFont systemFontOfSize:20]
+#define kFont21 [UIFont systemFontOfSize:21]
+#define kFont22 [UIFont systemFontOfSize:22]
+#define kFont23 [UIFont systemFontOfSize:23]
+#define kFont24 [UIFont systemFontOfSize:24]
+#define kFont25 [UIFont systemFontOfSize:25]
+#define kFont26 [UIFont systemFontOfSize:26]
+#define kFont27 [UIFont systemFontOfSize:27]
+#define kFont28 [UIFont systemFontOfSize:28]
+#define kFont29 [UIFont systemFontOfSize:29]
+#define kFont30 [UIFont systemFontOfSize:30]
+
+#define kFontBold13 [UIFont fontWithName:@"Helvetica-Bold" size:13]
+#define kFontBold15 [UIFont fontWithName:@"Helvetica-Bold" size:15]
+#define kFontBold17 [UIFont fontWithName:@"Helvetica-Bold" size:17]
+#define kFontBold18 [UIFont fontWithName:@"Helvetica-Bold" size:18]
+#define kFontBold19 [UIFont fontWithName:@"Helvetica-Bold" size:19]
+#define kFontBold20 [UIFont fontWithName:@"Helvetica-Bold" size:20]
+#define kFontBold21 [UIFont fontWithName:@"Helvetica-Bold" size:21]
+#define kFontBold22 [UIFont fontWithName:@"Helvetica-Bold" size:22]
+#define kFontBold23 [UIFont fontWithName:@"Helvetica-Bold" size:23]
+#define kFontBold24 [UIFont fontWithName:@"Helvetica-Bold" size:24]
+#define kFontBold25 [UIFont fontWithName:@"Helvetica-Bold" size:25]
+
+#define kNSUDefaultSaveVauleAndKey(value,key) [[NSUserDefaults standardUserDefaults] setObject:value forKey:key]
+#define kNSUDefaultReadKey(key) [[NSUserDefaults standardUserDefaults] valueForKey:key]
+
+//精简版标识
+//#define kEasyVersion
+
+//聊天推送隐私设置
+#define kChatContentPrivacy
+
+//本地缓存的"是否显示推送提示器"字符串
+#define kHavePrompt @"havePrompt"
+#define kHaveInvite @"haveInvite"
+#define kHaveRequire @"haveRequire"
+
+#endif
+
+
