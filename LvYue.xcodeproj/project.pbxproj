@@ -542,7 +542,6 @@
 		3A55D13B1D220E8800FB591B /* UIView+KFFrame.m in Sources */ = {isa = PBXBuildFile; fileRef = 3A55D13A1D220E8800FB591B /* UIView+KFFrame.m */; };
 		3AA798491D23B42F002135E4 /* WalletDetailViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 3AA798481D23B42F002135E4 /* WalletDetailViewController.m */; };
 		3AA7984C1D23C175002135E4 /* BaseViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 3AA7984B1D23C175002135E4 /* BaseViewController.m */; };
-		3ABAF1521D349981006DF5C6 /* Reveal.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3ABAF1511D349981006DF5C6 /* Reveal.framework */; };
 		3ABAF1541D349A1A006DF5C6 /* libz.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = 3ABAF1531D349A1A006DF5C6 /* libz.tbd */; };
 		3ABAF1581D350F85006DF5C6 /* BuyRedBeanCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 3ABAF1561D350F85006DF5C6 /* BuyRedBeanCell.m */; };
 		3ABAF1591D350F85006DF5C6 /* BuyRedBeanCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 3ABAF1571D350F85006DF5C6 /* BuyRedBeanCell.xib */; };
@@ -2393,7 +2392,6 @@
 				18A1CEC11BCE25F400CA3993 /* libiconv.dylib in Frameworks */,
 				854B60101C0D263C00738752 /* libbaidumapapi.a in Frameworks */,
 				09549D291D153AF3008A721C /* libEaseMobClientSDKLite.a in Frameworks */,
-				3ABAF1521D349981006DF5C6 /* Reveal.framework in Frameworks */,
 				916739911BF5B85A001452CF /* libWeChatSDK.a in Frameworks */,
 				A79AA8101BEAFAB10065684F /* TencentOpenAPI.framework in Frameworks */,
 				916739811BF5B61D001452CF /* libUMSocial_Sdk_4.2.5.a in Frameworks */,
