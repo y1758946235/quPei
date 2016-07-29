@@ -6,11 +6,11 @@
 //  Copyright © 2015年 OLFT. All rights reserved.
 //
 
-#import "VideoPlayerCell.h"
-#import "VideoDetail.h"
-#import "UIImageView+WebCache.h"
-#import <AVFoundation/AVFoundation.h>
 #import "FMDB.h"
+#import "UIImageView+WebCache.h"
+#import "VideoDetail.h"
+#import "VideoPlayerCell.h"
+#import <AVFoundation/AVFoundation.h>
 
 @interface VideoPlayerCell ()
 
@@ -29,7 +29,6 @@
 @property (weak, nonatomic) IBOutlet UIView *videoContainer;
 
 @property (weak, nonatomic) IBOutlet UILabel *descLabel;
-
 
 
 @end
@@ -63,13 +62,13 @@
 - (void)fillDataWithModel:(VideoDetail *)model {
     [self loadPreviewImageWithURLString:model.url];
     self.timeLabel.text = [model getPerfectTime];
-    self.descLabel.text = [NSString stringWithFormat:@"%@",model.videoDesc];
+    self.descLabel.text = [NSString stringWithFormat:@"%@", model.videoDesc];
     [self.iconView sd_setImageWithURL:[NSURL URLWithString:model.owner.icon] placeholderImage:[UIImage imageNamed:@"头像"]];
     [self.vipIcon setHidden:([model.owner.isVip isEqualToString:@"1"] ? NO : YES)];
-    self.nameLabel.text = [NSString stringWithFormat:@"%@",model.owner.name];
+    self.nameLabel.text = [NSString stringWithFormat:@"%@", model.owner.name];
     self.sexIcon.image = [UIImage imageNamed:([model.owner.sex isEqualToString:@"0"] ? @"男" : @"女")];
-    self.ageLabel.text = [NSString stringWithFormat:@"%@",model.owner.age];
-    self.praiseNumLabel.text = [NSString stringWithFormat:@"%@",model.praiseNum];
+    self.ageLabel.text = [NSString stringWithFormat:@"%@", model.owner.age];
+    self.praiseNumLabel.text = [NSString stringWithFormat:@"%@", model.praiseNum];
     if ([model.isPraiseByMe isEqualToString:@"1"]) { //如果我已经点赞
         self.praiseNumLabel.font = [UIFont boldSystemFontOfSize:14.0];
         self.praiseNumLabel.textColor = RGBACOLOR(235, 55, 48, 1.0);
@@ -77,7 +76,7 @@
         self.praiseNumLabel.font = [UIFont systemFontOfSize:14.0];
         self.praiseNumLabel.textColor = [UIColor darkGrayColor];
     }
-    
+
     //调整控件位置
     [self resizeSubviewsWithModel:model];
 }
@@ -99,7 +98,7 @@
         NSString *imageDataString = @"";
         if ([kAppDelegate.dataBase open]) {
             //条件查询
-            NSString *searchSql = [NSString stringWithFormat:@"SELECT * FROM '%@' WHERE video_url = '%@'",@"VideoPreviewImage",urlString];
+            NSString *searchSql = [NSString stringWithFormat:@"SELECT * FROM '%@' WHERE video_url = '%@'", @"VideoPreviewImage", urlString];
             FMResultSet *result = [kAppDelegate.dataBase executeQuery:searchSql];
             BOOL isExist = NO;
             while ([result next]) {
@@ -125,27 +124,27 @@
  *
  *  @param timeBySecond 时间点
  */
-- (void)thumbnailImageRequest:(CGFloat )timeBySecond withURL:(NSURL *)url {
+- (void)thumbnailImageRequest:(CGFloat)timeBySecond withURL:(NSURL *)url {
     //异步并发截取
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
         //根据url创建AVURLAsset
-        AVURLAsset *urlAsset=[AVURLAsset assetWithURL:url];
+        AVURLAsset *urlAsset = [AVURLAsset assetWithURL:url];
         //根据AVURLAsset创建AVAssetImageGenerator
-        AVAssetImageGenerator *imageGenerator=[AVAssetImageGenerator assetImageGeneratorWithAsset:urlAsset];
+        AVAssetImageGenerator *imageGenerator = [AVAssetImageGenerator assetImageGeneratorWithAsset:urlAsset];
         /*截图
          * requestTime:缩略图创建时间
          * actualTime:缩略图实际生成的时间
          */
-        NSError *error=nil;
-        CMTime time=CMTimeMakeWithSeconds(timeBySecond, 10);//CMTime是表示电影时间信息的结构体，第一个参数表示是视频第几秒，第二个参数表示每秒帧数.(如果要活的某一秒的第几帧可以使用CMTimeMake方法)
+        NSError *error = nil;
+        CMTime time = CMTimeMakeWithSeconds(timeBySecond, 10); //CMTime是表示电影时间信息的结构体，第一个参数表示是视频第几秒，第二个参数表示每秒帧数.(如果要活的某一秒的第几帧可以使用CMTimeMake方法)
         CMTime actualTime;
-        CGImageRef cgImage= [imageGenerator copyCGImageAtTime:time actualTime:&actualTime error:&error];
-        if(error){
-            NSLog(@"截取视频缩略图时发生错误，错误信息：%@",error.localizedDescription);
+        CGImageRef cgImage = [imageGenerator copyCGImageAtTime:time actualTime:&actualTime error:&error];
+        if (error) {
+            NSLog(@"截取视频缩略图时发生错误，错误信息：%@", error.localizedDescription);
             return;
         }
         CMTimeShow(actualTime);
-        UIImage *image=[UIImage imageWithCGImage:cgImage];//转化为UIImage
+        UIImage *image = [UIImage imageWithCGImage:cgImage]; //转化为UIImage
         NSData *imageData = UIImageJPEGRepresentation(image, 0.3);
         NSString *dataString = [imageData base64EncodedStringWithOptions:NSDataBase64Encoding64CharacterLineLength];
         NSString *urlString = [url absoluteString];
@@ -155,7 +154,7 @@
             //缓存图片
             [kAppDelegate.dataBaseQueue inDatabase:^(FMDatabase *db) {
                 if ([kAppDelegate.dataBase open]) {
-                    NSString *insertSql = [NSString stringWithFormat:@"INSERT INTO '%@'('%@','%@') VALUES('%@','%@')",@"VideoPreviewImage",@"video_url",@"imageData",urlString,dataString];
+                    NSString *insertSql = [NSString stringWithFormat:@"INSERT INTO '%@'('%@','%@') VALUES('%@','%@')", @"VideoPreviewImage", @"video_url", @"imageData", urlString, dataString];
                     BOOL isSuccess = [kAppDelegate.dataBase executeUpdate:insertSql];
                     if (isSuccess) {
                         MLOG(@"预览图缓存成功!");
@@ -173,7 +172,7 @@
 
 - (void)tapIntoUserDetail:(UITapGestureRecognizer *)gesture {
     //通知控制器
-    [[NSNotificationCenter defaultCenter] postNotificationName:@"VideoCircle_TapUserIcon" object:nil userInfo:@{@"indexPath":self.indexPath}];
+    [[NSNotificationCenter defaultCenter] postNotificationName:@"VideoCircle_TapUserIcon" object:nil userInfo:@{ @"indexPath": self.indexPath }];
 }
 
 
