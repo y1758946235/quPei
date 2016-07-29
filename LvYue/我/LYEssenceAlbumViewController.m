@@ -18,16 +18,16 @@
 static NSString *const LYEssenceAlbumCollectionViewCellIdentity =
     @"photoCell";
 
-@interface LYEssenceAlbumViewController () <UICollectionViewDataSource,
-                                            UICollectionViewDelegate,
-                                            SDWebImageManagerDelegate>
+@interface LYEssenceAlbumViewController () <
+    UICollectionViewDataSource,
+    UICollectionViewDelegate,
+    SDWebImageManagerDelegate>
 
 @property (nonatomic, strong) UICollectionView *collectionView;
 @property (nonatomic, strong) UICollectionViewLayout *collectionViewLayout;
 
 @property (nonatomic, strong) NSArray<NSDictionary *> *responseArray;
-@property (nonatomic, strong)
-    NSArray<NSString *> *imageURLArray;                              // 图片URL
+@property (nonatomic, strong) NSArray<NSString *> *imageURLArray;    // 图片URL
 @property (nonatomic, strong) NSMutableArray<UIImage *> *imageArray; // 压缩数组
 
 @end
@@ -81,63 +81,6 @@ static NSString *const LYEssenceAlbumCollectionViewCellIdentity =
     return _collectionViewLayout;
 }
 
-- (NSArray<NSString *> *)imageURLArray {
-    if (!_imageURLArray) {
-        NSMutableArray *array = [[NSMutableArray alloc] initWithCapacity:self.responseArray.count];
-        [self.responseArray enumerateObjectsUsingBlock:^(NSDictionary *_Nonnull obj, NSUInteger idx, BOOL *_Nonnull stop) {
-            [array addObject:[NSString stringWithFormat:@"%@%@", IMAGEHEADER, obj[@"img_name"]]];
-        }];
-        _imageURLArray = [array copy];
-    }
-    return _imageURLArray;
-}
-
-- (NSMutableArray<UIImage *> *)imageArray {
-    if (!_imageArray) {
-        _imageArray = [[NSMutableArray alloc] initWithCapacity:self.imageURLArray.count];
-        for (NSInteger flag = 0; flag < self.imageURLArray.count; flag++) {
-            [_imageArray addObject:[UIImage imageNamed:@"PlaceImage"]];
-        }
-    }
-    return _imageArray;
-}
-
-
-#pragma mark - UICollectionDelegate,UICollevtiondataSource
-
-- (NSInteger)collectionView:(UICollectionView *)collectionView
-     numberOfItemsInSection:(NSInteger)section {
-    return self.imageURLArray.count;
-}
-
-- (UICollectionViewCell *)collectionView:(UICollectionView *)collectionView
-                  cellForItemAtIndexPath:(NSIndexPath *)indexPath {
-    MyDispositionCollectionViewCell *cell =
-        [collectionView dequeueReusableCellWithReuseIdentifier:
-                            LYEssenceAlbumCollectionViewCellIdentity
-                                                  forIndexPath:indexPath];
-    cell.imageViewM.image = self.imageArray[indexPath.row];
-
-    //    NSDictionary *dic = self.compressImageArray[indexPath.item];
-    //    NSURL *url = [NSURL URLWithString:[NSString
-    //    stringWithFormat:@"%@%@",IMAGEHEADER,dic[@"img_name"]]];
-    //    [cell.imageViewM sd_setImageWithURL:url placeholderImage:[UIImage
-    //    imageNamed:@"PlaceImage"] options:SDWebImageRetryFailed];
-
-    return cell;
-}
-
-- (void)collectionView:(UICollectionView *)collectionView
-    didSelectItemAtIndexPath:(NSIndexPath *)indexPath {
-
-    OriginalViewController *vc = [[OriginalViewController alloc] init];
-    vc.imageData               = self.responseArray; // 响应的字典
-    vc.smallImage              = self.imageArray;    // 对应已经加载的 image 对象
-    ;
-    vc.userId = [LYUserService sharedInstance].userID;
-    [vc showImageWithIndex:indexPath.row andCount:self.imageArray.count];
-}
-
 #pragma mark - Pravite
 
 - (void)p_loadData {
@@ -182,6 +125,63 @@ static NSString *const LYEssenceAlbumCollectionViewCellIdentity =
 
         }];
     }];
+}
+
+#pragma mark - UICollectionDelegate,UICollevtiondataSource
+
+- (NSInteger)collectionView:(UICollectionView *)collectionView
+     numberOfItemsInSection:(NSInteger)section {
+    return self.imageURLArray.count;
+}
+
+- (UICollectionViewCell *)collectionView:(UICollectionView *)collectionView
+                  cellForItemAtIndexPath:(NSIndexPath *)indexPath {
+    MyDispositionCollectionViewCell *cell =
+        [collectionView dequeueReusableCellWithReuseIdentifier:
+                            LYEssenceAlbumCollectionViewCellIdentity
+                                                  forIndexPath:indexPath];
+    cell.imageViewM.image = self.imageArray[indexPath.row];
+
+    //    NSDictionary *dic = self.compressImageArray[indexPath.item];
+    //    NSURL *url = [NSURL URLWithString:[NSString
+    //    stringWithFormat:@"%@%@",IMAGEHEADER,dic[@"img_name"]]];
+    //    [cell.imageViewM sd_setImageWithURL:url placeholderImage:[UIImage
+    //    imageNamed:@"PlaceImage"] options:SDWebImageRetryFailed];
+
+    return cell;
+}
+
+- (void)collectionView:(UICollectionView *)collectionView
+    didSelectItemAtIndexPath:(NSIndexPath *)indexPath {
+
+    OriginalViewController *vc = [[OriginalViewController alloc] init];
+    vc.imageData               = self.responseArray; // 响应的字典
+    vc.smallImage              = self.imageArray;    // 对应已经加载的 image 对象
+    ;
+    vc.userId = [LYUserService sharedInstance].userID;
+    [vc showImageWithIndex:indexPath.row andCount:self.imageArray.count];
+}
+
+
+- (NSArray<NSString *> *)imageURLArray {
+    if (!_imageURLArray) {
+        NSMutableArray *array = [[NSMutableArray alloc] initWithCapacity:self.responseArray.count];
+        [self.responseArray enumerateObjectsUsingBlock:^(NSDictionary *_Nonnull obj, NSUInteger idx, BOOL *_Nonnull stop) {
+            [array addObject:[NSString stringWithFormat:@"%@%@", IMAGEHEADER, obj[@"img_name"]]];
+        }];
+        _imageURLArray = [array copy];
+    }
+    return _imageURLArray;
+}
+
+- (NSMutableArray<UIImage *> *)imageArray {
+    if (!_imageArray) {
+        _imageArray = [[NSMutableArray alloc] initWithCapacity:self.imageURLArray.count];
+        for (NSInteger flag = 0; flag < self.imageURLArray.count; flag++) {
+            [_imageArray addObject:[UIImage imageNamed:@"PlaceImage"]];
+        }
+    }
+    return _imageArray;
 }
 
 

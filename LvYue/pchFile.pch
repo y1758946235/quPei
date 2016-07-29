@@ -86,7 +86,8 @@
 
 //测试
 //#define REQUESTHEADER     @"http://119.29.0.15:8080"
-#define REQUESTHEADER     @"http://182.254.153.99:8080/lvyue2"
+//#define REQUESTHEADER     @"http://182.254.153.99:8080/lvyue2"
+#define REQUESTHEADER     @"http://192.168.1.109:8080"
 
 //正式
 //#define REQUESTHEADER       @"http://114.215.184.120:8080" //阿里7云ip4
