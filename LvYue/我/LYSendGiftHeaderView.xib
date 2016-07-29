@@ -25,7 +25,7 @@
                     <nil key="highlightedColor"/>
                 </label>
                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" usesAttributedText="YES" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Poi-nR-FIW">
-                    <rect key="frame" x="120" y="84" width="68" height="21"/>
+                    <rect key="frame" x="120" y="84" width="80" height="21"/>
                     <attributedString key="attributedText">
                         <fragment content="余额">
                             <attributes>
@@ -39,17 +39,18 @@
                                 <font key="NSFont" size="15" name="HelveticaNeue"/>
                             </attributes>
                         </fragment>
-                        <fragment content="1000">
+                        <fragment content="加载中">
                             <attributes>
                                 <color key="NSColor" red="0.0" green="0.77825468778610229" blue="0.7601204514503479" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
-                                <font key="NSFont" size="15" name="HelveticaNeue"/>
+                                <font key="NSFont" size="15" name="PingFangSC-Regular"/>
+                                <font key="NSOriginalFont" size="15" name="HelveticaNeue"/>
                             </attributes>
                         </fragment>
                     </attributedString>
                     <nil key="highlightedColor"/>
                 </label>
                 <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="vip" translatesAutoresizingMaskIntoConstraints="NO" id="zCZ-Af-pRS">
-                    <rect key="frame" x="198" y="87" width="15" height="15"/>
+                    <rect key="frame" x="210" y="87" width="15" height="15"/>
                     <constraints>
                         <constraint firstAttribute="height" constant="15" id="6s3-kH-F5G"/>
                         <constraint firstAttribute="width" secondItem="zCZ-Af-pRS" secondAttribute="height" id="h7S-B3-XEg"/>
@@ -65,6 +66,9 @@
                     <state key="normal" title="获取金币">
                         <color key="titleColor" red="1" green="1" blue="1" alpha="1" colorSpace="calibratedRGB"/>
                     </state>
+                    <connections>
+                        <action selector="clickGetCoinButton:" destination="iN0-l3-epB" eventType="touchUpInside" id="tly-Z9-Slz"/>
+                    </connections>
                 </button>
                 <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="logo108" translatesAutoresizingMaskIntoConstraints="NO" id="OjD-5R-sCC">
                     <rect key="frame" x="10" y="15" width="100" height="100"/>

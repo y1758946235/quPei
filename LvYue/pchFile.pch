@@ -85,7 +85,9 @@
 //#define REQUESTHEADER     @"http://182.254.153.99:8080/lvyue-web-1.0.0-RELEASE2"             //gjh测试账号
 
 //测试
-#define REQUESTHEADER     @"http://119.29.0.15:8080"
+//#define REQUESTHEADER     @"http://119.29.0.15:8080"
+#define REQUESTHEADER     @"http://182.254.153.99:8080/lvyue2"
+
 //正式
 //#define REQUESTHEADER       @"http://114.215.184.120:8080" //阿里7云ip4
 

@@ -560,7 +560,6 @@
 		6BB490D61D473430003843C6 /* LYDetailDataDefalutTableViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 6BB490D41D473430003843C6 /* LYDetailDataDefalutTableViewCell.xib */; };
 		6BDD2A0A1D489CBE00693ADF /* LYSendGiftViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 6BDD2A091D489CBE00693ADF /* LYSendGiftViewController.m */; };
 		6BDD2A0F1D489F5A00693ADF /* LYSendGiftCollectionViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 6BDD2A0D1D489F5A00693ADF /* LYSendGiftCollectionViewCell.m */; };
-		6BDD2A101D489F5A00693ADF /* LYSendGiftCollectionViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 6BDD2A0E1D489F5A00693ADF /* LYSendGiftCollectionViewCell.xib */; };
 		6BDD2A131D48A21D00693ADF /* LYSendGiftHeaderView.m in Sources */ = {isa = PBXBuildFile; fileRef = 6BDD2A121D48A21D00693ADF /* LYSendGiftHeaderView.m */; };
 		6BDD2A151D48A23200693ADF /* LYSendGiftHeaderView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 6BDD2A141D48A23200693ADF /* LYSendGiftHeaderView.xib */; };
 		6BF5A9011D41EB590079331C /* LYDetailDataViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 6BF5A8FF1D41EB590079331C /* LYDetailDataViewController.m */; };
@@ -1790,7 +1789,6 @@
 		3AA798481D23B42F002135E4 /* WalletDetailViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WalletDetailViewController.m; sourceTree = "<group>"; };
 		3AA7984A1D23C175002135E4 /* BaseViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BaseViewController.h; sourceTree = "<group>"; };
 		3AA7984B1D23C175002135E4 /* BaseViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = BaseViewController.m; sourceTree = "<group>"; };
-		3ABAF1511D349981006DF5C6 /* Reveal.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = Reveal.framework; sourceTree = "<group>"; };
 		3ABAF1531D349A1A006DF5C6 /* libz.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = libz.tbd; path = usr/lib/libz.tbd; sourceTree = SDKROOT; };
 		3ABAF1551D350F85006DF5C6 /* BuyRedBeanCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BuyRedBeanCell.h; sourceTree = "<group>"; };
 		3ABAF1561D350F85006DF5C6 /* BuyRedBeanCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = BuyRedBeanCell.m; sourceTree = "<group>"; };
@@ -1820,7 +1818,6 @@
 		6BDD2A091D489CBE00693ADF /* LYSendGiftViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LYSendGiftViewController.m; sourceTree = "<group>"; };
 		6BDD2A0C1D489F5A00693ADF /* LYSendGiftCollectionViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LYSendGiftCollectionViewCell.h; sourceTree = "<group>"; };
 		6BDD2A0D1D489F5A00693ADF /* LYSendGiftCollectionViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LYSendGiftCollectionViewCell.m; sourceTree = "<group>"; };
-		6BDD2A0E1D489F5A00693ADF /* LYSendGiftCollectionViewCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = LYSendGiftCollectionViewCell.xib; sourceTree = "<group>"; };
 		6BDD2A111D48A21D00693ADF /* LYSendGiftHeaderView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LYSendGiftHeaderView.h; sourceTree = "<group>"; };
 		6BDD2A121D48A21D00693ADF /* LYSendGiftHeaderView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LYSendGiftHeaderView.m; sourceTree = "<group>"; };
 		6BDD2A141D48A23200693ADF /* LYSendGiftHeaderView.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = LYSendGiftHeaderView.xib; sourceTree = "<group>"; };
@@ -5052,7 +5049,6 @@
 				18DB6C041BCB9C740045D20E /* MobileCoreServices.framework */,
 				18DB6C061BCB9C820045D20E /* CFNetwork.framework */,
 				3ABAF1531D349A1A006DF5C6 /* libz.tbd */,
-				3ABAF1511D349981006DF5C6 /* Reveal.framework */,
 				3A06F8131D0D5A6F006ABDCF /* libstdc++.tbd */,
 				8540973D1C608515007E07F1 /* StoreKit.framework */,
 				1836A7201BDE6B4B0056D8A3 /* libstdc++.dylib */,
@@ -5085,7 +5081,6 @@
 			children = (
 				6BDD2A0C1D489F5A00693ADF /* LYSendGiftCollectionViewCell.h */,
 				6BDD2A0D1D489F5A00693ADF /* LYSendGiftCollectionViewCell.m */,
-				6BDD2A0E1D489F5A00693ADF /* LYSendGiftCollectionViewCell.xib */,
 				6BDD2A111D48A21D00693ADF /* LYSendGiftHeaderView.h */,
 				6BDD2A121D48A21D00693ADF /* LYSendGiftHeaderView.m */,
 				6BDD2A141D48A23200693ADF /* LYSendGiftHeaderView.xib */,
@@ -6367,7 +6362,6 @@
 				095BED851BC7F20000BC7D08 /* SearchFirstTableViewCell.xib in Resources */,
 				0991EEBE1C4DFD4A001D9FD3 /* BlockListTableViewCell.xib in Resources */,
 				09549E4B1D153B7A008A721C /* chat_location_detail_disclosure.png in Resources */,
-				6BDD2A101D489F5A00693ADF /* LYSendGiftCollectionViewCell.xib in Resources */,
 				09549E111D153B7A008A721C /* VoiceSearchFeedback003.png in Resources */,
 				18A6AE1F1BC752E6006D2DEF /* BuddySelectionCell.xib in Resources */,
 				09549EB91D153B7A008A721C /* tabbar_settingHL@2x.png in Resources */,

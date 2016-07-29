@@ -38,6 +38,9 @@ SpaceAfterCStyleCast: true
 # switch的case缩进
 IndentCaseLabels: true
 
+# 等号
+AlignConsecutiveAssignments: true
+
 ---
 Language: JavaScript
 # Use 100 columns for JS.

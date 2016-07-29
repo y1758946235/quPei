@@ -11,6 +11,7 @@
 #import "LYDetailDataHeaderView.h"
 #import "LYDetailDataPhotoTableViewCell.h"
 #import "LYDetailDataViewController.h"
+#import "LYEssenceAlbumViewController.h"
 #import "LYSendGiftViewController.h"
 #import "SendBuddyRequestMessageController.h"
 #import <MediaPlayer/MediaPlayer.h>
@@ -23,21 +24,19 @@
 #import "MyInfoModel.h"
 
 typedef NS_ENUM(NSUInteger, LYDetailDataRelationShipEnum) {
-    LYDetailDataRelationShipEnumAdd = 0,    // 加好友
+    LYDetailDataRelationShipEnumAdd    = 0, // 加好友
     LYDetailDataRelationShipEnumDelete = 1, // 删除好友
-    LYDetailDataRelationShipEnumIng = 2,    // 待验证
+    LYDetailDataRelationShipEnumIng    = 2, // 待验证
 };
 
 static NSString *const LYInviteVedioAuthMessage =
     @"TA 还未通过形象视频认证，请谨慎联系。确认送礼并邀请 TA 认证形象视频吗？如果对方不认证，系统会返回您购买该礼物的金币";
 static NSString *const LYPlayAuthVideoMessage1 = @"为了公平起见，你需要成为会员才能观看到更多人的形象视频，否则每天只能观看六个人的视频。";
-static NSString *const LYPlayAuthVideoMessage2 = @"";
+static NSString *const LYPlayAuthVideoMessage2 = @"为了公平起见，你需要上传自己的形象认证视频才能观看更多人的形象视频，否者每天只能观看两人的形象视频。";
 
 static NSArray<NSArray *> *LYDetailDataTableViewDataArray;
-// static NSString *const LYDetailDataTableViewDefaultCellIdentity =
-// @"LYDetailDataTableViewDefaultCellIdentity";
-static NSString *const LYDetailDataPhotoTableViewCellIdentity =
-    @"LYDetailDataPhotoTableViewCellIdentity";
+static NSString *const LYDetailDataTableViewDefaultCellIdentity = @"LYDetailDataTableViewDefaultCellIdentity";
+static NSString *const LYDetailDataPhotoTableViewCellIdentity   = @"LYDetailDataPhotoTableViewCellIdentity";
 
 @interface LYDetailDataViewController () <UITableViewDelegate, UITableViewDataSource, UIActionSheetDelegate,
                                           UIAlertViewDelegate>
@@ -121,7 +120,7 @@ static NSString *const LYDetailDataPhotoTableViewCellIdentity =
                    jingHuaImageURLArray && jingHuaImageURLArray ? jingHuaImageURLArray
                                                                 : @"",
                @"rowHeight": @82,
-               @"actionVC": [NSNull null]
+               @"actionVC": @"LYEssenceAlbumViewController"
            },
         ],
         @[
@@ -241,10 +240,11 @@ static NSString *const LYDetailDataPhotoTableViewCellIdentity =
         }
     }
 
-    LYDetailDataDefalutTableViewCell *cell =
-        [[[NSBundle mainBundle] loadNibNamed:@"LYDetailDataDefalutTableViewCell"
-                                       owner:self
-                                     options:nil] objectAtIndex:0];
+    //    LYDetailDataDefalutTableViewCell *cell =
+    //        [[[NSBundle mainBundle] loadNibNamed:@"LYDetailDataDefalutTableViewCell"
+    //                                       owner:self
+    //                                     options:nil] objectAtIndex:0];
+    LYDetailDataDefalutTableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:LYDetailDataTableViewDefaultCellIdentity forIndexPath:indexPath];
 
     NSDictionary *info = LYDetailDataTableViewDataArray[indexPath.section][indexPath.row];
     [cell configTitle:info[@"title"] content:info[@"value"]];
@@ -288,6 +288,12 @@ static NSString *const LYDetailDataPhotoTableViewCellIdentity =
 - (void)tableView:(UITableView *)tableView
     didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
     [tableView deselectRowAtIndexPath:indexPath animated:YES];
+
+    if ([LYDetailDataTableViewDataArray[indexPath.section][indexPath.row][@"actionVC"] length] > 0) {
+        Class cla = NSClassFromString(LYDetailDataTableViewDataArray[indexPath.section][indexPath.row][@"actionVC"]);
+        id vc     = [cla new];
+        [self.navigationController pushViewController:vc animated:YES];
+    }
 }
 
 - (void)tableView:(UITableView *)tableView
@@ -395,7 +401,7 @@ forRowAtIndexPath:(NSIndexPath *)indexPath {
                             forKey:@"isFocus"];
                 [infoDic setObject:successResponse[@"data"][@"fansNum"]
                             forKey:@"fansNum"];
-                self.infoModel = [[MyInfoModel alloc] initWithDict:[infoDic copy]];
+                self.infoModel       = [[MyInfoModel alloc] initWithDict:[infoDic copy]];
                 self.detailInfoModel = [[MyDetailInfoModel alloc]
                     initWithDict:successResponse[@"data"][@"userDetail"]];
 
@@ -464,64 +470,6 @@ forRowAtIndexPath:(NSIndexPath *)indexPath {
                         [MBProgressHUD hideHUD];
                         [MBProgressHUD showError:@"服务器繁忙,请重试"];
                     }];
-
-                //                [kAppDelegate.dataBaseQueue inDatabase:^(FMDatabase
-                //                *db) {
-                //矫正本地数据库
-                //如果数据库打开成功
-                //                    if ([kAppDelegate.dataBase open]) {
-                //如果用户模型在本地数据库表中没有，则插入，否则更新
-                //                        NSString *findSql   = [NSString
-                //                        stringWithFormat:@"SELECT * FROM '%@' WHERE
-                //                        userID = '%@'", @"User", [NSString
-                //                        stringWithFormat:@"%ld", (long)
-                //                        self.infoModel.id]];
-                //                        FMResultSet *result = [kAppDelegate.dataBase
-                //                        executeQuery:findSql];
-                //                        if ([result resultCount]) {
-                //                        //如果查询结果有数据
-                //更新对应数据
-                //                            NSString *updateSql = [NSString
-                //                            stringWithFormat:@"UPDATE '%@' SET name
-                //                            = '%@',remark = '%@',icon = '%@' WHERE
-                //                            userID = '%@'", @"User",
-                //                            self.infoModel.name, self.remark,
-                //                            [NSString stringWithFormat:@"%@%@",
-                //                            IMAGEHEADER, self.infoModel.icon],
-                //                            [NSString stringWithFormat:@"%ld",
-                //                            (long) self.infoModel.id]];
-                //                            BOOL isSuccess      =
-                //                            [kAppDelegate.dataBase
-                //                            executeUpdate:updateSql];
-                //                            if (isSuccess) {
-                //                                MLOG(@"更新数据成功!");
-                //                            } else {
-                //                                MLOG(@"更新数据失败!");
-                //                            }
-                //                        } else { //如果查询结果没有数据
-                //插入相应数据
-                //                            NSString *insertSql = [NSString
-                //                            stringWithFormat:@"INSERT INTO
-                //                            '%@'('%@','%@','%@','%@')
-                //                            VALUES('%@','%@','%@','%@')", @"User",
-                //                            @"userID", @"name", @"remark", @"icon",
-                //                            [NSString stringWithFormat:@"%ld",
-                //                            (long) self.infoModel.id],
-                //                            self.infoModel.name, self.remark,
-                //                            [NSString stringWithFormat:@"%@%@",
-                //                            IMAGEHEADER, self.infoModel.icon]];
-                //                            BOOL isSuccess      =
-                //                            [kAppDelegate.dataBase
-                //                            executeUpdate:insertSql];
-                //                            if (isSuccess) {
-                //                                MLOG(@"插入数据成功!");
-                //                            } else {
-                //                                MLOG(@"插入数据失败!");
-                //                            }
-                //                        }
-                //                        [kAppDelegate.dataBase close];
-                //                    }
-                //                }];
             } else {
                 [MBProgressHUD hideHUD];
                 [MBProgressHUD
@@ -678,21 +626,7 @@ forRowAtIndexPath:(NSIndexPath *)indexPath {
                 [MBProgressHUD hideHUD];
                 UIAlertView *alertView = [[UIAlertView alloc]
                         initWithTitle:@""
-                              message:
-                                  @"："
-                                  @"为"
-                                  @"了"
-                                  @"公"
-                                  @"平"
-                                  @"起"
-                                  @"见"
-                                  @"，你需要成为会员才能观看更多人的"
-                                  @"形"
-                                  @"象"
-                                  @"视"
-                                  @"频"
-                                  @"，"
-                                  @"否者每天只能观看六人的形象视频。"
+                              message:LYPlayAuthVideoMessage1
                              delegate:self
                     cancelButtonTitle:nil
                     otherButtonTitles:@"知道了", nil];
@@ -703,23 +637,7 @@ forRowAtIndexPath:(NSIndexPath *)indexPath {
                 [MBProgressHUD hideHUD];
                 UIAlertView *alertView = [[UIAlertView alloc]
                         initWithTitle:@""
-                              message:
-                                  @"："
-                                  @"为"
-                                  @"了"
-                                  @"公"
-                                  @"平"
-                                  @"起"
-                                  @"见"
-                                  @"，你需要上传自己的形象认证视频才"
-                                  @"能"
-                                  @"观"
-                                  @"看"
-                                  @"更"
-                                  @"多"
-                                  @"人"
-                                  @"的形象视频，否者每天只能观看两人"
-                                  @"的形象视频。"
+                              message:LYPlayAuthVideoMessage2
                              delegate:self
                     cancelButtonTitle:nil
                     otherButtonTitles:@"知道了", nil];
@@ -818,8 +736,11 @@ forRowAtIndexPath:(NSIndexPath *)indexPath {
  *  送礼物界面
  */
 - (void)p_sendGift {
-    [self.navigationController pushViewController:[LYSendGiftViewController new]
-                                         animated:YES];
+    LYSendGiftViewController *vc = [LYSendGiftViewController new];
+    vc.userName                  = self.infoModel.name;
+    vc.avatarImageURL            = self.infoModel.icon;
+    vc.friendID                  = [NSString stringWithFormat:@"%ld", (long) self.infoModel.id];
+    [self.navigationController pushViewController:vc animated:YES];
 }
 
 /**
@@ -843,14 +764,13 @@ forRowAtIndexPath:(NSIndexPath *)indexPath {
             UITableView *tableView = [[UITableView alloc]
                 initWithFrame:CGRectMake(0, 0, SCREEN_WIDTH, SCREEN_HEIGHT)
                         style:UITableViewStyleGrouped];
-            [tableView registerNib:
-                           [UINib nibWithNibName:@"LYDetailDataPhotoTableViewCell"
-                                          bundle:nil]
+            [tableView registerNib:[UINib nibWithNibName:@"LYDetailDataDefalutTableViewCell" bundle:nil] forCellReuseIdentifier:LYDetailDataTableViewDefaultCellIdentity];
+            [tableView registerNib:[UINib nibWithNibName:@"LYDetailDataPhotoTableViewCell" bundle:nil]
                 forCellReuseIdentifier:LYDetailDataPhotoTableViewCellIdentity];
-            //            [tableView registerClass:[UITableViewCell class]
-            //            forCellReuseIdentifier:LYDetailDataTableViewDefaultCellIdentity];
-            tableView.delegate = self;
-            tableView.dataSource = self;
+            tableView.tableHeaderView = [UIView new];
+            tableView.tableFooterView = [UIView new];
+            tableView.delegate        = self;
+            tableView.dataSource      = self;
             [self.view addSubview:tableView];
             tableView;
         });
@@ -867,7 +787,7 @@ forRowAtIndexPath:(NSIndexPath *)indexPath {
             [[[NSBundle mainBundle] loadNibNamed:@"LYDetailDataHeaderView"
                                            owner:self
                                          options:nil] objectAtIndex:0];
-        __weak typeof(self) weakSelf = self;
+        __weak typeof(self) weakSelf             = self;
         _detailDataHeaderView.playAuthVideoBlock = ^{
             [weakSelf p_playAuthVideo];
         };
@@ -890,10 +810,10 @@ forRowAtIndexPath:(NSIndexPath *)indexPath {
             UIView *view =
                 [[UIView alloc] initWithFrame:CGRectMake(0, 0, SCREEN_WIDTH, 30.f)];
 
-            UILabel *label = [[UILabel alloc] init];
-            label.font = [UIFont systemFontOfSize:12.f];
+            UILabel *label  = [[UILabel alloc] init];
+            label.font      = [UIFont systemFontOfSize:12.f];
             label.textColor = RGBCOLOR(213, 213, 213);
-            label.text = @"TA 未经过形象视频认证！";
+            label.text      = @"TA 未经过形象视频认证！";
             [label sizeToFit];
             label.frame = CGRectMake(14.f, (30.f - label.height) / 2.f, label.width,
                                      label.height);

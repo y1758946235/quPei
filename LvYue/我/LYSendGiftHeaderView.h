@@ -8,6 +8,8 @@
 
 #import <UIKit/UIKit.h>
 
-@interface LYSendGiftHeaderView : UIView
+@interface LYSendGiftHeaderView : UICollectionReusableView
+
+- (void)configData:(NSString *)userName avatarImageURL:(NSString *)avatarImageURL accountAmount:(NSString *)accountAmount;
 
 @end

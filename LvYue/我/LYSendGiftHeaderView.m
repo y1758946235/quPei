@@ -8,6 +8,7 @@
 //
 
 #import "LYSendGiftHeaderView.h"
+#import "UIImageView+WebCache.h"
 
 @interface LYSendGiftHeaderView ()
 
@@ -28,6 +29,21 @@
 
     self.getCoinLabel.layer.cornerRadius  = 5.f;
     self.getCoinLabel.layer.masksToBounds = YES;
+}
+
+- (void)configData:(NSString *)userName avatarImageURL:(NSString *)avatarImageURL accountAmount:(NSString *)accountAmount {
+    self.userNameLabel.text = userName;
+    [self.avatarImageView sd_setImageWithURL:[NSURL URLWithString:[NSString stringWithFormat:@"%@%@", IMAGEHEADER, avatarImageURL]] placeholderImage:[UIImage imageNamed:@"logo108"]];
+
+    if (!accountAmount || accountAmount.length == 0) {
+        accountAmount = @"加载中";
+    }
+    NSMutableAttributedString *attrStr = [[NSMutableAttributedString alloc] initWithString:[NSString stringWithFormat:@"余额:%@", accountAmount]];
+    [attrStr addAttribute:NSForegroundColorAttributeName value:RGBCOLOR(17, 198, 173) range:NSMakeRange(3, accountAmount.length)];
+    self.coinLabel.attributedText = [attrStr copy];
+}
+
+- (IBAction)clickGetCoinButton:(id)sender {
 }
 
 @end
