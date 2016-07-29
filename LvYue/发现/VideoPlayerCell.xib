@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="10117" systemVersion="15F34" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="10117" systemVersion="15G31" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES">
     <dependencies>
         <deployment identifier="iOS"/>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="10085"/>
@@ -14,7 +14,7 @@
                 <rect key="frame" x="0.0" y="0.0" width="320" height="382.5"/>
                 <autoresizingMask key="autoresizingMask"/>
                 <subviews>
-                    <imageView contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="头像" translatesAutoresizingMaskIntoConstraints="NO" id="NkH-9U-TaM">
+                    <imageView contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="默认头像" translatesAutoresizingMaskIntoConstraints="NO" id="NkH-9U-TaM">
                         <rect key="frame" x="15" y="15" width="50" height="50"/>
                         <constraints>
                             <constraint firstAttribute="width" constant="50" id="EJu-MY-kSL"/>
@@ -298,8 +298,8 @@
         <image name="vip" width="15" height="15"/>
         <image name="分享" width="60" height="50"/>
         <image name="多边形-9" width="27" height="30"/>
-        <image name="头像" width="120" height="120"/>
         <image name="爱心赞" width="60" height="53"/>
         <image name="男" width="10" height="11"/>
+        <image name="默认头像" width="105" height="105"/>
     </resources>
 </document>

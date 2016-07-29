@@ -752,7 +752,6 @@ static NSString *notice_index;
 
                                     model.textHeight = rect.size.height;
 
-
                                     CGFloat height = 0;
                                     if (model.imageHeight != 25.0) {
                                         height = model.imageHeight + 55 + rect.size.height;
@@ -871,7 +870,6 @@ static NSString *notice_index;
                                     }
 
                                     model.textHeight = rect.size.height;
-
 
                                     CGFloat height = 0;
                                     if (model.imageHeight != 25.0) {
@@ -992,7 +990,8 @@ static NSString *notice_index;
                                 CGFloat height = 0;
                                 if (model.imageHeight != 25.0) {
                                     height = model.imageHeight + 55 + rect.size.height;
-                                } else {
+                                }
+                                else {
                                     height = model.imageHeight + 42 + rect.size.height;
                                 }
                                 model.cellHeight = height;
@@ -1150,11 +1149,11 @@ static NSString *notice_index;
 
 - (UICollectionViewCell *)collectionView:(UICollectionView *)collectionView cellForItemAtIndexPath:(NSIndexPath *)indexPath {
     if (collectionView == _collectionView) {
+        
         if (indexPath.row > 1) {
             HomeCollectionViewCell *cell = [collectionView dequeueReusableCellWithReuseIdentifier:@"newCell" forIndexPath:indexPath];
             cell.delegate                = self;
             homeModel                    = _guideArray[indexPath.row - 2];
-
             [cell fillData:homeModel];
             return cell;
         } else {
@@ -1277,7 +1276,7 @@ static NSString *notice_index;
 - (CGSize)collectionView:(UICollectionView *)collectionView layout:(UICollectionViewLayout *)collectionViewLayout sizeForItemAtIndexPath:(NSIndexPath *)indexPath {
     if (collectionView == _hotCollectionView) {
 
-        return CGSizeMake(SCREEN_WIDTH, [_heightHotArr[indexPath.item] floatValue]);
+        return CGSizeMake(SCREEN_WIDTH , [_heightHotArr[indexPath.item] floatValue]);
     }
 
     return CGSizeMake(SCREEN_WIDTH, SCREEN_WIDTH);
