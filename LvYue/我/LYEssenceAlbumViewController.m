@@ -49,7 +49,7 @@ static NSString *const LYEssenceAlbumCollectionViewCellIdentity =
     if (!_collectionView) {
         _collectionView = ({
             UICollectionView *collectionView = [[UICollectionView alloc]
-                       initWithFrame:CGRectMake(0, 0, SCREEN_WIDTH, SCREEN_HEIGHT - NAVIGATION_BAR_HEIGHT)
+                       initWithFrame:CGRectMake(0, NAVIGATION_BAR_HEIGHT + STATUS_BAR_HEIGHT, SCREEN_WIDTH, SCREEN_HEIGHT - NAVIGATION_BAR_HEIGHT - STATUS_BAR_HEIGHT)
                 collectionViewLayout:self.collectionViewLayout];
             collectionView.backgroundColor      = [UIColor whiteColor];
             collectionView.dataSource           = self;
@@ -141,13 +141,6 @@ static NSString *const LYEssenceAlbumCollectionViewCellIdentity =
                             LYEssenceAlbumCollectionViewCellIdentity
                                                   forIndexPath:indexPath];
     cell.imageViewM.image = self.imageArray[indexPath.row];
-
-    //    NSDictionary *dic = self.compressImageArray[indexPath.item];
-    //    NSURL *url = [NSURL URLWithString:[NSString
-    //    stringWithFormat:@"%@%@",IMAGEHEADER,dic[@"img_name"]]];
-    //    [cell.imageViewM sd_setImageWithURL:url placeholderImage:[UIImage
-    //    imageNamed:@"PlaceImage"] options:SDWebImageRetryFailed];
-
     return cell;
 }
 

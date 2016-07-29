@@ -6,11 +6,11 @@
 //  Copyright (c) 2015年 vison. All rights reserved.
 //
 
-#import "DetailDataViewController.h"
 #import "FriendsCircleCell.h"
 #import "FriendsCircleMessage.h"
 #import "FriendsCirleViewController.h"
 #import "FriendsMessageViewController.h"
+#import "LYDetailDataViewController.h"
 #import "PublishMessageViewController.h"
 
 #import "AFNetworking.h"
@@ -111,17 +111,17 @@
 
 
     //初始化
-    _messageArray = [NSMutableArray array];
-    _commentList = [NSMutableArray array];
-    _praiseList = [NSMutableArray array];
-    _noticeList = [NSMutableArray array];
+    _messageArray  = [NSMutableArray array];
+    _commentList   = [NSMutableArray array];
+    _praiseList    = [NSMutableArray array];
+    _noticeList    = [NSMutableArray array];
     _coverImageUrl = nil;
 
-    _tableView = [[UITableView alloc] initWithFrame:CGRectMake(0, 0, self.view.frame.size.width, self.view.frame.size.height) style:UITableViewStyleGrouped];
+    _tableView                 = [[UITableView alloc] initWithFrame:CGRectMake(0, 0, self.view.frame.size.width, self.view.frame.size.height) style:UITableViewStyleGrouped];
     _tableView.backgroundColor = [UIColor whiteColor];
-    _tableView.delegate = self;
-    _tableView.dataSource = self;
-    _tableView.separatorStyle = UITableViewCellSeparatorStyleNone;
+    _tableView.delegate        = self;
+    _tableView.dataSource      = self;
+    _tableView.separatorStyle  = UITableViewCellSeparatorStyleNone;
     [self.view addSubview:_tableView];
 
     [self setStatus];
@@ -135,10 +135,10 @@
 - (void)setStatus {
     //初始化头部segment
     UISegmentedControl *segmentedControl = [[UISegmentedControl alloc] initWithItems:nil];
-    segmentedControl.tintColor = [UIColor whiteColor];
+    segmentedControl.tintColor           = [UIColor whiteColor];
     [segmentedControl insertSegmentWithTitle:@"全部" atIndex:0 animated:YES];
     [segmentedControl insertSegmentWithTitle:@"关注" atIndex:1 animated:YES];
-    self.navigationItem.titleView = segmentedControl;
+    self.navigationItem.titleView         = segmentedControl;
     segmentedControl.selectedSegmentIndex = 0;
     [segmentedControl addTarget:self action:@selector(controlPressed:) forControlEvents:UIControlEventValueChanged];
 
@@ -146,14 +146,14 @@
         self.userId = [LYUserService sharedInstance].userID;
         //self.userId = [NSString stringWithFormat:@""];
         self.isFriendsCircle = YES;
-        self.title = @"朋友圈";
-        self.personName = [LYUserService sharedInstance].userDetail.userName;
+        self.title           = @"朋友圈";
+        self.personName      = [LYUserService sharedInstance].userDetail.userName;
     }
 
     if (_isFriendsCircle) {
         [self setRightButton:[UIImage imageNamed:@"more"] title:@"" target:self action:@selector(addClick) rect:CGRectMake(0, 0, 43, 43)];
     } else {
-        self.title = @"Ta的动态";
+        self.title                                    = @"Ta的动态";
         self.navigationController.navigationBarHidden = NO;
         if ([self.userId isEqualToString:[LYUserService sharedInstance].userID]) {
             [self setRightButton:nil title:@"最近来访" target:self action:@selector(whoCome) rect:CGRectMake(0, 0, 80, 20)];
@@ -170,9 +170,9 @@
 
     /* 添加代码,处理值的变化 */
     if (selectedIndex == 0) { //全部
-        MLOG(@"%ld",(long)selectedIndex);
+        MLOG(@"%ld", (long) selectedIndex);
     } else { //关注
-        MLOG(@"%ld",(long)selectedIndex);
+        MLOG(@"%ld", (long) selectedIndex);
     }
 }
 
@@ -455,7 +455,7 @@
             [MBProgressHUD hideHUD];
 
             //移除数据源
-            NSInteger noticeIndex = [_deleteCommentDict[@"noticeIndex"] integerValue];
+            NSInteger noticeIndex  = [_deleteCommentDict[@"noticeIndex"] integerValue];
             NSInteger commentIndex = [_deleteCommentDict[@"commentIndex"] integerValue];
             [_commentList[noticeIndex] removeObjectAtIndex:commentIndex];
 
@@ -487,31 +487,31 @@
             [self.view addSubview:_clearBtn];
         }
 
-        _inputView = [[UIView alloc] initWithFrame:CGRectMake(0, SCREEN_HEIGHT - 64, SCREEN_WIDTH, 40 + kSingleContentHeight)];
+        _inputView                   = [[UIView alloc] initWithFrame:CGRectMake(0, SCREEN_HEIGHT - 64, SCREEN_WIDTH, 40 + kSingleContentHeight)];
         _inputView.layer.borderColor = TABLEVIEW_BACKGROUNDCOLOR.CGColor;
         _inputView.layer.borderWidth = 1;
-        _inputView.backgroundColor = [UIColor whiteColor];
-        _inputView.alpha = 0.95;
+        _inputView.backgroundColor   = [UIColor whiteColor];
+        _inputView.alpha             = 0.95;
         [self.view addSubview:_inputView];
 
         //输入框
-        _textView = [[UITextView alloc] initWithFrame:CGRectMake(Kinterval, Kinterval / 2, SCREEN_WIDTH - Kinterval - 60, 20 + kSingleContentHeight)];
-        _textView.backgroundColor = [UIColor clearColor];
+        _textView                    = [[UITextView alloc] initWithFrame:CGRectMake(Kinterval, Kinterval / 2, SCREEN_WIDTH - Kinterval - 60, 20 + kSingleContentHeight)];
+        _textView.backgroundColor    = [UIColor clearColor];
         _textView.layer.cornerRadius = 5.0;
-        _textView.font = [UIFont systemFontOfSize:15];
-        _textView.layer.borderColor = TABLEVIEW_BACKGROUNDCOLOR.CGColor;
-        _textView.layer.borderWidth = 1;
-        _textView.delegate = self;
-        _textView.scrollEnabled = NO;
+        _textView.font               = [UIFont systemFontOfSize:15];
+        _textView.layer.borderColor  = TABLEVIEW_BACKGROUNDCOLOR.CGColor;
+        _textView.layer.borderWidth  = 1;
+        _textView.delegate           = self;
+        _textView.scrollEnabled      = NO;
         [_inputView addSubview:_textView];
 
         //PlaceHolder Label
-        _placeHolderLabel = [[UILabel alloc] initWithFrame:CGRectMake(15, 0, _textView.frame.size.width - 20, 20 + kSingleContentHeight)];
-        _placeHolderLabel.enabled = NO;
+        _placeHolderLabel                 = [[UILabel alloc] initWithFrame:CGRectMake(15, 0, _textView.frame.size.width - 20, 20 + kSingleContentHeight)];
+        _placeHolderLabel.enabled         = NO;
         _placeHolderLabel.backgroundColor = [UIColor clearColor];
-        _placeHolderLabel.font = [UIFont systemFontOfSize:15.0];
-        _placeHolderLabel.textColor = [UIColor lightGrayColor];
-        _placeHolderLabel.textAlignment = NSTextAlignmentLeft;
+        _placeHolderLabel.font            = [UIFont systemFontOfSize:15.0];
+        _placeHolderLabel.textColor       = [UIColor lightGrayColor];
+        _placeHolderLabel.textAlignment   = NSTextAlignmentLeft;
         [_textView addSubview:_placeHolderLabel];
 
         //发送
@@ -527,8 +527,8 @@
     //区别是回复而非评论
     _textView.tag = 100000;
 
-    _reply = notification.userInfo[@"reply"];
-    _noticeId = notification.userInfo[@"noticeId"];
+    _reply     = notification.userInfo[@"reply"];
+    _noticeId  = notification.userInfo[@"noticeId"];
     _replyName = notification.userInfo[@"replyName"];
     _commenter = _noticeList[[notification.userInfo[@"index"] integerValue]][@"user_id"];
 
@@ -538,7 +538,7 @@
     //获得第一响应者
     [_textView becomeFirstResponder];
     _placeHolderLabel.text = [NSString stringWithFormat:@"回复%@:", _replyName];
-    _clearBtn.hidden = NO;
+    _clearBtn.hidden       = NO;
 }
 
 //点击评论(添加评论栏)
@@ -560,30 +560,30 @@
             [self.view addSubview:_clearBtn];
         }
 
-        _inputView = [[UIView alloc] initWithFrame:CGRectMake(0, SCREEN_HEIGHT - 64, SCREEN_WIDTH, 40 + kSingleContentHeight)];
+        _inputView                   = [[UIView alloc] initWithFrame:CGRectMake(0, SCREEN_HEIGHT - 64, SCREEN_WIDTH, 40 + kSingleContentHeight)];
         _inputView.layer.borderColor = TABLEVIEW_BACKGROUNDCOLOR.CGColor;
         _inputView.layer.borderWidth = 1;
-        _inputView.backgroundColor = [UIColor whiteColor];
-        _inputView.alpha = 0.95;
+        _inputView.backgroundColor   = [UIColor whiteColor];
+        _inputView.alpha             = 0.95;
 
         //输入框
         _textView = [[UITextView alloc] initWithFrame:CGRectMake(Kinterval, Kinterval / 2, SCREEN_WIDTH - Kinterval - 60, 20 + kSingleContentHeight)];
         [_textView setBackgroundColor:[UIColor clearColor]];
         _textView.layer.cornerRadius = 5.0;
-        _textView.font = [UIFont systemFontOfSize:15];
-        _textView.layer.borderColor = TABLEVIEW_BACKGROUNDCOLOR.CGColor;
-        _textView.layer.borderWidth = 1;
-        _textView.delegate = self;
-        _textView.scrollEnabled = NO;
+        _textView.font               = [UIFont systemFontOfSize:15];
+        _textView.layer.borderColor  = TABLEVIEW_BACKGROUNDCOLOR.CGColor;
+        _textView.layer.borderWidth  = 1;
+        _textView.delegate           = self;
+        _textView.scrollEnabled      = NO;
         [_inputView addSubview:_textView];
 
         //PlaceHolder Label
-        _placeHolderLabel = [[UILabel alloc] initWithFrame:CGRectMake(15, 0, _textView.frame.size.width - 20, 20 + kSingleContentHeight)];
-        _placeHolderLabel.enabled = NO;
+        _placeHolderLabel                 = [[UILabel alloc] initWithFrame:CGRectMake(15, 0, _textView.frame.size.width - 20, 20 + kSingleContentHeight)];
+        _placeHolderLabel.enabled         = NO;
         _placeHolderLabel.backgroundColor = [UIColor clearColor];
-        _placeHolderLabel.font = [UIFont systemFontOfSize:15.0];
-        _placeHolderLabel.textColor = [UIColor lightGrayColor];
-        _placeHolderLabel.textAlignment = NSTextAlignmentLeft;
+        _placeHolderLabel.font            = [UIFont systemFontOfSize:15.0];
+        _placeHolderLabel.textColor       = [UIColor lightGrayColor];
+        _placeHolderLabel.textAlignment   = NSTextAlignmentLeft;
         [_textView addSubview:_placeHolderLabel];
 
         //发送
@@ -606,7 +606,7 @@
     //获得第一响应者
     [_textView becomeFirstResponder];
     _placeHolderLabel.text = @"写点儿评论吧";
-    _clearBtn.hidden = NO;
+    _clearBtn.hidden       = NO;
     //    }
 }
 
@@ -637,7 +637,7 @@
                         [self hiddenAddView];
                         //2.手动加入数据源
                         NSString *comment_id = responseObject[@"data"][@"id"];
-                        NSDictionary *dict = @{ @"comment_id": comment_id,
+                        NSDictionary *dict   = @{ @"comment_id": comment_id,
                                                 @"comment_user": [NSString stringWithFormat:@"%@", [LYUserService sharedInstance].userDetail.userName],
                                                 @"comment_user_id": [NSString stringWithFormat:@"%@", [LYUserService sharedInstance].userID],
                                                 @"detail": detailStr,
@@ -689,7 +689,7 @@
                         [self hiddenAddView];
                         //2.手动加入数据源
                         NSString *comment_id = responseObject[@"data"][@"id"];
-                        NSDictionary *dict = @{ @"comment_id": comment_id,
+                        NSDictionary *dict   = @{ @"comment_id": comment_id,
                                                 @"comment_user": [NSString stringWithFormat:@"%@", [LYUserService sharedInstance].userDetail.userName],
                                                 @"comment_user_id": [NSString stringWithFormat:@"%@", [LYUserService sharedInstance].userID],
                                                 @"detail": detailStr,
@@ -743,12 +743,12 @@
                     [self.view addSubview:_clearBtn];
                 }
 
-                _addView = [[UIView alloc] initWithFrame:CGRectMake(SCREEN_WIDTH - 130, 10, 120, 88)];
+                _addView                    = [[UIView alloc] initWithFrame:CGRectMake(SCREEN_WIDTH - 130, 10, 120, 88)];
                 _addView.layer.cornerRadius = 5.0;
-                _addView.layer.shadowColor = [UIColor blackColor].CGColor;
-                _addView.layer.borderWidth = 1;
-                _addView.layer.borderColor = TABLEVIEW_BACKGROUNDCOLOR.CGColor;
-                _addView.backgroundColor = [UIColor whiteColor];
+                _addView.layer.shadowColor  = [UIColor blackColor].CGColor;
+                _addView.layer.borderWidth  = 1;
+                _addView.layer.borderColor  = TABLEVIEW_BACKGROUNDCOLOR.CGColor;
+                _addView.backgroundColor    = [UIColor whiteColor];
                 [self.view addSubview:_addView];
 
                 //发布动态
@@ -757,14 +757,14 @@
                 [_addView addSubview:publishBtn];
 
                 UIImageView *publishImageView = [[UIImageView alloc] initWithFrame:CGRectMake((44 - 20) / 2, (44 - 20) / 2, 20, 20)];
-                publishImageView.image = [UIImage imageNamed:@"动态"];
-                publishImageView.contentMode = UIViewContentModeScaleAspectFit;
+                publishImageView.image        = [UIImage imageNamed:@"动态"];
+                publishImageView.contentMode  = UIViewContentModeScaleAspectFit;
                 [publishBtn addSubview:publishImageView];
 
-                UILabel *publishLabel = [[UILabel alloc] initWithFrame:CGRectMake(CGRectGetMaxX(publishImageView.frame), 0, _addView.frame.size.width - CGRectGetMaxX(publishImageView.frame), 44)];
+                UILabel *publishLabel      = [[UILabel alloc] initWithFrame:CGRectMake(CGRectGetMaxX(publishImageView.frame), 0, _addView.frame.size.width - CGRectGetMaxX(publishImageView.frame), 44)];
                 publishLabel.textAlignment = NSTextAlignmentCenter;
-                publishLabel.font = [UIFont systemFontOfSize:17];
-                publishLabel.text = @"发布动态";
+                publishLabel.font          = [UIFont systemFontOfSize:17];
+                publishLabel.text          = @"发布动态";
                 [publishBtn addSubview:publishLabel];
 
                 //消息
@@ -773,25 +773,25 @@
                 [_addView addSubview:msgBtn];
 
                 UIImageView *msgImageView = [[UIImageView alloc] initWithFrame:CGRectMake((44 - 20) / 2, (44 - 20) / 2, 20, 20)];
-                msgImageView.image = [UIImage imageNamed:@"对话2"];
-                msgImageView.contentMode = UIViewContentModeScaleAspectFit;
+                msgImageView.image        = [UIImage imageNamed:@"对话2"];
+                msgImageView.contentMode  = UIViewContentModeScaleAspectFit;
                 [msgBtn addSubview:msgImageView];
 
-                UILabel *msgLabel = [[UILabel alloc] initWithFrame:CGRectMake(CGRectGetMaxX(msgImageView.frame) - 5, 0, _addView.frame.size.width - CGRectGetMaxX(msgImageView.frame), 44)];
+                UILabel *msgLabel      = [[UILabel alloc] initWithFrame:CGRectMake(CGRectGetMaxX(msgImageView.frame) - 5, 0, _addView.frame.size.width - CGRectGetMaxX(msgImageView.frame), 44)];
                 msgLabel.textAlignment = NSTextAlignmentCenter;
-                msgLabel.font = [UIFont systemFontOfSize:17];
-                msgLabel.text = @"消息";
+                msgLabel.font          = [UIFont systemFontOfSize:17];
+                msgLabel.text          = @"消息";
                 [msgBtn addSubview:msgLabel];
 
                 _newMsg = [[UIButton alloc] initWithFrame:CGRectMake(95, (44 - 18) / 2, 18, 18)];
                 [_newMsg setBackgroundImage:[UIImage imageNamed:@"circle"] forState:UIControlStateNormal];
-                _newMsg.hidden = YES;
+                _newMsg.hidden          = YES;
                 _newMsg.titleLabel.font = [UIFont systemFontOfSize:14];
                 [msgBtn addSubview:_newMsg];
 
             } else {
 
-                _addView.hidden = !_addView.hidden;
+                _addView.hidden  = !_addView.hidden;
                 _clearBtn.hidden = !_clearBtn.hidden;
             }
         }
@@ -806,14 +806,14 @@
 
         } else {
             AFHTTPRequestOperationManager *manager = [AFHTTPRequestOperationManager manager];
-            NSString *urlStr = [NSString stringWithFormat:@"%@/mobile/notice/iosFindNumByUser", REQUESTHEADER];
+            NSString *urlStr                       = [NSString stringWithFormat:@"%@/mobile/notice/iosFindNumByUser", REQUESTHEADER];
             [manager POST:urlStr parameters:@{ @"userId": [NSString stringWithFormat:@"%@", [LYUserService sharedInstance].userID] } success:^(AFHTTPRequestOperation *operation, id responseObject) {
                 NSLog(@"新消息数量:%@", responseObject);
 
                 if ([[NSString stringWithFormat:@"%@", responseObject[@"code"]] isEqualToString:@"200"]) {
 
                     _newMsgNumber = [responseObject[@"data"][@"infoNum"] integerValue];
-                    _newMsgIcon = [NSString stringWithFormat:@"%@%@", IMAGEHEADER, responseObject[@"data"][@"icon"]];
+                    _newMsgIcon   = [NSString stringWithFormat:@"%@%@", IMAGEHEADER, responseObject[@"data"][@"icon"]];
 
                     //如果大于0，则提示新消息
                     if (_newMsgNumber > 0) {
@@ -852,7 +852,7 @@
     } else {
         if ([[LYUserService sharedInstance].userDetail.isVip isEqualToString:@"0"]) {
             UIAlertView *alert = [[UIAlertView alloc] initWithTitle:nil message:@"您需要开通会员才能发消息" delegate:self cancelButtonTitle:@"好的" otherButtonTitles:@"去开通", nil];
-            alert.delegate = self;
+            alert.delegate     = self;
             [alert show];
 
         } else {
@@ -871,7 +871,7 @@
     _textView.text = @"";
     [_textView resignFirstResponder];
 
-    _addView.hidden = YES;
+    _addView.hidden  = YES;
     _clearBtn.hidden = YES;
 }
 
@@ -933,12 +933,12 @@
         cell = (FriendsCircleCell *) [[sender superview] superview];
     }
     NSIndexPath *indexPath = [self.tableView indexPathForCell:cell];
-    NSInteger row = indexPath.row;
+    NSInteger row          = indexPath.row;
 
     if (sender.selected == NO) {
         //按钮变红，数量+1,tag+1
         AFHTTPRequestOperationManager *manager = [AFHTTPRequestOperationManager manager];
-        NSString *urlStr = [NSString stringWithFormat:@"%@/mobile/notice/praise", REQUESTHEADER];
+        NSString *urlStr                       = [NSString stringWithFormat:@"%@/mobile/notice/praise", REQUESTHEADER];
         [manager POST:urlStr parameters:@{ @"noticeId": _noticeList[row][@"id"],
                                            @"praiser": [NSString stringWithFormat:@"%@", [LYUserService sharedInstance].userID] }
             success:^(AFHTTPRequestOperation *operation, id responseObject) {
@@ -947,14 +947,14 @@
 
                 if ([[NSString stringWithFormat:@"%@", responseObject[@"code"]] isEqualToString:@"200"]) {
 
-                    sender.selected = YES;
-                    NSInteger number = [cell.praiseNum.text integerValue];
+                    sender.selected     = YES;
+                    NSInteger number    = [cell.praiseNum.text integerValue];
                     cell.praiseNum.text = [NSString stringWithFormat:@"%d", (int) number + 1];
                     [sender setImage:[UIImage imageNamed:@"Hearts red"] forState:UIControlStateNormal];
 
                     //编辑新的点赞 数据字典。并手动添入数据源
                     NSString *praise_id = responseObject[@"data"][@"id"];
-                    NSDictionary *dict = @{ @"notice_id": _noticeList[row][@"id"],
+                    NSDictionary *dict  = @{ @"notice_id": _noticeList[row][@"id"],
                                             @"praise_id": praise_id,
                                             @"praise_user": [NSString stringWithFormat:@"%@", [LYUserService sharedInstance].userDetail.userName],
                                             @"praise_user_id": [NSString stringWithFormat:@"%@", [LYUserService sharedInstance].userID] };
@@ -977,21 +977,21 @@
         for (NSDictionary *dict in _praiseList[row]) {
             if ([[NSString stringWithFormat:@"%@", dict[@"praise_user_id"]] isEqualToString:[NSString stringWithFormat:@"%@", [LYUserService sharedInstance].userID]]) {
                 praise_id = dict[@"praise_id"];
-                deltDict = dict;
+                deltDict  = dict;
                 break;
             }
         }
         //按钮变黑，数量-1,tag - 1
         AFHTTPRequestOperationManager *manager = [AFHTTPRequestOperationManager manager];
-        NSString *urlStr = [NSString stringWithFormat:@"%@/mobile/notice/cancelPraise", REQUESTHEADER];
+        NSString *urlStr                       = [NSString stringWithFormat:@"%@/mobile/notice/cancelPraise", REQUESTHEADER];
         [manager POST:urlStr parameters:@{ @"praiseId": praise_id } success:^(AFHTTPRequestOperation *operation, id responseObject) {
             NSLog(@"取消点赞:%@", responseObject);
             [MBProgressHUD hideHUD];
 
             if ([[NSString stringWithFormat:@"%@", responseObject[@"code"]] isEqualToString:@"200"]) {
 
-                sender.selected = NO;
-                NSInteger number = [cell.praiseNum.text integerValue];
+                sender.selected     = NO;
+                NSInteger number    = [cell.praiseNum.text integerValue];
                 cell.praiseNum.text = [NSString stringWithFormat:@"%d", (int) number - 1];
                 [sender setImage:[UIImage imageNamed:@"Hearts gray"] forState:UIControlStateNormal];
 
@@ -1012,11 +1012,9 @@
 
 //点击头像
 - (void)tapHeadImg:(UITapGestureRecognizer *)tap {
-
-    NSInteger userId = [_noticeList[tap.view.tag][@"user_id"] integerValue];
-    DetailDataViewController *detailDataViewController = [[DetailDataViewController alloc] init];
-    detailDataViewController.friendId = userId;
-    [self.navigationController pushViewController:detailDataViewController animated:YES];
+    LYDetailDataViewController *vc = [[LYDetailDataViewController alloc] init];
+    vc.userId                      = _noticeList[tap.view.tag][@"user_id"];
+    [self.navigationController pushViewController:vc animated:YES];
 }
 
 
@@ -1040,7 +1038,7 @@
     }
 
     //给头像添加手势
-    cell.headImg.tag = indexPath.row;
+    cell.headImg.tag                = indexPath.row;
     UITapGestureRecognizer *headTap = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(tapHeadImg:)];
     [cell.headImg addGestureRecognizer:headTap];
 
@@ -1054,7 +1052,7 @@
          *  @brief  reason: '*** -[__NSArrayM objectAtIndex:]: index 32 beyond bounds [0 .. 19]'
          */
         FriendsCircleMessage *message = _messageArray[indexPath.row];
-        cell.separatorLine.frame = CGRectMake(0, [message returnCellHeight] - 1, SCREEN_WIDTH, 1);
+        cell.separatorLine.frame      = CGRectMake(0, [message returnCellHeight] - 1, SCREEN_WIDTH, 1);
 
         //保持最新的评论数据 和  点赞数据
         [message setCommentList:_commentList[indexPath.row]];
@@ -1110,10 +1108,10 @@
 
     if (_newMsgNumber > 0) {
         _newMsgBtn.hidden = NO;
-        headerView.frame = CGRectMake(0, 0, SCREEN_WIDTH, SCREEN_WIDTH * 0.5 + 70);
+        headerView.frame  = CGRectMake(0, 0, SCREEN_WIDTH, SCREEN_WIDTH * 0.5 + 70);
         return SCREEN_WIDTH * 0.5 + 70;
     } else {
-        headerView.frame = CGRectMake(0, 0, SCREEN_WIDTH, SCREEN_WIDTH * 0.5 + 30);
+        headerView.frame  = CGRectMake(0, 0, SCREEN_WIDTH, SCREEN_WIDTH * 0.5 + 30);
         _newMsgBtn.hidden = YES;
         return SCREEN_WIDTH * 0.5 + 30;
     }
@@ -1127,7 +1125,7 @@
 - (UIView *)tableView:(UITableView *)tableView viewForHeaderInSection:(NSInteger)section {
 
     if (!headerView) {
-        headerView = [[UIView alloc] init];
+        headerView                 = [[UIView alloc] init];
         headerView.backgroundColor = [UIColor whiteColor];
 
         //大图片
@@ -1144,8 +1142,8 @@
         [headerView addSubview:bgImageView];
 
         //自己的头像
-        myIcon = [[UIImageView alloc] initWithFrame:CGRectMake(SCREEN_WIDTH - 80, SCREEN_WIDTH * 0.5 - 35, 70, 70)];
-        myIcon.layer.cornerRadius = myIcon.frame.size.width / 2;
+        myIcon                     = [[UIImageView alloc] initWithFrame:CGRectMake(SCREEN_WIDTH - 80, SCREEN_WIDTH * 0.5 - 35, 70, 70)];
+        myIcon.layer.cornerRadius  = myIcon.frame.size.width / 2;
         myIcon.layer.masksToBounds = YES;
         if (self.myInfoModel.icon) {
             [myIcon sd_setImageWithURL:[NSURL URLWithString:[NSString stringWithFormat:@"%@%@", IMAGEHEADER, self.myInfoModel.icon]] placeholderImage:[UIImage imageNamed:@"默认头像"]];
@@ -1168,7 +1166,7 @@
                 }
 
                 myName.textAlignment = NSTextAlignmentRight;
-                myName.textColor = [UIColor whiteColor];
+                myName.textColor     = [UIColor whiteColor];
                 [myName setFont:[UIFont fontWithName:@"Helvetica-Bold" size:15]];
                 [headerView addSubview:myName];
             }
@@ -1185,10 +1183,10 @@
 
     //消息提示
     if (!_newMsgBtn) {
-        _newMsgBtn = [[UIButton alloc] initWithFrame:CGRectMake((SCREEN_WIDTH - 140) / 2, CGRectGetMaxY(bgImageView.frame) + 30, 140, 35)];
-        _newMsgBtn.backgroundColor = UIColorWithRGBA(58, 58, 58, 1);
+        _newMsgBtn                    = [[UIButton alloc] initWithFrame:CGRectMake((SCREEN_WIDTH - 140) / 2, CGRectGetMaxY(bgImageView.frame) + 30, 140, 35)];
+        _newMsgBtn.backgroundColor    = UIColorWithRGBA(58, 58, 58, 1);
         _newMsgBtn.layer.cornerRadius = 5.0;
-        _newMsgBtn.hidden = YES;
+        _newMsgBtn.hidden             = YES;
         [_newMsgBtn addTarget:self action:@selector(pushMessageList) forControlEvents:UIControlEventTouchUpInside];
         [headerView addSubview:_newMsgBtn];
     }
@@ -1205,11 +1203,11 @@
 
     //消息提示文字
     if (!newMsgTitle) {
-        newMsgTitle = [[UILabel alloc] initWithFrame:CGRectMake(30, 0, _newMsgBtn.frame.size.width - 30, _newMsgBtn.frame.size.height)];
-        newMsgTitle.text = [NSString stringWithFormat:@"%ld条新消息", (long) _newMsgNumber];
+        newMsgTitle               = [[UILabel alloc] initWithFrame:CGRectMake(30, 0, _newMsgBtn.frame.size.width - 30, _newMsgBtn.frame.size.height)];
+        newMsgTitle.text          = [NSString stringWithFormat:@"%ld条新消息", (long) _newMsgNumber];
         newMsgTitle.textAlignment = NSTextAlignmentCenter;
-        newMsgTitle.textColor = [UIColor whiteColor];
-        newMsgTitle.font = [UIFont systemFontOfSize:13];
+        newMsgTitle.textColor     = [UIColor whiteColor];
+        newMsgTitle.font          = [UIFont systemFontOfSize:13];
         [_newMsgBtn addSubview:newMsgTitle];
     } else {
         newMsgTitle.text = [NSString stringWithFormat:@"%ld条新消息", (long) _newMsgNumber];
@@ -1234,11 +1232,11 @@
     if (_isFriendsCircle) { //如果是朋友圈
         [[LYUserService sharedInstance] fetchLoginStateWithCompeletionBlock:^(UserLoginStateType type) {
             if (type == UserLoginStateTypeWaitToLogin) {
-                myIcon = [[UIImageView alloc] initWithFrame:CGRectMake(SCREEN_WIDTH - 80, SCREEN_WIDTH * 0.5 - 35, 70, 70)];
+                myIcon       = [[UIImageView alloc] initWithFrame:CGRectMake(SCREEN_WIDTH - 80, SCREEN_WIDTH * 0.5 - 35, 70, 70)];
                 myIcon.image = [UIImage imageNamed:@"默认头像"];
 
-                myName = [[UILabel alloc] initWithFrame:CGRectMake(CGRectGetMinX(myIcon.frame) - 100, kMainScreenWidth * 0.5 - 25, 100, 20)];
-                myName.text = @"用户_游客";
+                myName           = [[UILabel alloc] initWithFrame:CGRectMake(CGRectGetMinX(myIcon.frame) - 100, kMainScreenWidth * 0.5 - 25, 100, 20)];
+                myName.text      = @"用户_游客";
                 myName.textColor = [UIColor whiteColor];
                 //myName.backgroundColor =[UIColor redColor];
                 //[self.tableView addSubview:myName];
@@ -1253,10 +1251,10 @@
                     MLOG(@"获取用户资料 : %@", successResponse);
                     [MBProgressHUD hideAllHUDsForView:self.view animated:YES];
                     if ([[NSString stringWithFormat:@"%@", successResponse[@"code"]] isEqualToString:@"200"]) {
-                        NSDictionary *infoDict = successResponse[@"data"][@"user"];
-                        self.myInfoModel = [[MyInfoModel alloc] initWithDict:infoDict];
+                        NSDictionary *infoDict       = successResponse[@"data"][@"user"];
+                        self.myInfoModel             = [[MyInfoModel alloc] initWithDict:infoDict];
                         NSDictionary *detailInfoDict = successResponse[@"data"][@"userDetail"];
-                        self.myDetailModel = [[MyDetailInfoModel alloc] initWithDict:detailInfoDict];
+                        self.myDetailModel           = [[MyDetailInfoModel alloc] initWithDict:detailInfoDict];
                         [myIcon sd_setImageWithURL:[NSURL URLWithString:[NSString stringWithFormat:@"%@%@", IMAGEHEADER, self.myInfoModel.icon]]];
                         myName.text = self.myInfoModel.name;
                         CGRect rect = [myName.text boundingRectWithSize:CGSizeMake(SCREEN_WIDTH - 100, 20) options:(NSStringDrawingUsesLineFragmentOrigin | NSStringDrawingUsesFontLeading) attributes:@{ NSFontAttributeName: myName.font } context:nil];
@@ -1289,10 +1287,10 @@
             MLOG(@"结果:%@", successResponse);
             [MBProgressHUD hideAllHUDsForView:self.view animated:YES];
             if ([[NSString stringWithFormat:@"%@", successResponse[@"code"]] isEqualToString:@"200"]) {
-                NSDictionary *infoDict = successResponse[@"data"][@"user"];
-                self.myInfoModel = [[MyInfoModel alloc] initWithDict:infoDict];
+                NSDictionary *infoDict       = successResponse[@"data"][@"user"];
+                self.myInfoModel             = [[MyInfoModel alloc] initWithDict:infoDict];
                 NSDictionary *detailInfoDict = successResponse[@"data"][@"userDetail"];
-                self.myDetailModel = [[MyDetailInfoModel alloc] initWithDict:detailInfoDict];
+                self.myDetailModel           = [[MyDetailInfoModel alloc] initWithDict:detailInfoDict];
                 [myIcon sd_setImageWithURL:[NSURL URLWithString:[NSString stringWithFormat:@"%@%@", IMAGEHEADER, self.myInfoModel.icon]]];
                 NSString *urlString = @"";
                 if (successResponse[@"data"][@"user"][@"circle_cover"] && (![successResponse[@"data"][@"user"][@"circle_cover"] isEqualToString:@""]) && (![successResponse[@"data"][@"user"][@"circle_cover"] isEqualToString:@"<null>"])) {
@@ -1364,18 +1362,18 @@
         if (0 == buttonIndex) {                             //拍照
             if ([UIImagePickerController canTakePicture]) { //检查设备是否可以拍照
                 UIImagePickerController *imagePickerController = [[UIImagePickerController alloc] init];
-                imagePickerController.sourceType = UIImagePickerControllerSourceTypeCamera;
-                imagePickerController.mediaTypes = [[NSArray alloc] initWithObjects:(NSString *) kUTTypeImage, nil];
-                imagePickerController.allowsEditing = YES;
-                imagePickerController.delegate = self;
+                imagePickerController.sourceType               = UIImagePickerControllerSourceTypeCamera;
+                imagePickerController.mediaTypes               = [[NSArray alloc] initWithObjects:(NSString *) kUTTypeImage, nil];
+                imagePickerController.allowsEditing            = YES;
+                imagePickerController.delegate                 = self;
                 [self presentViewController:imagePickerController animated:YES completion:nil];
             }
         } else if (1 == buttonIndex) { //手机相册
             UIImagePickerController *imagePickerController = [[UIImagePickerController alloc] init];
-            imagePickerController.sourceType = UIImagePickerControllerSourceTypePhotoLibrary;
-            imagePickerController.mediaTypes = [[NSArray alloc] initWithObjects:(NSString *) kUTTypeImage, nil];
-            imagePickerController.allowsEditing = YES;
-            imagePickerController.delegate = self;
+            imagePickerController.sourceType               = UIImagePickerControllerSourceTypePhotoLibrary;
+            imagePickerController.mediaTypes               = [[NSArray alloc] initWithObjects:(NSString *) kUTTypeImage, nil];
+            imagePickerController.allowsEditing            = YES;
+            imagePickerController.delegate                 = self;
             [self presentViewController:imagePickerController animated:YES completion:nil];
         } else {
             //不做操作
@@ -1409,23 +1407,23 @@
         }
     } else {
         _placeHolderLabel.text = @"";
-        NSString *content = textView.text;
-        CGSize contentSize = [content sizeWithFont:[UIFont systemFontOfSize:15.0] constrainedToSize:CGSizeMake(textView.frame.size.width - 20, 1000) lineBreakMode:NSLineBreakByWordWrapping];
-        CGFloat contentHeight = contentSize.height;
+        NSString *content      = textView.text;
+        CGSize contentSize     = [content sizeWithFont:[UIFont systemFontOfSize:15.0] constrainedToSize:CGSizeMake(textView.frame.size.width - 20, 1000) lineBreakMode:NSLineBreakByWordWrapping];
+        CGFloat contentHeight  = contentSize.height;
         //如果文本内容超过textView的高度
         if (20 + contentHeight > textView.frame.size.height && contentHeight < 6 * kSingleContentHeight) {
             textView.scrollEnabled = NO;
-            CGFloat margin = 20 + contentHeight - textView.frame.size.height;
+            CGFloat margin         = 20 + contentHeight - textView.frame.size.height;
             [UIView animateWithDuration:0.2 animations:^{
                 //调整inputView
                 CGRect inputFrame = _inputView.frame;
                 inputFrame.origin.y -= margin;
                 inputFrame.size.height = 40 + contentHeight;
-                _inputView.frame = inputFrame;
+                _inputView.frame       = inputFrame;
                 //textView增加height
-                CGRect temp = textView.frame;
+                CGRect temp      = textView.frame;
                 temp.size.height = 20 + contentHeight;
-                textView.frame = temp;
+                textView.frame   = temp;
             }];
         } else if (contentHeight >= 6 * kSingleContentHeight) { //如果达到高度极限
             textView.scrollEnabled = YES;
@@ -1433,17 +1431,17 @@
 
         if (contentHeight + kSingleContentHeight + 10 <= textView.frame.size.height) { //如果文本内容行数正在缩减
             textView.scrollEnabled = NO;
-            CGFloat margin = textView.frame.size.height - 20 - contentHeight;
+            CGFloat margin         = textView.frame.size.height - 20 - contentHeight;
             [UIView animateWithDuration:0.2 animations:^{
                 //调整inputView
                 CGRect inputFrame = _inputView.frame;
                 inputFrame.origin.y += margin;
                 inputFrame.size.height = 40 + contentHeight;
-                _inputView.frame = inputFrame;
+                _inputView.frame       = inputFrame;
                 //textView缩减height
-                CGRect temp = textView.frame;
+                CGRect temp      = textView.frame;
                 temp.size.height = 20 + contentHeight;
-                textView.frame = temp;
+                textView.frame   = temp;
             }];
         }
     }
@@ -1460,22 +1458,22 @@
             NSString *token = successResponse[@"data"][@"qiniuToken"];
 
             //获取当前时间
-            NSDate *now = [NSDate date];
-            NSCalendar *calendar = [NSCalendar currentCalendar];
-            NSUInteger unitFlags = NSYearCalendarUnit | NSMonthCalendarUnit | NSDayCalendarUnit | NSHourCalendarUnit | NSMinuteCalendarUnit | NSSecondCalendarUnit;
+            NSDate *now                     = [NSDate date];
+            NSCalendar *calendar            = [NSCalendar currentCalendar];
+            NSUInteger unitFlags            = NSYearCalendarUnit | NSMonthCalendarUnit | NSDayCalendarUnit | NSHourCalendarUnit | NSMinuteCalendarUnit | NSSecondCalendarUnit;
             NSDateComponents *dateComponent = [calendar components:unitFlags fromDate:now];
-            NSInteger year = [dateComponent year];
-            NSInteger month = [dateComponent month];
-            NSInteger day = [dateComponent day];
-            NSInteger hour = [dateComponent hour];
-            NSInteger minute = [dateComponent minute];
-            NSInteger second = [dateComponent second];
+            NSInteger year                  = [dateComponent year];
+            NSInteger month                 = [dateComponent month];
+            NSInteger day                   = [dateComponent day];
+            NSInteger hour                  = [dateComponent hour];
+            NSInteger minute                = [dateComponent minute];
+            NSInteger second                = [dateComponent second];
 
             NSString *locationString = [NSString stringWithFormat:@"iosLvYue_CircleCover_%@_%ld%ld%ld%ld%ld%ld", [LYUserService sharedInstance].userID, (long) year, (long) month, (long) day, (long) hour, (long) minute, (long) second];
 
             //压缩
             UIImage *editImage = info[UIImagePickerControllerEditedImage];
-            NSData *savedData = UIImageJPEGRepresentation(editImage, 0.3);
+            NSData *savedData  = UIImageJPEGRepresentation(editImage, 0.3);
 
             //七牛上传图片
             QNUploadManager *upManager = [[QNUploadManager alloc] init];
@@ -1533,7 +1531,7 @@
 - (void)tapCoverImage:(UITapGestureRecognizer *)gesture {
     if ([LYUserService sharedInstance].userID) {
         UIActionSheet *action = [[UIActionSheet alloc] initWithTitle:nil delegate:self cancelButtonTitle:@"取消" destructiveButtonTitle:nil otherButtonTitles:@"拍照", @"从相册中选择", nil];
-        action.tag = 1000;
+        action.tag            = 1000;
         [action showInView:self.view];
     }
 }

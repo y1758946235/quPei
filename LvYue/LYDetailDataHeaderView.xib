@@ -135,8 +135,8 @@
                                 <constraint firstItem="Xif-7q-Zxh" firstAttribute="top" secondItem="YOx-hQ-ayw" secondAttribute="top" id="vKW-W5-aMh"/>
                             </constraints>
                         </view>
-                        <view contentMode="scaleToFill" misplaced="YES" translatesAutoresizingMaskIntoConstraints="NO" id="Jfv-9Z-seJ">
-                            <rect key="frame" x="132" y="0.0" width="62" height="44"/>
+                        <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Jfv-9Z-seJ">
+                            <rect key="frame" x="133" y="0.0" width="62" height="44"/>
                             <subviews>
                                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="加载中" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="nKy-6a-37z">
                                     <rect key="frame" x="10" y="27" width="42" height="17"/>
@@ -165,8 +165,8 @@
                                 <constraint firstAttribute="width" constant="1" id="weg-lg-xu6"/>
                             </constraints>
                         </view>
-                        <view contentMode="scaleToFill" misplaced="YES" translatesAutoresizingMaskIntoConstraints="NO" id="PAD-ai-AX2">
-                            <rect key="frame" x="132" y="11" width="1" height="22"/>
+                        <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="PAD-ai-AX2">
+                            <rect key="frame" x="133" y="11" width="1" height="22"/>
                             <color key="backgroundColor" red="0.83529411760000005" green="0.83529411760000005" blue="0.83529411760000005" alpha="1" colorSpace="calibratedRGB"/>
                             <constraints>
                                 <constraint firstAttribute="width" constant="1" id="V6m-J4-420"/>
@@ -262,7 +262,7 @@
                 <outlet property="userNameLabel" destination="Iwf-ph-IgV" id="ITS-I1-Cho"/>
                 <outlet property="vipImageView" destination="cPr-9X-AWw" id="b6k-SZ-lQ9"/>
             </connections>
-            <point key="canvasLocation" x="451" y="130.5"/>
+            <point key="canvasLocation" x="152" y="130.5"/>
         </view>
     </objects>
     <resources>

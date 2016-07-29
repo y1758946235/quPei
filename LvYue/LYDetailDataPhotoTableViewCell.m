@@ -7,6 +7,7 @@
 //
 
 #import "FXBlurView.h"
+#import "LYBlurImageCache.h"
 #import "LYDetailDataPhotoTableViewCell.h"
 #import "SDWebImageManager.h"
 
@@ -16,8 +17,6 @@
 @property (weak, nonatomic) IBOutlet UIImageView *firstImageView;
 @property (weak, nonatomic) IBOutlet UIImageView *secondImageView;
 @property (weak, nonatomic) IBOutlet UIImageView *thirdImageView;
-
-@property (nonatomic, strong) NSMutableArray<UIImage *> *blurImageArray;
 
 @end
 
@@ -49,20 +48,16 @@
 
             // 精华相册需要模糊
             if (essenceImage) {
-
-                if (self.blurImageArray && self.blurImageArray.count) {
-                    if (idx == 0) {
-                        self.firstImageView.image = self.blurImageArray[idx];
-                    }
-                    if (idx == 1) {
-                        self.secondImageView.image = self.blurImageArray[idx];
-                    }
-                    if (idx == 2) {
-                        self.secondImageView.image = self.blurImageArray[idx];
-                    }
-                } else {
+                // 读取缓存图片
+                __block UIImage *blurImage = [[LYBlurImageCache shareCache] objectForKey:imageURL.absoluteString];
+                // 没有缓存重新模糊图片
+                if (!blurImage) {
                     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
-                        UIImage *blurImage = [image blurredImageWithRadius:100 iterations:3 tintColor:RGBACOLOR(0, 0, 0, 0.5)];
+
+                        blurImage = [image blurredImageWithRadius:100 iterations:3 tintColor:RGBACOLOR(0, 0, 0, 0.5)];
+
+                        [[LYBlurImageCache shareCache] setObject:blurImage forKey:imageURL.absoluteString];
+
                         dispatch_async(dispatch_get_main_queue(), ^{
                             if (idx == 0) {
                                 self.firstImageView.image = blurImage;
@@ -73,11 +68,21 @@
                             if (idx == 2) {
                                 self.secondImageView.image = blurImage;
                             }
-                            // 缓存下模糊后的 Image
-                            [self.blurImageArray addObject:blurImage];
                         });
+
                     });
+                } else {
+                    if (idx == 0) {
+                        self.firstImageView.image = blurImage;
+                    }
+                    if (idx == 1) {
+                        self.secondImageView.image = blurImage;
+                    }
+                    if (idx == 2) {
+                        self.secondImageView.image = blurImage;
+                    }
                 }
+
             } else {
                 if (idx == 0) {
                     self.firstImageView.image = image;

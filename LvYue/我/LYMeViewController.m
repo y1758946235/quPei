@@ -131,7 +131,7 @@ typedef NS_ENUM(NSUInteger, LYMeViewControllerCellTypeEnum) {
 - (void)viewWillAppear:(BOOL)animated {
     [super viewWillAppear:animated];
 
-    [self.navigationController setNavigationBarHidden:YES animated:YES];
+    [self.navigationController setNavigationBarHidden:YES];
 
     if (self.login) {
         [self p_loadData];

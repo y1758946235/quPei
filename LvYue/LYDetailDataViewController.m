@@ -7,13 +7,16 @@
 //
 
 #import "ChatViewController.h"
+#import "FriendsCirleViewController.h"
 #import "LYDetailDataDefalutTableViewCell.h"
 #import "LYDetailDataHeaderView.h"
 #import "LYDetailDataPhotoTableViewCell.h"
 #import "LYDetailDataViewController.h"
 #import "LYEssenceAlbumViewController.h"
+#import "LYPopoverViewController.h"
 #import "LYSendGiftViewController.h"
 #import "SendBuddyRequestMessageController.h"
+#import "WYPopoverController.h"
 #import <MediaPlayer/MediaPlayer.h>
 
 #import "ChatSendHelper.h"
@@ -104,7 +107,7 @@ static NSString *const LYDetailDataPhotoTableViewCellIdentity   = @"LYDetailData
                    dynamicImageURLArray && dynamicImageURLArray ? dynamicImageURLArray
                                                                 : [NSNull null],
                @"rowHeight": @82,
-               @"actionVC": @""
+               @"actionVC": @"FriendsCirleViewController"
            },
            @{
                @"title": @"TA的气质",
@@ -112,7 +115,7 @@ static NSString *const LYDetailDataPhotoTableViewCellIdentity   = @"LYDetailData
                              ? taDeQiZhiImageURLArray
                              : [NSNull null],
                @"rowHeight": @82,
-               @"actionVC": @""
+               @"actionVC": @"MyDispositionViewController"
            },
            @{
                @"title": @"精华相册",
@@ -181,6 +184,8 @@ static NSString *const LYDetailDataPhotoTableViewCellIdentity   = @"LYDetailData
 
     [self p_loadData];
 
+    self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithImage:[UIImage imageNamed:@"more"] style:UIBarButtonItemStylePlain target:self action:@selector(p_clickRightBarButtonItem:)];
+
     [self.tableView reloadData];
 }
 
@@ -240,10 +245,6 @@ static NSString *const LYDetailDataPhotoTableViewCellIdentity   = @"LYDetailData
         }
     }
 
-    //    LYDetailDataDefalutTableViewCell *cell =
-    //        [[[NSBundle mainBundle] loadNibNamed:@"LYDetailDataDefalutTableViewCell"
-    //                                       owner:self
-    //                                     options:nil] objectAtIndex:0];
     LYDetailDataDefalutTableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:LYDetailDataTableViewDefaultCellIdentity forIndexPath:indexPath];
 
     NSDictionary *info = LYDetailDataTableViewDataArray[indexPath.section][indexPath.row];
@@ -413,7 +414,7 @@ forRowAtIndexPath:(NSIndexPath *)indexPath {
                 // 是否好友关系
                 self.status = [successResponse[@"data"][@"status"] integerValue];
                 // 是否屏蔽
-                self.shield = [successResponse[@"data"][@"isdefault"] boolValue];
+                self.shield = [[NSString stringWithFormat:@"%@", successResponse[@"data"][@"isdefault"]] boolValue];
                 // 个人动态图片
                 self.dynamicImageURLArray = successResponse[@"data"][@"photos"];
 
@@ -429,10 +430,7 @@ forRowAtIndexPath:(NSIndexPath *)indexPath {
 
                 [self.detailDataHeaderView configData:self.infoModel];
 
-                [LYHttpPoster
-                    postHttpRequestByPost:
-                        [NSString
-                            stringWithFormat:@"%@/mobile/user/imgList", REQUESTHEADER]
+                [LYHttpPoster postHttpRequestByPost:[NSString stringWithFormat:@"%@/mobile/user/imgList", REQUESTHEADER]
                     andParameter:@{
                         @"user_id": self.userId
                     }
@@ -663,21 +661,25 @@ forRowAtIndexPath:(NSIndexPath *)indexPath {
 
     [MBProgressHUD showMessage:nil toView:self.view];
 
+    NSString *requestURL;
+    // 已经屏蔽则取消屏蔽接口
+    if (self.shield) {
+        requestURL = [NSString stringWithFormat:@"%@/mobile/notice/cancelShield", REQUESTHEADER];
+    } else {
+        requestURL = [NSString stringWithFormat:@"%@/mobile/notice/shield", REQUESTHEADER];
+    }
+
     // 屏蔽
-    [LYHttpPoster
-        postHttpRequestByPost:
-            [NSString stringWithFormat:@"%@/mobile/userFriend/deleteShield",
-                                       REQUESTHEADER]
+    [LYHttpPoster postHttpRequestByPost:requestURL
         andParameter:@{
             @"user_id": [NSString
                 stringWithFormat:@"%@", [LYUserService sharedInstance].userID],
-            @"other_user_id": [NSString stringWithFormat:@"%ld", (long) self.userId]
+            @"other_user_id": self.userId
         }
         success:^(id successResponse) {
             MLOG(@"结果:%@", successResponse);
             [MBProgressHUD hideAllHUDsForView:self.view animated:YES];
-            if ([[NSString stringWithFormat:@"%@", successResponse[@"code"]]
-                    isEqualToString:@"200"]) {
+            if ([[NSString stringWithFormat:@"%@", successResponse[@"code"]] isEqualToString:@"200"]) {
                 self.shield = !self.shield;
 
                 if (self.shield) {
@@ -687,9 +689,7 @@ forRowAtIndexPath:(NSIndexPath *)indexPath {
                 }
             } else {
                 [MBProgressHUD hideAllHUDsForView:self.view animated:YES];
-                [MBProgressHUD
-                    showError:[NSString
-                                  stringWithFormat:@"%@", successResponse[@"msg"]]];
+                [MBProgressHUD showError:[NSString stringWithFormat:@"%@", successResponse[@"msg"]]];
             }
         }
         andFailure:^(id failureResponse) {
@@ -715,7 +715,7 @@ forRowAtIndexPath:(NSIndexPath *)indexPath {
                 self.infoModel.isFocus = !self.infoModel.isFocus;
                 [self.detailDataHeaderView configData:self.infoModel];
                 if (self.infoModel.isFocus) {
-                    [MBProgressHUD showError:@"关注成功"];
+                    [MBProgressHUD showSuccess:@"关注成功"];
                 } else {
                     [MBProgressHUD showError:@"取消关注成功"];
                 }
@@ -756,6 +756,23 @@ forRowAtIndexPath:(NSIndexPath *)indexPath {
     [alert show];
 }
 
+/**
+ *  点击导航栏右侧按钮
+ */
+- (void)p_clickRightBarButtonItem:(UIBarButtonItem *)sender {
+    LYPopoverViewController *popoverVC = [[LYPopoverViewController alloc] init];
+    popoverVC.itemInfoArray            = @[@{
+        @"title": @"举报",
+        @"block": ^{
+
+        }
+    }];
+
+    popoverVC.preferredContentSize = CGSizeMake(100, 30.f);
+    WYPopoverController *popVC     = [[WYPopoverController alloc] initWithContentViewController:popoverVC];
+    [popVC presentPopoverFromBarButtonItem:sender permittedArrowDirections:WYPopoverArrowDirectionDown animated:YES];
+}
+
 #pragma mark - Getter
 
 - (UITableView *)tableView {
@@ -767,8 +784,8 @@ forRowAtIndexPath:(NSIndexPath *)indexPath {
             [tableView registerNib:[UINib nibWithNibName:@"LYDetailDataDefalutTableViewCell" bundle:nil] forCellReuseIdentifier:LYDetailDataTableViewDefaultCellIdentity];
             [tableView registerNib:[UINib nibWithNibName:@"LYDetailDataPhotoTableViewCell" bundle:nil]
                 forCellReuseIdentifier:LYDetailDataPhotoTableViewCellIdentity];
-            tableView.tableHeaderView = [UIView new];
-            tableView.tableFooterView = [UIView new];
+            tableView.tableHeaderView = [[UIView alloc] initWithFrame:CGRectMake(CGFLOAT_MIN, CGFLOAT_MIN, CGFLOAT_MIN, CGFLOAT_MIN)];
+            tableView.tableFooterView = [[UIView alloc] initWithFrame:CGRectMake(CGFLOAT_MIN, CGFLOAT_MIN, CGFLOAT_MIN, CGFLOAT_MIN)];
             tableView.delegate        = self;
             tableView.dataSource      = self;
             [self.view addSubview:tableView];
@@ -886,5 +903,16 @@ forRowAtIndexPath:(NSIndexPath *)indexPath {
     }
     return _tableViewFooterView;
 }
+
+#pragma mark - Setter 
+
+- (void)setUserId:(NSString *)userId {
+    if ([userId isKindOfClass:[NSNumber class]]) {
+        _userId = [NSString stringWithFormat:@"%@", userId];
+        return;
+    }
+    _userId = userId;
+}
+
 
 @end
