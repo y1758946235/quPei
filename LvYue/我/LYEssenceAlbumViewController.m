@@ -7,6 +7,7 @@
 //
 
 #import "FXBlurView.h"
+#import "LYBlurImageCache.h"
 #import "LYEssenceAlbumViewController.h"
 #import "LYHttpPoster.h"
 #import "LYUserService.h"
@@ -110,11 +111,26 @@ static NSString *const LYEssenceAlbumCollectionViewCellIdentity =
     [self.imageURLArray enumerateObjectsUsingBlock:^(NSString *_Nonnull obj, NSUInteger idx, BOOL *_Nonnull stop) {
 
         NSURL *URL = [NSURL URLWithString:obj];
+
+        // 读取缓存
+        UIImage *blurImage = [[LYBlurImageCache shareCache] objectForKey:URL.absoluteString];
+        if (blurImage) {
+            [self.imageArray replaceObjectAtIndex:idx withObject:blurImage];
+            [self.collectionView reloadItemsAtIndexPaths:@[[NSIndexPath indexPathForRow:idx inSection:0]]];
+            return;
+        }
+
+        // 没缓存就下载
         [[SDWebImageManager sharedManager] downloadImageWithURL:URL options:SDWebImageRetryFailed progress:nil completed:^(UIImage *image, NSError *error, SDImageCacheType cacheType, BOOL finished, NSURL *imageURL) {
             __block UIImage *returnImage = image;
+
             dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
                 // 图片模糊
                 returnImage = [returnImage blurredImageWithRadius:100 iterations:3 tintColor:RGBACOLOR(0, 0, 0, 0.5)];
+
+                // 缓存模糊图片到内存
+                [[LYBlurImageCache shareCache] setObject:returnImage forKey:imageURL.absoluteString];
+
                 [self.imageArray replaceObjectAtIndex:idx withObject:returnImage];
 
                 dispatch_async(dispatch_get_main_queue(), ^{

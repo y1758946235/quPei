@@ -19,6 +19,6 @@ typedef void (^ClickSendGiftButtonBlock)(void);
 @property (nonatomic, copy) ClickFoucsOnButtonBlock foucsOnButtonBlock;
 @property (nonatomic, copy) ClickSendGiftButtonBlock sendGiftButtonBlock;
 
-- (void)configData:(MyInfoModel *)infoModel;
+- (void)configData:(MyInfoModel *)infoModel mySelf:(BOOL)mySelf;
 
 @end

@@ -255,6 +255,7 @@
                 <outlet property="avatarImageView" destination="yTZ-Am-RdB" id="mEH-df-M3v"/>
                 <outlet property="caiFuValueLabel" destination="nKy-6a-37z" id="9l9-Hc-KOd"/>
                 <outlet property="fansValueLabel" destination="7KV-Rc-Dvt" id="YSV-aR-bek"/>
+                <outlet property="fouceOnAndSendGiftView" destination="3zy-f7-t5G" id="slK-Uo-bzV"/>
                 <outlet property="foucsOnButton" destination="dfI-8U-tGY" id="rKH-q6-ZJ0"/>
                 <outlet property="meiLiValueLabel" destination="1FL-KL-L5v" id="RSv-1R-80S"/>
                 <outlet property="playVideoButton" destination="cqp-dM-S6C" id="OWh-13-2DE"/>

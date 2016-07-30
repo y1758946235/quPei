@@ -45,7 +45,9 @@
         NSURL *imageURL = [NSURL URLWithString:[NSString stringWithFormat:@"%@%@", IMAGEHEADER, obj]];
 
         [[SDWebImageManager sharedManager] downloadImageWithURL:imageURL options:SDWebImageRetryFailed progress:nil completed:^(UIImage *image, NSError *error, SDImageCacheType cacheType, BOOL finished, NSURL *imageURL) {
-
+            if (error) {
+                return;
+            }
             // 精华相册需要模糊
             if (essenceImage) {
                 // 读取缓存图片

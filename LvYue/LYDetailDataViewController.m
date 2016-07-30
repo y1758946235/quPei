@@ -7,16 +7,17 @@
 //
 
 #import "ChatViewController.h"
+#import "DXPopover.h"
 #import "FriendsCirleViewController.h"
 #import "LYDetailDataDefalutTableViewCell.h"
 #import "LYDetailDataHeaderView.h"
 #import "LYDetailDataPhotoTableViewCell.h"
 #import "LYDetailDataViewController.h"
 #import "LYEssenceAlbumViewController.h"
-#import "LYPopoverViewController.h"
+#import "LYPopoverView.h"
 #import "LYSendGiftViewController.h"
+#import "ReportViewController.h"
 #import "SendBuddyRequestMessageController.h"
-#import "WYPopoverController.h"
 #import <MediaPlayer/MediaPlayer.h>
 
 #import "ChatSendHelper.h"
@@ -41,8 +42,12 @@ static NSArray<NSArray *> *LYDetailDataTableViewDataArray;
 static NSString *const LYDetailDataTableViewDefaultCellIdentity = @"LYDetailDataTableViewDefaultCellIdentity";
 static NSString *const LYDetailDataPhotoTableViewCellIdentity   = @"LYDetailDataPhotoTableViewCellIdentity";
 
-@interface LYDetailDataViewController () <UITableViewDelegate, UITableViewDataSource, UIActionSheetDelegate,
-                                          UIAlertViewDelegate>
+@interface LYDetailDataViewController () <
+    UITableViewDelegate,
+    UITableViewDataSource,
+    UIActionSheetDelegate,
+    UIAlertViewDelegate,
+    LYPopoverViewDataSource>
 
 @property (nonatomic, strong) MyInfoModel *infoModel;
 @property (nonatomic, strong) MyDetailInfoModel *detailInfoModel;
@@ -55,8 +60,10 @@ static NSString *const LYDetailDataPhotoTableViewCellIdentity   = @"LYDetailData
 // 是否屏蔽
 @property (nonatomic, assign) BOOL shield;
 // 好友状态
-@property (nonatomic, assign)
-    LYDetailDataRelationShipEnum status; // 0 无关系  1 好友  2 等待验证
+@property (nonatomic, assign) LYDetailDataRelationShipEnum status; // 0 无关系  1 好友  2 等待验证
+
+// 是否是用户自己
+@property (nonatomic, assign) BOOL mySelf;
 
 /***** UI ******/
 
@@ -184,7 +191,13 @@ static NSString *const LYDetailDataPhotoTableViewCellIdentity   = @"LYDetailData
 
     [self p_loadData];
 
-    self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithImage:[UIImage imageNamed:@"more"] style:UIBarButtonItemStylePlain target:self action:@selector(p_clickRightBarButtonItem:)];
+    // 用户自己则不现实加好友发消息、右上角的汉堡按钮
+    if (!self.mySelf) {
+
+        self.tableView.tableFooterView = self.tableViewFooterView;
+
+        [self setRightButton:[UIImage imageNamed:@"more"] title:nil target:self action:@selector(p_clickRightBarButtonItem:)];
+    }
 
     [self.tableView reloadData];
 }
@@ -373,8 +386,31 @@ forRowAtIndexPath:(NSIndexPath *)indexPath {
 - (void)alertView:(UIAlertView *)alertView
     clickedButtonAtIndex:(NSInteger)buttonIndex {
     if (buttonIndex == 1) {
-        [self.navigationController pushViewController:[LYSendGiftViewController new]
-                                             animated:YES];
+        LYSendGiftViewController *vc = [LYSendGiftViewController new];
+
+        vc.friendID = [NSString stringWithFormat:@"%ld", (long) self.infoModel.id];
+
+        vc.userName       = self.infoModel.name;
+        vc.avatarImageURL = self.infoModel.icon;
+        [self.navigationController pushViewController:vc animated:YES];
+    }
+}
+
+#pragma mark - LYPopoverViewDataSource
+
+- (NSArray<NSDictionary *> *)popoverViewDataSource:(LYPopoverView *)popoverView {
+    return @[
+        @{
+            @"title": @"举报",
+            @"icon": @""
+        }
+    ];
+}
+
+- (void)popoverViewDidSelected:(NSInteger)index {
+    if (index == 0) {
+        ReportViewController *report = [[ReportViewController alloc] init];
+        [self.navigationController pushViewController:report animated:YES];
     }
 }
 
@@ -418,17 +454,15 @@ forRowAtIndexPath:(NSIndexPath *)indexPath {
                 // 个人动态图片
                 self.dynamicImageURLArray = successResponse[@"data"][@"photos"];
 
-                // 视频未认证则现实头部的邀请入口
-                if (!self.infoModel.auth_video) {
-                    self.tableView.tableHeaderView = self.invitateTableViewHeaderView;
-                }
-                // 用户自己就不显示加好友、发消息
-                if (![self.userId
-                        isEqualToString:[LYUserService sharedInstance].userID]) {
-                    self.tableView.tableFooterView = self.tableViewFooterView;
+                // 用户自己则不显示邀请文字
+                if (!self.mySelf) {
+                    // 视频未认证则现实头部的邀请入口
+                    if (!self.infoModel.auth_video) {
+                        self.tableView.tableHeaderView = self.invitateTableViewHeaderView;
+                    }
                 }
 
-                [self.detailDataHeaderView configData:self.infoModel];
+                [self.detailDataHeaderView configData:self.infoModel mySelf:self.mySelf];
 
                 [LYHttpPoster postHttpRequestByPost:[NSString stringWithFormat:@"%@/mobile/user/imgList", REQUESTHEADER]
                     andParameter:@{
@@ -713,11 +747,11 @@ forRowAtIndexPath:(NSIndexPath *)indexPath {
         success:^(id successResponse) {
             if ([successResponse[@"code"] integerValue] == 200) {
                 self.infoModel.isFocus = !self.infoModel.isFocus;
-                [self.detailDataHeaderView configData:self.infoModel];
+                [self.detailDataHeaderView configData:self.infoModel mySelf:self.mySelf];
                 if (self.infoModel.isFocus) {
                     [MBProgressHUD showSuccess:@"关注成功"];
                 } else {
-                    [MBProgressHUD showError:@"取消关注成功"];
+                    [MBProgressHUD showSuccess:@"取消关注成功"];
                 }
             } else {
                 [MBProgressHUD hideAllHUDsForView:self.view animated:YES];
@@ -760,17 +794,7 @@ forRowAtIndexPath:(NSIndexPath *)indexPath {
  *  点击导航栏右侧按钮
  */
 - (void)p_clickRightBarButtonItem:(UIBarButtonItem *)sender {
-    LYPopoverViewController *popoverVC = [[LYPopoverViewController alloc] init];
-    popoverVC.itemInfoArray            = @[@{
-        @"title": @"举报",
-        @"block": ^{
-
-        }
-    }];
-
-    popoverVC.preferredContentSize = CGSizeMake(100, 30.f);
-    WYPopoverController *popVC     = [[WYPopoverController alloc] initWithContentViewController:popoverVC];
-    [popVC presentPopoverFromBarButtonItem:sender permittedArrowDirections:WYPopoverArrowDirectionDown animated:YES];
+    [LYPopoverView showPopoverViewAtPoint:CGPointMake(SCREEN_WIDTH - 15.f, 64.f + 10.f) inView:self.view type:LYPopoverViewItemTypeDefault delegate:self];
 }
 
 #pragma mark - Getter
@@ -904,7 +928,11 @@ forRowAtIndexPath:(NSIndexPath *)indexPath {
     return _tableViewFooterView;
 }
 
-#pragma mark - Setter 
+- (BOOL)mySelf {
+    return [self.userId isEqualToString:[LYUserService sharedInstance].userID];
+}
+
+#pragma mark - Setter
 
 - (void)setUserId:(NSString *)userId {
     if ([userId isKindOfClass:[NSNumber class]]) {
