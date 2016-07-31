@@ -30,7 +30,19 @@
     [super setSelected:selected animated:animated];
 }
 
+- (void)prepareForReuse {
+    [super prepareForReuse];
+
+    self.firstImageView.image  = [[UIImage alloc] init];
+    self.secondImageView.image = [[UIImage alloc] init];
+    self.thirdImageView.image  = [[UIImage alloc] init];
+}
+
 - (void)configPhotoArray:(NSArray *)imageURLArray title:(NSString *)title essenceImage:(BOOL)essenceImage {
+
+    self.firstImageView.image  = [[UIImage alloc] init];
+    self.secondImageView.image = [[UIImage alloc] init];
+    self.thirdImageView.image  = [[UIImage alloc] init];
 
     self.lyTitleLabel.text = title;
 
@@ -39,6 +51,10 @@
     }
     [imageURLArray enumerateObjectsUsingBlock:^(id _Nonnull obj, NSUInteger idx, BOOL *_Nonnull stop) {
         if (idx > 2) {
+            return;
+        }
+
+        if ([obj isEqual:[NSNull null]]) {
             return;
         }
 

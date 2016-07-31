@@ -55,6 +55,8 @@ static NSString *const LYDetailDataPhotoTableViewCellIdentity   = @"LYDetailData
 @property (nonatomic, strong) NSArray *dynamicImageURLArray;
 // TA 的气质数组
 @property (nonatomic, strong) NSArray *taDeQiZhiImageURLArray;
+// 精华相册数组
+@property (nonatomic, strong) NSArray *jingHuaImageURLArray;
 // 备注
 @property (nonatomic, strong) NSString *remark;
 // 是否屏蔽
@@ -240,11 +242,8 @@ static NSString *const LYDetailDataPhotoTableViewCellIdentity   = @"LYDetailData
     if (indexPath.section == 0) {
         // 我的动态  TA 的气质  精华相册
         if (indexPath.row == 3 || indexPath.row == 4 || indexPath.row == 5) {
-            LYDetailDataPhotoTableViewCell *cell =
-                [tableView dequeueReusableCellWithIdentifier:
-                               LYDetailDataPhotoTableViewCellIdentity
-                                                forIndexPath:indexPath];
-
+            LYDetailDataPhotoTableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:LYDetailDataPhotoTableViewCellIdentity forIndexPath:indexPath];
+            //            LYDetailDataPhotoTableViewCell *cell = [[[NSBundle mainBundle] loadNibNamed:@"LYDetailDataPhotoTableViewCell" owner:self options:nil] objectAtIndex:0];
             BOOL essenceImage = NO;
             if (indexPath.row == 5) {
                 essenceImage = YES;
@@ -306,6 +305,12 @@ static NSString *const LYDetailDataPhotoTableViewCellIdentity   = @"LYDetailData
     if ([LYDetailDataTableViewDataArray[indexPath.section][indexPath.row][@"actionVC"] length] > 0) {
         Class cla = NSClassFromString(LYDetailDataTableViewDataArray[indexPath.section][indexPath.row][@"actionVC"]);
         id vc     = [cla new];
+
+        // 个人动态，TA 的气质，精华相册
+        if (indexPath.section == 0 && (indexPath.row == 3 || indexPath.row == 4 || indexPath.row == 5)) {
+            [vc setValue:[NSString stringWithFormat:@"%ld", (long) self.infoModel.id] forKey:@"userId"];
+        }
+
         [self.navigationController pushViewController:vc animated:YES];
     }
 }
@@ -330,6 +335,8 @@ forRowAtIndexPath:(NSIndexPath *)indexPath {
 - (void)actionSheet:(UIActionSheet *)actionSheet
     clickedButtonAtIndex:(NSInteger)buttonIndex {
 
+    __weak typeof(self) weakSelf = self;
+
     if (buttonIndex == 0) {
         [MBProgressHUD showMessage:@"删除中.."];
         [LYHttpPoster
@@ -338,7 +345,7 @@ forRowAtIndexPath:(NSIndexPath *)indexPath {
                                            REQUESTHEADER]
             andParameter:@{
                 @"user_id": [LYUserService sharedInstance].userID,
-                @"friend_user_id": self.userId
+                @"friend_user_id": weakSelf.userId
             }
             success:^(id successResponse) {
                 if ([[NSString stringWithFormat:@"%@", successResponse[@"code"]]
@@ -346,7 +353,7 @@ forRowAtIndexPath:(NSIndexPath *)indexPath {
                     //调用环信"删除好友"的方法
                     EMError *error = nil;
                     BOOL isSuccess = [[EaseMob sharedInstance]
-                                          .chatManager removeBuddy:self.userId
+                                          .chatManager removeBuddy:weakSelf.userId
                                                   removeFromRemote:YES
                                                              error:&error];
                     if (isSuccess && !error) {
@@ -417,12 +424,14 @@ forRowAtIndexPath:(NSIndexPath *)indexPath {
 #pragma mark - Pravite
 
 - (void)p_loadData {
+    // 以下嵌套调用 实属无奈，网络封装缺少 complete 已经接口设计问题
+    __weak typeof(self) weakSelf = self;
     [MBProgressHUD showMessage:nil];
     [LYHttpPoster postHttpRequestByPost:
                       [NSString stringWithFormat:@"%@/mobile/userFriend/getInfo",
                                                  REQUESTHEADER]
         andParameter:@{
-            @"friend_user_id": self.userId,
+            @"friend_user_id": weakSelf.userId,
             @"user_id": [LYUserService sharedInstance].userID
         }
         success:^(id successResponse) {
@@ -438,35 +447,36 @@ forRowAtIndexPath:(NSIndexPath *)indexPath {
                             forKey:@"isFocus"];
                 [infoDic setObject:successResponse[@"data"][@"fansNum"]
                             forKey:@"fansNum"];
-                self.infoModel       = [[MyInfoModel alloc] initWithDict:[infoDic copy]];
-                self.detailInfoModel = [[MyDetailInfoModel alloc]
+                weakSelf.infoModel       = [[MyInfoModel alloc] initWithDict:[infoDic copy]];
+                weakSelf.detailInfoModel = [[MyDetailInfoModel alloc]
                     initWithDict:successResponse[@"data"][@"userDetail"]];
 
                 if ([successResponse[@"data"][@"remark"] length] == 0) {
-                    self.remark = @"";
+                    weakSelf.remark = @"";
                 } else {
-                    self.remark = successResponse[@"data"][@"remark"];
+                    weakSelf.remark = successResponse[@"data"][@"remark"];
                 }
                 // 是否好友关系
-                self.status = [successResponse[@"data"][@"status"] integerValue];
+                weakSelf.status = [successResponse[@"data"][@"status"] integerValue];
                 // 是否屏蔽
-                self.shield = [[NSString stringWithFormat:@"%@", successResponse[@"data"][@"isdefault"]] boolValue];
+                weakSelf.shield = [[NSString stringWithFormat:@"%@", successResponse[@"data"][@"isdefault"]] boolValue];
                 // 个人动态图片
-                self.dynamicImageURLArray = successResponse[@"data"][@"photos"];
+                weakSelf.dynamicImageURLArray = successResponse[@"data"][@"photos"];
 
                 // 用户自己则不显示邀请文字
-                if (!self.mySelf) {
+                if (!weakSelf.mySelf) {
                     // 视频未认证则现实头部的邀请入口
-                    if (!self.infoModel.auth_video) {
-                        self.tableView.tableHeaderView = self.invitateTableViewHeaderView;
+                    if (!weakSelf.infoModel.auth_video) {
+                        weakSelf.tableView.tableHeaderView = weakSelf.invitateTableViewHeaderView;
                     }
                 }
 
-                [self.detailDataHeaderView configData:self.infoModel mySelf:self.mySelf];
+                [weakSelf.detailDataHeaderView configData:weakSelf.infoModel mySelf:weakSelf.mySelf];
 
+                // 加载我的气质
                 [LYHttpPoster postHttpRequestByPost:[NSString stringWithFormat:@"%@/mobile/user/imgList", REQUESTHEADER]
                     andParameter:@{
-                        @"user_id": self.userId
+                        @"user_id": weakSelf.userId
                     }
                     success:^(id successResponse) {
                         MLOG(@"结果:%@", successResponse);
@@ -480,22 +490,61 @@ forRowAtIndexPath:(NSIndexPath *)indexPath {
                                                              BOOL *_Nonnull stop) {
                                     [array addObject:obj[@"img_name"]];
                                 }];
-                            self.taDeQiZhiImageURLArray = [array copy];
+                            weakSelf.taDeQiZhiImageURLArray = [array copy];
 
-                            [LYDetailDataViewController
-                                configTableViewDataArray:self.detailInfoModel
-                                               infoModel:self.infoModel
-                                                  remark:self.remark
-                                    dynamicImageURLArray:self.dynamicImageURLArray
-                                  taDeQiZhiImageURLArray:self.taDeQiZhiImageURLArray
-                                    jingHuaImageURLArray:self.taDeQiZhiImageURLArray];
-                            [self.tableView reloadData];
+                            // 加载精华相册
+                            [LYHttpPoster postHttpRequestByPost:[NSString stringWithFormat:@"%@/mobile/user/imgList", REQUESTHEADER]
+                                andParameter:@{
+                                    @"user_id": @(weakSelf.infoModel.id)
+                                }
+                                success:^(id successResponse) {
+                                    if ([successResponse[@"code"] integerValue] == 200) {
+                                        NSMutableArray *array = [[NSMutableArray alloc] init];
+                                        [successResponse[@"data"][@"list"]
+                                            enumerateObjectsUsingBlock:^(id _Nonnull obj,
+                                                                         NSUInteger idx,
+                                                                         BOOL *_Nonnull stop) {
+                                                [array addObject:obj[@"img_name"]];
+                                            }];
+                                        weakSelf.jingHuaImageURLArray = [array copy];
+                                        [LYDetailDataViewController
+                                            configTableViewDataArray:weakSelf.detailInfoModel
+                                                           infoModel:weakSelf.infoModel
+                                                              remark:weakSelf.remark
+                                                dynamicImageURLArray:weakSelf.dynamicImageURLArray
+                                              taDeQiZhiImageURLArray:weakSelf.taDeQiZhiImageURLArray
+                                                jingHuaImageURLArray:weakSelf.jingHuaImageURLArray];
+
+                                        [weakSelf.tableView reloadData];
+                                    } else {
+                                        [LYDetailDataViewController
+                                            configTableViewDataArray:weakSelf.detailInfoModel
+                                                           infoModel:weakSelf.infoModel
+                                                              remark:weakSelf.remark
+                                                dynamicImageURLArray:weakSelf.dynamicImageURLArray
+                                              taDeQiZhiImageURLArray:weakSelf.taDeQiZhiImageURLArray
+                                                jingHuaImageURLArray:nil];
+                                        [MBProgressHUD hideHUD];
+                                        [MBProgressHUD
+                                            showError:[NSString stringWithFormat:@"%@", successResponse[@"msg"]]];
+                                    }
+                                }
+                                andFailure:^(id failureResponse) {
+                                    [LYDetailDataViewController
+                                        configTableViewDataArray:weakSelf.detailInfoModel
+                                                       infoModel:weakSelf.infoModel
+                                                          remark:weakSelf.remark
+                                            dynamicImageURLArray:weakSelf.dynamicImageURLArray
+                                          taDeQiZhiImageURLArray:weakSelf.taDeQiZhiImageURLArray
+                                            jingHuaImageURLArray:nil];
+                                    [MBProgressHUD hideHUD];
+                                    [MBProgressHUD showError:@"加载精华照片失败,请重试"];
+                                }];
+
                         } else {
                             [MBProgressHUD hideHUD];
                             [MBProgressHUD
-                                showError:[NSString
-                                              stringWithFormat:@"%@",
-                                                               successResponse[@"msg"]]];
+                                showError:[NSString stringWithFormat:@"%@", successResponse[@"msg"]]];
                         }
                     }
                     andFailure:^(id failureResponse) {
@@ -567,6 +616,7 @@ forRowAtIndexPath:(NSIndexPath *)indexPath {
         }
         case LYDetailDataRelationShipEnumIng: {
             [MBProgressHUD showMessage:@"正在通过验证.."];
+            __weak typeof(self) weakSelf = self;
             [LYHttpPoster
                 postHttpRequestByPost:
                     [NSString
@@ -574,7 +624,7 @@ forRowAtIndexPath:(NSIndexPath *)indexPath {
                                          REQUESTHEADER]
                 andParameter:@{
                     @"user_id": [LYUserService sharedInstance].userID,
-                    @"friend_id": self.userId,
+                    @"friend_id": weakSelf.userId,
                     @"status": @"2"
                 }
                 success:^(id successResponse) {
@@ -583,18 +633,16 @@ forRowAtIndexPath:(NSIndexPath *)indexPath {
                         //手动调用环信的"通过验证"方法
                         EMError *error = nil;
                         BOOL isSuccess = [[EaseMob sharedInstance]
-                                              .chatManager acceptBuddyRequest:self.userId
+                                              .chatManager acceptBuddyRequest:weakSelf.userId
                                                                         error:&error];
                         if (isSuccess && !error) {
                             [MBProgressHUD hideHUD];
                             [MBProgressHUD showSuccess:@"通过验证"];
-                            //                            [self getDataFromWeb];
+                            //                            [weakSelf getDataFromWeb];
                             //提示通过了XX用户的验证信息(同意加好友)
                             EMConversation *conversation = [[EaseMob sharedInstance]
                                                                 .chatManager
-                                conversationForChatter:[NSString
-                                                           stringWithFormat:@"%ld",
-                                                                            (long) self.userId]
+                                conversationForChatter:weakSelf.userId
                                       conversationType:eConversationTypeChat];
                             [ChatSendHelper sendTextMessageWithString:
                                                 @"我已通过了你的好友验证请求"
@@ -628,6 +676,7 @@ forRowAtIndexPath:(NSIndexPath *)indexPath {
  */
 - (void)p_playAuthVideo {
     [MBProgressHUD showMessage:nil];
+    __weak typeof(self) weakSelf = self;
     [LYHttpPoster
         postHttpRequestByPost:[NSString
                                   stringWithFormat:@"%@/mobile/video/openVideo",
@@ -635,7 +684,7 @@ forRowAtIndexPath:(NSIndexPath *)indexPath {
         andParameter:@{
             @"user_id": [LYUserService sharedInstance].userID,
             @"video_id": @"1",
-            @"fid": self.userId
+            @"fid": weakSelf.userId
         }
         success:^(id successResponse) {
             // 199 开会员   198 去认证视频  200
@@ -649,17 +698,17 @@ forRowAtIndexPath:(NSIndexPath *)indexPath {
                         [NSURL
                             URLWithString:[NSString
                                               stringWithFormat:@"%@%@", IMAGEHEADER,
-                                                               self.detailInfoModel
+                                                               weakSelf.detailInfoModel
                                                                    .authVideoPath]]];
                 player.moviePlayer.shouldAutoplay = YES;
-                [self presentMoviePlayerViewControllerAnimated:player];
+                [weakSelf presentMoviePlayerViewControllerAnimated:player];
             } else if ([[NSString stringWithFormat:@"%@", successResponse[@"code"]]
                            isEqualToString:@"199"]) {
                 [MBProgressHUD hideHUD];
                 UIAlertView *alertView = [[UIAlertView alloc]
                         initWithTitle:@""
                               message:LYPlayAuthVideoMessage1
-                             delegate:self
+                             delegate:weakSelf
                     cancelButtonTitle:nil
                     otherButtonTitles:@"知道了", nil];
                 alertView.tag = 903;
@@ -670,7 +719,7 @@ forRowAtIndexPath:(NSIndexPath *)indexPath {
                 UIAlertView *alertView = [[UIAlertView alloc]
                         initWithTitle:@""
                               message:LYPlayAuthVideoMessage2
-                             delegate:self
+                             delegate:weakSelf
                     cancelButtonTitle:nil
                     otherButtonTitles:@"知道了", nil];
                 alertView.tag = 904;

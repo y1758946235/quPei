@@ -1,27 +1,36 @@
 //
-//  UpLoadViewController.m
+//  LYEssenceImageUploadViewController.m
 //  LvYue
 //
-//  Created by 郑洲 on 16/3/15.
+//  Created by KentonYu on 16/7/30.
 //  Copyright © 2016年 OLFT. All rights reserved.
 //
 
 #import "AFHTTPRequestOperationManager.h"
+#import "LYEssenceImageUploadViewController.h"
 #import "LYHttpPoster.h"
 #import "LYUserService.h"
 #import "MBProgressHUD+NJ.h"
 #import "PhotoDetailViewController.h"
 #import "QNUploadManager.h"
 #import "UIImage+fixOrientation.h"
-#import "UpLoadViewController.h"
 #import "UploadImageCell.h"
 
 #import "IQFileManager.h"
 #import "IQMediaPickerController.h"
 #import <AVFoundation/AVFoundation.h>
 #import <MediaPlayer/MediaPlayer.h>
+@interface LYEssenceImageUploadViewController () <
+    IQMediaPickerControllerDelegate,
+    UITextViewDelegate,
+    UIActionSheetDelegate,
+    UIImagePickerControllerDelegate,
+    UINavigationControllerDelegate,
+    UITableViewDataSource,
+    UITableViewDelegate,
+    UIPickerViewDataSource,
+    UIPickerViewDelegate> {
 
-@interface UpLoadViewController () <IQMediaPickerControllerDelegate, UITextViewDelegate, UIActionSheetDelegate, UIImagePickerControllerDelegate, UINavigationControllerDelegate, UITableViewDataSource, UITableViewDelegate, UIPickerViewDataSource, UIPickerViewDelegate> {
     UITextView *markView;
     UIButton *_addBtn;
     UILabel *placeholder;
@@ -29,15 +38,17 @@
     IQMediaPickerControllerMediaType mediaType;
     NSMutableArray *_imgArray;
 }
+
 @property (nonatomic, strong) UITableView *tableView;
+
 @end
 
-@implementation UpLoadViewController
+@implementation LYEssenceImageUploadViewController
 
 - (void)viewDidLoad {
     [super viewDidLoad];
 
-    self.title = @"上传到相册";
+    self.title = @"上传到精华相册";
     [self setLeftButton:nil title:@"取消" target:self action:@selector(back)];
     [self setRightButton:[UIImage imageNamed:@"发送"] title:nil target:self action:@selector(sendClick)];
     self.view.backgroundColor = [UIColor colorWithRed:244 / 255.0 green:245 / 255.0 blue:246 / 255.0 alpha:1];
@@ -47,100 +58,20 @@
 
 - (void)sendClick {
     if (_imgArray.count == 0) {
-        [MBProgressHUD showError:@"请您添加一张相片" toView:self.view];
+        [MBProgressHUD showError:@"请您添加一张图片" toView:self.view];
         return;
     }
 
-    [MBProgressHUD showMessage:@"正在上传，请稍后..."];
-    //1. 获得七牛token
-    AFHTTPRequestOperationManager *manager = [AFHTTPRequestOperationManager manager];
-
-    NSString *urlStr = [NSString stringWithFormat:@"%@/mobile/getQiniuToken", REQUESTHEADER];
-    [manager POST:urlStr parameters:@{} success:^(AFHTTPRequestOperation *operation, id responseObject) {
-        NSLog(@"获得七牛TOKEN:%@", responseObject);
-
-        if ([[NSString stringWithFormat:@"%@", responseObject[@"code"]] isEqualToString:@"200"]) {
-            [MBProgressHUD hideHUD];
-            NSString *token = responseObject[@"data"][@"qiniuToken"];
-
-            //获取当前时间
-            NSDate *now = [NSDate date];
-            NSLog(@"now date is: %@", now);
-            NSCalendar *calendar            = [NSCalendar currentCalendar];
-            NSUInteger unitFlags            = NSYearCalendarUnit | NSMonthCalendarUnit | NSDayCalendarUnit | NSHourCalendarUnit | NSMinuteCalendarUnit | NSSecondCalendarUnit;
-            NSDateComponents *dateComponent = [calendar components:unitFlags fromDate:now];
-            int year                        = (int) [dateComponent year];
-            int month                       = (int) [dateComponent month];
-            int day                         = (int) [dateComponent day];
-            int hour                        = (int) [dateComponent hour];
-            int minute                      = (int) [dateComponent minute];
-            int second                      = (int) [dateComponent second];
-
-            NSString *photoString = @"";
-            //2.将图片传给七牛服务器,并保存图片名
-            for (int i = 0; i < _imgArray.count; i++) {
-                UIImage *beSendImage = _imgArray[i];
-                NSData *photoData    = UIImageJPEGRepresentation(beSendImage, 0.3);
-                UIImage *image       = [UIImage imageWithData:photoData];
-                CGSize size          = CGSizeFromString(NSStringFromCGSize(image.size));
-                CGFloat percent      = size.width / size.height;
-                NSString *photoStr   = [NSString stringWithFormat:@"iosLvYueFriendCircle%d%d%d%d%d%d(%d)%.2f", year, month, day, hour, minute, second, i, percent];
-                photoString          = [photoString stringByAppendingString:[NSString stringWithFormat:@"%@;", photoStr]];
-
-                QNUploadManager *upManager = [[QNUploadManager alloc] init];
-                [upManager putData:photoData key:photoStr token:token
-                          complete:^(QNResponseInfo *info, NSString *key, NSDictionary *resp) {
-                              NSLog(@"%@", info);
-                              NSLog(@"%@", resp);
-                              if (resp == nil) {
-                                  [MBProgressHUD hideHUD];
-                                  [MBProgressHUD showError:@"上传失败"];
-                                  return;
-                              }
-                          }
-                            option:nil];
-
-                //3.向后台请求
-                [LYHttpPoster postHttpRequestByPost:[NSString stringWithFormat:@"%@/mobile/user/addUserImg", REQUESTHEADER]
-                    andParameter:@{
-                        @"user_id": [LYUserService sharedInstance].userID,
-                        @"img_name": photoStr,
-                        @"intro": markView.text,
-                        @"isEssence": @2,
-                        @"bounty": @0
-                    }
-                    success:^(id successResponse) {
-                        MLOG(@"发送气质图:%@", successResponse);
-                        if ([[NSString stringWithFormat:@"%@", successResponse[@"code"]] isEqualToString:@"200"]) {
-                            [MBProgressHUD hideHUD];
-                            [MBProgressHUD showSuccess:@"提交成功"];
-                            [[NSNotificationCenter defaultCenter] postNotificationName:@"reloadDisposition" object:nil];
-
-                        } else {
-                            [MBProgressHUD hideHUD];
-                            [MBProgressHUD showError:[NSString stringWithFormat:@"%@", successResponse[@"msg"]]];
-                        }
-                    }
-                    andFailure:^(id failureResponse) {
-                        [MBProgressHUD hideHUD];
-                        [MBProgressHUD showError:@"服务器繁忙,请重试"];
-                    }];
-            }
-            dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.3 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
-                [self.navigationController popViewControllerAnimated:YES];
-
-            });
-        } else {
-
-            [MBProgressHUD hideHUD];
-            [MBProgressHUD showError:responseObject[@"msg"]];
-        }
-    }
-        failure:^(AFHTTPRequestOperation *operation, NSError *error) {
-            NSLog(@"%@", error);
-            [MBProgressHUD hideHUD];
-            [MBProgressHUD showError:@"请检查您的网络"];
-        }];
+    UIAlertView *alert   = [[UIAlertView alloc] init];
+    alert.alertViewStyle = UIAlertViewStylePlainTextInput;
+    alert.title          = @"豆客";
+    alert.message        = @"请输入查看该精华相片最低打赏金币数";
+    [alert addButtonWithTitle:@"取消"];
+    [alert addButtonWithTitle:@"确定"];
+    UITextField *textField = [alert textFieldAtIndex:0];
+    textField.keyboardType = UIKeyboardTypeNumberPad;
+    alert.delegate         = self;
+    [alert show];
 }
 
 
@@ -184,6 +115,12 @@
     [markView resignFirstResponder];
 
     if (sender.tag == _addBtn.tag) {
+
+        if (_imgArray.count == 1) {
+            [MBProgressHUD showError:@"每次只能上传一张精华相片"];
+            return;
+        }
+
         UIActionSheet *actionSheet = [[UIActionSheet alloc] initWithTitle:@"提示" delegate:self cancelButtonTitle:@"取消" destructiveButtonTitle:nil otherButtonTitles:@"从手机相册中选取", @"拍照", nil];
         [actionSheet showInView:self.view];
     } else {
@@ -371,6 +308,7 @@
 
 
 #pragma mark - UITextViewDelegate
+
 - (BOOL)textView:(UITextView *)textView shouldChangeTextInRange:(NSRange)range replacementText:(NSString *)text {
     if (range.location > 30) {
         [MBProgressHUD showError:@"字数超过限制，限输30字" toView:self.view];
@@ -400,19 +338,108 @@
     [self.view endEditing:YES];
 }
 
-- (void)didReceiveMemoryWarning {
-    [super didReceiveMemoryWarning];
-    // Dispose of any resources that can be recreated.
+#pragma mark - UIAlertViewDelegate
+
+- (void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex NS_DEPRECATED_IOS(2_0, 9_0) {
+    if (buttonIndex == 1) {
+        UITextField *textField = [alertView textFieldAtIndex:0];
+        if (!textField.text || [textField.text integerValue] == 0) {
+            [MBProgressHUD showError:@"请输入最低打赏金币数"];
+            return;
+        }
+
+        [MBProgressHUD showMessage:@"正在上传，请稍后..."];
+        //1. 获得七牛token
+        AFHTTPRequestOperationManager *manager = [AFHTTPRequestOperationManager manager];
+
+        NSString *urlStr = [NSString stringWithFormat:@"%@/mobile/getQiniuToken", REQUESTHEADER];
+        [manager POST:urlStr parameters:@{} success:^(AFHTTPRequestOperation *operation, id responseObject) {
+            NSLog(@"获得七牛TOKEN:%@", responseObject);
+
+            if ([[NSString stringWithFormat:@"%@", responseObject[@"code"]] isEqualToString:@"200"]) {
+                [MBProgressHUD hideHUD];
+                NSString *token = responseObject[@"data"][@"qiniuToken"];
+
+                //获取当前时间
+                NSDate *now = [NSDate date];
+                NSLog(@"now date is: %@", now);
+                NSCalendar *calendar            = [NSCalendar currentCalendar];
+                NSUInteger unitFlags            = NSYearCalendarUnit | NSMonthCalendarUnit | NSDayCalendarUnit | NSHourCalendarUnit | NSMinuteCalendarUnit | NSSecondCalendarUnit;
+                NSDateComponents *dateComponent = [calendar components:unitFlags fromDate:now];
+                int year                        = (int) [dateComponent year];
+                int month                       = (int) [dateComponent month];
+                int day                         = (int) [dateComponent day];
+                int hour                        = (int) [dateComponent hour];
+                int minute                      = (int) [dateComponent minute];
+                int second                      = (int) [dateComponent second];
+
+                NSString *photoString = @"";
+                //2.将图片传给七牛服务器,并保存图片名
+                for (int i = 0; i < _imgArray.count; i++) {
+                    UIImage *beSendImage = _imgArray[i];
+                    NSData *photoData    = UIImageJPEGRepresentation(beSendImage, 0.3);
+                    UIImage *image       = [UIImage imageWithData:photoData];
+                    CGSize size          = CGSizeFromString(NSStringFromCGSize(image.size));
+                    CGFloat percent      = size.width / size.height;
+                    NSString *photoStr   = [NSString stringWithFormat:@"iosLvYueFriendCircle%d%d%d%d%d%d(%d)%.2f", year, month, day, hour, minute, second, i, percent];
+                    photoString          = [photoString stringByAppendingString:[NSString stringWithFormat:@"%@;", photoStr]];
+
+                    QNUploadManager *upManager = [[QNUploadManager alloc] init];
+                    [upManager putData:photoData key:photoStr token:token
+                              complete:^(QNResponseInfo *info, NSString *key, NSDictionary *resp) {
+                                  NSLog(@"%@", info);
+                                  NSLog(@"%@", resp);
+                                  if (resp == nil) {
+                                      [MBProgressHUD hideHUD];
+                                      [MBProgressHUD showError:@"上传失败"];
+                                      return;
+                                  }
+                              }
+                                option:nil];
+
+                    //3.向后台请求
+                    [LYHttpPoster postHttpRequestByPost:[NSString stringWithFormat:@"%@/mobile/user/addUserImg", REQUESTHEADER]
+                        andParameter:@{
+                            @"user_id": [LYUserService sharedInstance].userID,
+                            @"img_name": photoStr,
+                            @"intro": markView.text,
+                            @"isEssence": @1,
+                            @"bounty": textField.text
+                        }
+                        success:^(id successResponse) {
+                            MLOG(@"发送气质图:%@", successResponse);
+                            if ([[NSString stringWithFormat:@"%@", successResponse[@"code"]] isEqualToString:@"200"]) {
+                                [MBProgressHUD hideHUD];
+                                [MBProgressHUD showSuccess:@"提交成功"];
+                                [[NSNotificationCenter defaultCenter] postNotificationName:@"reloadDisposition" object:nil];
+
+                            } else {
+                                [MBProgressHUD hideHUD];
+                                [MBProgressHUD showError:[NSString stringWithFormat:@"%@", successResponse[@"msg"]]];
+                            }
+                        }
+                        andFailure:^(id failureResponse) {
+                            [MBProgressHUD hideHUD];
+                            [MBProgressHUD showError:@"服务器繁忙,请重试"];
+                        }];
+                }
+                dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.3 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+                    [self.navigationController popViewControllerAnimated:YES];
+
+                });
+            } else {
+
+                [MBProgressHUD hideHUD];
+                [MBProgressHUD showError:responseObject[@"msg"]];
+            }
+        }
+            failure:^(AFHTTPRequestOperation *operation, NSError *error) {
+                NSLog(@"%@", error);
+                [MBProgressHUD hideHUD];
+                [MBProgressHUD showError:@"请检查您的网络"];
+            }];
+    }
 }
 
-/*
-#pragma mark - Navigation
-
-// In a storyboard-based application, you will often want to do a little preparation before navigation
-- (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
-    // Get the new view controller using [segue destinationViewController].
-    // Pass the selected object to the new view controller.
-}
-*/
 
 @end

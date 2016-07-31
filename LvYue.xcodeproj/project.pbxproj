@@ -554,6 +554,7 @@
 		3AE063781D2F76F9002338B4 /* VideoCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 3AE063761D2F76F9002338B4 /* VideoCell.xib */; };
 		4DF675701BDA3594004B2854 /* SearchNearbyModel.m in Sources */ = {isa = PBXBuildFile; fileRef = 4DF6756F1BDA3594004B2854 /* SearchNearbyModel.m */; };
 		6B3336111D45E18A0034C620 /* FXBlurView.m in Sources */ = {isa = PBXBuildFile; fileRef = 6B3336101D45E18A0034C620 /* FXBlurView.m */; };
+		6B5099EB1D4CEF4F009B7DDF /* LYEssenceImageUploadViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 6B5099EA1D4CEF4F009B7DDF /* LYEssenceImageUploadViewController.m */; };
 		6B55B07A1D4B50B900EBD172 /* LYBlurImageCache.m in Sources */ = {isa = PBXBuildFile; fileRef = 6B55B0791D4B50B900EBD172 /* LYBlurImageCache.m */; };
 		6B55B07E1D4B5F6A00EBD172 /* DXPopover.m in Sources */ = {isa = PBXBuildFile; fileRef = 6B55B07D1D4B5F6A00EBD172 /* DXPopover.m */; };
 		6B55B0811D4B62A100EBD172 /* LYPopoverView.m in Sources */ = {isa = PBXBuildFile; fileRef = 6B55B0801D4B62A100EBD172 /* LYPopoverView.m */; };
@@ -1812,6 +1813,8 @@
 		4DF6756F1BDA3594004B2854 /* SearchNearbyModel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SearchNearbyModel.m; sourceTree = "<group>"; };
 		6B33360F1D45E18A0034C620 /* FXBlurView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FXBlurView.h; sourceTree = "<group>"; };
 		6B3336101D45E18A0034C620 /* FXBlurView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FXBlurView.m; sourceTree = "<group>"; };
+		6B5099E91D4CEF4F009B7DDF /* LYEssenceImageUploadViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LYEssenceImageUploadViewController.h; sourceTree = "<group>"; };
+		6B5099EA1D4CEF4F009B7DDF /* LYEssenceImageUploadViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LYEssenceImageUploadViewController.m; sourceTree = "<group>"; };
 		6B55B0781D4B50B900EBD172 /* LYBlurImageCache.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LYBlurImageCache.h; sourceTree = "<group>"; };
 		6B55B0791D4B50B900EBD172 /* LYBlurImageCache.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LYBlurImageCache.m; sourceTree = "<group>"; };
 		6B55B07C1D4B5F6A00EBD172 /* DXPopover.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DXPopover.h; sourceTree = "<group>"; };
@@ -5139,6 +5142,8 @@
 				6B3336101D45E18A0034C620 /* FXBlurView.m */,
 				6BF5A9171D421B830079331C /* LYEssenceAlbumViewController.h */,
 				6BF5A9181D421B830079331C /* LYEssenceAlbumViewController.m */,
+				6B5099E91D4CEF4F009B7DDF /* LYEssenceImageUploadViewController.h */,
+				6B5099EA1D4CEF4F009B7DDF /* LYEssenceImageUploadViewController.m */,
 			);
 			name = "精华相册";
 			sourceTree = "<group>";
@@ -6851,6 +6856,7 @@
 				097577C21BC643E90048163E /* MyDetailInfoModel.m in Sources */,
 				A79AA7811BEAFAB10065684F /* AFHTTPRequestOperation.m in Sources */,
 				A79AA79B1BEAFAB10065684F /* QNRecord.m in Sources */,
+				6B5099EB1D4CEF4F009B7DDF /* LYEssenceImageUploadViewController.m in Sources */,
 				09549CDD1D153AF3008A721C /* EMSDWebImagePrefetcher.m in Sources */,
 				09549CDA1D153AF3008A721C /* EMSDWebImageDownloader.m in Sources */,
 				4DF675701BDA3594004B2854 /* SearchNearbyModel.m in Sources */,

@@ -10,4 +10,6 @@
 
 @interface LYEssenceAlbumViewController : BaseViewController
 
+@property (nonatomic, copy) NSString *userId;
+
 @end

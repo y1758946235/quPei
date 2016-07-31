@@ -9,6 +9,7 @@
 #import "FXBlurView.h"
 #import "LYBlurImageCache.h"
 #import "LYEssenceAlbumViewController.h"
+#import "LYEssenceImageUploadViewController.h"
 #import "LYHttpPoster.h"
 #import "LYUserService.h"
 #import "MBProgressHUD+NJ.h"
@@ -30,6 +31,7 @@ static NSString *const LYEssenceAlbumCollectionViewCellIdentity =
 @property (nonatomic, strong) NSArray<NSDictionary *> *responseArray;
 @property (nonatomic, strong) NSArray<NSString *> *imageURLArray;    // 图片URL
 @property (nonatomic, strong) NSMutableArray<UIImage *> *imageArray; // 压缩数组
+@property (nonatomic, assign) BOOL mySelf;                           // 是否是自己
 
 @end
 
@@ -41,7 +43,132 @@ static NSString *const LYEssenceAlbumCollectionViewCellIdentity =
     self.navigationItem.title = @"精华相册";
     self.view.backgroundColor = [UIColor whiteColor];
 
+    if (self.mySelf) {
+        [self setRightButton:[UIImage imageNamed:@"上传照片"] title:nil target:self action:@selector(uploadPhoto)];
+    }
+}
+
+- (void)viewWillAppear:(BOOL)animated {
+    [super viewWillAppear:animated];
+
     [self p_loadData];
+}
+
+
+#pragma mark - Pravite
+
+- (void)p_loadData {
+
+    NSString *userId = [LYUserService sharedInstance].userID;
+
+    [LYHttpPoster postHttpRequestByPost:[NSString stringWithFormat:@"%@/mobile/user/getEssenceImgList", REQUESTHEADER]
+        andParameter:
+            @{
+                @"user_id": self.mySelf ? userId : self.userId
+            }
+        success:^(id successResponse) {
+
+            if ([[NSString stringWithFormat:@"%@", successResponse[@"code"]] isEqualToString:@"200"]) {
+
+                self.responseArray = successResponse[@"data"][@"list"];
+                [self.collectionView reloadData];
+
+                // 下载图片
+                [self p_downloadImage];
+
+            } else {
+                [MBProgressHUD showError:[NSString stringWithFormat:@"%@", successResponse[@"msg"]]];
+            }
+        }
+        andFailure:^(id failureResponse) {
+            [MBProgressHUD showError:@"服务器繁忙,请重试"];
+        }];
+}
+
+- (void)p_downloadImage {
+    [self.imageURLArray enumerateObjectsUsingBlock:^(NSString *_Nonnull obj, NSUInteger idx, BOOL *_Nonnull stop) {
+
+        NSURL *URL = [NSURL URLWithString:obj];
+
+        // 自己看自己不需要模糊
+        if (!self.mySelf) {
+            // 读取缓存
+            UIImage *blurImage = [[LYBlurImageCache shareCache] objectForKey:URL.absoluteString];
+            if (blurImage) {
+                [self.imageArray replaceObjectAtIndex:idx withObject:blurImage];
+                [self.collectionView reloadItemsAtIndexPaths:@[[NSIndexPath indexPathForRow:idx inSection:0]]];
+                return;
+            }
+        }
+
+        // 没缓存就下载
+        [[SDWebImageManager sharedManager] downloadImageWithURL:URL options:SDWebImageRetryFailed progress:nil completed:^(UIImage *image, NSError *error, SDImageCacheType cacheType, BOOL finished, NSURL *imageURL) {
+
+            if (error) {
+                return;
+            }
+
+            __block UIImage *returnImage = image;
+
+            dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
+                // 自己看自己不需要模糊
+                if (!self.mySelf) {
+                    // 图片模糊
+                    returnImage = [returnImage blurredImageWithRadius:100 iterations:3 tintColor:RGBACOLOR(0, 0, 0, 0.5)];
+
+                    // 缓存模糊图片到内存
+                    [[LYBlurImageCache shareCache] setObject:returnImage forKey:imageURL.absoluteString];
+                }
+
+                dispatch_async(dispatch_get_main_queue(), ^{
+
+                    [self.imageArray replaceObjectAtIndex:idx withObject:returnImage];
+
+                    [self.collectionView reloadItemsAtIndexPaths:@[[NSIndexPath indexPathForRow:idx inSection:0]]];
+                });
+
+            });
+
+        }];
+    }];
+}
+
+- (void)uploadPhoto {
+    LYEssenceImageUploadViewController *vc = [LYEssenceImageUploadViewController new];
+    [self.navigationController pushViewController:vc animated:YES];
+}
+
+#pragma mark - UICollectionDelegate,UICollevtiondataSource
+
+- (NSInteger)collectionView:(UICollectionView *)collectionView
+     numberOfItemsInSection:(NSInteger)section {
+    return self.imageURLArray.count;
+}
+
+- (UICollectionViewCell *)collectionView:(UICollectionView *)collectionView
+                  cellForItemAtIndexPath:(NSIndexPath *)indexPath {
+    MyDispositionCollectionViewCell *cell =
+        [collectionView dequeueReusableCellWithReuseIdentifier:
+                            LYEssenceAlbumCollectionViewCellIdentity
+                                                  forIndexPath:indexPath];
+    cell.imageViewM.image = self.imageArray[indexPath.row];
+    return cell;
+}
+
+- (void)collectionView:(UICollectionView *)collectionView
+    didSelectItemAtIndexPath:(NSIndexPath *)indexPath {
+
+    // 自己看自己则直接查看
+    if (!self.mySelf) {
+        return;
+    }
+
+    OriginalViewController *vc = [[OriginalViewController alloc] init];
+    vc.imageData               = self.responseArray; // 响应的字典
+    vc.smallImage              = self.imageArray;    // 对应已经加载的 image 对象
+    ;
+    vc.userId = [LYUserService sharedInstance].userID;
+    [vc showImageWithIndex:indexPath.row andCount:self.imageArray.count];
 }
 
 #pragma mark Getter
@@ -82,96 +209,6 @@ static NSString *const LYEssenceAlbumCollectionViewCellIdentity =
     return _collectionViewLayout;
 }
 
-#pragma mark - Pravite
-
-- (void)p_loadData {
-
-    NSString *userId = [LYUserService sharedInstance].userID;
-
-    [LYHttpPoster postHttpRequestByPost:[NSString stringWithFormat:@"%@/mobile/user/imgList", REQUESTHEADER] andParameter:@{ @"user_id": userId } success:^(id successResponse) {
-
-        if ([[NSString stringWithFormat:@"%@", successResponse[@"code"]] isEqualToString:@"200"]) {
-
-            self.responseArray = successResponse[@"data"][@"list"];
-            [self.collectionView reloadData];
-
-            // 下载图片
-            [self p_downloadImage];
-
-        } else {
-            [MBProgressHUD showError:[NSString stringWithFormat:@"%@", successResponse[@"msg"]]];
-        }
-    }
-        andFailure:^(id failureResponse) {
-            [MBProgressHUD showError:@"服务器繁忙,请重试"];
-        }];
-}
-
-- (void)p_downloadImage {
-    [self.imageURLArray enumerateObjectsUsingBlock:^(NSString *_Nonnull obj, NSUInteger idx, BOOL *_Nonnull stop) {
-
-        NSURL *URL = [NSURL URLWithString:obj];
-
-        // 读取缓存
-        UIImage *blurImage = [[LYBlurImageCache shareCache] objectForKey:URL.absoluteString];
-        if (blurImage) {
-            [self.imageArray replaceObjectAtIndex:idx withObject:blurImage];
-            [self.collectionView reloadItemsAtIndexPaths:@[[NSIndexPath indexPathForRow:idx inSection:0]]];
-            return;
-        }
-
-        // 没缓存就下载
-        [[SDWebImageManager sharedManager] downloadImageWithURL:URL options:SDWebImageRetryFailed progress:nil completed:^(UIImage *image, NSError *error, SDImageCacheType cacheType, BOOL finished, NSURL *imageURL) {
-            __block UIImage *returnImage = image;
-
-            dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
-                // 图片模糊
-                returnImage = [returnImage blurredImageWithRadius:100 iterations:3 tintColor:RGBACOLOR(0, 0, 0, 0.5)];
-
-                // 缓存模糊图片到内存
-                [[LYBlurImageCache shareCache] setObject:returnImage forKey:imageURL.absoluteString];
-
-                [self.imageArray replaceObjectAtIndex:idx withObject:returnImage];
-
-                dispatch_async(dispatch_get_main_queue(), ^{
-                    [self.collectionView reloadItemsAtIndexPaths:@[[NSIndexPath indexPathForRow:idx inSection:0]]];
-                });
-
-            });
-
-        }];
-    }];
-}
-
-#pragma mark - UICollectionDelegate,UICollevtiondataSource
-
-- (NSInteger)collectionView:(UICollectionView *)collectionView
-     numberOfItemsInSection:(NSInteger)section {
-    return self.imageURLArray.count;
-}
-
-- (UICollectionViewCell *)collectionView:(UICollectionView *)collectionView
-                  cellForItemAtIndexPath:(NSIndexPath *)indexPath {
-    MyDispositionCollectionViewCell *cell =
-        [collectionView dequeueReusableCellWithReuseIdentifier:
-                            LYEssenceAlbumCollectionViewCellIdentity
-                                                  forIndexPath:indexPath];
-    cell.imageViewM.image = self.imageArray[indexPath.row];
-    return cell;
-}
-
-- (void)collectionView:(UICollectionView *)collectionView
-    didSelectItemAtIndexPath:(NSIndexPath *)indexPath {
-
-    OriginalViewController *vc = [[OriginalViewController alloc] init];
-    vc.imageData               = self.responseArray; // 响应的字典
-    vc.smallImage              = self.imageArray;    // 对应已经加载的 image 对象
-    ;
-    vc.userId = [LYUserService sharedInstance].userID;
-    [vc showImageWithIndex:indexPath.row andCount:self.imageArray.count];
-}
-
-
 - (NSArray<NSString *> *)imageURLArray {
     if (!_imageURLArray) {
         NSMutableArray *array = [[NSMutableArray alloc] initWithCapacity:self.responseArray.count];
@@ -186,12 +223,17 @@ static NSString *const LYEssenceAlbumCollectionViewCellIdentity =
 - (NSMutableArray<UIImage *> *)imageArray {
     if (!_imageArray) {
         _imageArray = [[NSMutableArray alloc] initWithCapacity:self.imageURLArray.count];
+        NSLog(@"count:%@", @(self.imageURLArray.count));
         for (NSInteger flag = 0; flag < self.imageURLArray.count; flag++) {
+            NSLog(@"flag:%@", @(flag));
             [_imageArray addObject:[UIImage imageNamed:@"PlaceImage"]];
         }
     }
     return _imageArray;
 }
 
+- (BOOL)mySelf {
+    return (self.userId.length == 0 || [self.userId isEqualToString:[LYUserService sharedInstance].userID]);
+}
 
 @end
