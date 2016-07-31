@@ -493,7 +493,7 @@ forRowAtIndexPath:(NSIndexPath *)indexPath {
                             weakSelf.taDeQiZhiImageURLArray = [array copy];
 
                             // 加载精华相册
-                            [LYHttpPoster postHttpRequestByPost:[NSString stringWithFormat:@"%@/mobile/user/imgList", REQUESTHEADER]
+                            [LYHttpPoster postHttpRequestByPost:[NSString stringWithFormat:@"%@/mobile/user/getEssenceImgList", REQUESTHEADER]
                                 andParameter:@{
                                     @"user_id": @(weakSelf.infoModel.id)
                                 }

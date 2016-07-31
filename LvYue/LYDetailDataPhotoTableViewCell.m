@@ -84,7 +84,7 @@
                                 self.secondImageView.image = blurImage;
                             }
                             if (idx == 2) {
-                                self.secondImageView.image = blurImage;
+                                self.thirdImageView.image = blurImage;
                             }
                         });
 
@@ -97,7 +97,7 @@
                         self.secondImageView.image = blurImage;
                     }
                     if (idx == 2) {
-                        self.secondImageView.image = blurImage;
+                        self.thirdImageView.image = blurImage;
                     }
                 }
 
@@ -109,7 +109,7 @@
                     self.secondImageView.image = image;
                 }
                 if (idx == 2) {
-                    self.secondImageView.image = image;
+                    self.thirdImageView.image = image;
                 }
             }
         }];
