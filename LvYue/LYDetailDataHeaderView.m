@@ -20,6 +20,7 @@
 @property (weak, nonatomic) IBOutlet UILabel *fansValueLabel;
 @property (weak, nonatomic) IBOutlet UILabel *caiFuValueLabel;
 
+@property (weak, nonatomic) IBOutlet UIView *fouceOnAndSendGiftView;
 @property (weak, nonatomic) IBOutlet UIButton *foucsOnButton;
 @property (weak, nonatomic) IBOutlet UIButton *sendGiftButton;
 
@@ -35,7 +36,7 @@
     self.avatarImageView.layer.masksToBounds = YES;
 }
 
-- (void)configData:(MyInfoModel *)infoModel {
+- (void)configData:(MyInfoModel *)infoModel mySelf:(BOOL)mySelf {
 
     [self.avatarImageView sd_setImageWithURL:[NSURL URLWithString:[NSString stringWithFormat:@"%@%@", IMAGEHEADER, infoModel.icon]] placeholderImage:[UIImage imageNamed:@"logo108"]];
 
@@ -52,6 +53,10 @@
     self.meiLiValueLabel.text = [NSString stringWithFormat:@"%ld", (long) infoModel.charm];
     self.caiFuValueLabel.text = [NSString stringWithFormat:@"%ld", (long) infoModel.wealth];
     self.fansValueLabel.text  = [NSString stringWithFormat:@"%ld", (long) infoModel.fansNum];
+
+    if (mySelf) {
+        self.fouceOnAndSendGiftView.hidden = YES;
+    }
 
     // 已关注
     if (infoModel.isFocus) {

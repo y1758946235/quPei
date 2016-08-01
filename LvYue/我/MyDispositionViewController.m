@@ -35,6 +35,8 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
 
+    self.title = @"我的气质";
+
     if (_userId.length == 0) {
         [self setRightButton:[UIImage imageNamed:@"上传照片"] title:nil target:self action:@selector(uploadPhoto)];
     }

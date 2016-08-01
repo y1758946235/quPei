@@ -6,13 +6,13 @@
 //  Copyright (c) 2015年 vison. All rights reserved.
 //
 
-#import "DetailDataViewController.h"
 #import "FriendsCircleCell.h"
 #import "FriendsCircleMessage.h"
 #import "FriendsCirleViewController.h"
 #import "FriendsMessageViewController.h"
+#import "LYDetailDataViewController.h"
 #import "PublishMessageViewController.h"
-
+#import "LYDetailDataViewController.h"
 #import "AFNetworking.h"
 #import "LYHttpPoster.h"
 #import "LYUserService.h"
@@ -146,6 +146,7 @@
     };
     [segmentedControl setTitleTextAttributes:attrs forState:UIControlStateNormal];
     [segmentedControl setTitleTextAttributes:attrs forState:UIControlStateSelected];
+
     self.navigationItem.titleView         = segmentedControl;
     segmentedControl.selectedSegmentIndex = 0;
     [segmentedControl addTarget:self action:@selector(controlPressed:) forControlEvents:UIControlEventValueChanged];
@@ -1059,9 +1060,10 @@
 - (void)tapHeadImg:(UITapGestureRecognizer *)tap {
 
     NSInteger userId                                   = [_noticeList[tap.view.tag][@"user_id"] integerValue];
-    DetailDataViewController *detailDataViewController = [[DetailDataViewController alloc] init];
-    detailDataViewController.friendId                  = userId;
+    LYDetailDataViewController *detailDataViewController = [[LYDetailDataViewController alloc] init];
+    detailDataViewController.userId                  = [NSString stringWithFormat:@"%ld", (long)userId];
     [self.navigationController pushViewController:detailDataViewController animated:YES];
+
 }
 
 
@@ -1165,6 +1167,7 @@
         //设置热门的frame
         hotBackView.y = CGRectGetMaxY(myIcon.frame)+5;
         headerView.frame  = CGRectMake(0, 0, SCREEN_WIDTH, SCREEN_WIDTH * 0.5 + 30 +hotBackView.height);
+
         _newMsgBtn.hidden = YES;
         return SCREEN_WIDTH * 0.5 + 30+hotBackView.height;
     }

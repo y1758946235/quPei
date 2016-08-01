@@ -7,11 +7,12 @@
 //
 
 #import <UIKit/UIKit.h>
+@class LYSendGiftModel;
 
 @interface LYSendGiftCollectionViewCell : UICollectionViewCell
 
 - (void)selected;
 - (void)unSelected;
-- (void)configData:(NSDictionary *)data;
+- (void)configData:(LYSendGiftModel *)data;
 
 @end

@@ -553,12 +553,21 @@
 		3AC849D71D2522DC002735E0 /* BuyCoinViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 3AC849D51D2522DC002735E0 /* BuyCoinViewController.xib */; };
 		3AE063771D2F76F9002338B4 /* VideoCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 3AE063751D2F76F9002338B4 /* VideoCell.m */; };
 		3AE063781D2F76F9002338B4 /* VideoCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 3AE063761D2F76F9002338B4 /* VideoCell.xib */; };
+		3AE5ED121D4F4662006884D5 /* DXPopover.m in Sources */ = {isa = PBXBuildFile; fileRef = 3AE5ED111D4F4662006884D5 /* DXPopover.m */; };
 		4DF675701BDA3594004B2854 /* SearchNearbyModel.m in Sources */ = {isa = PBXBuildFile; fileRef = 4DF6756F1BDA3594004B2854 /* SearchNearbyModel.m */; };
 		6B3336111D45E18A0034C620 /* FXBlurView.m in Sources */ = {isa = PBXBuildFile; fileRef = 6B3336101D45E18A0034C620 /* FXBlurView.m */; };
+		6B5099EB1D4CEF4F009B7DDF /* LYEssenceImageUploadViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 6B5099EA1D4CEF4F009B7DDF /* LYEssenceImageUploadViewController.m */; };
+		6B55B07A1D4B50B900EBD172 /* LYBlurImageCache.m in Sources */ = {isa = PBXBuildFile; fileRef = 6B55B0791D4B50B900EBD172 /* LYBlurImageCache.m */; };
+		6B55B0811D4B62A100EBD172 /* LYPopoverView.m in Sources */ = {isa = PBXBuildFile; fileRef = 6B55B0801D4B62A100EBD172 /* LYPopoverView.m */; };
 		6B6A57C61D48F986001E29D1 /* LYDetailDataPhotoTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 6B6A57C41D48F986001E29D1 /* LYDetailDataPhotoTableViewCell.m */; };
 		6B6A57C71D48F986001E29D1 /* LYDetailDataPhotoTableViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 6B6A57C51D48F986001E29D1 /* LYDetailDataPhotoTableViewCell.xib */; };
+		6B9644BD1D4EFFEB00833212 /* LYEssenceTipViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 6B9644BB1D4EFFEB00833212 /* LYEssenceTipViewController.m */; };
+		6BA818A11D4EDEB8007AB115 /* LYFocusOnAndFansViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 6BA818A01D4EDEB8007AB115 /* LYFocusOnAndFansViewController.m */; };
+		6BA818A61D4EDF1B007AB115 /* LYFocusOnAndFansTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 6BA818A41D4EDF1B007AB115 /* LYFocusOnAndFansTableViewCell.m */; };
+		6BA818A71D4EDF1B007AB115 /* LYFocusOnAndFansTableViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 6BA818A51D4EDF1B007AB115 /* LYFocusOnAndFansTableViewCell.xib */; };
 		6BB490D51D473430003843C6 /* LYDetailDataDefalutTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 6BB490D31D473430003843C6 /* LYDetailDataDefalutTableViewCell.m */; };
 		6BB490D61D473430003843C6 /* LYDetailDataDefalutTableViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 6BB490D41D473430003843C6 /* LYDetailDataDefalutTableViewCell.xib */; };
+		6BC56C711D4CA97800B22B61 /* LYSendGiftModel.m in Sources */ = {isa = PBXBuildFile; fileRef = 6BC56C701D4CA97800B22B61 /* LYSendGiftModel.m */; };
 		6BDD2A0A1D489CBE00693ADF /* LYSendGiftViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 6BDD2A091D489CBE00693ADF /* LYSendGiftViewController.m */; };
 		6BDD2A0F1D489F5A00693ADF /* LYSendGiftCollectionViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 6BDD2A0D1D489F5A00693ADF /* LYSendGiftCollectionViewCell.m */; };
 		6BDD2A131D48A21D00693ADF /* LYSendGiftHeaderView.m in Sources */ = {isa = PBXBuildFile; fileRef = 6BDD2A121D48A21D00693ADF /* LYSendGiftHeaderView.m */; };
@@ -1807,16 +1816,33 @@
 		3AE063741D2F76F9002338B4 /* VideoCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = VideoCell.h; sourceTree = "<group>"; };
 		3AE063751D2F76F9002338B4 /* VideoCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = VideoCell.m; sourceTree = "<group>"; };
 		3AE063761D2F76F9002338B4 /* VideoCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = VideoCell.xib; sourceTree = "<group>"; };
+		3AE5ED101D4F4662006884D5 /* DXPopover.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = DXPopover.h; path = LvYue/Lib/DXPopover.h; sourceTree = SOURCE_ROOT; };
+		3AE5ED111D4F4662006884D5 /* DXPopover.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = DXPopover.m; path = LvYue/Lib/DXPopover.m; sourceTree = SOURCE_ROOT; };
 		4DF6756E1BDA3594004B2854 /* SearchNearbyModel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SearchNearbyModel.h; sourceTree = "<group>"; };
 		4DF6756F1BDA3594004B2854 /* SearchNearbyModel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SearchNearbyModel.m; sourceTree = "<group>"; };
 		6B33360F1D45E18A0034C620 /* FXBlurView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FXBlurView.h; sourceTree = "<group>"; };
 		6B3336101D45E18A0034C620 /* FXBlurView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FXBlurView.m; sourceTree = "<group>"; };
+		6B5099E91D4CEF4F009B7DDF /* LYEssenceImageUploadViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LYEssenceImageUploadViewController.h; sourceTree = "<group>"; };
+		6B5099EA1D4CEF4F009B7DDF /* LYEssenceImageUploadViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LYEssenceImageUploadViewController.m; sourceTree = "<group>"; };
+		6B55B0781D4B50B900EBD172 /* LYBlurImageCache.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LYBlurImageCache.h; sourceTree = "<group>"; };
+		6B55B0791D4B50B900EBD172 /* LYBlurImageCache.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LYBlurImageCache.m; sourceTree = "<group>"; };
+		6B55B07F1D4B62A100EBD172 /* LYPopoverView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LYPopoverView.h; sourceTree = "<group>"; };
+		6B55B0801D4B62A100EBD172 /* LYPopoverView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LYPopoverView.m; sourceTree = "<group>"; };
 		6B6A57C31D48F986001E29D1 /* LYDetailDataPhotoTableViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LYDetailDataPhotoTableViewCell.h; sourceTree = "<group>"; };
 		6B6A57C41D48F986001E29D1 /* LYDetailDataPhotoTableViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LYDetailDataPhotoTableViewCell.m; sourceTree = "<group>"; };
 		6B6A57C51D48F986001E29D1 /* LYDetailDataPhotoTableViewCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = LYDetailDataPhotoTableViewCell.xib; sourceTree = "<group>"; };
+		6B9644BA1D4EFFEB00833212 /* LYEssenceTipViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LYEssenceTipViewController.h; sourceTree = "<group>"; };
+		6B9644BB1D4EFFEB00833212 /* LYEssenceTipViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LYEssenceTipViewController.m; sourceTree = "<group>"; };
+		6BA8189F1D4EDEB8007AB115 /* LYFocusOnAndFansViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LYFocusOnAndFansViewController.h; sourceTree = "<group>"; };
+		6BA818A01D4EDEB8007AB115 /* LYFocusOnAndFansViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LYFocusOnAndFansViewController.m; sourceTree = "<group>"; };
+		6BA818A31D4EDF1B007AB115 /* LYFocusOnAndFansTableViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LYFocusOnAndFansTableViewCell.h; sourceTree = "<group>"; };
+		6BA818A41D4EDF1B007AB115 /* LYFocusOnAndFansTableViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LYFocusOnAndFansTableViewCell.m; sourceTree = "<group>"; };
+		6BA818A51D4EDF1B007AB115 /* LYFocusOnAndFansTableViewCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = LYFocusOnAndFansTableViewCell.xib; sourceTree = "<group>"; };
 		6BB490D21D473430003843C6 /* LYDetailDataDefalutTableViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LYDetailDataDefalutTableViewCell.h; sourceTree = "<group>"; };
 		6BB490D31D473430003843C6 /* LYDetailDataDefalutTableViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LYDetailDataDefalutTableViewCell.m; sourceTree = "<group>"; };
 		6BB490D41D473430003843C6 /* LYDetailDataDefalutTableViewCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = LYDetailDataDefalutTableViewCell.xib; sourceTree = "<group>"; };
+		6BC56C6F1D4CA97800B22B61 /* LYSendGiftModel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LYSendGiftModel.h; sourceTree = "<group>"; };
+		6BC56C701D4CA97800B22B61 /* LYSendGiftModel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LYSendGiftModel.m; sourceTree = "<group>"; };
 		6BDD2A081D489CBE00693ADF /* LYSendGiftViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LYSendGiftViewController.h; sourceTree = "<group>"; };
 		6BDD2A091D489CBE00693ADF /* LYSendGiftViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LYSendGiftViewController.m; sourceTree = "<group>"; };
 		6BDD2A0C1D489F5A00693ADF /* LYSendGiftCollectionViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LYSendGiftCollectionViewCell.h; sourceTree = "<group>"; };
@@ -3816,6 +3842,7 @@
 		097577BC1BC63BFE0048163E /* Model */ = {
 			isa = PBXGroup;
 			children = (
+				6BC56C6E1D4CA96200B22B61 /* 礼物 */,
 				0991EEB51C4DFBB5001D9FD3 /* 屏蔽列表 */,
 				09CF96181C23B54200FF755D /* 最近来访 */,
 				0928A62A1BD0C68B00CA100E /* 订单 */,
@@ -4019,6 +4046,7 @@
 		09C07F431BBA1AB8003AD2C4 /* Controllser */ = {
 			isa = PBXGroup;
 			children = (
+				6BA8189E1D4EDE8B007AB115 /* 粉丝关注 */,
 				6BDD2A071D489C9D00693ADF /* 礼物 */,
 				6BF5A9161D421B600079331C /* 精华相册 */,
 				6BF5A9121D421AFA0079331C /* 我的礼物 */,
@@ -4043,6 +4071,7 @@
 		09C07F441BBA1AC1003AD2C4 /* View */ = {
 			isa = PBXGroup;
 			children = (
+				6BA818A21D4EDEF1007AB115 /* 粉丝关注 */,
 				6BDD2A0B1D489F3A00693ADF /* 礼物 */,
 				3AC849C91D24B7A2002735E0 /* 钱包明细Cell */,
 				98D30A7C1C98089C008EE11F /* 我的气质cell */,
@@ -4808,6 +4837,8 @@
 				85A4763A1C46C77C00841B68 /* UITextView+QuickTextView.m */,
 				85A4763C1C46C7AF00841B68 /* UIImageView+QuickImageView.h */,
 				85A4763D1C46C7AF00841B68 /* UIImageView+QuickImageView.m */,
+				6B55B07F1D4B62A100EBD172 /* LYPopoverView.h */,
+				6B55B0801D4B62A100EBD172 /* LYPopoverView.m */,
 			);
 			path = Tool;
 			sourceTree = "<group>";
@@ -4899,6 +4930,8 @@
 				6B6A57C31D48F986001E29D1 /* LYDetailDataPhotoTableViewCell.h */,
 				6B6A57C41D48F986001E29D1 /* LYDetailDataPhotoTableViewCell.m */,
 				6B6A57C51D48F986001E29D1 /* LYDetailDataPhotoTableViewCell.xib */,
+				6B55B0781D4B50B900EBD172 /* LYBlurImageCache.h */,
+				6B55B0791D4B50B900EBD172 /* LYBlurImageCache.m */,
 			);
 			name = View;
 			sourceTree = "<group>";
@@ -5055,6 +5088,43 @@
 			name = "退款成功";
 			sourceTree = "<group>";
 		};
+		6B55B07B1D4B5F6A00EBD172 /* DXPopover */ = {
+			isa = PBXGroup;
+			children = (
+				3AE5ED101D4F4662006884D5 /* DXPopover.h */,
+				3AE5ED111D4F4662006884D5 /* DXPopover.m */,
+			);
+			path = DXPopover;
+			sourceTree = "<group>";
+		};
+		6BA8189E1D4EDE8B007AB115 /* 粉丝关注 */ = {
+			isa = PBXGroup;
+			children = (
+				6BA8189F1D4EDEB8007AB115 /* LYFocusOnAndFansViewController.h */,
+				6BA818A01D4EDEB8007AB115 /* LYFocusOnAndFansViewController.m */,
+			);
+			name = "粉丝关注";
+			sourceTree = "<group>";
+		};
+		6BA818A21D4EDEF1007AB115 /* 粉丝关注 */ = {
+			isa = PBXGroup;
+			children = (
+				6BA818A31D4EDF1B007AB115 /* LYFocusOnAndFansTableViewCell.h */,
+				6BA818A41D4EDF1B007AB115 /* LYFocusOnAndFansTableViewCell.m */,
+				6BA818A51D4EDF1B007AB115 /* LYFocusOnAndFansTableViewCell.xib */,
+			);
+			name = "粉丝关注";
+			sourceTree = "<group>";
+		};
+		6BC56C6E1D4CA96200B22B61 /* 礼物 */ = {
+			isa = PBXGroup;
+			children = (
+				6BC56C6F1D4CA97800B22B61 /* LYSendGiftModel.h */,
+				6BC56C701D4CA97800B22B61 /* LYSendGiftModel.m */,
+			);
+			name = "礼物";
+			sourceTree = "<group>";
+		};
 		6BDBBF8D1D3F2F2000BA565D /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
@@ -5116,6 +5186,10 @@
 				6B3336101D45E18A0034C620 /* FXBlurView.m */,
 				6BF5A9171D421B830079331C /* LYEssenceAlbumViewController.h */,
 				6BF5A9181D421B830079331C /* LYEssenceAlbumViewController.m */,
+				6B5099E91D4CEF4F009B7DDF /* LYEssenceImageUploadViewController.h */,
+				6B5099EA1D4CEF4F009B7DDF /* LYEssenceImageUploadViewController.m */,
+				6B9644BA1D4EFFEB00833212 /* LYEssenceTipViewController.h */,
+				6B9644BB1D4EFFEB00833212 /* LYEssenceTipViewController.m */,
 			);
 			name = "精华相册";
 			sourceTree = "<group>";
@@ -5622,6 +5696,7 @@
 		A79AA3741BEAFAB00065684F /* Lib */ = {
 			isa = PBXGroup;
 			children = (
+				6B55B07B1D4B5F6A00EBD172 /* DXPopover */,
 				09549B5B1D153AF3008A721C /* Ease */,
 				8538D2211C61C9F40025495B /* EageProgressHUD */,
 				09D02A491C48C5AA004C7BE9 /* MJRefresh */,
@@ -6360,6 +6435,7 @@
 				09549E101D153B7A008A721C /* VoiceSearchFeedback002@2x.png in Resources */,
 				09549E031D153B7A008A721C /* chatListCellHead.png in Resources */,
 				09549E1F1D153B7A008A721C /* VoiceSearchFeedback010.png in Resources */,
+				6BA818A71D4EDF1B007AB115 /* LYFocusOnAndFansTableViewCell.xib in Resources */,
 				09549E541D153B7A008A721C /* messageSendFail@2x.png in Resources */,
 				A79AA7CC1BEAFAB10065684F /* MBProgressHUD.bundle in Resources */,
 				09549E771D153B7A008A721C /* chatBar_more_cameraSelected.png in Resources */,
@@ -6558,11 +6634,13 @@
 				3ABAF1581D350F85006DF5C6 /* BuyRedBeanCell.m in Sources */,
 				09D02A851C48C5AA004C7BE9 /* MJRefreshConst.m in Sources */,
 				A79AA8151BEAFAB10065684F /* base64.m in Sources */,
+				3AE5ED121D4F4662006884D5 /* DXPopover.m in Sources */,
 				18EEB8821BBA3D6A00AD5BD5 /* LoginViewController.m in Sources */,
 				09D02A861C48C5AA004C7BE9 /* UIScrollView+MJExtension.m in Sources */,
 				09549D251D153AF3008A721C /* EMSearchDisplayController.m in Sources */,
 				984B4DA91CCDF7C0001A063D /* SDImageCache.m in Sources */,
 				09549D1F1D153AF3008A721C /* BaseTableViewCell.m in Sources */,
+				6BA818A61D4EDF1B007AB115 /* LYFocusOnAndFansTableViewCell.m in Sources */,
 				18976ACE1BC899AA00B5D912 /* SearchNewGroupController.m in Sources */,
 				A79AA7E51BEAFAB10065684F /* QNFileRecorder.m in Sources */,
 				18ECFC1C1BC6C54600EBA772 /* BuddySelectionViewController.m in Sources */,
@@ -6572,6 +6650,7 @@
 				85A476351C46C72D00841B68 /* UIButton+QuickButton.m in Sources */,
 				09C802AE1BB8E69200E8F231 /* StartDateTableViewCell.m in Sources */,
 				987A0F1E1C969B7500FB90A8 /* HomeCollectionViewCell.m in Sources */,
+				6BA818A11D4EDEB8007AB115 /* LYFocusOnAndFansViewController.m in Sources */,
 				851048D11C3E0F6D00778A5C /* OtherVideoViewController.m in Sources */,
 				855FAB261C33C7F400440773 /* VideoPlayerCell.m in Sources */,
 				189B825F1BE0AE7100CC1620 /* SystemMessageCell.m in Sources */,
@@ -6683,6 +6762,7 @@
 				09549D101D153AF3008A721C /* DXRecordView.m in Sources */,
 				188B007F1BBB8A350022B9DB /* ForgetPasswordController.m in Sources */,
 				A79AA8161BEAFAB10065684F /* DataSigner.m in Sources */,
+				6B55B07A1D4B50B900EBD172 /* LYBlurImageCache.m in Sources */,
 				09549D151D153AF3008A721C /* EMChatTextBubbleView.m in Sources */,
 				09549CC81D153AF3008A721C /* EMCDDeviceManager+Remind.m in Sources */,
 				A70951F91BFB1B7D009A050A /* LiveModel.m in Sources */,
@@ -6703,6 +6783,7 @@
 				984B4DB41CCDF7C0001A063D /* UIImageView+HighlightedWebCache.m in Sources */,
 				1866986D1BCFC474008A3A0C /* OrderDetailsViewController.m in Sources */,
 				098AF2911BD48134006E092F /* SubscriptionViewController.m in Sources */,
+				6BC56C711D4CA97800B22B61 /* LYSendGiftModel.m in Sources */,
 				09549CE01D153AF3008A721C /* UIButton+EMWebCache.m in Sources */,
 				09549D161D153AF3008A721C /* EMChatVideoBubbleView.m in Sources */,
 				980FCEBC1CE72F1200956912 /* IQSongsListViewController.m in Sources */,
@@ -6725,6 +6806,7 @@
 				09549CC91D153AF3008A721C /* EMCDDeviceManagerBase.m in Sources */,
 				09C07F4D1BBA1AEB003AD2C4 /* MyCenterTableViewCell.m in Sources */,
 				184B35C71BD86C5F00421229 /* AddGroupMemberViewController.m in Sources */,
+				6B55B0811D4B62A100EBD172 /* LYPopoverView.m in Sources */,
 				85208BBB1C2BBA1A00261C78 /* VideoListViewController.m in Sources */,
 				187308C11BB8D96300B071CE /* DialogueViewController.m in Sources */,
 				A79AA7D61BEAFAB10065684F /* NSString+DeviceToken.m in Sources */,
@@ -6754,6 +6836,7 @@
 				09C07F581BBA1AFD003AD2C4 /* MyInfomationOtherTableViewCell.m in Sources */,
 				095BEDA91BC7F30300BC7D08 /* JIangHuCell.m in Sources */,
 				6BF5A9101D41FBF80079331C /* LYMeTableViewCell.m in Sources */,
+				6B9644BD1D4EFFEB00833212 /* LYEssenceTipViewController.m in Sources */,
 				A79AA79E1BEAFAB10065684F /* QNHijackingDetectWrapper.m in Sources */,
 				980FCEC51CE72F1200956912 /* IQMediaView.m in Sources */,
 				09549CD71D153AF3008A721C /* EMSDImageCache.m in Sources */,
@@ -6825,6 +6908,7 @@
 				097577C21BC643E90048163E /* MyDetailInfoModel.m in Sources */,
 				A79AA7811BEAFAB10065684F /* AFHTTPRequestOperation.m in Sources */,
 				A79AA79B1BEAFAB10065684F /* QNRecord.m in Sources */,
+				6B5099EB1D4CEF4F009B7DDF /* LYEssenceImageUploadViewController.m in Sources */,
 				09549CDD1D153AF3008A721C /* EMSDWebImagePrefetcher.m in Sources */,
 				09549CDA1D153AF3008A721C /* EMSDWebImageDownloader.m in Sources */,
 				4DF675701BDA3594004B2854 /* SearchNearbyModel.m in Sources */,

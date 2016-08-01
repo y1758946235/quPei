@@ -7,6 +7,8 @@
 //
 
 #import "LYSendGiftCollectionViewCell.h"
+#import "LYSendGiftModel.h"
+#import "UIImageView+WebCache.h"
 
 @interface LYSendGiftCollectionViewCell ()
 
@@ -52,10 +54,10 @@
     self.selectedImageView.frame = CGRectMake(0, 0, 34.f, 34.f);
 }
 
-- (void)configData:(NSDictionary *)data {
-    self.iconImageView.image = [UIImage imageNamed:data[@"icon"]];
-    self.nameLabel.text      = data[@"name"];
-    self.coinNumLabel.text   = data[@"coin"];
+- (void)configData:(LYSendGiftModel *)data {
+    [self.iconImageView sd_setImageWithURL:data.giftIconURL placeholderImage:[UIImage imageNamed:@"logo108"]];
+    self.nameLabel.text    = data.giftName;
+    self.coinNumLabel.text = [NSString stringWithFormat:@"%ld", (long) data.giftPrice];
 }
 
 - (void)selected {

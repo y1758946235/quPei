@@ -10,6 +10,7 @@
 #import "LYHttpPoster.h"
 #import "LYSendGiftCollectionViewCell.h"
 #import "LYSendGiftHeaderView.h"
+#import "LYSendGiftModel.h"
 #import "LYSendGiftViewController.h"
 #import "LYUserService.h"
 #import "MBProgressHUD+NJ.h"
@@ -19,7 +20,6 @@ typedef NS_ENUM(NSUInteger, LYSendGiftAlertType) {
     LYSendGiftAlertTypeSendGift      = 2  // 送礼物
 };
 
-static NSArray<NSDictionary *> *LYSendGiftCollectionViewDataArray;
 static NSString *const LYSendGiftHeaderViewIdentity         = @"LYSendGiftHeaderViewIdentity";
 static NSString *const LYSendGiftCollectionViewCellIdentity = @"LYSendGiftCollectionViewCellIdentity";
 
@@ -35,69 +35,11 @@ static NSString *const LYSendGiftCollectionViewCellIdentity = @"LYSendGiftCollec
 
 @property (nonatomic, strong) LYSendGiftCollectionViewCell *selectedCell;
 @property (nonatomic, copy) NSString *accountAmount; // 账户余额
+@property (nonatomic, strong) NSMutableArray<LYSendGiftModel *> *giftInfoList;
 
 @end
 
 @implementation LYSendGiftViewController
-
-+ (void)initialize {
-    LYSendGiftCollectionViewDataArray = @[
-        @{ @"icon": @"青瓜",
-           @"name": @"小青瓜",
-           @"coin": @"1" },
-        @{ @"icon": @"魔棒",
-           @"name": @"魔术棒",
-           @"coin": @"2" },
-        @{ @"icon": @"小旺",
-           @"name": @"小汪",
-           @"coin": @"5" },
-        @{ @"icon": @"鲜花",
-           @"name": @"束花",
-           @"coin": @"10" },
-        @{ @"icon": @"烟花",
-           @"name": @"爱心烟花",
-           @"coin": @"6666" },
-        @{ @"icon": @"戒指",
-           @"name": @"钻戒",
-           @"coin": @"5000" },
-        @{ @"icon": @"红包",
-           @"name": @"大红包",
-           @"coin": @"3000" },
-        @{ @"icon": @"小蘑菇",
-           @"name": @"小蘑菇",
-           @"coin": @"1" },
-        @{ @"icon": @"干杯",
-           @"name": @"干杯",
-           @"coin": @"2" },
-        @{ @"icon": @"香蕉先生",
-           @"name": @"香蕉先生",
-           @"coin": @"2" },
-        @{ @"icon": @"飞吻",
-           @"name": @"飞吻",
-           @"coin": @"33" },
-        @{ @"icon": @"爱心钻石",
-           @"name": @"爱心钻石",
-           @"coin": @"88" },
-        @{ @"icon": @"红包",
-           @"name": @"小红包",
-           @"coin": @"500" },
-        @{ @"icon": @"飞机",
-           @"name": @"飞机",
-           @"coin": @"3000" },
-        @{ @"icon": @"赛车",
-           @"name": @"赛车",
-           @"coin": @"3000" },
-        @{ @"icon": @"西瓜",
-           @"name": @"小西瓜",
-           @"coin": @"1" },
-        @{ @"icon": @"雷枪",
-           @"name": @"手枪",
-           @"coin": @"2" },
-        @{ @"icon": @"鞭",
-           @"name": @"鞭",
-           @"coin": @"3" },
-    ];
-}
 
 - (void)viewDidLoad {
     [super viewDidLoad];
@@ -105,19 +47,18 @@ static NSString *const LYSendGiftCollectionViewCellIdentity = @"LYSendGiftCollec
     self.title = @"赠送礼物";
 
     [self p_loadAccountAmount];
-
-    [self.collectionView reloadData];
+    [self p_loadGift];
 }
 
 #pragma mark - UICollectionView
 
 - (NSInteger)collectionView:(UICollectionView *)collectionView numberOfItemsInSection:(NSInteger)section {
-    return LYSendGiftCollectionViewDataArray.count;
+    return self.giftInfoList.count;
 }
 
 - (UICollectionViewCell *)collectionView:(UICollectionView *)collectionView cellForItemAtIndexPath:(NSIndexPath *)indexPath {
     LYSendGiftCollectionViewCell *cell = [collectionView dequeueReusableCellWithReuseIdentifier:LYSendGiftCollectionViewCellIdentity forIndexPath:indexPath];
-    [cell configData:LYSendGiftCollectionViewDataArray[indexPath.row]];
+    [cell configData:self.giftInfoList[indexPath.row]];
     return cell;
 }
 
@@ -143,12 +84,12 @@ static NSString *const LYSendGiftCollectionViewCellIdentity = @"LYSendGiftCollec
     [self.selectedCell selected];
 
     // 判断余额不足
-    if ([self.accountAmount integerValue] < [LYSendGiftCollectionViewDataArray[indexPath.row][@"coin"] integerValue]) {
-        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:nil message:[NSString stringWithFormat:@"您的余额不足已购买%@，请先充值。", LYSendGiftCollectionViewDataArray[indexPath.row][@"name"]] delegate:self cancelButtonTitle:@"取消" otherButtonTitles:@"确定", nil];
+    if ([self.accountAmount integerValue] < self.giftInfoList[indexPath.row].giftPrice) {
+        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:nil message:[NSString stringWithFormat:@"您的余额不足已购买%@，请先充值。", self.giftInfoList[indexPath.row].giftName] delegate:self cancelButtonTitle:@"取消" otherButtonTitles:@"确定", nil];
         alert.tag          = LYSendGiftAlertTypeAccountAmount;
         [alert show];
     } else {
-        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:nil message:[NSString stringWithFormat:@"确定赠送%@给%@吗？", LYSendGiftCollectionViewDataArray[indexPath.row][@"name"], self.userName] delegate:self cancelButtonTitle:@"取消" otherButtonTitles:@"赠送", nil];
+        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:nil message:[NSString stringWithFormat:@"确定赠送%@给%@吗？", self.giftInfoList[indexPath.row].giftName, self.userName] delegate:self cancelButtonTitle:@"取消" otherButtonTitles:@"赠送", nil];
         alert.tag          = LYSendGiftAlertTypeSendGift;
         [alert show];
     }
@@ -183,13 +124,14 @@ static NSString *const LYSendGiftCollectionViewCellIdentity = @"LYSendGiftCollec
     switch (type) {
         case LYSendGiftAlertTypeAccountAmount: {
             // 跳转充值页面
-            if (buttonIndex == 0) {
+            if (buttonIndex == 1) {
             }
             break;
         }
         case LYSendGiftAlertTypeSendGift: {
             // 确认送礼物
-            if (buttonIndex == 0) {
+            if (buttonIndex == 1) {
+                [self p_sendGift:[self.collectionView indexPathForCell:self.selectedCell].row];
             }
             break;
         }
@@ -221,11 +163,59 @@ static NSString *const LYSendGiftCollectionViewCellIdentity = @"LYSendGiftCollec
         }];
 }
 
+- (void)p_loadGift {
+    [MBProgressHUD showHUDAddedTo:self.view animated:YES];
+
+    [LYHttpPoster postHttpRequestByPost:[NSString stringWithFormat:@"%@/mobile/gift/giftlist", REQUESTHEADER] andParameter:nil
+        success:^(id successResponse) {
+            [MBProgressHUD hideHUDForView:self.view animated:YES];
+            if ([successResponse[@"code"] integerValue] == 200) {
+
+                self.giftInfoList = [[NSMutableArray alloc] init];
+                [successResponse[@"data"][@"giftlist"] enumerateObjectsUsingBlock:^(id _Nonnull obj, NSUInteger idx, BOOL *_Nonnull stop) {
+                    [self.giftInfoList addObject:[LYSendGiftModel initWithDic:obj]];
+                }];
+                [self.collectionView reloadData];
+
+            } else {
+                [MBProgressHUD showError:[NSString stringWithFormat:@"%@", successResponse[@"msg"]]];
+            }
+        }
+        andFailure:^(id failureResponse) {
+            [MBProgressHUD hideHUDForView:self.view animated:YES];
+            [MBProgressHUD showError:@"加载礼物列表失败，请重试"];
+        }];
+}
+
+- (void)p_sendGift:(NSInteger)index {
+    [MBProgressHUD showHUDAddedTo:self.view animated:YES];
+
+    [LYHttpPoster postHttpRequestByPost:[NSString stringWithFormat:@"%@/mobile/gift/present", REQUESTHEADER]
+        andParameter:@{
+            @"userId": [LYUserService sharedInstance].userID,
+            @"otherId": self.friendID,
+            @"giftId": @(self.giftInfoList[index].giftId)
+        }
+        success:^(id successResponse) {
+            [MBProgressHUD hideHUDForView:self.view animated:YES];
+            if ([successResponse[@"code"] integerValue] == 200) {
+                [MBProgressHUD showSuccess:@"赠送成功"];
+                [self.navigationController popViewControllerAnimated:YES];
+            } else {
+                [MBProgressHUD showError:[NSString stringWithFormat:@"%@", successResponse[@"msg"]]];
+            }
+        }
+        andFailure:^(id failureResponse) {
+            [MBProgressHUD hideHUDForView:self.view animated:YES];
+            [MBProgressHUD showError:@"赠送礼物失败，请重试"];
+        }];
+}
+
 #pragma mark - Getter
 
 - (UICollectionView *)collectionView {
     if (!_collectionView) {
-        _collectionView                 = [[UICollectionView alloc] initWithFrame:CGRectMake(0, 0, SCREEN_WIDTH, SCREEN_HEIGHT) collectionViewLayout:[[UICollectionViewFlowLayout alloc] init]];
+        _collectionView                 = [[UICollectionView alloc] initWithFrame:CGRectMake(0, 0, SCREEN_WIDTH, SCREEN_HEIGHT - 64.f) collectionViewLayout:[[UICollectionViewFlowLayout alloc] init]];
         _collectionView.backgroundColor = RGBCOLOR(213, 213, 213);
         _collectionView.delegate        = self;
         _collectionView.dataSource      = self;
