@@ -882,7 +882,7 @@ forRowAtIndexPath:(NSIndexPath *)indexPath {
     if (!_tableView) {
         _tableView = ({
             UITableView *tableView = [[UITableView alloc]
-                initWithFrame:CGRectMake(0, 0, SCREEN_WIDTH, SCREEN_HEIGHT)
+                initWithFrame:CGRectMake(0, 0, SCREEN_WIDTH, SCREEN_HEIGHT - 64.f)
                         style:UITableViewStyleGrouped];
             [tableView registerNib:[UINib nibWithNibName:@"LYDetailDataDefalutTableViewCell" bundle:nil] forCellReuseIdentifier:LYDetailDataTableViewDefaultCellIdentity];
             [tableView registerNib:[UINib nibWithNibName:@"LYDetailDataPhotoTableViewCell" bundle:nil]

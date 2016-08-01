@@ -108,7 +108,19 @@ static NSString *const LYFocusOnAndFansTableViewCellIdentity = @"LYFocusOnAndFan
         }
         success:^(id successResponse) {
             if ([successResponse[@"code"] integerValue] == 200) {
-                [MBProgressHUD showError:@"处理失败，请重试"];
+                NSMutableArray *array    = [self.tableViewArray mutableCopy];
+                NSMutableDictionary *dic = [array[indexPath.row] mutableCopy];
+                [dic setObject:([dic[@"isgz"] integerValue] == 1 ? @2 : @1) forKey:@"isgz"];
+                [array replaceObjectAtIndex:indexPath.row withObject:[dic copy]];
+                self.tableViewArray = [array copy];
+                [self.tableView reloadRowsAtIndexPaths:@[indexPath] withRowAnimation:UITableViewRowAnimationFade];
+
+                if ([dic[@"isgz"] integerValue] == 1) {
+                    [MBProgressHUD showSuccess:@"关注成功"];
+                } else {
+                    [MBProgressHUD showSuccess:@"取消关注成功"];
+                }
+
             } else {
                 [MBProgressHUD showError:@"处理失败，请重试"];
             }

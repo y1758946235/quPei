@@ -35,6 +35,15 @@
     [self.avatarImageView sd_setImageWithURL:[NSURL URLWithString:[NSString stringWithFormat:@"%@%@", IMAGEHEADER, dic[@"icon"]]] placeholderImage:[UIImage imageNamed:@"logo108"]];
 
     self.nameLabel.text = dic[@"name"];
+
+    self.signatureLabel.text = dic[@"signature"];
+
+    // 1:关注  2：未关注
+    if ([dic[@"isgz"] integerValue] == 1) {
+        self.focusOnImageView.image = [UIImage imageNamed:@"icon_focusOn"];
+    } else {
+        self.focusOnImageView.image = [UIImage imageNamed:@"icon_noFocusOn"];
+    }
 }
 
 - (void)tapFocusOnImageView:(id)sender {
