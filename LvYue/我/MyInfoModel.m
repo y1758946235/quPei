@@ -41,8 +41,9 @@
         self.charm        = [dict[@"charm"] integerValue];
         self.wealth       = [dict[@"wealth"] integerValue];
 
-        self.isFocus = [dict[@"isFocus"] boolValue];
-        self.fansNum = [dict[@"fansNum"] integerValue];
+        self.isFocus  = [dict[@"isFocus"] boolValue];
+        self.fansNum  = [dict[@"fansNum"] integerValue] ?: [dict[@"fansCount"] integerValue];
+        self.focusNum = [dict[@"focusCount"] integerValue];
     }
 
     return self;

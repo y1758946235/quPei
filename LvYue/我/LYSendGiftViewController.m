@@ -215,7 +215,7 @@ static NSString *const LYSendGiftCollectionViewCellIdentity = @"LYSendGiftCollec
 
 - (UICollectionView *)collectionView {
     if (!_collectionView) {
-        _collectionView                 = [[UICollectionView alloc] initWithFrame:CGRectMake(0, 64.f, SCREEN_WIDTH, SCREEN_HEIGHT - 64.f) collectionViewLayout:[[UICollectionViewFlowLayout alloc] init]];
+        _collectionView                 = [[UICollectionView alloc] initWithFrame:CGRectMake(0, 0, SCREEN_WIDTH, SCREEN_HEIGHT) collectionViewLayout:[[UICollectionViewFlowLayout alloc] init]];
         _collectionView.backgroundColor = RGBCOLOR(213, 213, 213);
         _collectionView.delegate        = self;
         _collectionView.dataSource      = self;

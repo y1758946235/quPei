@@ -26,6 +26,8 @@
 #import "MyInfomationViewController.h"  // 我的个人资料
 #import "SettingViewController.h"       // 设置
 
+#import "LYFocusOnAndFansViewController.h"
+
 #import "ChangeHeadViewController.h" // 修改头像
 
 #import "MyDetailInfoModel.h"
@@ -69,41 +71,41 @@ typedef NS_ENUM(NSUInteger, LYMeViewControllerCellTypeEnum) {
         @[
            @{
                @"title": @"我的账户",
-               @"icon": @"我的豆客",
+               @"icon": @"icon_myAccount",
                @"cellType": @"0"
            },
            @{
                @"title": @"我的礼物",
-               @"icon": @"",
+               @"icon": @"icon_myGift",
                @"cellType": @"1"
            }
         ],
         @[
            @{
                @"title": @"个人资料",
-               @"icon": @"个人资料-1",
+               @"icon": @"icon_personalInfo",
                @"cellType": @"2"
            },
            @{
                @"title": @"个人动态",
-               @"icon": @"个人动态-1",
+               @"icon": @"icon_friendCircle",
                @"cellType": @"3"
            },
            @{
                @"title": @"我的相册",
-               @"icon": @"我的气质",
+               @"icon": @"icon_myAlbum",
                @"cellType": @"4"
            },
            @{
                @"title": @"精华相册",
-               @"icon": @"",
+               @"icon": @"icon_essenceAlbum",
                @"cellType": @"5"
            }
         ],
         @[
            @{
                @"title": @"身份认证",
-               @"icon": @"申请向导",
+               @"icon": @"icon_IDCardValide",
                @"cellType": @"6"
            }
         ],
@@ -143,21 +145,28 @@ typedef NS_ENUM(NSUInteger, LYMeViewControllerCellTypeEnum) {
 
 - (void)p_loadData {
 
-    [LYHttpPoster postHttpRequestByPost:[NSString stringWithFormat:@"%@/mobile/user/getDetailInfo", REQUESTHEADER] andParameter:@{ @"id": [NSString stringWithFormat:@"%@", [LYUserService sharedInstance].userID] } success:^(id successResponse) {
-
-        if ([[NSString stringWithFormat:@"%@", successResponse[@"code"]] isEqualToString:@"200"]) {
-
-            NSDictionary *infoDict       = successResponse[@"data"][@"user"];
-            self.infoModel               = [[MyInfoModel alloc] initWithDict:infoDict];
-            NSDictionary *detailInfoDict = successResponse[@"data"][@"userDetail"];
-            self.detailInfoModel         = [[MyDetailInfoModel alloc] initWithDict:detailInfoDict];
-
-            [self.headerView configHeaderViewDataSource:self.detailInfoModel infoModel:self.infoModel];
-        } else {
-            [MBProgressHUD showError:[NSString stringWithFormat:@"%@", successResponse[@"msg"]]];
+    [LYHttpPoster postHttpRequestByPost:[NSString stringWithFormat:@"%@/mobile/user/getDetailInfo", REQUESTHEADER]
+        andParameter:@{
+            @"id": [LYUserService sharedInstance].userID
         }
+        success:^(id successResponse) {
 
-    }
+            if ([[NSString stringWithFormat:@"%@", successResponse[@"code"]] isEqualToString:@"200"]) {
+
+                NSMutableDictionary *infoDict = [successResponse[@"data"][@"user"] mutableCopy];
+                // 这两个字段层级不一样
+                [infoDict setObject:successResponse[@"data"][@"fansCount"] forKey:@"fansCount"];
+                [infoDict setObject:successResponse[@"data"][@"focusCount"] forKey:@"focusCount"];
+                self.infoModel               = [[MyInfoModel alloc] initWithDict:[infoDict copy]];
+                NSDictionary *detailInfoDict = successResponse[@"data"][@"userDetail"];
+                self.detailInfoModel         = [[MyDetailInfoModel alloc] initWithDict:detailInfoDict];
+
+                [self.headerView configHeaderViewDataSource:self.detailInfoModel infoModel:self.infoModel];
+            } else {
+                [MBProgressHUD showError:[NSString stringWithFormat:@"%@", successResponse[@"msg"]]];
+            }
+
+        }
         andFailure:^(id failureResponse) {
             [MBProgressHUD showError:@"服务器繁忙,请重试"];
         }];
@@ -182,6 +191,36 @@ typedef NS_ENUM(NSUInteger, LYMeViewControllerCellTypeEnum) {
 
     //分享
     [UMSocialSnsService presentSnsIconSheetView:self appKey:@"55f3983c67e58e502a00167d" shareText:LYMeViewControllerShareText shareImage:[UIImage imageNamed:@"logo108"] shareToSnsNames:[NSArray arrayWithObjects:UMShareToWechatTimeline, UMShareToWechatSession, UMShareToSina, UMShareToQQ, UMShareToQzone, nil] delegate:self];
+}
+
+- (void)p_changeAvatarImage {
+    if (self.login) {
+        ChangeHeadViewController *vc = [[ChangeHeadViewController alloc] init];
+        [vc setHidesBottomBarWhenPushed:YES];
+        vc.headImage = self.headerView.avatarImageView.image;
+        vc.name      = self.infoModel.name;
+        [self.navigationController pushViewController:vc animated:YES];
+    }
+}
+
+- (void)p_goToFocusVC {
+    if (!self.login) {
+        [[LYUserService sharedInstance] jumpToLoginWithController:self.tabBarController];
+        return;
+    }
+    LYFocusOnAndFansViewController *vc = [LYFocusOnAndFansViewController new];
+    vc.type                            = LYFocusOnAndFansViewControllerTypeFocusOn;
+    [self.navigationController pushViewController:vc animated:YES];
+}
+
+- (void)p_goToFansVC {
+    if (!self.login) {
+        [[LYUserService sharedInstance] jumpToLoginWithController:self.tabBarController];
+        return;
+    }
+    LYFocusOnAndFansViewController *vc = [LYFocusOnAndFansViewController new];
+    vc.type                            = LYFocusOnAndFansViewControllerFans;
+    [self.navigationController pushViewController:vc animated:YES];
 }
 
 
@@ -355,13 +394,13 @@ typedef NS_ENUM(NSUInteger, LYMeViewControllerCellTypeEnum) {
         _headerView.frame                  = CGRectMake(0, 0, SCREEN_WIDTH, 240.f);
         __weak typeof(self) weakSelf       = self;
         _headerView.changeAvatarImageBlock = ^(id sender) {
-            if (weakSelf.login) {
-                ChangeHeadViewController *vc = [[ChangeHeadViewController alloc] init];
-                [vc setHidesBottomBarWhenPushed:YES];
-                vc.headImage = weakSelf.headerView.avatarImageView.image;
-                vc.name      = weakSelf.infoModel.name;
-                [weakSelf.navigationController pushViewController:vc animated:YES];
-            }
+            [weakSelf p_changeAvatarImage];
+        };
+        _headerView.tapFansLabelBlock = ^(id sender) {
+            [weakSelf p_goToFansVC];
+        };
+        _headerView.tapFocusLabelBlock = ^(id sender) {
+            [weakSelf p_goToFocusVC];
         };
     }
     return _headerView;

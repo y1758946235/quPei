@@ -29,7 +29,8 @@
 @property (nonatomic, strong) NSString *provide_stay;  //民宿状态
 @property (nonatomic, strong) NSString *hongdou;       //红豆数量
 @property (nonatomic, assign) BOOL isFocus;            //是否关注
-@property (nonatomic, assign) NSInteger fansNum;       // 粉丝
+@property (nonatomic, assign) NSInteger fansNum;       // 粉丝数
+@property (nonatomic, assign) NSInteger focusNum;      // 关注数
 @property (nonatomic, assign) NSInteger charm;         // 魅力值
 @property (nonatomic, assign) NSInteger wealth;        // 财富值
 

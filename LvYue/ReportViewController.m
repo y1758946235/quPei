@@ -25,12 +25,12 @@
 
     [self setRightButton:nil title:@"提交" target:self action:@selector(completeWrite)];
 
-    UILabel *plzLabel = [[UILabel alloc] initWithFrame:CGRectMake(10, 74, 150, 20)];
+    UILabel *plzLabel = [[UILabel alloc] initWithFrame:CGRectMake(10, 10.f, 150, 20)];
     plzLabel.font     = [UIFont systemFontOfSize:14.0];
     plzLabel.text     = @"请描述一下举报原因";
     [self.view addSubview:plzLabel];
 
-    text                    = [[UITextView alloc] initWithFrame:CGRectMake(10, 100, kMainScreenWidth - 20, kMainScreenHeight - 150)];
+    text                    = [[UITextView alloc] initWithFrame:CGRectMake(10, 36.f, kMainScreenWidth - 20, kMainScreenHeight - 150)];
     text.font               = [UIFont systemFontOfSize:14.0];
     text.layer.cornerRadius = 4;
     text.backgroundColor    = RGBACOLOR(238, 238, 238, 1);

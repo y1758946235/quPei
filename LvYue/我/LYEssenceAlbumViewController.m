@@ -10,6 +10,7 @@
 #import "LYBlurImageCache.h"
 #import "LYEssenceAlbumViewController.h"
 #import "LYEssenceImageUploadViewController.h"
+#import "LYEssenceTipViewController.h"
 #import "LYHttpPoster.h"
 #import "LYUserService.h"
 #import "MBProgressHUD+NJ.h"
@@ -64,7 +65,8 @@ static NSString *const LYEssenceAlbumCollectionViewCellIdentity =
     [LYHttpPoster postHttpRequestByPost:[NSString stringWithFormat:@"%@/mobile/user/getEssenceImgList", REQUESTHEADER]
         andParameter:
             @{
-                @"user_id": self.mySelf ? userId : self.userId
+                @"user_id": self.mySelf ? userId : self.userId,
+                @"other_id": self.mySelf ? userId : self.userId
             }
         success:^(id successResponse) {
 
@@ -159,16 +161,20 @@ static NSString *const LYEssenceAlbumCollectionViewCellIdentity =
     didSelectItemAtIndexPath:(NSIndexPath *)indexPath {
 
     // 自己看自己则直接查看
-    if (!self.mySelf) {
+    if (self.mySelf) {
+        OriginalViewController *vc = [[OriginalViewController alloc] init];
+        vc.imageData               = self.responseArray; // 响应的字典
+        vc.smallImage              = self.imageArray;    // 对应已经加载的 image 对象
+        vc.userId                  = [LYUserService sharedInstance].userID;
+        [vc showImageWithIndex:indexPath.row andCount:self.imageArray.count];
         return;
     }
 
-    OriginalViewController *vc = [[OriginalViewController alloc] init];
-    vc.imageData               = self.responseArray; // 响应的字典
-    vc.smallImage              = self.imageArray;    // 对应已经加载的 image 对象
-    ;
-    vc.userId = [LYUserService sharedInstance].userID;
-    [vc showImageWithIndex:indexPath.row andCount:self.imageArray.count];
+    LYEssenceTipViewController *vc = [[LYEssenceTipViewController alloc] init];
+    vc.userID                      = self.userId;
+    vc.bulrImageID                 = self.responseArray[indexPath.row][@"id"];
+    vc.bulrImageURL                = self.responseArray[indexPath.row][@"img_name"];
+    [self.navigationController pushViewController:vc animated:YES];
 }
 
 #pragma mark Getter
@@ -177,7 +183,7 @@ static NSString *const LYEssenceAlbumCollectionViewCellIdentity =
     if (!_collectionView) {
         _collectionView = ({
             UICollectionView *collectionView = [[UICollectionView alloc]
-                       initWithFrame:CGRectMake(0, NAVIGATION_BAR_HEIGHT + STATUS_BAR_HEIGHT, SCREEN_WIDTH, SCREEN_HEIGHT - NAVIGATION_BAR_HEIGHT - STATUS_BAR_HEIGHT)
+                       initWithFrame:CGRectMake(0, 0, SCREEN_WIDTH, SCREEN_HEIGHT)
                 collectionViewLayout:self.collectionViewLayout];
             collectionView.backgroundColor      = [UIColor whiteColor];
             collectionView.dataSource           = self;

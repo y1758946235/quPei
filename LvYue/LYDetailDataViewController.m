@@ -33,6 +33,12 @@ typedef NS_ENUM(NSUInteger, LYDetailDataRelationShipEnum) {
     LYDetailDataRelationShipEnumIng    = 2, // 待验证
 };
 
+typedef NS_ENUM(NSUInteger, LYDetailDataAlertViewEnum) {
+    LYDetailDataAlertViewEnumSendGift     = 1, // 送礼
+    LYDetailDataAlertViewEnumWatchContact = 2  // 查看联系方式
+};
+
+
 static NSString *const LYInviteVedioAuthMessage =
     @"TA 还未通过形象视频认证，请谨慎联系。确认送礼并邀请 TA 认证形象视频吗？如果对方不认证，系统会返回您购买该礼物的金币";
 static NSString *const LYPlayAuthVideoMessage1 = @"为了公平起见，你需要成为会员才能观看到更多人的形象视频，否则每天只能观看六个人的视频。";
@@ -265,7 +271,16 @@ static NSString *const LYDetailDataPhotoTableViewCellIdentity   = @"LYDetailData
     // 联系方式
     if (indexPath.section == 1 && indexPath.row == 2) {
         [cell showWatchButton:^(UIButton *button) {
-            return YES;
+
+            if ([[LYUserService sharedInstance].userDetail.isVip integerValue]) {
+                return YES;
+            } else {
+                UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"豆客" message:@"只有会员才有资格查看" delegate:self cancelButtonTitle:@"取消" otherButtonTitles:@"成为会员", nil];
+                alert.tag          = LYDetailDataAlertViewEnumWatchContact;
+                [alert show];
+                return NO;
+            }
+
         }];
     }
 
@@ -392,14 +407,28 @@ forRowAtIndexPath:(NSIndexPath *)indexPath {
 
 - (void)alertView:(UIAlertView *)alertView
     clickedButtonAtIndex:(NSInteger)buttonIndex {
-    if (buttonIndex == 1) {
-        LYSendGiftViewController *vc = [LYSendGiftViewController new];
 
-        vc.friendID = [NSString stringWithFormat:@"%ld", (long) self.infoModel.id];
+    LYDetailDataAlertViewEnum type = (LYDetailDataAlertViewEnum) alertView.tag;
 
-        vc.userName       = self.infoModel.name;
-        vc.avatarImageURL = self.infoModel.icon;
-        [self.navigationController pushViewController:vc animated:YES];
+    switch (type) {
+        case LYDetailDataAlertViewEnumSendGift: {
+            if (buttonIndex == 1) {
+                LYSendGiftViewController *vc = [LYSendGiftViewController new];
+
+                vc.friendID = [NSString stringWithFormat:@"%ld", (long) self.infoModel.id];
+
+                vc.userName       = self.infoModel.name;
+                vc.avatarImageURL = self.infoModel.icon;
+                [self.navigationController pushViewController:vc animated:YES];
+            }
+            break;
+        }
+        case LYDetailDataAlertViewEnumWatchContact: {
+            if (buttonIndex == 1) {
+                // 成为会员
+            }
+            break;
+        }
     }
 }
 
@@ -835,7 +864,8 @@ forRowAtIndexPath:(NSIndexPath *)indexPath {
                                    message:LYInviteVedioAuthMessage
                                   delegate:self
                          cancelButtonTitle:@"取消"
-                         otherButtonTitles:@"确认", nil];
+                         otherButtonTitles:@"赠送并邀请", nil];
+    alert.tag = LYDetailDataAlertViewEnumSendGift;
     [alert show];
 }
 
@@ -843,7 +873,7 @@ forRowAtIndexPath:(NSIndexPath *)indexPath {
  *  点击导航栏右侧按钮
  */
 - (void)p_clickRightBarButtonItem:(UIBarButtonItem *)sender {
-    [LYPopoverView showPopoverViewAtPoint:CGPointMake(SCREEN_WIDTH - 15.f, 64.f + 10.f) inView:self.view type:LYPopoverViewItemTypeDefault delegate:self];
+    [LYPopoverView showPopoverViewAtPoint:CGPointMake(SCREEN_WIDTH - 15.f, 10.f) inView:self.view type:LYPopoverViewItemTypeDefault delegate:self];
 }
 
 #pragma mark - Getter
