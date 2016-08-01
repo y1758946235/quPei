@@ -7,11 +7,13 @@
 //  Copyright © 2016年 OLFT. All rights reserved.
 //
 
+#import "LYDetailDataViewController.h"
 #import "LYFocusOnAndFansTableViewCell.h"
 #import "LYFocusOnAndFansViewController.h"
 #import "LYHttpPoster.h"
 #import "LYUserService.h"
 #import "MBProgressHUD+NJ.h"
+
 
 static NSString *const LYFocusOnAndFansTableViewCellIdentity = @"LYFocusOnAndFansTableViewCellIdentity";
 
@@ -65,6 +67,10 @@ static NSString *const LYFocusOnAndFansTableViewCellIdentity = @"LYFocusOnAndFan
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
     [tableView deselectRowAtIndexPath:indexPath animated:YES];
+
+    LYDetailDataViewController *vc = [LYDetailDataViewController new];
+    vc.userId                      = self.tableViewArray[indexPath.row][@"id"];
+    [self.navigationController pushViewController:vc animated:YES];
 }
 
 #pragma mark - Pravite
