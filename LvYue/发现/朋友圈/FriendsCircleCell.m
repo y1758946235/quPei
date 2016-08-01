@@ -32,6 +32,19 @@
         _nameLabel.textColor = UIColorWithRGBA(70,80,140, 1);
         [self addSubview:_nameLabel];
         
+        //举报
+        _reportBtn = [UIButton buttonWithType:UIButtonTypeCustom];
+        _reportBtn.width = 60;
+        _reportBtn.height = 30;
+        _reportBtn.x = kMainScreenWidth - 20 - _reportBtn.width;
+        _reportBtn.y = _nameLabel.y;
+        [_reportBtn setImage:[UIImage imageNamed:@"举报"] forState:UIControlStateNormal];
+        _reportBtn.titleLabel.font = kFont14;
+        [_reportBtn setTitle:@"举报" forState:UIControlStateNormal];
+        [_reportBtn setTitleColor:[UIColor grayColor] forState:UIControlStateNormal];
+        
+        [self addSubview:_reportBtn];
+        
         //内容
         _contentLabel = [[UILabel alloc]initWithFrame:CGRectMake(CGRectGetMaxX(_headImg.frame)+5, CGRectGetMaxY(_nameLabel.frame),SCREEN_WIDTH - CGRectGetMaxX(_headImg.frame) - 5, 20)];
         _contentLabel.font = [UIFont systemFontOfSize:15];
@@ -55,12 +68,12 @@
         _commentBtn = [[UIButton alloc]initWithFrame:CGRectMake(SCREEN_WIDTH - 20 - 20, CGRectGetMinY(_timeLabel.frame), 20, 25)];
         [_commentBtn setImage:[UIImage imageNamed:@"Conversation"] forState:UIControlStateNormal];
         [self addSubview:_commentBtn];
-        
+     
         _commentNum = [[UILabel alloc]initWithFrame:CGRectMake(CGRectGetMinX(_commentBtn.frame)-25,CGRectGetMinY(_timeLabel.frame),25,20)];
         _commentNum.font = [UIFont systemFontOfSize:13];
         _commentNum.textAlignment = NSTextAlignmentCenter;
         [self addSubview:_commentNum];
-        
+
         //点赞
         _praiseBtn = [[UIButton alloc]initWithFrame:CGRectMake(CGRectGetMinX(_commentNum.frame)-20, CGRectGetMinY(_timeLabel.frame), 20, 25)];
         [_praiseBtn setImage:[UIImage imageNamed:@"Hearts gray"] forState:UIControlStateNormal];
@@ -71,6 +84,15 @@
         _praiseNum.font = [UIFont systemFontOfSize:13];
         _praiseNum.textAlignment = NSTextAlignmentCenter;
         [self addSubview:_praiseNum];
+        
+        //礼物
+        _giftBtn = [UIButton buttonWithType:UIButtonTypeCustom];
+        _giftBtn.x = CGRectGetMinX(_praiseNum.frame)-25;
+        _giftBtn.y = CGRectGetMinY(_timeLabel.frame);
+        _giftBtn.width = 20;
+        _giftBtn.height = 25;
+        [_giftBtn setImage:[UIImage imageNamed:@"礼物-1"] forState:UIControlStateNormal];
+        [self addSubview:_giftBtn];
         
         //评论
         _commentTableView = [[UITableView alloc]initWithFrame:CGRectMake(CGRectGetMinX(_timeLabel.frame), CGRectGetMaxY(_timeLabel.frame)+10, SCREEN_WIDTH-CGRectGetMinX(_timeLabel.frame)-20, 0) style:UITableViewStyleGrouped];
@@ -87,6 +109,7 @@
     }
     return self;
 }
+
 
 //设置图片
 - (void)setImageArrayAndFit:(FriendsCircleMessage *)model{
@@ -164,6 +187,7 @@
     _commentNum.frame = CGRectMake(CGRectGetMinX(_commentBtn.frame)-25,CGRectGetMinY(_timeLabel.frame),25,20);
     _praiseBtn.frame = CGRectMake(CGRectGetMinX(_commentNum.frame)-20, CGRectGetMinY(_timeLabel.frame), 20, 20);
     _praiseNum.frame = CGRectMake(CGRectGetMinX(_praiseBtn.frame)-25,CGRectGetMinY(_timeLabel.frame),25,20);
+    _giftBtn.frame = CGRectMake(CGRectGetMinX(_praiseNum.frame)-25,CGRectGetMinY(_timeLabel.frame),25,20);
     _commentTableView.frame = CGRectMake(CGRectGetMinX(_timeLabel.frame), CGRectGetMaxY(_timeLabel.frame)+10, SCREEN_WIDTH-CGRectGetMinX(_timeLabel.frame)-20, [self returnTableViewHeightWithModel:model]);
     [_commentTableView reloadData];
 }

@@ -538,6 +538,7 @@
 		3A06F8141D0D5A6F006ABDCF /* libstdc++.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = 3A06F8131D0D5A6F006ABDCF /* libstdc++.tbd */; };
 		3A244BD51D2E8D7500C09EAA /* ThirdRegisterViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 3A244BD41D2E8D7500C09EAA /* ThirdRegisterViewController.m */; };
 		3A244BD91D2F3EE000C09EAA /* UserInfo.m in Sources */ = {isa = PBXBuildFile; fileRef = 3A244BD81D2F3EE000C09EAA /* UserInfo.m */; };
+		3A331A971D4B5C8700838B14 /* HotTopicViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 3A331A961D4B5C8700838B14 /* HotTopicViewController.m */; };
 		3A55D1351D21206600FB591B /* KFAlertView.m in Sources */ = {isa = PBXBuildFile; fileRef = 3A55D1341D21206600FB591B /* KFAlertView.m */; };
 		3A55D13B1D220E8800FB591B /* UIView+KFFrame.m in Sources */ = {isa = PBXBuildFile; fileRef = 3A55D13A1D220E8800FB591B /* UIView+KFFrame.m */; };
 		3AA798491D23B42F002135E4 /* WalletDetailViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 3AA798481D23B42F002135E4 /* WalletDetailViewController.m */; };
@@ -1781,6 +1782,8 @@
 		3A244BD41D2E8D7500C09EAA /* ThirdRegisterViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ThirdRegisterViewController.m; sourceTree = "<group>"; };
 		3A244BD71D2F3EE000C09EAA /* UserInfo.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = UserInfo.h; sourceTree = "<group>"; };
 		3A244BD81D2F3EE000C09EAA /* UserInfo.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = UserInfo.m; sourceTree = "<group>"; };
+		3A331A951D4B5C8700838B14 /* HotTopicViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HotTopicViewController.h; sourceTree = "<group>"; };
+		3A331A961D4B5C8700838B14 /* HotTopicViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = HotTopicViewController.m; sourceTree = "<group>"; };
 		3A55D1331D21206600FB591B /* KFAlertView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = KFAlertView.h; sourceTree = "<group>"; };
 		3A55D1341D21206600FB591B /* KFAlertView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = KFAlertView.m; sourceTree = "<group>"; };
 		3A55D1391D220E8800FB591B /* UIView+KFFrame.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIView+KFFrame.h"; sourceTree = "<group>"; };
@@ -4963,6 +4966,15 @@
 			name = Model;
 			sourceTree = "<group>";
 		};
+		3A331A941D4B5C5200838B14 /* 热门话题 */ = {
+			isa = PBXGroup;
+			children = (
+				3A331A951D4B5C8700838B14 /* HotTopicViewController.h */,
+				3A331A961D4B5C8700838B14 /* HotTopicViewController.m */,
+			);
+			name = "热门话题";
+			sourceTree = "<group>";
+		};
 		3AA798461D23A359002135E4 /* 钱包明细 */ = {
 			isa = PBXGroup;
 			children = (
@@ -5167,6 +5179,7 @@
 				91D825491BD9C8AF0019764F /* FriendsCircleMessage.m */,
 				91D8254A1BD9C8AF0019764F /* FriendsCirleViewController.h */,
 				91D8254B1BD9C8AF0019764F /* FriendsCirleViewController.m */,
+				3A331A941D4B5C5200838B14 /* 热门话题 */,
 				91D8254C1BD9C8AF0019764F /* FriendsMessageCell.h */,
 				91D8254D1BD9C8AF0019764F /* FriendsMessageCell.m */,
 				91D8254E1BD9C8AF0019764F /* FriendsMessageViewController.h */,
@@ -6974,6 +6987,7 @@
 				18A6AE1E1BC752E6006D2DEF /* BuddySelectionCell.m in Sources */,
 				188B007A1BBB68190022B9DB /* RigisterViewController.m in Sources */,
 				097577BF1BC63C120048163E /* MyInfoModel.m in Sources */,
+				3A331A971D4B5C8700838B14 /* HotTopicViewController.m in Sources */,
 				980FCEC01CE72F1200956912 /* IQAudioSession.m in Sources */,
 				095BED801BC7F19600BC7D08 /* SearchNearbyViewController.m in Sources */,
 				09549CCA1D153AF3008A721C /* EMAlertView.m in Sources */,

@@ -631,7 +631,8 @@
             sender.enabled = YES;
             [MBProgressHUD showError:@"服务器繁忙,请稍候重试"];
         }];
-    } else {
+    }
+    else {
         //点赞
         [LYHttpPoster postHttpRequestByPost:[NSString stringWithFormat:@"%@/mobile/video/praise",REQUESTHEADER] andParameter:@{@"videoId":model.videoID,@"praiser":[LYUserService sharedInstance].userID} success:^(id successResponse) {
             MLOG(@"点赞结果 : %@",successResponse);
