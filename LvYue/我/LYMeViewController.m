@@ -20,11 +20,10 @@
 #import "KnowViewController.h"           // 身份认证
 #import "LYEssenceAlbumViewController.h" // 精华相册
 #import "LYMyGiftViewController.h"       // 我的礼物
-#import "LYSendGiftViewController.h"
-#import "MyAccountViewController.h"     // 我的账户
-#import "MyDispositionViewController.h" // 普通相册
-#import "MyInfomationViewController.h"  // 我的个人资料
-#import "SettingViewController.h"       // 设置
+#import "MyAccountViewController.h"      // 我的账户
+#import "MyDispositionViewController.h"  // 普通相册
+#import "MyInfomationViewController.h"   // 我的个人资料
+#import "SettingViewController.h"        // 设置
 
 #import "LYFocusOnAndFansViewController.h"
 
@@ -272,7 +271,7 @@ typedef NS_ENUM(NSUInteger, LYMeViewControllerCellTypeEnum) {
             break;
         }
         case LYMeViewControllerCellTypeEnumMyGift: {
-            LYSendGiftViewController *vc = [[LYSendGiftViewController alloc] init];
+            LYMyGiftViewController *vc = [[LYMyGiftViewController alloc] init];
             [self.navigationController pushViewController:vc animated:YES];
             break;
         }

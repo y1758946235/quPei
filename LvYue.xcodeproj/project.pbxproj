@@ -553,7 +553,6 @@
 		3AC849D71D2522DC002735E0 /* BuyCoinViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 3AC849D51D2522DC002735E0 /* BuyCoinViewController.xib */; };
 		3AE063771D2F76F9002338B4 /* VideoCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 3AE063751D2F76F9002338B4 /* VideoCell.m */; };
 		3AE063781D2F76F9002338B4 /* VideoCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 3AE063761D2F76F9002338B4 /* VideoCell.xib */; };
-		3AE5ED121D4F4662006884D5 /* DXPopover.m in Sources */ = {isa = PBXBuildFile; fileRef = 3AE5ED111D4F4662006884D5 /* DXPopover.m */; };
 		4DF675701BDA3594004B2854 /* SearchNearbyModel.m in Sources */ = {isa = PBXBuildFile; fileRef = 4DF6756F1BDA3594004B2854 /* SearchNearbyModel.m */; };
 		6B3336111D45E18A0034C620 /* FXBlurView.m in Sources */ = {isa = PBXBuildFile; fileRef = 6B3336101D45E18A0034C620 /* FXBlurView.m */; };
 		6B5099EB1D4CEF4F009B7DDF /* LYEssenceImageUploadViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 6B5099EA1D4CEF4F009B7DDF /* LYEssenceImageUploadViewController.m */; };
@@ -561,6 +560,9 @@
 		6B55B0811D4B62A100EBD172 /* LYPopoverView.m in Sources */ = {isa = PBXBuildFile; fileRef = 6B55B0801D4B62A100EBD172 /* LYPopoverView.m */; };
 		6B6A57C61D48F986001E29D1 /* LYDetailDataPhotoTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 6B6A57C41D48F986001E29D1 /* LYDetailDataPhotoTableViewCell.m */; };
 		6B6A57C71D48F986001E29D1 /* LYDetailDataPhotoTableViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 6B6A57C51D48F986001E29D1 /* LYDetailDataPhotoTableViewCell.xib */; };
+		6B9094C81D4F36E000037DD0 /* LYMyGiftViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 6B9094C61D4F36E000037DD0 /* LYMyGiftViewController.m */; };
+		6B9094C91D4F36E000037DD0 /* LYMyGiftViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 6B9094C71D4F36E000037DD0 /* LYMyGiftViewController.xib */; };
+		6B9094CC1D4F49E500037DD0 /* DXPopover.m in Sources */ = {isa = PBXBuildFile; fileRef = 6B9094CB1D4F49E500037DD0 /* DXPopover.m */; };
 		6B9644BD1D4EFFEB00833212 /* LYEssenceTipViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 6B9644BB1D4EFFEB00833212 /* LYEssenceTipViewController.m */; };
 		6BA818A11D4EDEB8007AB115 /* LYFocusOnAndFansViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 6BA818A01D4EDEB8007AB115 /* LYFocusOnAndFansViewController.m */; };
 		6BA818A61D4EDF1B007AB115 /* LYFocusOnAndFansTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 6BA818A41D4EDF1B007AB115 /* LYFocusOnAndFansTableViewCell.m */; };
@@ -578,7 +580,6 @@
 		6BF5A90B1D41F6D40079331C /* LYMeViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 6BF5A9091D41F6D40079331C /* LYMeViewController.m */; };
 		6BF5A9101D41FBF80079331C /* LYMeTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 6BF5A90E1D41FBF80079331C /* LYMeTableViewCell.m */; };
 		6BF5A9111D41FBF80079331C /* LYMeTableViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 6BF5A90F1D41FBF80079331C /* LYMeTableViewCell.xib */; };
-		6BF5A9151D421B1E0079331C /* LYMyGiftViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 6BF5A9141D421B1E0079331C /* LYMyGiftViewController.m */; };
 		6BF5A9191D421B830079331C /* LYEssenceAlbumViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 6BF5A9181D421B830079331C /* LYEssenceAlbumViewController.m */; };
 		6BF5A91C1D4265280079331C /* LYMyAccountViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 6BF5A91B1D4265280079331C /* LYMyAccountViewController.m */; };
 		6BF5A91F1D42678F0079331C /* LYMeHeaderView.m in Sources */ = {isa = PBXBuildFile; fileRef = 6BF5A91E1D42678F0079331C /* LYMeHeaderView.m */; };
@@ -1816,8 +1817,6 @@
 		3AE063741D2F76F9002338B4 /* VideoCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = VideoCell.h; sourceTree = "<group>"; };
 		3AE063751D2F76F9002338B4 /* VideoCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = VideoCell.m; sourceTree = "<group>"; };
 		3AE063761D2F76F9002338B4 /* VideoCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = VideoCell.xib; sourceTree = "<group>"; };
-		3AE5ED101D4F4662006884D5 /* DXPopover.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = DXPopover.h; path = LvYue/Lib/DXPopover.h; sourceTree = SOURCE_ROOT; };
-		3AE5ED111D4F4662006884D5 /* DXPopover.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = DXPopover.m; path = LvYue/Lib/DXPopover.m; sourceTree = SOURCE_ROOT; };
 		4DF6756E1BDA3594004B2854 /* SearchNearbyModel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SearchNearbyModel.h; sourceTree = "<group>"; };
 		4DF6756F1BDA3594004B2854 /* SearchNearbyModel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SearchNearbyModel.m; sourceTree = "<group>"; };
 		6B33360F1D45E18A0034C620 /* FXBlurView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FXBlurView.h; sourceTree = "<group>"; };
@@ -1831,6 +1830,11 @@
 		6B6A57C31D48F986001E29D1 /* LYDetailDataPhotoTableViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LYDetailDataPhotoTableViewCell.h; sourceTree = "<group>"; };
 		6B6A57C41D48F986001E29D1 /* LYDetailDataPhotoTableViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LYDetailDataPhotoTableViewCell.m; sourceTree = "<group>"; };
 		6B6A57C51D48F986001E29D1 /* LYDetailDataPhotoTableViewCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = LYDetailDataPhotoTableViewCell.xib; sourceTree = "<group>"; };
+		6B9094C51D4F36E000037DD0 /* LYMyGiftViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LYMyGiftViewController.h; sourceTree = "<group>"; };
+		6B9094C61D4F36E000037DD0 /* LYMyGiftViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LYMyGiftViewController.m; sourceTree = "<group>"; };
+		6B9094C71D4F36E000037DD0 /* LYMyGiftViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = LYMyGiftViewController.xib; sourceTree = "<group>"; };
+		6B9094CA1D4F49E500037DD0 /* DXPopover.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DXPopover.h; sourceTree = "<group>"; };
+		6B9094CB1D4F49E500037DD0 /* DXPopover.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DXPopover.m; sourceTree = "<group>"; };
 		6B9644BA1D4EFFEB00833212 /* LYEssenceTipViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LYEssenceTipViewController.h; sourceTree = "<group>"; };
 		6B9644BB1D4EFFEB00833212 /* LYEssenceTipViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LYEssenceTipViewController.m; sourceTree = "<group>"; };
 		6BA8189F1D4EDEB8007AB115 /* LYFocusOnAndFansViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LYFocusOnAndFansViewController.h; sourceTree = "<group>"; };
@@ -1860,8 +1864,6 @@
 		6BF5A90D1D41FBF80079331C /* LYMeTableViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LYMeTableViewCell.h; sourceTree = "<group>"; };
 		6BF5A90E1D41FBF80079331C /* LYMeTableViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LYMeTableViewCell.m; sourceTree = "<group>"; };
 		6BF5A90F1D41FBF80079331C /* LYMeTableViewCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = LYMeTableViewCell.xib; sourceTree = "<group>"; };
-		6BF5A9131D421B1E0079331C /* LYMyGiftViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LYMyGiftViewController.h; sourceTree = "<group>"; };
-		6BF5A9141D421B1E0079331C /* LYMyGiftViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LYMyGiftViewController.m; sourceTree = "<group>"; };
 		6BF5A9171D421B830079331C /* LYEssenceAlbumViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LYEssenceAlbumViewController.h; sourceTree = "<group>"; };
 		6BF5A9181D421B830079331C /* LYEssenceAlbumViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LYEssenceAlbumViewController.m; sourceTree = "<group>"; };
 		6BF5A91A1D4265280079331C /* LYMyAccountViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LYMyAccountViewController.h; sourceTree = "<group>"; };
@@ -4047,7 +4049,6 @@
 			isa = PBXGroup;
 			children = (
 				6BA8189E1D4EDE8B007AB115 /* 粉丝关注 */,
-				6BDD2A071D489C9D00693ADF /* 礼物 */,
 				6BF5A9161D421B600079331C /* 精华相册 */,
 				6BF5A9121D421AFA0079331C /* 我的礼物 */,
 				3AA798461D23A359002135E4 /* 钱包明细 */,
@@ -4072,7 +4073,7 @@
 			isa = PBXGroup;
 			children = (
 				6BA818A21D4EDEF1007AB115 /* 粉丝关注 */,
-				6BDD2A0B1D489F3A00693ADF /* 礼物 */,
+				6BDD2A0B1D489F3A00693ADF /* 我的礼物 */,
 				3AC849C91D24B7A2002735E0 /* 钱包明细Cell */,
 				98D30A7C1C98089C008EE11F /* 我的气质cell */,
 				0991EEB91C4DFD02001D9FD3 /* 屏蔽列表 */,
@@ -5091,8 +5092,8 @@
 		6B55B07B1D4B5F6A00EBD172 /* DXPopover */ = {
 			isa = PBXGroup;
 			children = (
-				3AE5ED101D4F4662006884D5 /* DXPopover.h */,
-				3AE5ED111D4F4662006884D5 /* DXPopover.m */,
+				6B9094CA1D4F49E500037DD0 /* DXPopover.h */,
+				6B9094CB1D4F49E500037DD0 /* DXPopover.m */,
 			);
 			path = DXPopover;
 			sourceTree = "<group>";
@@ -5149,16 +5150,7 @@
 			name = Frameworks;
 			sourceTree = "<group>";
 		};
-		6BDD2A071D489C9D00693ADF /* 礼物 */ = {
-			isa = PBXGroup;
-			children = (
-				6BDD2A081D489CBE00693ADF /* LYSendGiftViewController.h */,
-				6BDD2A091D489CBE00693ADF /* LYSendGiftViewController.m */,
-			);
-			name = "礼物";
-			sourceTree = "<group>";
-		};
-		6BDD2A0B1D489F3A00693ADF /* 礼物 */ = {
+		6BDD2A0B1D489F3A00693ADF /* 我的礼物 */ = {
 			isa = PBXGroup;
 			children = (
 				6BDD2A0C1D489F5A00693ADF /* LYSendGiftCollectionViewCell.h */,
@@ -5167,14 +5159,17 @@
 				6BDD2A121D48A21D00693ADF /* LYSendGiftHeaderView.m */,
 				6BDD2A141D48A23200693ADF /* LYSendGiftHeaderView.xib */,
 			);
-			name = "礼物";
+			name = "我的礼物";
 			sourceTree = "<group>";
 		};
 		6BF5A9121D421AFA0079331C /* 我的礼物 */ = {
 			isa = PBXGroup;
 			children = (
-				6BF5A9131D421B1E0079331C /* LYMyGiftViewController.h */,
-				6BF5A9141D421B1E0079331C /* LYMyGiftViewController.m */,
+				6BDD2A081D489CBE00693ADF /* LYSendGiftViewController.h */,
+				6BDD2A091D489CBE00693ADF /* LYSendGiftViewController.m */,
+				6B9094C51D4F36E000037DD0 /* LYMyGiftViewController.h */,
+				6B9094C61D4F36E000037DD0 /* LYMyGiftViewController.m */,
+				6B9094C71D4F36E000037DD0 /* LYMyGiftViewController.xib */,
 			);
 			name = "我的礼物";
 			sourceTree = "<group>";
@@ -6428,6 +6423,7 @@
 				09549E201D153B7A008A721C /* VoiceSearchFeedback010@2x.png in Resources */,
 				09549E641D153B7A008A721C /* chatBar_recordBg@2x.png in Resources */,
 				A79AA8081BEAFAB10065684F /* UMSCommentInputController.xib in Resources */,
+				6B9094C91D4F36E000037DD0 /* LYMyGiftViewController.xib in Resources */,
 				09549E751D153B7A008A721C /* chatBar_more_camera.png in Resources */,
 				09549E2F1D153B7A008A721C /* VoiceSearchFeedback018.png in Resources */,
 				09549E9A1D153B7A008A721C /* account.png in Resources */,
@@ -6634,7 +6630,6 @@
 				3ABAF1581D350F85006DF5C6 /* BuyRedBeanCell.m in Sources */,
 				09D02A851C48C5AA004C7BE9 /* MJRefreshConst.m in Sources */,
 				A79AA8151BEAFAB10065684F /* base64.m in Sources */,
-				3AE5ED121D4F4662006884D5 /* DXPopover.m in Sources */,
 				18EEB8821BBA3D6A00AD5BD5 /* LoginViewController.m in Sources */,
 				09D02A861C48C5AA004C7BE9 /* UIScrollView+MJExtension.m in Sources */,
 				09549D251D153AF3008A721C /* EMSearchDisplayController.m in Sources */,
@@ -6741,6 +6736,7 @@
 				85A476381C46C75D00841B68 /* UITextField+QuickTextField.m in Sources */,
 				98DAE22D1CB8E720002CF647 /* SkillTableViewCell.m in Sources */,
 				A79AA8001BEAFAB10065684F /* UIView+RSAdditions.m in Sources */,
+				6B9094CC1D4F49E500037DD0 /* DXPopover.m in Sources */,
 				09193ED11BC7EF4300D1937C /* HomeTableView.m in Sources */,
 				18BF32BD1BD36649009E6335 /* GroupModel.m in Sources */,
 				09549D261D153AF3008A721C /* XHMessageTextView.m in Sources */,
@@ -7042,12 +7038,12 @@
 				985968251CCF2A1B005BD96E /* UIImage+fixOrientation.m in Sources */,
 				98D30A871C980C75008EE11F /* UpLoadViewController.m in Sources */,
 				6BF5A90B1D41F6D40079331C /* LYMeViewController.m in Sources */,
-				6BF5A9151D421B1E0079331C /* LYMyGiftViewController.m in Sources */,
 				6BDD2A0A1D489CBE00693ADF /* LYSendGiftViewController.m in Sources */,
 				980FCEAA1CE72F1200956912 /* IQAlbumAssetsViewController.m in Sources */,
 				6BF5A9051D41EB7F0079331C /* LYDetailDataHeaderView.m in Sources */,
 				09549D241D153AF3008A721C /* EMNavigationController.m in Sources */,
 				850FEEF51C40B17500C5DE0C /* NSString+StringFrame.m in Sources */,
+				6B9094C81D4F36E000037DD0 /* LYMyGiftViewController.m in Sources */,
 				A79AA7D91BEAFAB10065684F /* GTM_Base64.m in Sources */,
 				980FCEB71CE72F1200956912 /* IQSongsAlbumListViewController.m in Sources */,
 				984B4DAC1CCDF7C0001A063D /* SDWebImageDownloader.m in Sources */,
