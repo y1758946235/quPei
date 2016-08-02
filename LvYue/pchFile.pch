@@ -86,9 +86,9 @@
 
 
 //#define REQUESTHEADER     @"http://192.168.1.103:8080/lvyue2"  //王炯达测试
-#define REQUESTHEADER     @"http://121.42.156.36:8088/lvyue2"  //吴书杰测试
+//#define REQUESTHEADER     @"http://121.42.156.36:8088/lvyue2"  //吴书杰测试
 
-//#define REQUESTHEADER     @"http://192.168.1.109:8080"             //本地测试
+#define REQUESTHEADER     @"http://192.168.1.110:8080"             //吴书杰本地测试
 
 
 //正式

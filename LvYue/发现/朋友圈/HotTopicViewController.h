@@ -14,4 +14,6 @@
 @property (nonatomic,assign) BOOL isFriendsCircle;//是否是朋友圈
 @property (nonatomic,strong) NSString *personName;
 
+@property (nonatomic, assign) NSInteger topic_id;//热门话题id
+
 @end

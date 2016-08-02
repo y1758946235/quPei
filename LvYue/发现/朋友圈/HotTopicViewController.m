@@ -14,10 +14,13 @@
 #import "AFNetworking.h"
 #import "MBProgressHUD+NJ.h"
 #import "MJRefresh.h"
+#import "LYHttpPoster.h"
+#import "UIImageView+WebCache.h"
 
 #import "ReportViewController.h"
 #import "PublishMessageViewController.h"
 #import "FriendsMessageViewController.h"
+#import "TopicTitle.h"
 
 #define kSingleContentHeight 17.895f
 @interface HotTopicViewController ()<UITableViewDelegate, UITableViewDataSource, UITextViewDelegate, UIActionSheetDelegate>{
@@ -38,6 +41,7 @@
     NSMutableArray *_noticeList;   //消息列表
     NSInteger _currentPage;        //当前分页
     
+    NSMutableArray* _topicArray;   //话题内容
     
     /*****************评论中回复他人用到的过渡字段*******************/
     NSString *_reply;           //回复的对象id
@@ -83,7 +87,8 @@
     
     //获得朋友圈消息列表
     [self postRequest];
-    
+    //话题详情
+    [self getTopicDetail];
 }
 
 
@@ -114,13 +119,19 @@
     backImageView.y = 0;
     backImageView.width = kMainScreenWidth;
     backImageView.height = 160;
-    backImageView.image = [UIImage imageNamed:@"朋友圈背景"];
+    TopicTitle* titleModel = _topicArray[0];
+    NSString* imgStr = [NSString stringWithFormat:@"%@%@",IMAGEHEADER,titleModel.back_img];
+    NSURL* url = [NSURL URLWithString:imgStr];
+    [backImageView sd_setImageWithURL:url placeholderImage:[UIImage imageNamed:@"朋友圈背景"] options:SDWebImageRetryFailed];
+    
+    //backImageView.image = [UIImage imageNamed:@"朋友圈背景"];
     //backImageView.userInteractionEnabled = YES;
     [headerView addSubview:backImageView];
     
     //背景上的文字
     UILabel* joinLabel = [[UILabel alloc] init];
-    joinLabel.text = @"397人参与";
+    NSString* partNumsStr = [NSString stringWithFormat:@"%@人参与",titleModel.partNums];
+    joinLabel.text = partNumsStr;
     joinLabel.textColor = [UIColor whiteColor];
     joinLabel.width = 80;
     joinLabel.height = 20;
@@ -131,7 +142,8 @@
     [backImageView addSubview:joinLabel];
     
     UILabel* titleLabel = [[UILabel alloc] init];
-    NSString* titleStr = @"#那些美好的风景#";
+    NSString* titleStr = [NSString stringWithFormat:@"#%@#",titleModel.title];
+    //NSString* titleStr = @"#那些美好的风景#";
     titleLabel.text = titleStr;
     titleLabel.font = kFont20;
     titleLabel.textColor = [UIColor whiteColor];
@@ -155,7 +167,8 @@
     shortLabel.width = kMainScreenWidth - 2*shortLabel.x;
     shortLabel.height = 80;
     //计算高度
-    NSString* contentStr = @"此刻她是白锦曦，是苏眠，是《美人为馅》里的绝色警花…时间倒退，她是毓秀，是小寒，是采月，是袭香，是唤云，是八姐，是成君，是灵珊，是梅超风，是小风筝，是佟腊月，是无数无数传奇的女子…记不清多少的前世今生，她总是时而娇俏，时而狠辣，时而温柔，时而霸气，时而为情所伤，时而绝不回头…她是独立女性的代表，是绝对的演技派…时间再倒退，上戏的操场上，长发及腰的白族姑娘，十五岁的大学生，翩翩舞姿迷倒了大部分男生，但她总是安静地沉浸在戏剧的世界中，不受尘世骚扰…她信佛、念经、放生、执着…她度己亦度人，在方寸的屏幕间把热泪洒尽…她是杨蓉，她是天地的钟灵之秀…明天是她的生日，是一次新的起航…人间最美不过是把自身所学淋漓尽致地挥洒…我们渴望未来的日子里有更多的传奇女子涌现，比如刘楚玉，这是我接这个项目的唯一理由… 因为有杨蓉，戏的世界如此美好！";
+//    NSString* contentStr = @"此刻她是白锦曦，是苏眠，是《美人为馅》里的绝色警花…时间倒退，她是毓秀，是小寒，是采月，是袭香，是唤云，是八姐，是成君，是灵珊，是梅超风，是小风筝，是佟腊月，是无数无数传奇的女子…记不清多少的前世今生，她总是时而娇俏，时而狠辣，时而温柔，时而霸气，时而为情所伤，时而绝不回头…她是独立女性的代表，是绝对的演技派…时间再倒退，上戏的操场上，长发及腰的白族姑娘，十五岁的大学生，翩翩舞姿迷倒了大部分男生，但她总是安静地沉浸在戏剧的世界中，不受尘世骚扰…她信佛、念经、放生、执着…她度己亦度人，在方寸的屏幕间把热泪洒尽…她是杨蓉，她是天地的钟灵之秀…明天是她的生日，是一次新的起航…人间最美不过是把自身所学淋漓尽致地挥洒…我们渴望未来的日子里有更多的传奇女子涌现，比如刘楚玉，这是我接这个项目的唯一理由… 因为有杨蓉，戏的世界如此美好！";
+    NSString* contentStr = [NSString stringWithFormat:@"%@", titleModel.intro];
     NSDictionary* shortLabelAttrs = @{
                             NSFontAttributeName:kFont14
                             };
@@ -704,7 +717,7 @@
                       
                       if ([[NSString stringWithFormat:@"%@", responseObject[@"code"]] isEqualToString:@"200"]) {
                           
-                          NSLog(@"发送评论成功");
+                          MLOG(@"发送评论成功");
                           //1.隐藏输入框 评论显示+1
                           [self hiddenAddView];
                           //2.手动加入数据源
@@ -1010,11 +1023,45 @@
         [MBProgressHUD showError:@"请检查您的网络"];
     }];
 }
+
+//获取详情
+- (void)getTopicDetail {
+    NSNumber* topicInt = [NSNumber numberWithInteger:self.topic_id];
+    NSString* urlStr = [NSString stringWithFormat:@"%@/mobile/notice/getHotTopicDetail",REQUESTHEADER];
+    NSDictionary* params = @{
+                             @"topic_id":topicInt
+                             };
+    
+    [MBProgressHUD showMessage:nil toView:self.view];
+    [LYHttpPoster postHttpRequestByGet:urlStr andParameter:params success:^(id successResponse) {
+    [MBProgressHUD hideAllHUDsForView:self.view animated:YES];
+        if ([[NSString stringWithFormat:@"%@",successResponse[@"code"]] isEqualToString:@"200"]) {
+            NSMutableArray* detailM = successResponse[@"topic"];
+            for (NSDictionary* dict in detailM) {
+                TopicTitle* model = [TopicTitle topicTitleWithDict:dict];
+                [_topicArray addObject:model];
+            }
+            [_tableView.mj_header endRefreshing];
+            [_tableView reloadData];
+        }
+        else {
+            
+            [MBProgressHUD hideAllHUDsForView:self.view animated:YES];
+            [MBProgressHUD showError:successResponse[@"msg"]];
+        }
+    } andFailure:^(id failureResponse) {
+        NSLog(@"热门话题%@", failureResponse);
+        [MBProgressHUD hideAllHUDsForView:self.view animated:YES];
+        [MBProgressHUD showError:@"请检查您的网络"];
+    }];
+}
+
+
 //注册通知
 - (void)addObserver {
     
     //点击评论
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(commentClick:) name:@"commentClick_KF" object:nil];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(commentClick:) name:@"commentClick" object:nil];
     //键盘高度变化
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(keyboardWillChangeFrame:) name:UIKeyboardWillChangeFrameNotification object:nil];
     //删除评论

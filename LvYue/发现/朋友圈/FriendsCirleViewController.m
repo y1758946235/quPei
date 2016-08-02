@@ -27,6 +27,7 @@
 #import "WhoComeViewController.h"
 #import "ReportViewController.h"
 #import "HotTopicViewController.h"
+#import "TopicTitle.h"
 
 #define kSingleContentHeight 17.895f
 
@@ -44,6 +45,9 @@
     NSMutableArray *_commentList;  //评论列表
     NSMutableArray *_praiseList;   //点赞列表
     NSMutableArray *_noticeList;   //消息列表
+    NSMutableArray *_topicList;    //热门话题数量
+    
+    
     UIButton *_newMsg;             //新消息条数提示
     NSString *_newMsgIcon;         //新消息提示的头像图片
     NSInteger _newMsgNumber;       //新消息数
@@ -89,6 +93,7 @@
 
     //获得朋友圈消息列表
     [self postRequest];
+    [self getHotTopic];
     //[self getDataFromWeb];
     //注册通知
     [self addObserver];
@@ -118,6 +123,7 @@
     _commentList   = [NSMutableArray array];
     _praiseList    = [NSMutableArray array];
     _noticeList    = [NSMutableArray array];
+    _topicList     = [NSMutableArray array];
     _coverImageUrl = nil;
 
     _tableView                 = [[UITableView alloc] initWithFrame:CGRectMake(0, 0, self.view.frame.size.width, self.view.frame.size.height) style:UITableViewStyleGrouped];
@@ -128,6 +134,8 @@
     [self.view addSubview:_tableView];
 
     [self setStatus];
+    [self getHotTopic];
+    
     [self getDataFromWeb];
     //上拉下拉刷新
     [self addRefresh];
@@ -239,6 +247,7 @@
     //获取网络
     //加载数据
     [self postRequest];
+    //[self getHotTopic];
 }
 
 //上拉
@@ -431,6 +440,40 @@
             [MBProgressHUD hideAllHUDsForView:self.view animated:YES];
             [MBProgressHUD showError:@"请检查您的网络"];
         }];
+}
+
+//获取热门话题
+- (void)getHotTopic {
+    //清空数据源
+    [_topicList removeAllObjects];
+    
+    NSString* urlStr = [NSString stringWithFormat:@"%@/mobile/notice/getHotTitle",REQUESTHEADER];
+    NSDictionary* params = nil;
+    
+    [MBProgressHUD showMessage:nil toView:self.view];
+    [LYHttpPoster postHttpRequestByPost:urlStr andParameter:params success:^(id successResponse) {
+        MLOG(@"获取朋友圈列表:%@", successResponse);
+        [MBProgressHUD hideAllHUDsForView:self.view animated:YES];
+        if ([[NSString stringWithFormat:@"%@", successResponse[@"code"]] isEqualToString:@"200"]) {
+            NSMutableArray* topicsM = successResponse[@"data"][@"topics"];
+            for (NSDictionary* dict in topicsM) {
+                TopicTitle* topic = [TopicTitle topicTitleWithDict:dict];
+                [_topicList addObject:topic];
+            }
+            
+            [_tableView.mj_header endRefreshing];
+            [_tableView reloadData];
+        }
+        else {
+            
+            [MBProgressHUD hideAllHUDsForView:self.view animated:YES];
+            [MBProgressHUD showError:successResponse[@"msg"]];
+        }
+    } andFailure:^(id failureResponse) {
+        NSLog(@"获取朋友圈列表%@", failureResponse);
+        [MBProgressHUD hideAllHUDsForView:self.view animated:YES];
+        [MBProgressHUD showError:@"请检查您的网络"];
+    }];
 }
 
 //注册通知
@@ -1270,6 +1313,7 @@
 
     //一个热门话题的高度
     static CGFloat hotTipH = 35;
+    UILabel* hotLabel;
     //设置热门话题
     if (!hotBackView) {
         //背景
@@ -1282,11 +1326,11 @@
         [headerView addSubview:hotBackView];
         
         //热门
-        UILabel* hotLabel = [[UILabel alloc] init];
+        hotLabel = [[UILabel alloc] init];
         hotLabel.x = 10;
         hotLabel.y = 15;
         hotLabel.width = hotTipH;
-        hotLabel.height = hotTipH*2;
+        hotLabel.height = hotTipH*(_topicList.count+1);
         hotLabel.backgroundColor = [UIColor whiteColor];
         hotLabel.numberOfLines = 0;
         hotLabel.text = @"热话";
@@ -1304,42 +1348,112 @@
         [hotBackView addSubview:hotLabel];
         
         //话题内容
-        UIButton* tipButton = [UIButton buttonWithType:UIButtonTypeCustom];
-        tipButton.x = CGRectGetMaxX(hotLabel.frame) + 3;
-        tipButton.y = hotLabel.y;
-        tipButton.width = kMainScreenWidth - CGRectGetMaxX(hotLabel.frame) - 3;
-        tipButton.height = hotTipH;
-//        tipButton.backgroundColor = [UIColor redColor];
-        [tipButton setTitleColor:[UIColor blackColor] forState:UIControlStateNormal];
-        [tipButton setTitle:@"#赵薇新片撤换戴立忍#" forState:UIControlStateNormal];
-        tipButton.contentHorizontalAlignment = UIControlContentHorizontalAlignmentLeft;
-        tipButton.titleEdgeInsets = UIEdgeInsetsMake(0, 15, 0, 0);
-        [tipButton addTarget:self action:@selector(clickTipButton:) forControlEvents:UIControlEventTouchUpInside];
-        [hotBackView addSubview:tipButton];
-        //虚线
-        UIView* lineView =[[UIView alloc] init];
-        lineView.x = 0;
-        lineView.y = tipButton.height - 1;
-        lineView.width = kMainScreenWidth;
-        lineView.height = 1.0f;
-        [UIView drawDashLine:lineView lineLength:3.0f lineSpacing:3.0f lineColor:[UIColor grayColor]];
-        [tipButton addSubview:lineView];
-
-        UIButton* tip2Button = [UIButton buttonWithType:UIButtonTypeCustom];
-        tip2Button.x = CGRectGetMaxX(hotLabel.frame) + 3;
-        tip2Button.y = CGRectGetMaxY(tipButton.frame) + 1;
-        tip2Button.width = kMainScreenWidth - CGRectGetMaxX(hotLabel.frame) - 3;
-        tip2Button.height = hotTipH;
-//        tip2Button.backgroundColor = [UIColor blueColor];
-        tip2Button.titleLabel.textColor = [UIColor blackColor];
-        [tip2Button setTitleColor:[UIColor blackColor] forState:UIControlStateNormal];
-        [tip2Button setTitle:@"#赵薇新片撤换戴立忍#" forState:UIControlStateNormal];
-        tip2Button.contentHorizontalAlignment = UIControlContentHorizontalAlignmentLeft;
-        tip2Button.titleEdgeInsets = UIEdgeInsetsMake(0, 15, 0, 0);
-        [tip2Button addTarget:self action:@selector(clickTipButton:) forControlEvents:UIControlEventTouchUpInside];
-        [hotBackView addSubview:tip2Button];
+//        UIButton* tipButton = [UIButton buttonWithType:UIButtonTypeCustom];
+//        tipButton.x = CGRectGetMaxX(hotLabel.frame) + 3;
+//        tipButton.y = hotLabel.y;
+//        tipButton.width = kMainScreenWidth - CGRectGetMaxX(hotLabel.frame) - 3;
+//        tipButton.height = hotTipH;
+//        //        tipButton.backgroundColor = [UIColor redColor];
+//        [tipButton setTitleColor:[UIColor blackColor] forState:UIControlStateNormal];
+//        [tipButton setTitle:@"#赵薇新片撤换戴立忍#" forState:UIControlStateNormal];
+//        tipButton.contentHorizontalAlignment = UIControlContentHorizontalAlignmentLeft;
+//        tipButton.titleEdgeInsets = UIEdgeInsetsMake(0, 15, 0, 0);
+//        [tipButton addTarget:self action:@selector(clickTipButton:) forControlEvents:UIControlEventTouchUpInside];
+//        [hotBackView addSubview:tipButton];
+//        //虚线
+//        UIView* lineView =[[UIView alloc] init];
+//        lineView.x = 0;
+//        lineView.y = tipButton.height - 1;
+//        lineView.width = kMainScreenWidth;
+//        lineView.height = 1.0f;
+//        [UIView drawDashLine:lineView lineLength:3.0f lineSpacing:3.0f lineColor:[UIColor grayColor]];
+//        [tipButton addSubview:lineView];
+//        
+//        UIButton* tip2Button = [UIButton buttonWithType:UIButtonTypeCustom];
+//        tip2Button.x = CGRectGetMaxX(hotLabel.frame) + 3;
+//        tip2Button.y = CGRectGetMaxY(tipButton.frame) + 1;
+//        tip2Button.width = kMainScreenWidth - CGRectGetMaxX(hotLabel.frame) - 3;
+//        tip2Button.height = hotTipH;
+//        //        tip2Button.backgroundColor = [UIColor blueColor];
+//        tip2Button.titleLabel.textColor = [UIColor blackColor];
+//        [tip2Button setTitleColor:[UIColor blackColor] forState:UIControlStateNormal];
+//        [tip2Button setTitle:@"#赵薇新片撤换戴立忍#" forState:UIControlStateNormal];
+//        tip2Button.contentHorizontalAlignment = UIControlContentHorizontalAlignmentLeft;
+//        tip2Button.titleEdgeInsets = UIEdgeInsetsMake(0, 15, 0, 0);
+//        [tip2Button addTarget:self action:@selector(clickTipButton:) forControlEvents:UIControlEventTouchUpInside];
+//        [hotBackView addSubview:tip2Button];
+//
+//        for (int i = 0; i<_topicList.count; i++) {
+//            //话题内容
+//            UIButton* tipButton = [UIButton buttonWithType:UIButtonTypeCustom];
+//            tipButton.height = hotTipH;
+//            tipButton.width = kMainScreenWidth - CGRectGetMaxX(hotLabel.frame) - 3;
+//            tipButton.x = CGRectGetMaxX(hotLabel.frame) + 3;
+//            tipButton.y = hotLabel.y + i*(tipButton.y+hotTipH+1);
+//            
+//            tipButton.backgroundColor = [UIColor redColor];
+//            [tipButton setTitleColor:[UIColor blackColor] forState:UIControlStateNormal];
+//            TopicTitle* titleModel = _topicList[i+1];
+//            NSString* title = [NSString stringWithFormat:@"#%@#",titleModel.title];
+//            
+//            tipButton.tag = 1000+ [titleModel.ID integerValue];
+//            
+//            [tipButton setTitle:title forState:UIControlStateNormal];
+//            tipButton.contentHorizontalAlignment = UIControlContentHorizontalAlignmentLeft;
+//            tipButton.titleEdgeInsets = UIEdgeInsetsMake(0, 15, 0, 0);
+//            [tipButton addTarget:self action:@selector(clickTipButton:) forControlEvents:UIControlEventTouchUpInside];
+//            [hotBackView addSubview:tipButton];
+//            //虚线
+//            UIView* lineView =[[UIView alloc] init];
+//            lineView.x = 0;
+//            lineView.y = tipButton.height - 1;
+//            lineView.width = kMainScreenWidth;
+//            lineView.height = 1.0f;
+//            [UIView drawDashLine:lineView lineLength:3.0f lineSpacing:3.0f lineColor:[UIColor grayColor]];
+//            [tipButton addSubview:lineView];
+//            if (_topicList.count - 1 == i) {
+//                lineView.hidden = YES;
+//            }
+//
+//        }
+        
     }
     else {
+        
+        hotLabel.height = hotTipH*(_topicList.count+1);
+        
+        for (int i = 0; i<_topicList.count; i++) {
+            //话题内容
+            UIButton* tipButton = [UIButton buttonWithType:UIButtonTypeCustom];
+            tipButton.height = hotTipH;
+            tipButton.width = kMainScreenWidth - CGRectGetMaxX(hotLabel.frame) - 3;
+            tipButton.x = CGRectGetMaxX(hotLabel.frame) + 3;
+            tipButton.y = hotLabel.y + i*(tipButton.y+hotTipH+1);
+            
+            tipButton.backgroundColor = [UIColor redColor];
+            [tipButton setTitleColor:[UIColor blackColor] forState:UIControlStateNormal];
+            TopicTitle* titleModel = _topicList[i];
+            NSString* title = [NSString stringWithFormat:@"#%@#",titleModel.title];
+            
+            tipButton.tag = 1000+ [titleModel.ID integerValue];
+            
+            [tipButton setTitle:title forState:UIControlStateNormal];
+            tipButton.contentHorizontalAlignment = UIControlContentHorizontalAlignmentLeft;
+            tipButton.titleEdgeInsets = UIEdgeInsetsMake(0, 15, 0, 0);
+            [tipButton addTarget:self action:@selector(clickTipButton:) forControlEvents:UIControlEventTouchUpInside];
+            [hotBackView addSubview:tipButton];
+            //虚线
+            UIView* lineView =[[UIView alloc] init];
+            lineView.x = 0;
+            lineView.y = tipButton.height - 1;
+            lineView.width = kMainScreenWidth;
+            lineView.height = 1.0f;
+            [UIView drawDashLine:lineView lineLength:3.0f lineSpacing:3.0f lineColor:[UIColor grayColor]];
+            [tipButton addSubview:lineView];
+            if (_topicList.count - 1 == i) {
+                lineView.hidden = YES;
+            }
+        }
         
     }
   
@@ -1351,6 +1465,7 @@
     MLOG(@"%@",sender);
     HotTopicViewController* vc = [[HotTopicViewController alloc] init];
     vc.userId = self.userId;
+    vc.topic_id = sender.tag-1000;
     [self.navigationController pushViewController:vc animated:YES];
 }
 
