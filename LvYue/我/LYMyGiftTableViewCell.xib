@@ -55,13 +55,22 @@
                         <constraints>
                             <constraint firstItem="EtS-F4-aL1" firstAttribute="top" secondItem="r1Z-6R-wIY" secondAttribute="bottom" constant="2" id="90O-jY-f5N"/>
                             <constraint firstAttribute="trailing" secondItem="EtS-F4-aL1" secondAttribute="trailing" id="Iub-Df-kwP"/>
+                            <constraint firstItem="EtS-F4-aL1" firstAttribute="top" secondItem="Hux-7d-xia" secondAttribute="bottom" constant="-6" id="MOQ-SW-Oi5"/>
                             <constraint firstAttribute="trailing" relation="greaterThanOrEqual" secondItem="g0m-vA-3OL" secondAttribute="trailing" constant="15" id="MWN-dr-KEK"/>
                             <constraint firstAttribute="trailing" secondItem="x86-ZI-oc2" secondAttribute="trailing" id="OMF-zx-Ivy"/>
+                            <constraint firstItem="EtS-F4-aL1" firstAttribute="leading" secondItem="g0m-vA-3OL" secondAttribute="leading" id="Q8w-Qb-ZdP"/>
                             <constraint firstItem="EtS-F4-aL1" firstAttribute="leading" secondItem="g0m-vA-3OL" secondAttribute="leading" id="bkJ-F7-m6G"/>
                             <constraint firstItem="x86-ZI-oc2" firstAttribute="centerY" secondItem="Hux-7d-xia" secondAttribute="centerY" id="evV-lA-8aL"/>
                             <constraint firstItem="r1Z-6R-wIY" firstAttribute="bottom" secondItem="x86-ZI-oc2" secondAttribute="bottom" id="fAI-cV-OP6"/>
                             <constraint firstAttribute="trailing" secondItem="r1Z-6R-wIY" secondAttribute="trailing" constant="10" id="i5n-cz-Bpu"/>
+                            <constraint firstItem="EtS-F4-aL1" firstAttribute="leading" relation="greaterThanOrEqual" secondItem="Hux-7d-xia" secondAttribute="trailing" constant="5" id="j4T-6f-Dgn"/>
                         </constraints>
+                        <variation key="default">
+                            <mask key="constraints">
+                                <exclude reference="MOQ-SW-Oi5"/>
+                                <exclude reference="bkJ-F7-m6G"/>
+                            </mask>
+                        </variation>
                     </view>
                     <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="lJB-LB-mlr">
                         <rect key="frame" x="33" y="8" width="69" height="63"/>

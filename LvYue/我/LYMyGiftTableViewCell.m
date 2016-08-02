@@ -41,7 +41,7 @@
     NSMutableAttributedString *contentAttrStr;
     switch (self.type) {
         case LYMyGiftViewControllerTypeFetch: {
-            contentAttrStr = [[NSMutableAttributedString alloc] initWithString:[NSString stringWithFormat:@"送给你一%@%@\n增加%@金币", dic[@"word"],dic[@"gift_name"], dic[@"price"]]];
+            contentAttrStr = [[NSMutableAttributedString alloc] initWithString:[NSString stringWithFormat:@"送给你一%@%@\n增加%@金币", dic[@"word"], dic[@"gift_name"], dic[@"price"]]];
             // 金币数量颜色
             NSUInteger location = contentAttrStr.length - 2 - [NSString stringWithFormat:@"%@", dic[@"price"]].length;
             NSUInteger length   = [NSString stringWithFormat:@"%@", dic[@"price"]].length;
@@ -49,9 +49,10 @@
             break;
         }
         case LYMyGiftViewControllerTypeSend: {
-            contentAttrStr = [[NSMutableAttributedString alloc] initWithString:[NSString stringWithFormat:@"我送给%@一%@价值\n%@金币的%@", dic[@"userName"], dic[@"word"],dic[@"price"], dic[@"gift_name"]]];
+            NSString *userName = [dic[@"userName"] length] > 5 ? [NSString stringWithFormat:@"%@...", [dic[@"userName"] substringToIndex:5]] : dic[@"userName"];
+            contentAttrStr     = [[NSMutableAttributedString alloc] initWithString:[NSString stringWithFormat:@"我送给%@一%@价值\n%@金币的%@", userName, dic[@"word"], dic[@"price"], dic[@"gift_name"]]];
             // 用户名颜色
-            [contentAttrStr addAttribute:NSForegroundColorAttributeName value:RGBCOLOR(46, 186, 239) range:NSMakeRange(3, [dic[@"userName"] length])];
+            [contentAttrStr addAttribute:NSForegroundColorAttributeName value:RGBCOLOR(46, 186, 239) range:NSMakeRange(3, userName.length)];
             // 金币数量颜色
             NSUInteger location = contentAttrStr.length - [dic[@"gift_name"] length] - 3 - [NSString stringWithFormat:@"%@", dic[@"price"]].length;
             NSUInteger length   = [NSString stringWithFormat:@"%@", dic[@"price"]].length;
