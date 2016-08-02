@@ -6,9 +6,21 @@
 //  Copyright © 2016年 OLFT. All rights reserved.
 //
 
+#import "LYHttpPoster.h"
+#import "LYMyGiftTableViewCell.h"
 #import "LYMyGiftViewController.h"
+#import "LYUserService.h"
+#import "MBProgressHUD+NJ.h"
 
-@interface LYMyGiftViewController ()
+
+static NSString *const LYMyGiftTableViewCellIdentity = @"LYMyGiftTableViewCellIdentity";
+
+@interface LYMyGiftViewController () <
+    UITableViewDelegate,
+    UITableViewDataSource>
+
+@property (nonatomic, assign) LYMyGiftViewControllerType selectedType;
+@property (nonatomic, strong) NSArray<NSDictionary *> *tableViewDataArray;
 
 @property (weak, nonatomic) IBOutlet NSLayoutConstraint *navBottomLineLeading;
 @property (weak, nonatomic) IBOutlet UIView *navBottomLineView;
@@ -33,23 +45,107 @@
 
     self.title = @"我的礼物";
 
-    [self clickMyGiftButton:nil];
+    [self.tableView registerNib:[UINib nibWithNibName:@"LYMyGiftTableViewCell" bundle:nil] forCellReuseIdentifier:LYMyGiftTableViewCellIdentity];
+    self.tableView.delegate   = self;
+    self.tableView.dataSource = self;
+
+    self.wealthLabel.text = self.wealth;
+    self.meiliLabel.text  = self.meiLiZhi;
+
+    [self p_loadData];
 }
 
 // 我收到的
 - (IBAction)clickMyGiftButton:(id)sender {
-    self.navBottomLineLeading.constant = (SCREEN_WIDTH / 2.f - 60.f) / 2.f;
-    [UIView animateWithDuration:1.0f animations:^{
+    self.selectedType = LYMyGiftViewControllerTypeFetch;
+    [self p_loadData];
+    self.navBottomLineLeading.constant = 0;
+
+    [UIView animateWithDuration:1.f animations:^{
         [self.navBottomLineView layoutIfNeeded];
     }];
 }
 
 // 我送出的
 - (IBAction)clickSendButton:(id)sender {
-    self.navBottomLineLeading.constant = (SCREEN_WIDTH / 2.f - 60.f) / 2.f + SCREEN_WIDTH / 2.f;
-    [UIView animateWithDuration:1.0f animations:^{
+    self.selectedType = LYMyGiftViewControllerTypeSend;
+    [self p_loadData];
+    self.navBottomLineLeading.constant = SCREEN_WIDTH / 2.f;
+
+    [UIView animateWithDuration:1.f animations:^{
         [self.navBottomLineView layoutIfNeeded];
     }];
+}
+
+#pragma mark TableView DataSource & Delegate
+
+- (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
+    return self.tableViewDataArray.count;
+}
+
+- (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath {
+    return 100.f;
+}
+
+
+- (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
+    LYMyGiftTableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:LYMyGiftTableViewCellIdentity forIndexPath:indexPath];
+    cell.type                   = self.selectedType;
+    [cell configData:self.tableViewDataArray[indexPath.row]];
+    return cell;
+}
+
+- (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
+    [tableView deselectRowAtIndexPath:indexPath animated:YES];
+}
+
+- (void)tableView:(UITableView *)tableView willDisplayCell:(UITableViewCell *)cell forRowAtIndexPath:(NSIndexPath *)indexPath {
+    if ([cell respondsToSelector:@selector(setSeparatorInset:)]) {
+        [cell setSeparatorInset:UIEdgeInsetsZero];
+    }
+    if ([cell respondsToSelector:@selector(setPreservesSuperviewLayoutMargins:)]) {
+        [cell setPreservesSuperviewLayoutMargins:NO];
+    }
+    if ([cell respondsToSelector:@selector(setLayoutMargins:)]) {
+        [cell setLayoutMargins:UIEdgeInsetsZero];
+    }
+}
+
+#pragma mark - Pravite
+
+- (void)p_loadData {
+
+    NSString *relativeURL;
+
+    switch (self.selectedType) {
+        case LYMyGiftViewControllerTypeFetch: {
+            relativeURL = @"/mobile/gift/giftReceive";
+            break;
+        }
+        case LYMyGiftViewControllerTypeSend: {
+            relativeURL = @"/mobile/gift/giftSend";
+            break;
+        }
+    }
+
+    [LYHttpPoster postHttpRequestByPost:[NSString stringWithFormat:@"%@%@", REQUESTHEADER, relativeURL]
+        andParameter:@{
+            @"userId": [LYUserService sharedInstance].userID
+        }
+        success:^(id successResponse) {
+            if ([successResponse[@"code"] integerValue] == 200) {
+
+                self.tableViewDataArray = successResponse[@"data"][@"giftRecords"];
+                [self.tableView reloadData];
+
+            } else {
+                [MBProgressHUD showError:[NSString stringWithFormat:@"%@", successResponse[@"msg"]]];
+            }
+        }
+        andFailure:^(id failureResponse) {
+            [MBProgressHUD hideHUDForView:self.view animated:YES];
+            [MBProgressHUD showError:@"加载失败，请重试"];
+        }];
 }
 
 

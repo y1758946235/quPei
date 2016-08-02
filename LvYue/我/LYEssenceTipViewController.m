@@ -138,7 +138,7 @@
 - (UIScrollView *)scrollView {
     if (!_scrollView) {
         _scrollView = ({
-            UIScrollView *scrollView = [[UIScrollView alloc] initWithFrame:CGRectMake(0, 0, SCREEN_WIDTH, SCREEN_HEIGHT)];
+            UIScrollView *scrollView = [[UIScrollView alloc] initWithFrame:CGRectMake(0, 0, SCREEN_WIDTH, SCREEN_HEIGHT - 64.f)];
             scrollView.contentSize   = CGSizeMake(SCREEN_WIDTH, 603);
             scrollView;
         });

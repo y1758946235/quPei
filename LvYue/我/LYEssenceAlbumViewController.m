@@ -65,7 +65,7 @@ static NSString *const LYEssenceAlbumCollectionViewCellIdentity =
     [LYHttpPoster postHttpRequestByPost:[NSString stringWithFormat:@"%@/mobile/user/getEssenceImgList", REQUESTHEADER]
         andParameter:
             @{
-                @"user_id": self.mySelf ? userId : self.userId,
+                @"user_id": [LYUserService sharedInstance].userID,
                 @"other_id": self.mySelf ? userId : self.userId
             }
         success:^(id successResponse) {
@@ -92,9 +92,9 @@ static NSString *const LYEssenceAlbumCollectionViewCellIdentity =
 
         NSURL *URL = [NSURL URLWithString:obj];
 
-        // 自己看自己不需要模糊
-        if (!self.mySelf) {
-            // 读取缓存
+        // 自己看自己不需要模糊   已经打赏过也不需要模糊 1：打赏过  2：未打赏
+        if (!self.mySelf && [self.responseArray[idx][@"isBo"] integerValue] != 1) {
+            // 读取缓存中的模糊相片
             UIImage *blurImage = [[LYBlurImageCache shareCache] objectForKey:URL.absoluteString];
             if (blurImage) {
                 [self.imageArray replaceObjectAtIndex:idx withObject:blurImage];
@@ -113,8 +113,8 @@ static NSString *const LYEssenceAlbumCollectionViewCellIdentity =
             __block UIImage *returnImage = image;
 
             dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
-                // 自己看自己不需要模糊
-                if (!self.mySelf) {
+                // 自己看自己不需要模糊  已经打赏过也不需要模糊
+                if (!self.mySelf && [self.responseArray[idx][@"isBo"] integerValue] != 1) {
                     // 图片模糊
                     returnImage = [returnImage blurredImageWithRadius:100 iterations:3 tintColor:RGBACOLOR(0, 0, 0, 0.5)];
 
@@ -167,6 +167,16 @@ static NSString *const LYEssenceAlbumCollectionViewCellIdentity =
         vc.smallImage              = self.imageArray;    // 对应已经加载的 image 对象
         vc.userId                  = [LYUserService sharedInstance].userID;
         [vc showImageWithIndex:indexPath.row andCount:self.imageArray.count];
+        return;
+    }
+
+    // 已经打赏过，则直接查看这个照片
+    if ([self.responseArray[indexPath.row][@"isBo"] integerValue] == 1) {
+        OriginalViewController *vc = [[OriginalViewController alloc] init];
+        vc.imageData               = @[self.responseArray[indexPath.row]]; // 响应的字典
+        vc.smallImage              = @[self.imageArray[indexPath.row]];    // 对应已经加载的 image 对象
+        vc.userId                  = [LYUserService sharedInstance].userID;
+        [vc showImageWithIndex:0 andCount:1]; // 永远是单张查看
         return;
     }
 
@@ -239,7 +249,8 @@ static NSString *const LYEssenceAlbumCollectionViewCellIdentity =
 }
 
 - (BOOL)mySelf {
-    return (self.userId.length == 0 || [self.userId isEqualToString:[LYUserService sharedInstance].userID]);
+    BOOL mySelf = (self.userId.length == 0 || [self.userId isEqualToString:[LYUserService sharedInstance].userID]);
+    return mySelf;
 }
 
 @end

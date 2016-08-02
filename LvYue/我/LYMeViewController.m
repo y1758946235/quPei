@@ -272,6 +272,8 @@ typedef NS_ENUM(NSUInteger, LYMeViewControllerCellTypeEnum) {
         }
         case LYMeViewControllerCellTypeEnumMyGift: {
             LYMyGiftViewController *vc = [[LYMyGiftViewController alloc] init];
+            vc.wealth                  = [NSString stringWithFormat:@"%ld", (long) self.infoModel.wealth];
+            vc.meiLiZhi                = [NSString stringWithFormat:@"%ld", (long) self.infoModel.charm];
             [self.navigationController pushViewController:vc animated:YES];
             break;
         }
