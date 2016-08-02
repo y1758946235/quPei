@@ -27,9 +27,7 @@
     UIImagePickerControllerDelegate,
     UINavigationControllerDelegate,
     UITableViewDataSource,
-    UITableViewDelegate,
-    UIPickerViewDataSource,
-    UIPickerViewDelegate> {
+    UITableViewDelegate> {
 
     UITextView *markView;
     UIButton *_addBtn;

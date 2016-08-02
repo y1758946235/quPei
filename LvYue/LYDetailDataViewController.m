@@ -524,7 +524,8 @@ forRowAtIndexPath:(NSIndexPath *)indexPath {
                             // 加载精华相册
                             [LYHttpPoster postHttpRequestByPost:[NSString stringWithFormat:@"%@/mobile/user/getEssenceImgList", REQUESTHEADER]
                                 andParameter:@{
-                                    @"user_id": @(weakSelf.infoModel.id)
+                                    @"user_id": [LYUserService sharedInstance].userID,
+                                    @"other_id": @(weakSelf.infoModel.id)
                                 }
                                 success:^(id successResponse) {
                                     if ([successResponse[@"code"] integerValue] == 200) {

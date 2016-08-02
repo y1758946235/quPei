@@ -563,6 +563,8 @@
 		6B9094C81D4F36E000037DD0 /* LYMyGiftViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 6B9094C61D4F36E000037DD0 /* LYMyGiftViewController.m */; };
 		6B9094C91D4F36E000037DD0 /* LYMyGiftViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 6B9094C71D4F36E000037DD0 /* LYMyGiftViewController.xib */; };
 		6B9094CC1D4F49E500037DD0 /* DXPopover.m in Sources */ = {isa = PBXBuildFile; fileRef = 6B9094CB1D4F49E500037DD0 /* DXPopover.m */; };
+		6B9094D01D4F52C300037DD0 /* LYMyGiftTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 6B9094CE1D4F52C300037DD0 /* LYMyGiftTableViewCell.m */; };
+		6B9094D11D4F52C300037DD0 /* LYMyGiftTableViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 6B9094CF1D4F52C300037DD0 /* LYMyGiftTableViewCell.xib */; };
 		6B9644BD1D4EFFEB00833212 /* LYEssenceTipViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 6B9644BB1D4EFFEB00833212 /* LYEssenceTipViewController.m */; };
 		6BA818A11D4EDEB8007AB115 /* LYFocusOnAndFansViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 6BA818A01D4EDEB8007AB115 /* LYFocusOnAndFansViewController.m */; };
 		6BA818A61D4EDF1B007AB115 /* LYFocusOnAndFansTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 6BA818A41D4EDF1B007AB115 /* LYFocusOnAndFansTableViewCell.m */; };
@@ -1835,6 +1837,9 @@
 		6B9094C71D4F36E000037DD0 /* LYMyGiftViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = LYMyGiftViewController.xib; sourceTree = "<group>"; };
 		6B9094CA1D4F49E500037DD0 /* DXPopover.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DXPopover.h; sourceTree = "<group>"; };
 		6B9094CB1D4F49E500037DD0 /* DXPopover.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DXPopover.m; sourceTree = "<group>"; };
+		6B9094CD1D4F52C300037DD0 /* LYMyGiftTableViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LYMyGiftTableViewCell.h; sourceTree = "<group>"; };
+		6B9094CE1D4F52C300037DD0 /* LYMyGiftTableViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LYMyGiftTableViewCell.m; sourceTree = "<group>"; };
+		6B9094CF1D4F52C300037DD0 /* LYMyGiftTableViewCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = LYMyGiftTableViewCell.xib; sourceTree = "<group>"; };
 		6B9644BA1D4EFFEB00833212 /* LYEssenceTipViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LYEssenceTipViewController.h; sourceTree = "<group>"; };
 		6B9644BB1D4EFFEB00833212 /* LYEssenceTipViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LYEssenceTipViewController.m; sourceTree = "<group>"; };
 		6BA8189F1D4EDEB8007AB115 /* LYFocusOnAndFansViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LYFocusOnAndFansViewController.h; sourceTree = "<group>"; };
@@ -5158,6 +5163,9 @@
 				6BDD2A111D48A21D00693ADF /* LYSendGiftHeaderView.h */,
 				6BDD2A121D48A21D00693ADF /* LYSendGiftHeaderView.m */,
 				6BDD2A141D48A23200693ADF /* LYSendGiftHeaderView.xib */,
+				6B9094CD1D4F52C300037DD0 /* LYMyGiftTableViewCell.h */,
+				6B9094CE1D4F52C300037DD0 /* LYMyGiftTableViewCell.m */,
+				6B9094CF1D4F52C300037DD0 /* LYMyGiftTableViewCell.xib */,
 			);
 			name = "我的礼物";
 			sourceTree = "<group>";
@@ -6414,6 +6422,7 @@
 				09549EBB1D153B7A008A721C /* tabbarBackground@2x.png in Resources */,
 				09C07F571BBA1AFD003AD2C4 /* MyInfomationTableViewCell.xib in Resources */,
 				09549E271D153B7A008A721C /* VoiceSearchFeedback014.png in Resources */,
+				6B9094D11D4F52C300037DD0 /* LYMyGiftTableViewCell.xib in Resources */,
 				09549E5A1D153B7A008A721C /* chatBar_keyboard@2x.png in Resources */,
 				09549E2E1D153B7A008A721C /* VoiceSearchFeedback017@2x.png in Resources */,
 				09549E6A1D153B7A008A721C /* chatBar_colorMore_audioCallSelected@2x.png in Resources */,
@@ -6719,6 +6728,7 @@
 				1873089E1BB8D1E600B071CE /* AppDelegate.m in Sources */,
 				187308C41BB8D9A200B071CE /* MeController.m in Sources */,
 				A79AA7A01BEAFAB10065684F /* QNResolver.m in Sources */,
+				6B9094D01D4F52C300037DD0 /* LYMyGiftTableViewCell.m in Sources */,
 				18A6AE281BC7BB1C006D2DEF /* MyGroupCell.m in Sources */,
 				98FD86781CC476A700630B7A /* PeopleModel.m in Sources */,
 				A79AA7831BEAFAB10065684F /* AFHTTPSessionManager.m in Sources */,

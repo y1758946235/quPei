@@ -8,6 +8,14 @@
 
 #import "BaseViewController.h"
 
+typedef NS_ENUM(NSUInteger, LYMyGiftViewControllerType) {
+    LYMyGiftViewControllerTypeFetch = 0,
+    LYMyGiftViewControllerTypeSend  = 1
+};
+
 @interface LYMyGiftViewController : BaseViewController
+
+@property (nonatomic, copy) NSString *wealth;
+@property (nonatomic, copy) NSString *meiLiZhi;
 
 @end
