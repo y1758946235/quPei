@@ -560,8 +560,12 @@
 		6B5099EB1D4CEF4F009B7DDF /* LYEssenceImageUploadViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 6B5099EA1D4CEF4F009B7DDF /* LYEssenceImageUploadViewController.m */; };
 		6B55B07A1D4B50B900EBD172 /* LYBlurImageCache.m in Sources */ = {isa = PBXBuildFile; fileRef = 6B55B0791D4B50B900EBD172 /* LYBlurImageCache.m */; };
 		6B55B0811D4B62A100EBD172 /* LYPopoverView.m in Sources */ = {isa = PBXBuildFile; fileRef = 6B55B0801D4B62A100EBD172 /* LYPopoverView.m */; };
+		6B5F25481D50590700778C21 /* LYMyAccountTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 6B5F25461D50590700778C21 /* LYMyAccountTableViewCell.m */; };
+		6B5F25491D50590700778C21 /* LYMyAccountTableViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 6B5F25471D50590700778C21 /* LYMyAccountTableViewCell.xib */; };
 		6B6A57C61D48F986001E29D1 /* LYDetailDataPhotoTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 6B6A57C41D48F986001E29D1 /* LYDetailDataPhotoTableViewCell.m */; };
 		6B6A57C71D48F986001E29D1 /* LYDetailDataPhotoTableViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 6B6A57C51D48F986001E29D1 /* LYDetailDataPhotoTableViewCell.xib */; };
+		6B8088421D509A5B001CD14D /* LYGetCoinHeaderView.m in Sources */ = {isa = PBXBuildFile; fileRef = 6B8088411D509A5B001CD14D /* LYGetCoinHeaderView.m */; };
+		6B8088441D509A75001CD14D /* LYGetCoinHeaderView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 6B8088431D509A75001CD14D /* LYGetCoinHeaderView.xib */; };
 		6B9094C81D4F36E000037DD0 /* LYMyGiftViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 6B9094C61D4F36E000037DD0 /* LYMyGiftViewController.m */; };
 		6B9094C91D4F36E000037DD0 /* LYMyGiftViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 6B9094C71D4F36E000037DD0 /* LYMyGiftViewController.xib */; };
 
@@ -570,6 +574,7 @@
 		6B9094D11D4F52C300037DD0 /* LYMyGiftTableViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 6B9094CF1D4F52C300037DD0 /* LYMyGiftTableViewCell.xib */; };
 
 		6B9644BD1D4EFFEB00833212 /* LYEssenceTipViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 6B9644BB1D4EFFEB00833212 /* LYEssenceTipViewController.m */; };
+		6B9E70281D5070A600142458 /* LYGetCoinViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 6B9E70271D5070A600142458 /* LYGetCoinViewController.m */; };
 		6BA818A11D4EDEB8007AB115 /* LYFocusOnAndFansViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 6BA818A01D4EDEB8007AB115 /* LYFocusOnAndFansViewController.m */; };
 		6BA818A61D4EDF1B007AB115 /* LYFocusOnAndFansTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 6BA818A41D4EDF1B007AB115 /* LYFocusOnAndFansTableViewCell.m */; };
 		6BA818A71D4EDF1B007AB115 /* LYFocusOnAndFansTableViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 6BA818A51D4EDF1B007AB115 /* LYFocusOnAndFansTableViewCell.xib */; };
@@ -580,6 +585,8 @@
 		6BDD2A0F1D489F5A00693ADF /* LYSendGiftCollectionViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 6BDD2A0D1D489F5A00693ADF /* LYSendGiftCollectionViewCell.m */; };
 		6BDD2A131D48A21D00693ADF /* LYSendGiftHeaderView.m in Sources */ = {isa = PBXBuildFile; fileRef = 6BDD2A121D48A21D00693ADF /* LYSendGiftHeaderView.m */; };
 		6BDD2A151D48A23200693ADF /* LYSendGiftHeaderView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 6BDD2A141D48A23200693ADF /* LYSendGiftHeaderView.xib */; };
+		6BF282F11D50846B00C46028 /* LYGetCoinTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 6BF282EF1D50846B00C46028 /* LYGetCoinTableViewCell.m */; };
+		6BF282F21D50846B00C46028 /* LYGetCoinTableViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 6BF282F01D50846B00C46028 /* LYGetCoinTableViewCell.xib */; };
 		6BF5A9011D41EB590079331C /* LYDetailDataViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 6BF5A8FF1D41EB590079331C /* LYDetailDataViewController.m */; };
 		6BF5A9051D41EB7F0079331C /* LYDetailDataHeaderView.m in Sources */ = {isa = PBXBuildFile; fileRef = 6BF5A9041D41EB7F0079331C /* LYDetailDataHeaderView.m */; };
 		6BF5A9071D41EBF00079331C /* LYDetailDataHeaderView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 6BF5A9061D41EBF00079331C /* LYDetailDataHeaderView.xib */; };
@@ -1837,9 +1844,15 @@
 		6B55B0791D4B50B900EBD172 /* LYBlurImageCache.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LYBlurImageCache.m; sourceTree = "<group>"; };
 		6B55B07F1D4B62A100EBD172 /* LYPopoverView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LYPopoverView.h; sourceTree = "<group>"; };
 		6B55B0801D4B62A100EBD172 /* LYPopoverView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LYPopoverView.m; sourceTree = "<group>"; };
+		6B5F25451D50590700778C21 /* LYMyAccountTableViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LYMyAccountTableViewCell.h; sourceTree = "<group>"; };
+		6B5F25461D50590700778C21 /* LYMyAccountTableViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LYMyAccountTableViewCell.m; sourceTree = "<group>"; };
+		6B5F25471D50590700778C21 /* LYMyAccountTableViewCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = LYMyAccountTableViewCell.xib; sourceTree = "<group>"; };
 		6B6A57C31D48F986001E29D1 /* LYDetailDataPhotoTableViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LYDetailDataPhotoTableViewCell.h; sourceTree = "<group>"; };
 		6B6A57C41D48F986001E29D1 /* LYDetailDataPhotoTableViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LYDetailDataPhotoTableViewCell.m; sourceTree = "<group>"; };
 		6B6A57C51D48F986001E29D1 /* LYDetailDataPhotoTableViewCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = LYDetailDataPhotoTableViewCell.xib; sourceTree = "<group>"; };
+		6B8088401D509A5B001CD14D /* LYGetCoinHeaderView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LYGetCoinHeaderView.h; sourceTree = "<group>"; };
+		6B8088411D509A5B001CD14D /* LYGetCoinHeaderView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LYGetCoinHeaderView.m; sourceTree = "<group>"; };
+		6B8088431D509A75001CD14D /* LYGetCoinHeaderView.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = LYGetCoinHeaderView.xib; sourceTree = "<group>"; };
 		6B9094C51D4F36E000037DD0 /* LYMyGiftViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LYMyGiftViewController.h; sourceTree = "<group>"; };
 		6B9094C61D4F36E000037DD0 /* LYMyGiftViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LYMyGiftViewController.m; sourceTree = "<group>"; };
 		6B9094C71D4F36E000037DD0 /* LYMyGiftViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = LYMyGiftViewController.xib; sourceTree = "<group>"; };
@@ -1852,6 +1865,8 @@
 
 		6B9644BA1D4EFFEB00833212 /* LYEssenceTipViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LYEssenceTipViewController.h; sourceTree = "<group>"; };
 		6B9644BB1D4EFFEB00833212 /* LYEssenceTipViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LYEssenceTipViewController.m; sourceTree = "<group>"; };
+		6B9E70261D5070A600142458 /* LYGetCoinViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LYGetCoinViewController.h; sourceTree = "<group>"; };
+		6B9E70271D5070A600142458 /* LYGetCoinViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LYGetCoinViewController.m; sourceTree = "<group>"; };
 		6BA8189F1D4EDEB8007AB115 /* LYFocusOnAndFansViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LYFocusOnAndFansViewController.h; sourceTree = "<group>"; };
 		6BA818A01D4EDEB8007AB115 /* LYFocusOnAndFansViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LYFocusOnAndFansViewController.m; sourceTree = "<group>"; };
 		6BA818A31D4EDF1B007AB115 /* LYFocusOnAndFansTableViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LYFocusOnAndFansTableViewCell.h; sourceTree = "<group>"; };
@@ -1869,6 +1884,9 @@
 		6BDD2A111D48A21D00693ADF /* LYSendGiftHeaderView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LYSendGiftHeaderView.h; sourceTree = "<group>"; };
 		6BDD2A121D48A21D00693ADF /* LYSendGiftHeaderView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LYSendGiftHeaderView.m; sourceTree = "<group>"; };
 		6BDD2A141D48A23200693ADF /* LYSendGiftHeaderView.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = LYSendGiftHeaderView.xib; sourceTree = "<group>"; };
+		6BF282EE1D50846B00C46028 /* LYGetCoinTableViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LYGetCoinTableViewCell.h; sourceTree = "<group>"; };
+		6BF282EF1D50846B00C46028 /* LYGetCoinTableViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LYGetCoinTableViewCell.m; sourceTree = "<group>"; };
+		6BF282F01D50846B00C46028 /* LYGetCoinTableViewCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = LYGetCoinTableViewCell.xib; sourceTree = "<group>"; };
 		6BF5A8FE1D41EB590079331C /* LYDetailDataViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LYDetailDataViewController.h; sourceTree = "<group>"; };
 		6BF5A8FF1D41EB590079331C /* LYDetailDataViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LYDetailDataViewController.m; sourceTree = "<group>"; };
 		6BF5A9031D41EB7F0079331C /* LYDetailDataHeaderView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LYDetailDataHeaderView.h; sourceTree = "<group>"; };
@@ -4087,6 +4105,7 @@
 		09C07F441BBA1AC1003AD2C4 /* View */ = {
 			isa = PBXGroup;
 			children = (
+				6B5F25441D5058E800778C21 /* 个人账户 */,
 				6BA818A21D4EDEF1007AB115 /* 粉丝关注 */,
 				6BDD2A0B1D489F3A00693ADF /* 我的礼物 */,
 				3AC849C91D24B7A2002735E0 /* 钱包明细Cell */,
@@ -5122,6 +5141,31 @@
 			name = "退款成功";
 			sourceTree = "<group>";
 		};
+		6B55B07B1D4B5F6A00EBD172 /* DXPopover */ = {
+			isa = PBXGroup;
+			children = (
+				6B9094CA1D4F49E500037DD0 /* DXPopover.h */,
+				6B9094CB1D4F49E500037DD0 /* DXPopover.m */,
+			);
+			path = DXPopover;
+			sourceTree = "<group>";
+		};
+		6B5F25441D5058E800778C21 /* 个人账户 */ = {
+			isa = PBXGroup;
+			children = (
+				6B5F25451D50590700778C21 /* LYMyAccountTableViewCell.h */,
+				6B5F25461D50590700778C21 /* LYMyAccountTableViewCell.m */,
+				6B5F25471D50590700778C21 /* LYMyAccountTableViewCell.xib */,
+				6BF282EE1D50846B00C46028 /* LYGetCoinTableViewCell.h */,
+				6BF282EF1D50846B00C46028 /* LYGetCoinTableViewCell.m */,
+				6BF282F01D50846B00C46028 /* LYGetCoinTableViewCell.xib */,
+				6B8088401D509A5B001CD14D /* LYGetCoinHeaderView.h */,
+				6B8088411D509A5B001CD14D /* LYGetCoinHeaderView.m */,
+				6B8088431D509A75001CD14D /* LYGetCoinHeaderView.xib */,
+			);
+			name = "个人账户";
+			sourceTree = "<group>";
+		};
 		6BA8189E1D4EDE8B007AB115 /* 粉丝关注 */ = {
 			isa = PBXGroup;
 			children = (
@@ -5662,6 +5706,8 @@
 				98210A161CB38F06007BC503 /* WithDrawViewController.m */,
 				6BF5A91A1D4265280079331C /* LYMyAccountViewController.h */,
 				6BF5A91B1D4265280079331C /* LYMyAccountViewController.m */,
+				6B9E70261D5070A600142458 /* LYGetCoinViewController.h */,
+				6B9E70271D5070A600142458 /* LYGetCoinViewController.m */,
 			);
 			name = "个人账户";
 			sourceTree = "<group>";
@@ -6428,6 +6474,7 @@
 				09549E941D153B7A008A721C /* chat_sender_audio_playing_003.png in Resources */,
 				09549EAB1D153B7A008A721C /* groupPublicHeader@2x.png in Resources */,
 				09549E521D153B7A008A721C /* faceDelete@2x.png in Resources */,
+				6B5F25491D50590700778C21 /* LYMyAccountTableViewCell.xib in Resources */,
 				09549E0C1D153B7A008A721C /* chatFire_audioPlaying3@2x.png in Resources */,
 				09549E071D153B7A008A721C /* chatFire_audioPlaying1.png in Resources */,
 				09549E511D153B7A008A721C /* faceDelete.png in Resources */,
@@ -6481,10 +6528,12 @@
 				09549EB91D153B7A008A721C /* tabbar_settingHL@2x.png in Resources */,
 				09B7CC1B1C2000F50006ECF1 /* ShareCodeViewController.xib in Resources */,
 				A79AA80E1BEAFAB10065684F /* UMSShareListController.xib in Resources */,
+				6B8088441D509A75001CD14D /* LYGetCoinHeaderView.xib in Resources */,
 				09549E2C1D153B7A008A721C /* VoiceSearchFeedback016@2x.png in Resources */,
 				09193ED31BC7EF4300D1937C /* HomePageTableCell.xib in Resources */,
 				188272E11BC3C01100607F25 /* BuddyCell.xib in Resources */,
 				09549E221D153B7A008A721C /* VoiceSearchFeedback011@2x.png in Resources */,
+				6BF282F21D50846B00C46028 /* LYGetCoinTableViewCell.xib in Resources */,
 				09549EB01D153B7A008A721C /* tabbar_chatsHL.png in Resources */,
 				09549E021D153B7A008A721C /* 80.png in Resources */,
 				850FEEF91C40C6FB00C5DE0C /* VideoPlayerCell.xib in Resources */,
@@ -6666,6 +6715,7 @@
 				09549D1F1D153AF3008A721C /* BaseTableViewCell.m in Sources */,
 				6BA818A61D4EDF1B007AB115 /* LYFocusOnAndFansTableViewCell.m in Sources */,
 				18976ACE1BC899AA00B5D912 /* SearchNewGroupController.m in Sources */,
+				6BF282F11D50846B00C46028 /* LYGetCoinTableViewCell.m in Sources */,
 				A79AA7E51BEAFAB10065684F /* QNFileRecorder.m in Sources */,
 				18ECFC1C1BC6C54600EBA772 /* BuddySelectionViewController.m in Sources */,
 				980FCEB41CE72F1200956912 /* IQSongsAlbumViewCell.m in Sources */,
@@ -6850,6 +6900,7 @@
 				91D8255C1BD9C8AF0019764F /* PhotoDetailViewController.m in Sources */,
 				09193ED01BC7EF4300D1937C /* CycleScrollView.m in Sources */,
 				09549CDE1D153AF3008A721C /* MKAnnotationView+EMWebCache.m in Sources */,
+				6B5F25481D50590700778C21 /* LYMyAccountTableViewCell.m in Sources */,
 				09549D1A1D153AF3008A721C /* MessageModel.m in Sources */,
 				3A334A671D503C38003B8385 /* TopicTitle.m in Sources */,
 				182E161B1BED8ADE00362612 /* FMDatabase.m in Sources */,
@@ -6907,6 +6958,7 @@
 				98D30A7B1C98071E008EE11F /* MyDispositionViewController.m in Sources */,
 				099BAC6A1C3B4EEE00C1FA3E /* PrivacyPolicyViewController.m in Sources */,
 				98DD9D371C99471000CA2569 /* OriginalViewController.m in Sources */,
+				6B9E70281D5070A600142458 /* LYGetCoinViewController.m in Sources */,
 				18A946931BC4C53400132342 /* LYFactory.m in Sources */,
 				182616DA1BC64BE600BD4B6E /* SearchNewFriendResultCell.m in Sources */,
 				188272E01BC3C01100607F25 /* BuddyCell.m in Sources */,
@@ -6942,6 +6994,7 @@
 				09549D191D153AF3008A721C /* EMChatViewCell.m in Sources */,
 				18B3F4CE1BDF6CD900D501A1 /* SystemMessageViewController.m in Sources */,
 				09B7CC1A1C2000F50006ECF1 /* ShareCodeViewController.m in Sources */,
+				6B8088421D509A5B001CD14D /* LYGetCoinHeaderView.m in Sources */,
 				980FCEB81CE72F1200956912 /* IQSongsArtistListViewController.m in Sources */,
 				984B4DB31CCDF7C0001A063D /* UIImage+WebP.m in Sources */,
 				09549D091D153AF3008A721C /* ChatViewController.m in Sources */,

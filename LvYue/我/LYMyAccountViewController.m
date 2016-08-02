@@ -6,17 +6,27 @@
 //  Copyright © 2016年 OLFT. All rights reserved.
 //
 
+#import "LYGetCoinViewController.h"
+#import "LYHttpPoster.h"
+#import "LYMyAccountTableViewCell.h"
 #import "LYMyAccountViewController.h"
+#import "LYUserService.h"
+#import "MBProgressHUD+NJ.h"
+#import "VipInfoViewController.h"
+#import "WithDrawRedNumViewController.h"
+#import "WithdrawRedViewController.h"
 
 static NSString *const LYMyAccountTableViewCellIdentity = @"LYMyAccountTableViewCellIdentity";
 
-@interface LYMyAccountViewController ()
-<
-UITableViewDataSource,
-UITableViewDelegate
->
+@interface LYMyAccountViewController () <
+    UITableViewDataSource,
+    UITableViewDelegate>
 
 @property (nonatomic, strong) UITableView *tableView;
+@property (nonatomic, strong) UIView *tableViewFooterView;
+
+// 账户余额
+@property (nonatomic, assign) NSInteger accountAmount;
 
 @end
 
@@ -24,15 +34,19 @@ UITableViewDelegate
 
 - (void)viewDidLoad {
     [super viewDidLoad];
-    
-    self.navigationItem.title = @"我的账户";
-}
 
+    self.navigationItem.title = @"我的账户";
+    self.view.backgroundColor = RGBCOLOR(247, 247, 247);
+
+    [self p_loadAccountAmount];
+
+    [self.tableView reloadData];
+}
 
 #pragma mark TableView DataSource & Delegate
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
-    return 3;
+    return 2;
 }
 
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath {
@@ -41,13 +55,33 @@ UITableViewDelegate
 
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
-    UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:LYMyAccountTableViewCellIdentity forIndexPath:indexPath];
-    cell.textLabel.text = @"成为会员";
+    LYMyAccountTableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:LYMyAccountTableViewCellIdentity forIndexPath:indexPath];
+    // 金币
+    if (indexPath.row == 0) {
+        cell.fetchBlock = ^(id sender) {
+            LYGetCoinViewController *vc = [LYGetCoinViewController new];
+            vc.accountAmount            = self.accountAmount;
+            [self.navigationController pushViewController:vc animated:YES];
+        };
+        [cell configData:LYMyAccountTableViewCellTypeCoin coin:[NSString stringWithFormat:@"%@", @(self.accountAmount)]];
+    }
+    // 提现
+    if (indexPath.row == 1) {
+        [cell configData:LYMyAccountTableViewCellWithDraw coin:@"0"];
+    }
+
     return cell;
 }
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
     [tableView deselectRowAtIndexPath:indexPath animated:YES];
+
+    // 提现
+    if (indexPath.row == 1) {
+        WithdrawRedViewController *vc = [[WithdrawRedViewController alloc] init];
+        vc.hongdou                    = [NSString stringWithFormat:@"%d", self.accountAmount];
+        [self.navigationController pushViewController:vc animated:YES];
+    }
 }
 
 - (void)tableView:(UITableView *)tableView willDisplayCell:(UITableViewCell *)cell forRowAtIndexPath:(NSIndexPath *)indexPath {
@@ -62,20 +96,75 @@ UITableViewDelegate
     }
 }
 
+#pragma mark - Pravite
+
+- (void)p_becomeVip:(id)sender {
+    VipInfoViewController *vipInfo = [[VipInfoViewController alloc] init];
+    vipInfo.coinNum                = [NSString stringWithFormat:@"%@", @(self.accountAmount)];
+    [self.navigationController pushViewController:vipInfo animated:YES];
+}
+
+// 加载账户余额
+- (void)p_loadAccountAmount {
+
+    [MBProgressHUD showHUDAddedTo:self.view animated:YES];
+
+    [LYHttpPoster postHttpRequestByPost:[NSString stringWithFormat:@"%@/mobile/need/hongdou", REQUESTHEADER]
+        andParameter:@{
+            @"user_id": [LYUserService sharedInstance].userID
+        }
+        success:^(id successResponse) {
+            MLOG(@"结果:%@", successResponse);
+            [MBProgressHUD hideHUDForView:self.view];
+            if ([[NSString stringWithFormat:@"%@", successResponse[@"code"]] isEqualToString:@"200"]) {
+                self.accountAmount = [successResponse[@"data"][@"data"][@"hongdou"] integerValue];
+                [self.tableView reloadData];
+            } else {
+                [MBProgressHUD showError:[NSString stringWithFormat:@"%@", successResponse[@"msg"]]];
+            }
+        }
+        andFailure:^(id failureResponse) {
+            [MBProgressHUD hideHUDForView:self.view];
+            [MBProgressHUD showError:@"查询余额失败，请重试"];
+        }];
+}
+
 
 #pragma mark - Getter
 
 - (UITableView *)tableView {
     if (!_tableView) {
         _tableView = ({
-            UITableView *tableView = [[UITableView alloc] initWithFrame:CGRectMake(0, NAVIGATION_BAR_HEIGHT, SCREEN_WIDTH, SCREEN_HEIGHT - NAVIGATION_BAR_HEIGHT) style:UITableViewStylePlain];
-            tableView.delegate   = self;
-            tableView.dataSource = self;
+            UITableView *tableView    = [[UITableView alloc] initWithFrame:CGRectMake(0, 0, SCREEN_WIDTH, SCREEN_HEIGHT - 64.f) style:UITableViewStylePlain];
+            tableView.backgroundColor = RGBCOLOR(247, 247, 247);
+            tableView.delegate        = self;
+            tableView.dataSource      = self;
+            tableView.tableHeaderView = [[UIView alloc] init];
+            tableView.tableFooterView = self.tableViewFooterView;
+            [tableView registerNib:[UINib nibWithNibName:@"LYMyAccountTableViewCell" bundle:nil] forCellReuseIdentifier:LYMyAccountTableViewCellIdentity];
+            [self.view addSubview:tableView];
             tableView;
         });
     }
     return _tableView;
 }
 
+- (UIView *)tableViewFooterView {
+    if (!_tableViewFooterView) {
+        _tableViewFooterView = ({
+            UIView *view           = [[UIView alloc] initWithFrame:CGRectMake(0, 0, SCREEN_WIDTH, 60.f)];
+            view.backgroundColor   = RGBCOLOR(247, 247, 247);
+            UIButton *button       = [[UIButton alloc] initWithFrame:CGRectMake(15.f, 16.f, SCREEN_WIDTH - 30.f, 44.f)];
+            button.backgroundColor = [UIColor whiteColor];
+            button.titleLabel.font = [UIFont systemFontOfSize:16.f];
+            [button setTitle:@"成为会员" forState:UIControlStateNormal];
+            [button setTitleColor:RGBCOLOR(19, 199, 175) forState:UIControlStateNormal];
+            [button addTarget:self action:@selector(p_becomeVip:) forControlEvents:UIControlEventTouchUpInside];
+            [view addSubview:button];
+            view;
+        });
+    }
+    return _tableViewFooterView;
+}
 
 @end

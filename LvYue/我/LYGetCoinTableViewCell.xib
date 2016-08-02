@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="10117" systemVersion="15E65" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES">
+    <dependencies>
+        <deployment identifier="iOS"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="10085"/>
+        <capability name="Constraints to layout margins" minToolsVersion="6.0"/>
+    </dependencies>
+    <objects>
+        <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner"/>
+        <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
+        <tableViewCell contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" id="KGk-i7-Jjw" customClass="LYGetCoinTableViewCell">
+            <rect key="frame" x="0.0" y="0.0" width="320" height="44"/>
+            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+            <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="KGk-i7-Jjw" id="H2p-sc-9uM">
+                <rect key="frame" x="0.0" y="0.0" width="320" height="44"/>
+                <autoresizingMask key="autoresizingMask"/>
+                <subviews>
+                    <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="icon_getCoin" translatesAutoresizingMaskIntoConstraints="NO" id="v5u-g7-g39">
+                        <rect key="frame" x="15" y="10" width="25" height="25"/>
+                        <constraints>
+                            <constraint firstAttribute="width" constant="25" id="98l-rK-SSA"/>
+                            <constraint firstAttribute="height" constant="25" id="sM0-kW-KAd"/>
+                        </constraints>
+                    </imageView>
+                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="1200" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="5Ym-NQ-5ws">
+                        <rect key="frame" x="60" y="13" width="37" height="19"/>
+                        <fontDescription key="fontDescription" type="system" pointSize="16"/>
+                        <color key="textColor" red="0.82352941180000006" green="0.0" blue="0.019607843140000001" alpha="1" colorSpace="calibratedRGB"/>
+                        <nil key="highlightedColor"/>
+                    </label>
+                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="金币" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="05C-Ao-RnE">
+                        <rect key="frame" x="107" y="12" width="32" height="20"/>
+                        <fontDescription key="fontDescription" type="system" pointSize="16"/>
+                        <color key="textColor" red="0.20000000000000001" green="0.20000000000000001" blue="0.20000000000000001" alpha="1" colorSpace="calibratedRGB"/>
+                        <nil key="highlightedColor"/>
+                    </label>
+                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="元" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="aNQ-Od-BMu">
+                        <rect key="frame" x="289" y="12" width="16" height="20"/>
+                        <fontDescription key="fontDescription" type="system" pointSize="16"/>
+                        <color key="textColor" red="0.20000000000000001" green="0.20000000000000001" blue="0.20000000000000001" alpha="1" colorSpace="calibratedRGB"/>
+                        <nil key="highlightedColor"/>
+                    </label>
+                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="¥ 15" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="QNw-j2-q4H">
+                        <rect key="frame" x="246" y="12" width="33" height="21"/>
+                        <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                        <color key="textColor" red="0.82352941180000006" green="0.0" blue="0.019607843140000001" alpha="1" colorSpace="calibratedRGB"/>
+                        <nil key="highlightedColor"/>
+                    </label>
+                </subviews>
+                <constraints>
+                    <constraint firstAttribute="trailingMargin" secondItem="aNQ-Od-BMu" secondAttribute="trailing" constant="7" id="3t3-zM-mFO"/>
+                    <constraint firstItem="05C-Ao-RnE" firstAttribute="centerY" secondItem="H2p-sc-9uM" secondAttribute="centerY" id="9VW-Eg-78C"/>
+                    <constraint firstItem="QNw-j2-q4H" firstAttribute="centerY" secondItem="H2p-sc-9uM" secondAttribute="centerY" id="Anf-9D-ic6"/>
+                    <constraint firstItem="05C-Ao-RnE" firstAttribute="leading" secondItem="5Ym-NQ-5ws" secondAttribute="trailing" constant="10" id="CjL-UA-Mus"/>
+                    <constraint firstItem="5Ym-NQ-5ws" firstAttribute="leading" secondItem="v5u-g7-g39" secondAttribute="trailing" constant="20" id="KfM-f3-4fp"/>
+                    <constraint firstItem="v5u-g7-g39" firstAttribute="leading" secondItem="H2p-sc-9uM" secondAttribute="leadingMargin" constant="7" id="MpI-mB-oBA"/>
+                    <constraint firstItem="5Ym-NQ-5ws" firstAttribute="centerY" secondItem="H2p-sc-9uM" secondAttribute="centerY" id="Pe9-N2-pLF"/>
+                    <constraint firstItem="v5u-g7-g39" firstAttribute="centerY" secondItem="H2p-sc-9uM" secondAttribute="centerY" id="e9E-26-nrs"/>
+                    <constraint firstItem="aNQ-Od-BMu" firstAttribute="centerY" secondItem="H2p-sc-9uM" secondAttribute="centerY" id="kg6-a5-CFO"/>
+                    <constraint firstItem="aNQ-Od-BMu" firstAttribute="leading" secondItem="QNw-j2-q4H" secondAttribute="trailing" constant="10" id="ogj-EN-zxx"/>
+                </constraints>
+            </tableViewCellContentView>
+            <connections>
+                <outlet property="coinNumLabel" destination="5Ym-NQ-5ws" id="1qD-oE-pty"/>
+                <outlet property="rmbLabel" destination="QNw-j2-q4H" id="21U-Hf-o3r"/>
+            </connections>
+        </tableViewCell>
+    </objects>
+    <resources>
+        <image name="icon_getCoin" width="33" height="28"/>
+    </resources>
+</document>

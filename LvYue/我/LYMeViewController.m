@@ -19,8 +19,8 @@
 #import "FriendsCirleViewController.h"   // 动态圈
 #import "KnowViewController.h"           // 身份认证
 #import "LYEssenceAlbumViewController.h" // 精华相册
+#import "LYMyAccountViewController.h"    // 我的账户
 #import "LYMyGiftViewController.h"       // 我的礼物
-#import "MyAccountViewController.h"      // 我的账户
 #import "MyDispositionViewController.h"  // 普通相册
 #import "MyInfomationViewController.h"   // 我的个人资料
 #import "SettingViewController.h"        // 设置
@@ -265,8 +265,8 @@ typedef NS_ENUM(NSUInteger, LYMeViewControllerCellTypeEnum) {
     LYMeViewControllerCellTypeEnum type = (LYMeViewControllerCellTypeEnum)[kTableViewDataArray[indexPath.section][indexPath.row][@"cellType"] integerValue];
     switch (type) {
         case LYMeViewControllerCellTypeEnumMyAccount: {
-            MyAccountViewController *vc = [[MyAccountViewController alloc] init];
-            vc.myInfoModel              = self.infoModel;
+            LYMyAccountViewController *vc = [[LYMyAccountViewController alloc] init];
+            //            vc.myInfoModel                = self.infoModel;
             [self.navigationController pushViewController:vc animated:YES];
             break;
         }
