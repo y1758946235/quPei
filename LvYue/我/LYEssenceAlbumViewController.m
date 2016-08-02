@@ -184,6 +184,7 @@ static NSString *const LYEssenceAlbumCollectionViewCellIdentity =
     vc.userID                      = self.userId;
     vc.bulrImageID                 = self.responseArray[indexPath.row][@"id"];
     vc.bulrImageURL                = self.responseArray[indexPath.row][@"img_name"];
+    vc.tipAmount                   = [self.responseArray[indexPath.row][@"bounty"] integerValue];
     [self.navigationController pushViewController:vc animated:YES];
 }
 

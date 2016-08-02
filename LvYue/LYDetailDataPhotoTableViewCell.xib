@@ -14,7 +14,7 @@
             <rect key="frame" x="0.0" y="0.0" width="320" height="83"/>
             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
             <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="KGk-i7-Jjw" id="H2p-sc-9uM">
-                <rect key="frame" x="0.0" y="0.0" width="320" height="82.5"/>
+                <rect key="frame" x="0.0" y="0.0" width="320" height="83"/>
                 <autoresizingMask key="autoresizingMask"/>
                 <subviews>
                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="我的动态" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="dpg-D3-U0c">
@@ -24,13 +24,13 @@
                         <nil key="highlightedColor"/>
                     </label>
                     <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Vn6-RI-h14">
-                        <rect key="frame" x="125" y="0.0" width="182" height="82.5"/>
+                        <rect key="frame" x="125" y="0.0" width="182" height="83"/>
                         <subviews>
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="SZE-F9-Tkh">
-                                <rect key="frame" x="0.0" y="0.0" width="60.5" height="82.5"/>
+                                <rect key="frame" x="0.0" y="0.0" width="61" height="83"/>
                                 <subviews>
                                     <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="PIN-QL-iTe">
-                                        <rect key="frame" x="2" y="18.5" width="56.5" height="46"/>
+                                        <rect key="frame" x="2" y="19" width="57" height="46"/>
                                         <constraints>
                                             <constraint firstAttribute="width" secondItem="PIN-QL-iTe" secondAttribute="height" multiplier="133/108" id="oq7-9D-4t1"/>
                                         </constraints>
@@ -43,11 +43,11 @@
                                     <constraint firstItem="PIN-QL-iTe" firstAttribute="leading" secondItem="SZE-F9-Tkh" secondAttribute="leading" constant="2" id="rlp-nm-yKK"/>
                                 </constraints>
                             </view>
-                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="bS1-4e-WyP">
-                                <rect key="frame" x="60" y="0.0" width="60.5" height="82.5"/>
+                            <view contentMode="scaleToFill" misplaced="YES" translatesAutoresizingMaskIntoConstraints="NO" id="bS1-4e-WyP">
+                                <rect key="frame" x="60" y="0.0" width="61" height="83"/>
                                 <subviews>
                                     <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="SDR-IG-hVn">
-                                        <rect key="frame" x="2" y="20" width="56.5" height="44"/>
+                                        <rect key="frame" x="2" y="20" width="57" height="44"/>
                                         <constraints>
                                             <constraint firstAttribute="width" secondItem="SDR-IG-hVn" secondAttribute="height" multiplier="138/108" id="dww-JE-nWd"/>
                                         </constraints>
@@ -66,11 +66,11 @@
                                     </mask>
                                 </variation>
                             </view>
-                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="rNw-PJ-9Uh">
-                                <rect key="frame" x="121" y="0.0" width="60.5" height="82.5"/>
+                            <view contentMode="scaleToFill" misplaced="YES" translatesAutoresizingMaskIntoConstraints="NO" id="rNw-PJ-9Uh">
+                                <rect key="frame" x="121" y="0.0" width="61" height="83"/>
                                 <subviews>
                                     <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="ISN-F6-H5Q">
-                                        <rect key="frame" x="2" y="20" width="56.5" height="44"/>
+                                        <rect key="frame" x="2" y="20" width="57" height="44"/>
                                         <constraints>
                                             <constraint firstAttribute="width" secondItem="ISN-F6-H5Q" secondAttribute="height" multiplier="138/108" id="zX1-Gd-Wo7"/>
                                         </constraints>

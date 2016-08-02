@@ -288,7 +288,8 @@
             }];
     }
 
-    photoView.timeLabel.text = [NSString stringWithFormat:@"%@", _imageData[index % _imageData.count][@"createtime"]];
+    NSString *createTime     = [_imageData[index % _imageData.count][@"createtime"] isEqual:[NSNull null]] ? @"" : _imageData[index % _imageData.count][@"createtime"];
+    photoView.timeLabel.text = createTime;
 
     if (_imageData[index % _imageData.count][@"intro"] && [_imageData[index % _imageData.count][@"intro"] length] > 0) {
         photoView.markLabel.text = [NSString stringWithFormat:@" %@", _imageData[index % _imageData.count][@"intro"]];
