@@ -126,7 +126,7 @@
 }
 
 
-//设置图片
+//设置图片 视频
 - (void)setImageArrayAndFit:(FriendsCircleMessage *)model{
     NSString *imageStr = model.imageStr;
     
@@ -196,8 +196,8 @@
     else if([model.nType isEqualToString:@"2"]){//视频
         //增加视频播放按钮
         //_videoBtn.backgroundColor = [UIColor redColor];
-        _videoBtn.width = 90;
-        _videoBtn.height = _videoBtn.width;
+        _videoBtn.width = 0.5*kMainScreenWidth+20;
+        _videoBtn.height = 130;
         _videoBtn.x = CGRectGetMaxX(_headImg.frame)+ 5;
         _videoBtn.y = CGRectGetMaxY(_contentLabel.frame) + 5;
 
@@ -219,15 +219,15 @@
         [_videoBtn setImage:previewImageView.image forState:UIControlStateNormal];
         
         
-        if (!imgView) {
-            imgView = [[UIImageView alloc] init];
-            imgView.height = 40;
-            imgView.width = imgView.height;
-            imgView.x = (_videoBtn.width - imgView.height)* 0.5;
-            imgView.y = imgView.x;
-            imgView.image = [UIImage imageNamed:@"播放-1"];
-            imgView.userInteractionEnabled = YES;
-            [_videoBtn addSubview:imgView];
+        if (!_imgView) {
+            _imgView = [[UIImageView alloc] init];
+            _imgView.height = 40;
+            _imgView.width = _imgView.height;
+            _imgView.x = (_videoBtn.width - _imgView.height)* 0.5;
+            _imgView.y = (_videoBtn.height - _imgView.height)* 0.5;
+            _imgView.image = [UIImage imageNamed:@"播放-1"];
+            _imgView.userInteractionEnabled = YES;
+            [_videoBtn addSubview:_imgView];
         }
         
         [self addSubview:_videoBtn];
@@ -255,11 +255,12 @@
  *  获取第0秒钟的视频截图
  */
 - (void)loadPreviewImageWithURLString:(NSString *)urlString {
+    urlString = [urlString stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
     //打开数据库
     [kAppDelegate.dataBaseQueue inDatabase:^(FMDatabase *db) {
-        NSURL* testUrl = [NSURL URLWithString:@"http://7xlcz5.com2.z0.glb.qiniucdn.com/iosLvYueVideoCircle_VideoByLoader50050_201682224738/形象视频.mp4"];
-        NSURL* test2Url = [NSURL URLWithString:@"https://segmentfault.com/q/1010000002576009"];
-        NSURL* test3Url = [NSURL URLWithString:@"http://developer.qiniu.com/code/v7/sdk/php.html"];
+//        NSURL* testUrl = [NSURL URLWithString:@"http://7xlcz5.com2.z0.glb.qiniucdn.com/iosLvYueVideoCircle_VideoByLoader50050_201682224738/形象视频.mp4"];
+//        NSURL* test2Url = [NSURL URLWithString:@"https://segmentfault.com/q/1010000002576009"];
+//        NSURL* test3Url = [NSURL URLWithString:@"http://developer.qiniu.com/code/v7/sdk/php.html"];
         NSURL *url = [NSURL URLWithString:urlString];
         NSString *imageDataString = @"";
         if ([kAppDelegate.dataBase open]) {

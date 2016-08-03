@@ -35,6 +35,8 @@
 @property (nonatomic,strong) NSMutableArray *imageArray;//图片数组
 @property (nonatomic,strong) UIButton *videoBtn;    //视频按钮
 
+@property (nonatomic, strong) UIImageView* imgView;  //播放标志
+
 @property (nonatomic,strong) UIView *separatorLine;//分割线
 
 - (void)initWithModel:(FriendsCircleMessage *)model;

@@ -79,7 +79,7 @@
     }
     
     if ([self.nType isEqualToString:@"2"]) { //视频
-        imageHeight  = 75;
+        imageHeight  = 130;
     }
 
     //获取评论的所需高度

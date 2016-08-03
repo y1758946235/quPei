@@ -129,15 +129,15 @@
 - (void)viewWillAppear:(BOOL)animated {
     [super viewWillAppear:animated];
 
-    _currentPage = 1;
-
-    //获得朋友圈消息列表
+//    _currentPage = 1;
+//
+//    //获得朋友圈消息列表
     [self postRequest];
-    //热门话题
-    [self getHotTopic];
-    //[self getDataFromWeb];
-    //注册通知
-    [self addObserver];
+//    //热门话题
+//    [self getHotTopic];
+//    //[self getDataFromWeb];
+//    //注册通知
+//    [self addObserver];
 }
 
 
@@ -176,6 +176,20 @@
     _tableView.separatorStyle  = UITableViewCellSeparatorStyleNone;
     [self.view addSubview:_tableView];
 
+    
+    //数据
+    _currentPage = 1;
+    
+    //获得朋友圈消息列表
+    //[self postRequest];
+    //热门话题
+    [self getHotTopic];
+    //[self getDataFromWeb];
+    //注册通知
+    [self addObserver];
+    //数据*******
+    
+    
     [self setStatus];
     //[self getHotTopic];
     
@@ -1402,6 +1416,7 @@
 
     if (_newMsgNumber > 0) {
         _newMsgBtn.hidden = NO;
+        hotBackView.y = CGRectGetMaxY(_newMsgBtn.frame)+5;
         headerView.frame  = CGRectMake(0, 0, SCREEN_WIDTH, SCREEN_WIDTH * 0.5 + 70 + hotBackView.height);
         return SCREEN_WIDTH * 0.5 + 70+hotBackView.height;
     } else {
@@ -1535,12 +1550,20 @@
         hotLabel.font = kFont20;
         hotLabel.textColor = THEME_COLOR;
         //阴影
-        hotLabel.layer.shadowColor = [UIColor blackColor].CGColor;//shadowColor阴影颜色
-//        hotLabel.layer.shadowOffset = CGSizeMake(4,4);//shadowOffset阴影偏移,x向右偏移4，y向下偏移4，默认(0, -3),这个跟shadowRadius配合使用
-        hotLabel.layer.shadowOffset = CGSizeMake(4,0);//shadowOffset阴影偏移,x向右偏移4，y向下偏移4，默认(0, -3),这个跟shadowRadius配合使用
-        hotLabel.layer.shadowOpacity = 0.2;//阴影透明度，默认0
-//        hotLabel.layer.shadowRadius = 4;//阴影半径，默认3
-        hotLabel.layer.shadowRadius = 2;//阴影半径，默认3
+//        hotLabel.layer.shadowColor = [UIColor blackColor].CGColor;//shadowColor阴影颜色
+////        hotLabel.layer.shadowOffset = CGSizeMake(4,4);//shadowOffset阴影偏移,x向右偏移4，y向下偏移4，默认(0, -3),这个跟shadowRadius配合使用
+//        hotLabel.layer.shadowOffset = CGSizeMake(4,0);//shadowOffset阴影偏移,x向右偏移4，y向下偏移4，默认(0, -3),这个跟shadowRadius配合使用
+//        hotLabel.layer.shadowOpacity = 0.2;//阴影透明度，默认0
+////        hotLabel.layer.shadowRadius = 4;//阴影半径，默认3
+//        hotLabel.layer.shadowRadius = 2;//阴影半径，默认3
+        
+        //阴影
+        hotLabel.layer.shadowColor   = [UIColor blackColor].CGColor;
+        hotLabel.layer.shadowOffset  = CGSizeMake(4, 0);
+        UIBezierPath *shadowPath     = [UIBezierPath bezierPathWithRect:CGRectMake(hotLabel.x + hotLabel.width, 0, 1, hotLabel.height)];
+        hotLabel.layer.shadowPath    = shadowPath.CGPath;
+        hotLabel.layer.shadowOpacity = 0.8f;
+        
         
         hotLabel.textAlignment = NSTextAlignmentCenter;
         [hotBackView addSubview:hotLabel];
@@ -1701,6 +1724,7 @@
     if ([[LYUserService sharedInstance] canPlayVideo]) { //如果没有权限约束
         NSInteger index    = sender.tag - 100;
         FriendsCircleMessage *message = _messageArray[index];
+        message.videoUrl = [message.videoUrl stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
         _currentVideoURL   = [NSURL URLWithString:[NSString stringWithFormat:@"%@", message.videoUrl]];
         _player            = nil;
         

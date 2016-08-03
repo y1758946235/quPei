@@ -22,6 +22,8 @@
 #import "FriendsMessageViewController.h"
 #import "TopicTitle.h"
 
+#import <MediaPlayer/MediaPlayer.h>
+
 #define kSingleContentHeight 17.895f
 @interface HotTopicViewController ()<UITableViewDelegate, UITableViewDataSource, UITextViewDelegate, UIActionSheetDelegate>{
     UILabel* shortLabel;    //内容Label
@@ -32,6 +34,9 @@
     UIButton* joinBtn;      //话题参与按钮
     UIButton* lookAllBtn;   //查看按钮
     UIView* headerView;     //头部视图
+    
+    NSURL *_currentVideoURL; //当前准备要播放的视频的URL
+    
     
     UIView *_addView;
     UIButton *_clearBtn;           //透明按钮
@@ -66,7 +71,7 @@
 
 @property (nonatomic, weak) UITableView* tableView;  //主tableview
 
-
+@property (nonatomic, strong) MPMoviePlayerViewController* player;//视频播放
 
 @end
 
@@ -84,6 +89,27 @@
         [self.view addSubview:_tableView];
     }
     return _tableView;
+}
+
+
+- (MPMoviePlayerViewController *)player {
+    if (!_player) {
+        _player                            = [[MPMoviePlayerViewController alloc] initWithContentURL:_currentVideoURL];
+        _player.moviePlayer.shouldAutoplay = YES;
+        [self addVideoNotifications];
+    }
+    return _player;
+}
+
+//添加视频监听通知
+- (void)addVideoNotifications {
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(videoDidFinishLaunch:) name:MPMediaPlaybackIsPreparedToPlayDidChangeNotification object:_player.moviePlayer];
+}
+
+#pragma mark - 通知中心处理
+//当视频做好准备时
+- (void)videoDidFinishLaunch:(NSNotification *)aNotification {
+    MLOG(@"视频准备好了");
 }
 
 #pragma mark - 视图加载
@@ -195,7 +221,7 @@
         //设置查看按钮
         lookAllBtn = [UIButton buttonWithType:UIButtonTypeCustom];
         [lookAllBtn setTitle:@"查看全部" forState:UIControlStateNormal];
-        [lookAllBtn setTitleColor:[UIColor blueColor] forState:UIControlStateNormal];
+        [lookAllBtn setTitleColor:RGBCOLOR(107, 140, 172) forState:UIControlStateNormal];
         lookAllBtn.titleLabel.font = kFont16;
         if (shortLabel.height < 65) { //内容少
             [lookAllBtn setFrame:CGRectZero];
@@ -235,84 +261,108 @@
 
 #pragma mark - UITableViewDelegate, UITableViewDataSource
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView {
-//    return 2;
-    return 1;
+    return 2;
+//    return 1;
 }
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
-//    if (section == 0) {
-//        return _messageArray.count;
-//    }
-//    else {
-//        return 2;
-//    }
-    return _messageArray.count;
+    if (section == 0) {
+        return _messageArray.count;
+    }
+    else {
+        return 2;
+    }
+    //return _messageArray.count;
 }
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
-    static NSString *cellID = @"myCell";
-    FriendsCircleCell* cell = [tableView dequeueReusableCellWithIdentifier:cellID];
-    if (!cell) {
-        cell = [[FriendsCircleCell alloc] initWithStyle:UITableViewCellStyleSubtitle reuseIdentifier:cellID];
-    }
-    //给头像添加手势
-    cell.headImg.tag                = indexPath.row;
-    UITapGestureRecognizer *headTap = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(tapHeadImg:)];
-    [cell.headImg addGestureRecognizer:headTap];
-    
-    //举报
-    [cell.reportBtn addTarget:self action:@selector(reportClick:) forControlEvents:UIControlEventTouchUpInside];
-    
-    //送礼
-    [cell.reportBtn addTarget:self action:@selector(senderGift:) forControlEvents:UIControlEventTouchUpInside];
-    //添加分割线
-    if (_messageArray.count) {
-        FriendsCircleMessage *message = _messageArray[indexPath.row];
-        cell.separatorLine.frame      = CGRectMake(0, [message returnCellHeight] - 1, SCREEN_WIDTH, 1);
-        
-        //保持最新的评论数据 和  点赞数据
-        [message setCommentList:_commentList[indexPath.row]];
-        [message setPraiseList:_praiseList[indexPath.row]];
-        [cell initWithModel:message];
-        
-        //记录当前cell的数据源索引
-        cell.tag = indexPath.row;
-        
-        if ([_praiseList[indexPath.row] count]) {
-            
-            for (NSDictionary *dict in _praiseList[indexPath.row]) {
-                if ([[NSString stringWithFormat:@"%@", dict[@"praise_user_id"]] isEqualToString:[NSString stringWithFormat:@"%@", [LYUserService sharedInstance].userID]]) {
-                    [cell.praiseBtn setImage:[UIImage imageNamed:@"Hearts red"] forState:UIControlStateNormal];
-                    cell.praiseBtn.selected = YES;
-                }
-            }
-        } else {
-            [cell.praiseBtn setImage:[UIImage imageNamed:@"Hearts gray"] forState:UIControlStateNormal];
-            cell.praiseBtn.selected = NO;
+    if (indexPath.section == 0) {
+        static NSString *cellID = @"myCell";
+        FriendsCircleCell *cell = [tableView dequeueReusableCellWithIdentifier:cellID];
+        if (!cell) {
+            cell = [[FriendsCircleCell alloc] initWithStyle:UITableViewCellStyleSubtitle reuseIdentifier:cellID];
         }
+        
+        //给头像添加手势
+        cell.headImg.tag                = indexPath.row;
+        UITapGestureRecognizer *headTap = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(tapHeadImg:)];
+        [cell.headImg addGestureRecognizer:headTap];
+        
+        //举报
+        [cell.reportBtn addTarget:self action:@selector(reportClick:) forControlEvents:UIControlEventTouchUpInside];
+        
+        //送礼
+        [cell.reportBtn addTarget:self action:@selector(senderGift:) forControlEvents:UIControlEventTouchUpInside];
+        
+        //添加分割线
+        if (_messageArray.count) {
+#pragma mark - 下拉tableview，增加报错
+            /**
+             *  @author KF, 16-07-15 11:07:18
+             *
+             *  @brief  reason: '*** -[__NSArrayM objectAtIndex:]: index 32 beyond bounds [0 .. 19]'
+             */
+            FriendsCircleMessage *message = _messageArray[indexPath.row];
+            cell.separatorLine.frame      = CGRectMake(0, [message returnCellHeight] - 1, SCREEN_WIDTH, 1);
+            
+            //保持最新的评论数据 和  点赞数据
+            [message setCommentList:_commentList[indexPath.row]];
+            [message setPraiseList:_praiseList[indexPath.row]];
+            [cell initWithModel:message];
+            
+            //记录当前cell的数据源索引
+            cell.tag = indexPath.row;
+            
+            if ([_praiseList[indexPath.row] count]) {
+                
+                for (NSDictionary *dict in _praiseList[indexPath.row]) {
+                    if ([[NSString stringWithFormat:@"%@", dict[@"praise_user_id"]] isEqualToString:[NSString stringWithFormat:@"%@", [LYUserService sharedInstance].userID]]) {
+                        [cell.praiseBtn setImage:[UIImage imageNamed:@"Hearts red"] forState:UIControlStateNormal];
+                        cell.praiseBtn.selected = YES;
+                    }
+                }
+            } else {
+                [cell.praiseBtn setImage:[UIImage imageNamed:@"Hearts gray"] forState:UIControlStateNormal];
+                cell.praiseBtn.selected = NO;
+            }
+        }
+        
+        [cell.praiseBtn addTarget:self action:@selector(praiseClick:) forControlEvents:UIControlEventTouchUpInside];
+        
+        //给cell tag赋值
+        cell.commentBtn.tag = indexPath.row;
+        [cell.commentBtn addTarget:self action:@selector(commentBtnClick:) forControlEvents:UIControlEventTouchUpInside];
+        //视频播放
+        [cell.videoBtn addTarget:self action:@selector(playVideo:) forControlEvents:UIControlEventTouchUpInside];
+        cell.videoBtn.tag = 100 + indexPath.row;
+        
+        cell.deleteBtn.tag = indexPath.row;
+        [cell.deleteBtn addTarget:self action:@selector(deleteNoticeClick:) forControlEvents:UIControlEventTouchUpInside];
+        
+        cell.selectionStyle = UITableViewCellSelectionStyleNone;
+        return cell;
     }
-    
-    [cell.praiseBtn addTarget:self action:@selector(praiseClick:) forControlEvents:UIControlEventTouchUpInside];
-    
-    //给cell tag赋值
-    cell.commentBtn.tag = indexPath.row;
-    [cell.commentBtn addTarget:self action:@selector(commentBtnClick:) forControlEvents:UIControlEventTouchUpInside];
-    cell.deleteBtn.tag = indexPath.row;
-    [cell.deleteBtn addTarget:self action:@selector(deleteNoticeClick:) forControlEvents:UIControlEventTouchUpInside];
-    
-    cell.selectionStyle = UITableViewCellSelectionStyleNone;
-    return cell;
+    else {  //热门动态
+        UITableViewCell* cell = [[UITableViewCell alloc] init];
+        return cell;
+    }
 
 }
 
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath {
     
-    if (_messageArray.count) {
-        FriendsCircleMessage *message = _messageArray[indexPath.row];
-        return [message returnCellHeight];
-    } else {
-        return 0.1;
+    if (indexPath.section ==0) {
+        if (_messageArray.count) {
+            FriendsCircleMessage *message = _messageArray[indexPath.row];
+            return [message returnCellHeight];
+        } else {
+            return 0.1;
+        }
     }
+    else {
+        return 44;
+    }
+    
 }
 
 - (UIView *)tableView:(UITableView *)tableView viewForHeaderInSection:(NSInteger)section {
@@ -338,9 +388,9 @@
     if (section == 0) {  //热门动态
         titleLabel.text = @"热门动态";
     }
-//    else {
-//        titleLabel.text = @"全部动态";
-//    }
+    else {
+        titleLabel.text = @"全部动态";
+    }
     titleLabel.textColor = [UIColor blackColor];
     [sectionHeaderView addSubview:titleLabel];
     [containerView addSubview:sectionHeaderView];
@@ -573,6 +623,46 @@
               [MBProgressHUD showError:@"请检查您的网络"];
           }];
 }
+
+//点击播放按钮
+- (void)playVideo:(UIButton *)sender {
+    //#warning 权限开关
+    //    if ([[LYUserService sharedInstance].userDetail.isVip isEqualToString:@"1"]) {
+    //        NSInteger index = sender.tag - 100;
+    //        VideoDetail *model = self.videoArray[index];
+    //        _currentVideoURL = [NSURL URLWithString:[NSString stringWithFormat:@"%@",model.url]];
+    //        _player = nil;
+    //        [self presentMoviePlayerViewControllerAnimated:self.player];
+    //    }
+    //    else {
+    //        [[[UIAlertView alloc] initWithTitle:nil message:@"您还不是会员，将无法享受播放功能" delegate:self cancelButtonTitle:@"取消" otherButtonTitles:@"成为会员", nil] show];
+    //    }
+    /**
+     *  @author KF, 16-07-20 13:07:18
+     *
+     *  @brief 权限开关
+     */
+    if ([[LYUserService sharedInstance] canPlayVideo]) { //如果没有权限约束
+        NSInteger index    = sender.tag - 100;
+        FriendsCircleMessage *message = _messageArray[index];
+        message.videoUrl = [message.videoUrl stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
+        _currentVideoURL   = [NSURL URLWithString:[NSString stringWithFormat:@"%@", message.videoUrl]];
+        _player            = nil;
+        
+        [self presentMoviePlayerViewControllerAnimated:self.player];
+    } else { //如果有权限约束
+        if ([[LYUserService sharedInstance].userDetail.isVip isEqualToString:@"1"]) {
+            NSInteger index    = sender.tag - 100;
+            FriendsCircleMessage *message = _messageArray[index];
+            _currentVideoURL   = [NSURL URLWithString:[NSString stringWithFormat:@"%@", message.videoUrl]];
+            _player            = nil;
+            [self presentMoviePlayerViewControllerAnimated:self.player];
+        } else {
+            [[[UIAlertView alloc] initWithTitle:nil message:@"您还不是会员，将无法享受播放功能" delegate:self cancelButtonTitle:@"取消" otherButtonTitles:@"成为会员", nil] show];
+        }
+    }
+}
+
 
 //点击回复
 - (void)commentClick:(NSNotification *)notification {
