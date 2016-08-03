@@ -122,13 +122,15 @@
                 }
             }
 
+            
+            
             //3.向后台请求
             [LYHttpPoster postHttpRequestByPost:[NSString stringWithFormat:@"%@/mobile/notice/publish", REQUESTHEADER] andParameter:@{
                                                 @"publisher": [NSString stringWithFormat:@"%@", [LYUserService sharedInstance].userID],
                                                 @"noticeDetail": _textView.text,
                                                 @"photos": photoString,
                                                 @"noticeType":@"0",
-                                                @"hotId":@"0",
+                                                @"hotId":self.hotId,
                                                 @"nType":@"1",
                                                 @"videoUrl":@""
                                                 }

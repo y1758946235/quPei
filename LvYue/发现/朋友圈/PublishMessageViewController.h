@@ -17,6 +17,9 @@
 
 @interface PublishMessageViewController : BaseViewController
 
+@property (nonatomic, copy) NSString* hotId;        //话题ID, 是否为热门话题
+
+
 //@property (nonatomic, strong) ReturnIsPublish isPublishBlock;
 
 //- (void)ReturnIsPublish:(ReturnIsPublish)block;

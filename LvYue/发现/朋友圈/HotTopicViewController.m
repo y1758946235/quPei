@@ -17,6 +17,7 @@
 #import "LYHttpPoster.h"
 #import "UIImageView+WebCache.h"
 
+#import "LYSendGiftViewController.h"
 #import "ReportViewController.h"
 #import "PublishMessageViewController.h"
 #import "FriendsMessageViewController.h"
@@ -73,6 +74,8 @@
 @property (nonatomic, weak) UITableView* tableView;  //主tableview
 
 @property (nonatomic, strong) MPMoviePlayerViewController* player;//视频播放
+@property (nonatomic, copy) NSString* hotId;//热门话题Id
+
 
 @end
 
@@ -166,7 +169,9 @@
         //backImageView.image = [UIImage imageNamed:@"朋友圈背景"];
         //backImageView.userInteractionEnabled = YES;
         [headerView addSubview:backImageView];
-        
+        //获取热门话题Id
+        self.hotId = titleModel.ID;
+    
         //背景上的文字
         joinLabel = [[UILabel alloc] init];
         NSString* partNumsStr = [NSString stringWithFormat:@"%@人参与",titleModel.partNums];
@@ -250,6 +255,7 @@
         joinBtn.height = 45;
         joinBtn.layer.cornerRadius = 10.0f;
         joinBtn.layer.masksToBounds = YES;
+    
         [joinBtn addTarget:self action:@selector(publishClick) forControlEvents:UIControlEventTouchUpInside];
         [headerView addSubview:joinBtn];
         
@@ -298,7 +304,7 @@
         [cell.reportBtn addTarget:self action:@selector(reportClick:) forControlEvents:UIControlEventTouchUpInside];
         
         //送礼
-        [cell.reportBtn addTarget:self action:@selector(senderGift:) forControlEvents:UIControlEventTouchUpInside];
+        [cell.giftBtn addTarget:self action:@selector(senderGift:) forControlEvents:UIControlEventTouchUpInside];
         
         //添加分割线
         if (_hotMessageArray.count) {
@@ -595,6 +601,7 @@
         [self hiddenAddView];
         
         PublishMessageViewController *publishMessageViewController = [[PublishMessageViewController alloc] init];
+        publishMessageViewController.hotId = self.hotId;
         [self.navigationController pushViewController:publishMessageViewController animated:YES];
     } else {
         if ([[LYUserService sharedInstance].userDetail.isVip isEqualToString:@"0"]) {
@@ -633,7 +640,9 @@
 }
 
 - (void)senderGift:(UIButton *)sender {
-    // NSLog(@"senderGift");
+    LYSendGiftViewController* vc = [[LYSendGiftViewController alloc] init];
+    
+    [self.navigationController pushViewController:vc animated:YES];
 }
 
 
