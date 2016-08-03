@@ -40,6 +40,7 @@
 
     NSURL *_currentVideoURL; //当前准备要播放的视频的URL
     BOOL isupdateVideo;        //是否视频， yes是 no
+    BOOL isFriendVideo;        //是否为朋友圈视频。
     
     NSTimer *timer; //定时器轮询
     UIView *_addView;
@@ -168,6 +169,7 @@
     _coverImageUrl = nil;
     isAttention = NO;
     isupdateVideo = NO;
+    isFriendVideo = NO;
 
     _tableView                 = [[UITableView alloc] initWithFrame:CGRectMake(0, 0, self.view.frame.size.width, self.view.frame.size.height) style:UITableViewStyleGrouped];
     _tableView.backgroundColor = [UIColor whiteColor];
@@ -2069,6 +2071,8 @@
         MLOG(@"视频保存成功.");
         //跳转到发布界面
         PublishVideoViewController *dest = [[PublishVideoViewController alloc] init];
+        isFriendVideo = YES;
+        dest.isFriendVideo = isFriendVideo; //是否朋友圈视频
         dest.videoPath                   = videoPath;
         [self.navigationController pushViewController:dest animated:YES];
         //恢复初始化

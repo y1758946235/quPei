@@ -523,6 +523,14 @@
 
 #pragma mark - 七牛上传视频
 - (void)loadVideo {
+    //判断视频
+    NSString* nameStr;
+    if (self.isFriendVideo == YES) {
+        nameStr = @"朋友圈";
+    }
+    else {
+        nameStr = @"形象";
+    }
     //获取视频时长
     NSTimeInterval videoDuration = [self fetchVideoDurationWithVideoURL:[NSURL fileURLWithPath:self.videoPath]];
     MLOG(@"视频时长 : %lf", videoDuration);
@@ -547,8 +555,9 @@
             NSInteger hour                  = [dateComponent hour];
             NSInteger minute                = [dateComponent minute];
             NSInteger second                = [dateComponent second];
-
-            NSString *locationString = [NSString stringWithFormat:@"iosLvYueVideoCircle_VideoByLoader%@_%ld%ld%ld%ld%ld%ld/形象视频.mp4", [LYUserService sharedInstance].userID, (long) year, (long) month, (long) day, (long) hour, (long) minute, (long) second];
+    
+            
+            NSString *locationString = [NSString stringWithFormat:@"iosLvYueVideoCircle_VideoByLoader%@_%ld%ld%ld%ld%ld%ld/%@视频.mp4", [LYUserService sharedInstance].userID, (long) year, (long) month, (long) day, (long) hour, (long) minute, (long) second, nameStr];
 
             //七牛上传视频
             QNUploadManager *upManager = [[QNUploadManager alloc] init];

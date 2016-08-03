@@ -122,6 +122,8 @@
     [self postRequest];
     //话题详情
     [self getTopicDetail];
+    //上拉下拉刷新
+    [self addRefresh];
 }
 
 
@@ -463,6 +465,10 @@
 
 - (CGFloat)tableView:(UITableView *)tableView heightForHeaderInSection:(NSInteger)section {
     return 60;
+}
+
+- (CGFloat)tableView:(UITableView *)tableView heightForFooterInSection:(NSInteger)section {
+    return 0.01f;
 }
 
 
@@ -1279,6 +1285,151 @@
     //更新朋友圈
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(reloadFriendCircle:) name:@"ReloadFriendCircleVC" object:nil];
 }
+
+//添加刷新
+- (void)addRefresh {
+    // 1.下拉刷新(进入刷新状态就会调用self的headerRereshing)
+    _tableView.mj_header = [MJRefreshNormalHeader headerWithRefreshingTarget:self refreshingAction:@selector(headerRereshing)];
+    
+    //    [_tableView headerBeginRefreshing];
+    
+    // 2.上拉加载更多(进入刷新状态就会调用self的footerRereshing)
+    _tableView.mj_footer = [MJRefreshBackNormalFooter footerWithRefreshingTarget:self refreshingAction:@selector(footerRefreshing)];
+}
+
+//下拉
+- (void)headerRereshing {
+    _currentPage = 1;
+    
+    //获取网络
+    //加载数据
+    [self postRequest];
+    //[self getHotTopic];
+}
+
+//上拉
+//上拉加载方法
+- (void)footerRefreshing {
+    
+    _currentPage++;
+    
+    AFHTTPRequestOperationManager *manager = [AFHTTPRequestOperationManager manager];
+    [MBProgressHUD showMessage:@"正在加载" toView:self.view];
+    NSString *urlStr = [NSString stringWithFormat:@"%@/mobile/notice/iosNoticeList", REQUESTHEADER];
+    NSDictionary *parameters;
+    //type 0->自己的动态 1->自己的动态加上userID
+    //热门话题
+    if (!self.userId) { //游客
+        if (!self.userId) {
+            self.userId = @"";
+        }
+        parameters = @{ @"userId": [NSString stringWithFormat:@"%@", self.userId],
+                        @"noticeType": @"0",
+                        @"pageNum": [NSString stringWithFormat:@"%d", (int) _currentPage],
+                        @"hotId":self.topic_id,
+                        @"type": @"4" };
+    }
+    else { //用户
+        parameters = @{ @"userId": [NSString stringWithFormat:@"%@", self.userId],
+                        @"noticeType": @"0",
+                        @"pageNum": [NSString stringWithFormat:@"%d", (int) _currentPage],
+                        @"hotId":self.topic_id,
+                        @"type": @"5" };
+    }
+    
+    [manager POST:urlStr parameters:parameters success:^(AFHTTPRequestOperation *operation, id responseObject) {
+        NSLog(@"上拉获取朋友圈列表:%@", responseObject);
+        [MBProgressHUD hideAllHUDsForView:self.view animated:YES];
+        
+        if ([[NSString stringWithFormat:@"%@", responseObject[@"code"]] isEqualToString:@"200"]) {
+            
+            _dataDict = [NSMutableDictionary dictionaryWithDictionary:responseObject[@"data"]];
+            
+            if ([_dataDict[@"noticeList"] count]) {
+//                //有新数据
+//                //保存模型数组
+//                for (NSDictionary *dict in _dataDict[@"noticeList"]) {
+//                    
+//                    //消息数据源数组
+//                    [_noticeList addObject:dict];
+//                    
+//                    //消息模型数组
+//                    FriendsCircleMessage *message = [[FriendsCircleMessage alloc] initWithDict:dict];
+//                    [_messageArray addObject:message];
+//                }
+//                
+//                //评论列表
+//                for (int i = 0; i < [_dataDict[@"noticeList"] count]; i++) {
+//                    
+//                    NSMutableArray *array = [_dataDict[@"noticeList"][i][@"commentList"] mutableCopy];
+//                    [_commentList addObject:array];
+//                }
+//                
+//                //点赞列表
+//                for (int i = 0; i < [_dataDict[@"noticeList"] count]; i++) {
+//                    
+//                    NSMutableArray *array = [_dataDict[@"noticeList"][i][@"praiseList"] mutableCopy];
+//                    [_praiseList addObject:array];
+//                }
+//                [_tableView reloadData];
+//                [_tableView.mj_footer endRefreshing];
+                
+                //保存模型数组
+                for (NSDictionary *dict in _dataDict[@"noticeList"]) {
+                    
+                    //消息-数据源数组
+                    [_noticeList addObject:dict];
+                    
+                    //消息模型数组
+                    FriendsCircleMessage *message = [[FriendsCircleMessage alloc] initWithDict:dict];
+                    [_messageArray addObject:message];
+                    
+                    if ([message.isHot isEqualToString:@"1"]) { //是热门动态
+                        [_hotMessageArray addObject:message];
+                    }
+                }
+                [_tableView reloadData];
+                //评论列表
+                for (int i = 0; i < [_dataDict[@"noticeList"] count]; i++) {
+                    
+                    NSMutableArray *array = [_dataDict[@"noticeList"][i][@"commentList"] mutableCopy];
+                    [_commentList addObject:array];
+                }
+                //点赞列表
+                for (int i = 0; i < [_dataDict[@"noticeList"] count]; i++) {
+                    
+                    NSMutableArray *array = [_dataDict[@"noticeList"][i][@"praiseList"] mutableCopy];
+                    [_praiseList addObject:array];
+                }
+                
+                [_tableView.mj_header endRefreshing];
+                [_tableView reloadData];
+                
+            } else {
+                //没有新数据，到头了
+                _currentPage--;
+                [_tableView.mj_footer endRefreshing];
+                
+                [MBProgressHUD showMessage:@"已经到底啦~"];
+                dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.6 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+                    [MBProgressHUD hideHUD];
+                });
+            }
+        } else {
+            
+            [MBProgressHUD hideAllHUDsForView:self.view animated:YES];
+            [MBProgressHUD showError:responseObject[@"msg"]];
+        }
+    }
+          failure:^(AFHTTPRequestOperation *operation, NSError *error) {
+              NSLog(@"上拉获取朋友圈列表失败%@", error);
+              [MBProgressHUD hideHUD];
+              [MBProgressHUD showError:@"请检查您的网络"];
+          }];
+}
+
+
+
 
 #pragma mark - 监听方法
 /**

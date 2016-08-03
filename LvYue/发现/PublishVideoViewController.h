@@ -14,6 +14,6 @@
 
 @interface PublishVideoViewController : BaseViewController
 
-@property (nonatomic, copy) NSString *videoPath;
-
+@property (nonatomic, copy) NSString *videoPath;//视频路径
+@property (nonatomic, assign) BOOL isFriendVideo; //是否为朋友圈视频
 @end
