@@ -124,6 +124,7 @@
     [self getTopicDetail];
     //上拉下拉刷新
     [self addRefresh];
+    [self addObserver];
 }
 
 
@@ -1430,6 +1431,57 @@
 
 
 
+#pragma mark - UITextViewDelegate
+- (void)textViewDidChange:(UITextView *)textView {
+    NSString *text = textView.text;
+    if (text.length == 0) {
+        if (textView.tag == 100000) {
+            _placeHolderLabel.text = [NSString stringWithFormat:@"回复%@:", _replyName];
+        } else {
+            _placeHolderLabel.text = [NSString stringWithFormat:@"写点儿评论吧"];
+        }
+    } else {
+        _placeHolderLabel.text = @"";
+        NSString *content      = textView.text;
+        CGSize contentSize     = [content sizeWithFont:[UIFont systemFontOfSize:15.0] constrainedToSize:CGSizeMake(textView.frame.size.width - 20, 1000) lineBreakMode:NSLineBreakByWordWrapping];
+        CGFloat contentHeight  = contentSize.height;
+        //如果文本内容超过textView的高度
+        if (20 + contentHeight > textView.frame.size.height && contentHeight < 6 * kSingleContentHeight) {
+            textView.scrollEnabled = NO;
+            CGFloat margin         = 20 + contentHeight - textView.frame.size.height;
+            [UIView animateWithDuration:0.2 animations:^{
+                //调整inputView
+                CGRect inputFrame = _inputView.frame;
+                inputFrame.origin.y -= margin;
+                inputFrame.size.height = 40 + contentHeight;
+                _inputView.frame       = inputFrame;
+                //textView增加height
+                CGRect temp      = textView.frame;
+                temp.size.height = 20 + contentHeight;
+                textView.frame   = temp;
+            }];
+        } else if (contentHeight >= 6 * kSingleContentHeight) { //如果达到高度极限
+            textView.scrollEnabled = YES;
+        }
+        
+        if (contentHeight + kSingleContentHeight + 10 <= textView.frame.size.height) { //如果文本内容行数正在缩减
+            textView.scrollEnabled = NO;
+            CGFloat margin         = textView.frame.size.height - 20 - contentHeight;
+            [UIView animateWithDuration:0.2 animations:^{
+                //调整inputView
+                CGRect inputFrame = _inputView.frame;
+                inputFrame.origin.y += margin;
+                inputFrame.size.height = 40 + contentHeight;
+                _inputView.frame       = inputFrame;
+                //textView缩减height
+                CGRect temp      = textView.frame;
+                temp.size.height = 20 + contentHeight;
+                textView.frame   = temp;
+            }];
+        }
+    }
+}
+
 
 #pragma mark - 监听方法
 /**
@@ -1466,9 +1518,9 @@
         //            _inputView.frame.origin.y = keyboardF.origin.y - _inputView.frame.size.height;
         //        }
         if (keyboardF.origin.y >= SCREEN_HEIGHT) {
-            _inputView.frame = CGRectMake(0, SCREEN_HEIGHT - 64, SCREEN_WIDTH, 40 + kSingleContentHeight);
+            _inputView.frame = CGRectMake(0, SCREEN_HEIGHT, SCREEN_WIDTH, 40 + kSingleContentHeight);
         } else {
-            _inputView.frame = CGRectMake(0, SCREEN_HEIGHT - keyboardF.size.height - 54 - 64, SCREEN_WIDTH, 40 + kSingleContentHeight);
+            _inputView.frame = CGRectMake(0, SCREEN_HEIGHT - keyboardF.size.height - 54, SCREEN_WIDTH, 40 + kSingleContentHeight);
         }
     }];
 }

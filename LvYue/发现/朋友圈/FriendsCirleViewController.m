@@ -556,7 +556,7 @@
                 FriendsCircleMessage *message = [[FriendsCircleMessage alloc] initWithDict:dict];
                 [_messageArray addObject:message];
             }
-            [_tableView reloadData];
+            //[_tableView reloadData];
             
             //评论列表
             for (int i = 0; i < [_dataDict[@"noticeList"] count]; i++) {
@@ -811,7 +811,7 @@
         _textView = [[UITextView alloc] initWithFrame:CGRectMake(Kinterval, Kinterval / 2, SCREEN_WIDTH - Kinterval - 60, 20 + kSingleContentHeight)];
         [_textView setBackgroundColor:[UIColor clearColor]];
         _textView.layer.cornerRadius = 5.0;
-        _textView.font               = [UIFont systemFontOfSize:15];
+        _textView.font               = kFont15;
         _textView.layer.borderColor  = TABLEVIEW_BACKGROUNDCOLOR.CGColor;
         _textView.layer.borderWidth  = 1;
         _textView.delegate           = self;
@@ -833,7 +833,7 @@
         [_sendBtn setTitle:@"发送" forState:UIControlStateNormal];
         _sendBtn.titleLabel.font = [UIFont systemFontOfSize:15];
         [_sendBtn setTitleColor:[UIColor blackColor] forState:UIControlStateNormal];
-        //        sendBtn.tag = btn.tag;
+        //_sendBtn.tag = btn.tag;
         [_sendBtn addTarget:self action:@selector(sendClick:) forControlEvents:UIControlEventTouchUpInside];
         [_inputView addSubview:_sendBtn];
         [self.view addSubview:_inputView];

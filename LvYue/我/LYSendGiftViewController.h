@@ -10,8 +10,8 @@
 
 @interface LYSendGiftViewController : BaseViewController
 
-@property (nonatomic, strong) NSString *avatarImageURL;
-@property (nonatomic, copy) NSString *userName;
-@property (nonatomic, copy) NSString *friendID;
+@property (nonatomic, strong) NSString *avatarImageURL;//对方的头像
+@property (nonatomic, copy) NSString *userName;//对方的名字
+@property (nonatomic, copy) NSString *friendID;//对方的ID
 
 @end
