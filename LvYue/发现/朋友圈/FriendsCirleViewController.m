@@ -1550,19 +1550,14 @@
         hotLabel.font = kFont20;
         hotLabel.textColor = THEME_COLOR;
         //阴影
-//        hotLabel.layer.shadowColor = [UIColor blackColor].CGColor;//shadowColor阴影颜色
-////        hotLabel.layer.shadowOffset = CGSizeMake(4,4);//shadowOffset阴影偏移,x向右偏移4，y向下偏移4，默认(0, -3),这个跟shadowRadius配合使用
-//        hotLabel.layer.shadowOffset = CGSizeMake(4,0);//shadowOffset阴影偏移,x向右偏移4，y向下偏移4，默认(0, -3),这个跟shadowRadius配合使用
-//        hotLabel.layer.shadowOpacity = 0.2;//阴影透明度，默认0
-////        hotLabel.layer.shadowRadius = 4;//阴影半径，默认3
-//        hotLabel.layer.shadowRadius = 2;//阴影半径，默认3
-        
-        //阴影
-        hotLabel.layer.shadowColor   = [UIColor blackColor].CGColor;
-        hotLabel.layer.shadowOffset  = CGSizeMake(4, 0);
-        UIBezierPath *shadowPath     = [UIBezierPath bezierPathWithRect:CGRectMake(hotLabel.x + hotLabel.width, 0, 1, hotLabel.height)];
-        hotLabel.layer.shadowPath    = shadowPath.CGPath;
-        hotLabel.layer.shadowOpacity = 0.8f;
+        UIView *view                   = [[UIView alloc] initWithFrame:CGRectMake(hotLabel.x + hotLabel.width, 0, 5, hotLabel.height)];
+        CAGradientLayer *gradientLayer = [CAGradientLayer layer];
+        gradientLayer.colors           = @[(__bridge id)RGBCOLOR(225, 226, 228).CGColor, (__bridge id)[UIColor whiteColor].CGColor];
+        gradientLayer.frame            = CGRectMake(0, 0, 5, hotLabel.height);
+        gradientLayer.startPoint       = CGPointMake(0, 0);
+        gradientLayer.endPoint         = CGPointMake(1, 0);
+        [view.layer addSublayer:gradientLayer];
+        [hotBackView addSubview:view];
         
         
         hotLabel.textAlignment = NSTextAlignmentCenter;

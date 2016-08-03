@@ -44,7 +44,8 @@
     UITextView *_textView;         //输入框
     NSDictionary *_dataDict;       //数据源
     UIButton *_sendBtn;            //发送按钮
-    NSMutableArray *_messageArray; //模型数组
+    NSMutableArray *_messageArray; //全部热门话题模型数组
+    NSMutableArray *_hotMessageArray; //最热话题模型数组
     NSMutableArray *_commentList;  //评论列表
     NSMutableArray *_praiseList;   //点赞列表
     NSMutableArray *_noticeList;   //消息列表
@@ -129,6 +130,7 @@
     _currentPage = 1;
     //初始化
     _messageArray  = [NSMutableArray array];
+    _hotMessageArray = [NSMutableArray array];
     _commentList   = [NSMutableArray array];
     _praiseList    = [NSMutableArray array];
     _noticeList    = [NSMutableArray array];
@@ -267,16 +269,76 @@
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
     if (section == 0) {
-        return _messageArray.count;
+        return _hotMessageArray.count;
     }
     else {
-        return 2;
+        return _messageArray.count;
     }
     //return _messageArray.count;
 }
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
-    if (indexPath.section == 0) {
+    if (indexPath.section == 0) {//热门动态
+        static NSString *cellID = @"myCell";
+        FriendsCircleCell *cell = [tableView dequeueReusableCellWithIdentifier:cellID];
+        if (!cell) {
+            cell = [[FriendsCircleCell alloc] initWithStyle:UITableViewCellStyleSubtitle reuseIdentifier:cellID];
+        }
+        
+        //给头像添加手势
+        cell.headImg.tag                = indexPath.row;
+        UITapGestureRecognizer *headTap = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(tapHeadImg:)];
+        [cell.headImg addGestureRecognizer:headTap];
+        
+        //举报
+        [cell.reportBtn addTarget:self action:@selector(reportClick:) forControlEvents:UIControlEventTouchUpInside];
+        
+        //送礼
+        [cell.reportBtn addTarget:self action:@selector(senderGift:) forControlEvents:UIControlEventTouchUpInside];
+        
+        //添加分割线
+        if (_hotMessageArray.count) {
+            FriendsCircleMessage *message = _hotMessageArray[indexPath.row];
+            cell.separatorLine.frame      = CGRectMake(0, [message returnCellHeight] - 1, SCREEN_WIDTH, 1);
+            
+            //保持最新的评论数据 和  点赞数据
+            [message setCommentList:_commentList[indexPath.row]];
+            [message setPraiseList:_praiseList[indexPath.row]];
+            [cell initWithModel:message];
+            
+            //记录当前cell的数据源索引
+            cell.tag = indexPath.row;
+            
+            if ([_praiseList[indexPath.row] count]) {
+                
+                for (NSDictionary *dict in _praiseList[indexPath.row]) {
+                    if ([[NSString stringWithFormat:@"%@", dict[@"praise_user_id"]] isEqualToString:[NSString stringWithFormat:@"%@", [LYUserService sharedInstance].userID]]) {
+                        [cell.praiseBtn setImage:[UIImage imageNamed:@"Hearts red"] forState:UIControlStateNormal];
+                        cell.praiseBtn.selected = YES;
+                    }
+                }
+            } else {
+                [cell.praiseBtn setImage:[UIImage imageNamed:@"Hearts gray"] forState:UIControlStateNormal];
+                cell.praiseBtn.selected = NO;
+            }
+        }
+        
+        [cell.praiseBtn addTarget:self action:@selector(praiseClick:) forControlEvents:UIControlEventTouchUpInside];
+        
+        //给cell tag赋值
+        cell.commentBtn.tag = indexPath.row;
+        [cell.commentBtn addTarget:self action:@selector(commentBtnClick:) forControlEvents:UIControlEventTouchUpInside];
+        //视频播放
+        [cell.videoBtn addTarget:self action:@selector(playVideo:) forControlEvents:UIControlEventTouchUpInside];
+        cell.videoBtn.tag = 100 + indexPath.row;
+        
+        cell.deleteBtn.tag = indexPath.row;
+        [cell.deleteBtn addTarget:self action:@selector(deleteNoticeClick:) forControlEvents:UIControlEventTouchUpInside];
+        
+        cell.selectionStyle = UITableViewCellSelectionStyleNone;
+        return cell;
+    }
+    else {  //全部动态
         static NSString *cellID = @"myCell";
         FriendsCircleCell *cell = [tableView dequeueReusableCellWithIdentifier:cellID];
         if (!cell) {
@@ -342,25 +404,26 @@
         cell.selectionStyle = UITableViewCellSelectionStyleNone;
         return cell;
     }
-    else {  //热门动态
-        UITableViewCell* cell = [[UITableViewCell alloc] init];
-        return cell;
-    }
 
 }
 
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath {
     
     if (indexPath.section ==0) {
-        if (_messageArray.count) {
-            FriendsCircleMessage *message = _messageArray[indexPath.row];
+        if (_hotMessageArray.count) {
+            FriendsCircleMessage *message = _hotMessageArray[indexPath.row];
             return [message returnCellHeight];
         } else {
             return 0.1;
         }
     }
     else {
-        return 44;
+        if (_messageArray.count) {
+            FriendsCircleMessage *message = _messageArray[indexPath.row];
+            return [message returnCellHeight];
+        } else {
+            return 0.1;
+        }
     }
     
 }
@@ -1037,12 +1100,16 @@
                   
                   //先清空模型数组
                   [_messageArray removeAllObjects];
+                  [_hotMessageArray removeAllObjects];
                   //保存模型数组
                   for (NSDictionary *dict in _noticeList) {
                       
                       //消息模型数组
                       FriendsCircleMessage *message = [[FriendsCircleMessage alloc] initWithDict:dict];
                       [_messageArray addObject:message];
+                      if ([message.isHot isEqualToString:@"1"]) {  //是热门动态
+                          [_hotMessageArray addObject:message];
+                      }
                   }
                   
                   [_commentList removeObjectAtIndex:sender.tag];
@@ -1068,6 +1135,7 @@
 - (void)postRequest {
     //清空数据源
     [_messageArray removeAllObjects];
+    [_hotMessageArray removeAllObjects];
     [_commentList removeAllObjects];
     [_praiseList removeAllObjects];
     [_noticeList removeAllObjects];
@@ -1078,23 +1146,29 @@
     NSDictionary *parameters;
     //NSString* allUserId = @"";
     //type 0->自己的朋友圈 1->自己的动态加上userID
-    if (!self.userId) {
-        self.userId = @"";
+//    if (!self.userId) {
+//        self.userId = @"";
+//    }
+    //热门话题
+    if (!self.userId) { //游客
+        if (!self.userId) {
+            self.userId = @"";
+        }
+        parameters = @{ @"userId": [NSString stringWithFormat:@"%@", self.userId],
+                        @"noticeType": @"0",
+                        @"pageNum": [NSString stringWithFormat:@"%d", (int) _currentPage],
+                        @"hotId":self.topic_id,
+                        @"type": @"4" };
+    }
+    else { //用户
+        parameters = @{ @"userId": [NSString stringWithFormat:@"%@", self.userId],
+                        @"noticeType": @"0",
+                        @"pageNum": [NSString stringWithFormat:@"%d", (int) _currentPage],
+                        @"hotId":self.topic_id,
+                        @"type": @"5" };
     }
     
-    if (_isFriendsCircle) { //自己的动态
-        parameters = @{ @"userId": [NSString stringWithFormat:@"%@", self.userId],
-                        @"noticeType": @"0",
-                        @"pageNum": [NSString stringWithFormat:@"%d", (int) _currentPage],
-                        @"type": @"0" };
-    }
-    else { //ta的动态
-        parameters = @{ @"userId": [NSString stringWithFormat:@"%@", self.userId],
-                        @"noticeType": @"0",
-                        @"pageNum": [NSString stringWithFormat:@"%d", (int) _currentPage],
-                        @"status": @"1",
-                        @"type": @"1" };
-    }
+    
     [MBProgressHUD showMessage:nil toView:self.view];
     [manager POST:urlStr parameters:parameters success:^(AFHTTPRequestOperation *operation, id responseObject) {
         MLOG(@"获取朋友圈列表：%@", responseObject);
@@ -1111,6 +1185,10 @@
                 //消息模型数组
                 FriendsCircleMessage *message = [[FriendsCircleMessage alloc] initWithDict:dict];
                 [_messageArray addObject:message];
+                
+                if ([message.isHot isEqualToString:@"1"]) { //是热门动态
+                    [_hotMessageArray addObject:message];
+                }
             }
             [_tableView reloadData];
             //评论列表
