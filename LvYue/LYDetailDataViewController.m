@@ -213,6 +213,11 @@ static NSString *const LYDetailDataPhotoTableViewCellIdentity   = @"LYDetailData
 #pragma mark TableView DataSource & Delegate
 
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView {
+    // 自己的话 隐藏屏蔽用户  最后一个section
+    if ([[LYUserService sharedInstance].userID isEqualToString:self.userId]) {
+        return LYDetailDataTableViewDataArray.count - 1;
+    }
+
     return LYDetailDataTableViewDataArray.count;
 }
 
