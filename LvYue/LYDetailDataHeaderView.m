@@ -16,6 +16,7 @@
 @property (weak, nonatomic) IBOutlet UIImageView *vipImageView;
 @property (weak, nonatomic) IBOutlet UIButton *playVideoButton;
 @property (weak, nonatomic) IBOutlet UILabel *userNameLabel;
+@property (weak, nonatomic) IBOutlet UIView *valideIconView;
 @property (weak, nonatomic) IBOutlet UILabel *meiLiValueLabel;
 @property (weak, nonatomic) IBOutlet UILabel *fansValueLabel;
 @property (weak, nonatomic) IBOutlet UILabel *caiFuValueLabel;
@@ -64,6 +65,35 @@
     } else {
         [self.foucsOnButton setTitle:@"关注 TA" forState:UIControlStateNormal];
     }
+
+    NSInteger flag = 0;
+
+    // 车辆认证
+    if (infoModel.auth_car == 2) {
+        UIImageView *imageView = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"car"]];
+        imageView.frame        = CGRectMake(CGRectGetWidth(self.valideIconView.frame) - 15 - 20 * flag, 0, 15.f, 15.f);
+        [self.valideIconView addSubview:imageView];
+        flag++;
+    }
+    // 教育认证
+    if (infoModel.auth_edu == 2) {
+        UIImageView *imageView = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"xue"]];
+        imageView.frame        = CGRectMake(CGRectGetWidth(self.valideIconView.frame) - 15 - 20 * flag, 0, 15.f, 15.f);
+        [self.valideIconView addSubview:imageView];
+        flag++;
+    }
+    // 身份认证
+    if (infoModel.auth_identity == 2) {
+        UIImageView *imageView = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"zhen"]];
+        imageView.frame        = CGRectMake(CGRectGetWidth(self.valideIconView.frame) - 15 - 20 * flag, 0, 15.f, 15.f);
+        [self.valideIconView addSubview:imageView];
+        flag++;
+    }
+    // 性别
+    UIImageView *imageView = [[UIImageView alloc] initWithImage:[UIImage imageNamed:(infoModel.sex == 0 ? @"男" : @"女")]];
+    imageView.frame        = CGRectMake(CGRectGetWidth(self.valideIconView.frame) - 15 - 20 * flag, 0, 15.f, 15.f);
+    [self.valideIconView addSubview:imageView];
+    flag++;
 }
 
 // 关注，取消关注

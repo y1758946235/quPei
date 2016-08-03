@@ -79,11 +79,10 @@
                     </constraints>
                 </view>
                 <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="EsE-Dd-rpO">
-                    <rect key="frame" x="214" y="25" width="100" height="15"/>
-                    <color key="backgroundColor" red="1" green="0.42745098040000001" blue="0.42745098040000001" alpha="1" colorSpace="calibratedRGB"/>
+                    <rect key="frame" x="234" y="25" width="80" height="15"/>
                     <constraints>
                         <constraint firstAttribute="height" constant="15" id="DiI-bI-jSt"/>
-                        <constraint firstAttribute="width" constant="100" id="kQF-5X-SGd"/>
+                        <constraint firstAttribute="width" constant="80" id="kQF-5X-SGd"/>
                     </constraints>
                 </view>
                 <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="sIL-RS-F74">
@@ -261,6 +260,7 @@
                 <outlet property="playVideoButton" destination="cqp-dM-S6C" id="OWh-13-2DE"/>
                 <outlet property="sendGiftButton" destination="cZX-pb-18Q" id="mlO-hM-rB3"/>
                 <outlet property="userNameLabel" destination="Iwf-ph-IgV" id="ITS-I1-Cho"/>
+                <outlet property="valideIconView" destination="EsE-Dd-rpO" id="scK-dz-FEw"/>
                 <outlet property="vipImageView" destination="cPr-9X-AWw" id="b6k-SZ-lQ9"/>
             </connections>
             <point key="canvasLocation" x="152" y="130.5"/>
