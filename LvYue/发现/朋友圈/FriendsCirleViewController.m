@@ -28,10 +28,19 @@
 #import "ReportViewController.h"
 #import "HotTopicViewController.h"
 #import "TopicTitle.h"
+#import "PublishVideoViewController.h"
+
+#import "VideoCommitViewController.h"
+#import <MediaPlayer/MediaPlayer.h>
 
 #define kSingleContentHeight 17.895f
 
 @interface FriendsCirleViewController () <UITableViewDataSource, UITableViewDelegate, UIActionSheetDelegate, UIAlertViewDelegate, UITextViewDelegate, UINavigationControllerDelegate, UIImagePickerControllerDelegate> {
+    BOOL isAttention;           //是否关注，默认未选中
+
+    NSURL *_currentVideoURL; //当前准备要播放的视频的URL
+    BOOL isupdateVideo;        //是否视频， yes是 no
+    
     NSTimer *timer; //定时器轮询
     UIView *_addView;
     UIView *headerView;
@@ -46,7 +55,8 @@
     NSMutableArray *_praiseList;   //点赞列表
     NSMutableArray *_noticeList;   //消息列表
     NSMutableArray *_topicList;    //热门话题数量
-    
+    UIButton* tipButton;            //热门
+    UILabel* hotLabel;              //热门Label
     
     UIButton *_newMsg;             //新消息条数提示
     NSString *_newMsgIcon;         //新消息提示的头像图片
@@ -81,10 +91,40 @@
 @property (nonatomic, strong) MyInfoModel *myInfoModel;
 @property (nonatomic, strong) MyDetailInfoModel *myDetailModel;
 
+@property (nonatomic, strong) MPMoviePlayerViewController* player;
+@property (nonatomic, strong) UIImagePickerController *imagePicker; //摄像控制器
+
 @end
 
 @implementation FriendsCirleViewController
 
+- (UIImagePickerController *)imagePicker {
+    if (!_imagePicker) {
+        _imagePicker                      = [[UIImagePickerController alloc] init];
+        _imagePicker.sourceType           = UIImagePickerControllerSourceTypeCamera;
+        _imagePicker.mediaTypes           = @[(NSString *) kUTTypeMovie];
+        _imagePicker.videoQuality         = UIImagePickerControllerQualityTypeMedium;
+        _imagePicker.cameraCaptureMode    = UIImagePickerControllerCameraCaptureModeVideo;
+        _imagePicker.videoMaximumDuration = 300.0f;
+        _imagePicker.allowsEditing        = YES;
+        _imagePicker.delegate             = self;
+    }
+    return _imagePicker;
+}
+
+- (MPMoviePlayerViewController *)player {
+    if (!_player) {
+        _player                            = [[MPMoviePlayerViewController alloc] initWithContentURL:_currentVideoURL];
+        _player.moviePlayer.shouldAutoplay = YES;
+        [self addVideoNotifications];
+    }
+    return _player;
+}
+
+//添加视频监听通知
+- (void)addVideoNotifications {
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(videoDidFinishLaunch:) name:MPMediaPlaybackIsPreparedToPlayDidChangeNotification object:_player.moviePlayer];
+}
 
 - (void)viewWillAppear:(BOOL)animated {
     [super viewWillAppear:animated];
@@ -93,6 +133,7 @@
 
     //获得朋友圈消息列表
     [self postRequest];
+    //热门话题
     [self getHotTopic];
     //[self getDataFromWeb];
     //注册通知
@@ -125,6 +166,8 @@
     _noticeList    = [NSMutableArray array];
     _topicList     = [NSMutableArray array];
     _coverImageUrl = nil;
+    isAttention = NO;
+    isupdateVideo = NO;
 
     _tableView                 = [[UITableView alloc] initWithFrame:CGRectMake(0, 0, self.view.frame.size.width, self.view.frame.size.height) style:UITableViewStyleGrouped];
     _tableView.backgroundColor = [UIColor whiteColor];
@@ -134,7 +177,7 @@
     [self.view addSubview:_tableView];
 
     [self setStatus];
-    [self getHotTopic];
+    //[self getHotTopic];
     
     [self getDataFromWeb];
     //上拉下拉刷新
@@ -189,10 +232,16 @@
     /* 添加代码,处理值的变化 */
     if (selectedIndex == 0) { //全部
         MLOG(@"%ld", (long) selectedIndex);
-
+        isAttention = NO;
     } else { //关注
         MLOG(@"%ld", (long) selectedIndex);
+        isAttention = YES;
+        
     }
+    //获得朋友圈消息列表
+    [self postRequest];
+    //上拉下拉刷新
+    [self addRefresh];
 }
 
 
@@ -261,28 +310,84 @@
     NSString *urlStr = [NSString stringWithFormat:@"%@/mobile/notice/iosNoticeList", REQUESTHEADER];
     NSDictionary *parameters;
     //type 0->自己的动态 1->自己的动态加上userID
-    if (_isFriendsCircle) { //朋友圈
-        NSString* type ;
-        if (self.userId) {  //y
-            type = @"2";
+//    if (_isFriendsCircle) { //朋友圈
+//        NSString* type ;
+//        if (self.userId) {  //y
+//            type = @"2";
+//        }
+//        else if (self.userId == nil) {
+//            type = @"0";
+//        }
+//        parameters = @{ @"userId": [NSString stringWithFormat:@"%@", self.userId],
+//                        @"noticeType": @"0",
+//                        @"pageNum": [NSString stringWithFormat:@"%d", (int) _currentPage],
+//                        @"type": type };
+//    } else { //ta的动态
+//        parameters = @{ @"userId": [NSString stringWithFormat:@"%@", self.userId],
+//                        @"noticeType": @"0",
+//                        @"pageNum": [NSString stringWithFormat:@"%d", (int) _currentPage],
+//                        @"status": @"1",
+//                        @"type": @"1" };
+//    }
+    if (isAttention == NO) {  //全部
+        if (_isFriendsCircle) { //自己的动态
+            
+            NSString* type ;
+            if (self.userId) {  //y
+                type = @"2";
+            }
+            else if (self.userId == nil) {
+                if (!self.userId) {
+                    self.userId = @"";
+                }
+                type = @"0";
+            }
+            parameters = @{ @"userId": [NSString stringWithFormat:@"%@", self.userId],
+                            @"noticeType": @"0",
+                            @"pageNum": [NSString stringWithFormat:@"%d", (int) _currentPage],
+                            @"type": type };
+            
         }
-        else if (self.userId == nil) {
-            type = @"0";
+        else { //ta的动态
+            parameters = @{ @"userId": [NSString stringWithFormat:@"%@", self.userId],
+                            @"noticeType": @"0",
+                            @"pageNum": [NSString stringWithFormat:@"%d", (int) _currentPage],
+                            @"status": @"1",
+                            @"type": @"1" };
         }
-        parameters = @{ @"userId": [NSString stringWithFormat:@"%@", self.userId],
-                        @"noticeType": @"0",
-                        @"pageNum": [NSString stringWithFormat:@"%d", (int) _currentPage],
-                        @"type": type };
-    } else { //ta的动态
-        parameters = @{ @"userId": [NSString stringWithFormat:@"%@", self.userId],
-                        @"noticeType": @"0",
-                        @"pageNum": [NSString stringWithFormat:@"%d", (int) _currentPage],
-                        @"status": @"1",
-                        @"type": @"1" };
+    }
+    else {
+        if (_isFriendsCircle) { //自己的动态
+            
+            //            NSString* type ;
+            //            if (self.userId) {  //y
+            //                type = @"2";
+            //            }
+            //            else if (self.userId == nil) {
+            //                if (!self.userId) {
+            //                    self.userId = @"";
+            //                }
+            //                type = @"0";
+            //            }
+            parameters = @{ @"userId": [NSString stringWithFormat:@"%@", self.userId],
+                            @"noticeType": @"0",
+                            @"pageNum": [NSString stringWithFormat:@"%d", (int) _currentPage],
+                            @"type": @"3" };
+            
+        }
+        else { //ta的动态
+            parameters = @{ @"userId": [NSString stringWithFormat:@"%@", self.userId],
+                            @"noticeType": @"0",
+                            @"pageNum": [NSString stringWithFormat:@"%d", (int) _currentPage],
+                            @"status": @"1",
+                            @"type": @"3" };
+        }
+        
     }
 
+
     [manager POST:urlStr parameters:parameters success:^(AFHTTPRequestOperation *operation, id responseObject) {
-        NSLog(@"获取朋友圈列表:%@", responseObject);
+        NSLog(@"上拉获取朋友圈列表:%@", responseObject);
         [MBProgressHUD hideAllHUDsForView:self.view animated:YES];
 
         if ([[NSString stringWithFormat:@"%@", responseObject[@"code"]] isEqualToString:@"200"]) {
@@ -335,7 +440,7 @@
         }
     }
         failure:^(AFHTTPRequestOperation *operation, NSError *error) {
-            NSLog(@"获取朋友圈列表%@", error);
+            NSLog(@"上拉获取朋友圈列表失败%@", error);
             [MBProgressHUD hideHUD];
             [MBProgressHUD showError:@"请检查您的网络"];
         }];
@@ -356,33 +461,65 @@
 
     NSDictionary *parameters;
     //NSString* allUserId = @"";
-    //type 0->自己的朋友圈 1->自己的动态加上userI
+    //type 0->自己的朋友圈 1->自己的动态加上userID
 
-    if (_isFriendsCircle) { //自己的动态
-        
-        NSString* type ;
-        if (self.userId) {  //y
-            type = @"2";
-        }
-        else if (self.userId == nil) {
-            if (!self.userId) {
-                self.userId = @"";
+    if (isAttention == NO) {  //全部
+        if (_isFriendsCircle) { //自己的动态
+            
+            NSString* type ;
+            if (self.userId) {  //y
+                type = @"2";
             }
-            type = @"0";
+            else if (self.userId == nil) {
+                if (!self.userId) {
+                    self.userId = @"";
+                }
+                type = @"0";
+            }
+            parameters = @{ @"userId": [NSString stringWithFormat:@"%@", self.userId],
+                            @"noticeType": @"0",
+                            @"pageNum": [NSString stringWithFormat:@"%d", (int) _currentPage],
+                            @"type": type };
+            
         }
-        parameters = @{ @"userId": [NSString stringWithFormat:@"%@", self.userId],
-                        @"noticeType": @"0",
-                        @"pageNum": [NSString stringWithFormat:@"%d", (int) _currentPage],
-                        @"type": type };
-
+        else { //ta的动态
+            parameters = @{ @"userId": [NSString stringWithFormat:@"%@", self.userId],
+                            @"noticeType": @"0",
+                            @"pageNum": [NSString stringWithFormat:@"%d", (int) _currentPage],
+                            @"status": @"1",
+                            @"type": @"1" };
+        }
     }
-    else { //ta的动态
-        parameters = @{ @"userId": [NSString stringWithFormat:@"%@", self.userId],
-                        @"noticeType": @"0",
-                        @"pageNum": [NSString stringWithFormat:@"%d", (int) _currentPage],
-                        @"status": @"1",
-                        @"type": @"1" };
+    else {
+        if (_isFriendsCircle) { //自己的动态
+            
+//            NSString* type ;
+//            if (self.userId) {  //y
+//                type = @"2";
+//            }
+//            else if (self.userId == nil) {
+//                if (!self.userId) {
+//                    self.userId = @"";
+//                }
+//                type = @"0";
+//            }
+            parameters = @{ @"userId": [NSString stringWithFormat:@"%@", self.userId],
+                            @"noticeType": @"0",
+                            @"pageNum": [NSString stringWithFormat:@"%d", (int) _currentPage],
+                            @"type": @"3" };
+            
+        }
+        else { //ta的动态
+            parameters = @{ @"userId": [NSString stringWithFormat:@"%@", self.userId],
+                            @"noticeType": @"0",
+                            @"pageNum": [NSString stringWithFormat:@"%d", (int) _currentPage],
+                            @"status": @"1",
+                            @"type": @"3" };
+        }
+    
     }
+    
+    
     [MBProgressHUD showMessage:nil toView:self.view];
 
     [manager POST:urlStr parameters:parameters success:^(AFHTTPRequestOperation *operation, id responseObject) {
@@ -404,6 +541,7 @@
                 [_messageArray addObject:message];
             }
             [_tableView reloadData];
+            
             //评论列表
             for (int i = 0; i < [_dataDict[@"noticeList"] count]; i++) {
 
@@ -436,7 +574,7 @@
         }
     }
         failure:^(AFHTTPRequestOperation *operation, NSError *error) {
-            NSLog(@"获取朋友圈列表%@", error);
+            NSLog(@"获取朋友圈列表失败%@", error);
             [MBProgressHUD hideAllHUDsForView:self.view animated:YES];
             [MBProgressHUD showError:@"请检查您的网络"];
         }];
@@ -452,7 +590,7 @@
     
     [MBProgressHUD showMessage:nil toView:self.view];
     [LYHttpPoster postHttpRequestByPost:urlStr andParameter:params success:^(id successResponse) {
-        MLOG(@"获取朋友圈列表:%@", successResponse);
+        MLOG(@"获取热门话题:%@", successResponse);
         [MBProgressHUD hideAllHUDsForView:self.view animated:YES];
         if ([[NSString stringWithFormat:@"%@", successResponse[@"code"]] isEqualToString:@"200"]) {
             NSMutableArray* topicsM = successResponse[@"data"][@"topics"];
@@ -460,6 +598,8 @@
                 TopicTitle* topic = [TopicTitle topicTitleWithDict:dict];
                 [_topicList addObject:topic];
             }
+            hotLabel.height = 35*(_topicList.count+1);
+            hotBackView.height = 35*(_topicList.count+1)+3;
             
             [_tableView.mj_header endRefreshing];
             [_tableView reloadData];
@@ -470,7 +610,7 @@
             [MBProgressHUD showError:successResponse[@"msg"]];
         }
     } andFailure:^(id failureResponse) {
-        NSLog(@"获取朋友圈列表%@", failureResponse);
+        NSLog(@"获取热门话题%@", failureResponse);
         [MBProgressHUD hideAllHUDsForView:self.view animated:YES];
         [MBProgressHUD showError:@"请检查您的网络"];
     }];
@@ -828,7 +968,7 @@
                     [self.view addSubview:_clearBtn];
                 }
 
-                _addView                    = [[UIView alloc] initWithFrame:CGRectMake(SCREEN_WIDTH - 130, 10, 120, 88)];
+                _addView                    = [[UIView alloc] initWithFrame:CGRectMake(SCREEN_WIDTH - 130, 10, 120, 88+44)];
                 _addView.layer.cornerRadius = 5.0;
                 _addView.layer.shadowColor  = [UIColor blackColor].CGColor;
                 _addView.layer.borderWidth  = 1;
@@ -851,9 +991,25 @@
                 publishLabel.font          = [UIFont systemFontOfSize:17];
                 publishLabel.text          = @"发布动态";
                 [publishBtn addSubview:publishLabel];
+                
+                //发布视频
+                UIButton *publishVideoBtn = [[UIButton alloc] initWithFrame:CGRectMake(0, 44, _addView.frame.size.width, 44)];
+                [publishVideoBtn addTarget:self action:@selector(publishVideoClick:) forControlEvents:UIControlEventTouchUpInside];
+                [_addView addSubview:publishVideoBtn];
+                
+                UIImageView *publishVideoView = [[UIImageView alloc] initWithFrame:CGRectMake((44 - 20) / 2, (44 - 20) / 2, 20, 20)];
+                publishVideoView.image        = [UIImage imageNamed:@"个人动态"];
+                publishVideoView.contentMode  = UIViewContentModeScaleAspectFit;
+                [publishVideoBtn addSubview:publishVideoView];
+                
+                UILabel *publishVideoLabel      = [[UILabel alloc] initWithFrame:CGRectMake(CGRectGetMaxX(publishVideoView.frame), 0, _addView.frame.size.width - CGRectGetMaxX(publishVideoView.frame), 44)];
+                publishVideoLabel.textAlignment = NSTextAlignmentCenter;
+                publishVideoLabel.font          = [UIFont systemFontOfSize:17];
+                publishVideoLabel.text          = @"发布视频";
+                [publishVideoBtn addSubview:publishVideoLabel];
 
                 //消息
-                UIButton *msgBtn = [[UIButton alloc] initWithFrame:CGRectMake(0, 44, _addView.frame.size.width, 44)];
+                UIButton *msgBtn = [[UIButton alloc] initWithFrame:CGRectMake(0, 88, _addView.frame.size.width, 44)];
                 [msgBtn addTarget:self action:@selector(pushMessageList) forControlEvents:UIControlEventTouchUpInside];
                 [_addView addSubview:msgBtn];
 
@@ -952,6 +1108,44 @@
         }
     }
 }
+
+//发布视频
+- (void)publishVideoClick:(UIButton *)sender {
+    if ([LYUserService sharedInstance].canPublishFriend) {
+        [self hiddenAddView];
+        
+//        PublishVideoViewController *publishMessageViewController = [[PublishVideoViewController alloc] init];
+//        [self.navigationController pushViewController:publishMessageViewController animated:YES];
+        
+        if ([[LYUserService sharedInstance] canPublishVideo]) { //如果没有权限约束
+            [self presentViewController:self.imagePicker animated:YES completion:nil];
+            [[[UIAlertView alloc] initWithTitle:nil message:@"视频录制最长时间不能超过5分钟\n超过5分钟将自动结束录制" delegate:nil cancelButtonTitle:@"知道了" otherButtonTitles:nil] show];
+            isupdateVideo = YES;
+        } else { //如果有权限约束
+            if ([[LYUserService sharedInstance].userDetail.isVip isEqualToString:@"1"]) {
+                [self presentViewController:self.imagePicker animated:YES completion:nil];
+                [[[UIAlertView alloc] initWithTitle:nil message:@"视频录制最长时间不能超过5分钟\n超过5分钟将自动结束录制" delegate:nil cancelButtonTitle:@"知道了" otherButtonTitles:nil] show];
+            } else {
+                [[[UIAlertView alloc] initWithTitle:nil message:@"您还不是会员，将无法享受发布功能" delegate:self cancelButtonTitle:@"取消" otherButtonTitles:@"成为会员", nil] show];
+            }
+        }
+        
+        
+    } else {
+        if ([[LYUserService sharedInstance].userDetail.isVip isEqualToString:@"0"]) {
+            UIAlertView *alert = [[UIAlertView alloc] initWithTitle:nil message:@"您需要开通会员才能发消息" delegate:self cancelButtonTitle:@"好的" otherButtonTitles:@"去开通", nil];
+            alert.delegate     = self;
+            [alert show];
+            
+        } else {
+            [self hiddenAddView];
+            
+            PublishVideoViewController *publishMessageViewController = [[PublishVideoViewController alloc] init];
+            [self.navigationController pushViewController:publishMessageViewController animated:YES];
+        }
+    }
+}
+
 
 //点击蒙层 隐藏输入框等
 - (void)hiddenAddView {
@@ -1178,6 +1372,10 @@
     //给cell tag赋值
     cell.commentBtn.tag = indexPath.row;
     [cell.commentBtn addTarget:self action:@selector(commentBtnClick:) forControlEvents:UIControlEventTouchUpInside];
+    //视频播放
+    [cell.videoBtn addTarget:self action:@selector(playVideo:) forControlEvents:UIControlEventTouchUpInside];
+    cell.videoBtn.tag = 100 + indexPath.row;
+    
     cell.deleteBtn.tag = indexPath.row;
     [cell.deleteBtn addTarget:self action:@selector(deleteNoticeClick:) forControlEvents:UIControlEventTouchUpInside];
 
@@ -1313,24 +1511,24 @@
 
     //一个热门话题的高度
     static CGFloat hotTipH = 35;
-    UILabel* hotLabel;
+    
     //设置热门话题
     if (!hotBackView) {
         //背景
         hotBackView = [[UIView alloc] init];
-        hotBackView.backgroundColor = [UIColor whiteColor];
+        hotBackView.backgroundColor = [UIColor clearColor];
         hotBackView.x = 0;
-        hotBackView.y = CGRectGetMaxY(_newMsgBtn.frame)+5;
+        hotBackView.y = CGRectGetMaxY(_newMsgBtn.frame);
         hotBackView.width = kMainScreenWidth;
-        hotBackView.height = 100;
+        hotBackView.height = 60;
         [headerView addSubview:hotBackView];
         
         //热门
         hotLabel = [[UILabel alloc] init];
         hotLabel.x = 10;
-        hotLabel.y = 15;
+        hotLabel.y = 0;
         hotLabel.width = hotTipH;
-        hotLabel.height = hotTipH*(_topicList.count+1);
+        hotLabel.height = 60;
         hotLabel.backgroundColor = [UIColor whiteColor];
         hotLabel.numberOfLines = 0;
         hotLabel.text = @"热话";
@@ -1420,38 +1618,41 @@
     }
     else {
         
-        hotLabel.height = hotTipH*(_topicList.count+1);
+        //hotLabel.height = hotTipH*(_topicList.count+1);
         
         for (int i = 0; i<_topicList.count; i++) {
             //话题内容
-            UIButton* tipButton = [UIButton buttonWithType:UIButtonTypeCustom];
-            tipButton.height = hotTipH;
-            tipButton.width = kMainScreenWidth - CGRectGetMaxX(hotLabel.frame) - 3;
-            tipButton.x = CGRectGetMaxX(hotLabel.frame) + 3;
-            tipButton.y = hotLabel.y + i*(tipButton.y+hotTipH+1);
-            
-            tipButton.backgroundColor = [UIColor redColor];
-            [tipButton setTitleColor:[UIColor blackColor] forState:UIControlStateNormal];
-            TopicTitle* titleModel = _topicList[i];
-            NSString* title = [NSString stringWithFormat:@"#%@#",titleModel.title];
-            
-            tipButton.tag = 1000+ [titleModel.ID integerValue];
-            
-            [tipButton setTitle:title forState:UIControlStateNormal];
-            tipButton.contentHorizontalAlignment = UIControlContentHorizontalAlignmentLeft;
-            tipButton.titleEdgeInsets = UIEdgeInsetsMake(0, 15, 0, 0);
-            [tipButton addTarget:self action:@selector(clickTipButton:) forControlEvents:UIControlEventTouchUpInside];
-            [hotBackView addSubview:tipButton];
-            //虚线
-            UIView* lineView =[[UIView alloc] init];
-            lineView.x = 0;
-            lineView.y = tipButton.height - 1;
-            lineView.width = kMainScreenWidth;
-            lineView.height = 1.0f;
-            [UIView drawDashLine:lineView lineLength:3.0f lineSpacing:3.0f lineColor:[UIColor grayColor]];
-            [tipButton addSubview:lineView];
-            if (_topicList.count - 1 == i) {
-                lineView.hidden = YES;
+            if (!tipButton) {
+                tipButton = [UIButton buttonWithType:UIButtonTypeCustom];
+                tipButton.height = hotTipH;
+                tipButton.width = kMainScreenWidth - CGRectGetMaxX(hotLabel.frame) - 3;
+                tipButton.x = CGRectGetMaxX(hotLabel.frame) + 3;
+                tipButton.y = hotLabel.y + i*(tipButton.y+hotTipH+1)+10;
+//                tipButton.centerY = hotLabel.centerY;
+                
+//                tipButton.backgroundColor = [UIColor redColor];
+                [tipButton setTitleColor:[UIColor blackColor] forState:UIControlStateNormal];
+                TopicTitle* titleModel = _topicList[i];
+                NSString* title = [NSString stringWithFormat:@"#%@#",titleModel.title];
+                
+                tipButton.tag = 1000+ [titleModel.ID integerValue];
+                
+                [tipButton setTitle:title forState:UIControlStateNormal];
+                tipButton.contentHorizontalAlignment = UIControlContentHorizontalAlignmentLeft;
+                tipButton.titleEdgeInsets = UIEdgeInsetsMake(0, 15, 0, 0);
+                [tipButton addTarget:self action:@selector(clickTipButton:) forControlEvents:UIControlEventTouchUpInside];
+                [hotBackView addSubview:tipButton];
+                //虚线
+                UIView* lineView =[[UIView alloc] init];
+                lineView.x = 0;
+                lineView.y = tipButton.height - 1;
+                lineView.width = kMainScreenWidth;
+                lineView.height = 1.0f;
+                [UIView drawDashLine:lineView lineLength:3.0f lineSpacing:3.0f lineColor:[UIColor grayColor]];
+                [tipButton addSubview:lineView];
+                if (_topicList.count - 1 == i) {
+                    lineView.hidden = YES;
+                }
             }
         }
         
@@ -1460,12 +1661,12 @@
     return headerView;
 }
 
-#pragma clickTipButton:
+#pragma mark - clickTopButton:
 - (void)clickTipButton:(UIButton* )sender {
     MLOG(@"%@",sender);
     HotTopicViewController* vc = [[HotTopicViewController alloc] init];
     vc.userId = self.userId;
-    vc.topic_id = sender.tag-1000;
+    vc.topic_id = [NSString stringWithFormat:@"%ld",sender.tag-1000];
     [self.navigationController pushViewController:vc animated:YES];
 }
 
@@ -1478,6 +1679,51 @@
 
     [tableView deselectRowAtIndexPath:indexPath animated:YES];
 }
+
+//点击播放按钮
+- (void)playVideo:(UIButton *)sender {
+    //#warning 权限开关
+    //    if ([[LYUserService sharedInstance].userDetail.isVip isEqualToString:@"1"]) {
+    //        NSInteger index = sender.tag - 100;
+    //        VideoDetail *model = self.videoArray[index];
+    //        _currentVideoURL = [NSURL URLWithString:[NSString stringWithFormat:@"%@",model.url]];
+    //        _player = nil;
+    //        [self presentMoviePlayerViewControllerAnimated:self.player];
+    //    }
+    //    else {
+    //        [[[UIAlertView alloc] initWithTitle:nil message:@"您还不是会员，将无法享受播放功能" delegate:self cancelButtonTitle:@"取消" otherButtonTitles:@"成为会员", nil] show];
+    //    }
+    /**
+     *  @author KF, 16-07-20 13:07:18
+     *
+     *  @brief 权限开关
+     */
+    if ([[LYUserService sharedInstance] canPlayVideo]) { //如果没有权限约束
+        NSInteger index    = sender.tag - 100;
+        FriendsCircleMessage *message = _messageArray[index];
+        _currentVideoURL   = [NSURL URLWithString:[NSString stringWithFormat:@"%@", message.videoUrl]];
+        _player            = nil;
+        
+        [self presentMoviePlayerViewControllerAnimated:self.player];
+    } else { //如果有权限约束
+        if ([[LYUserService sharedInstance].userDetail.isVip isEqualToString:@"1"]) {
+            NSInteger index    = sender.tag - 100;
+            FriendsCircleMessage *message = _messageArray[index];
+            _currentVideoURL   = [NSURL URLWithString:[NSString stringWithFormat:@"%@", message.videoUrl]];
+            _player            = nil;
+            [self presentMoviePlayerViewControllerAnimated:self.player];
+        } else {
+            [[[UIAlertView alloc] initWithTitle:nil message:@"您还不是会员，将无法享受播放功能" delegate:self cancelButtonTitle:@"取消" otherButtonTitles:@"成为会员", nil] show];
+        }
+    }
+}
+
+#pragma mark - 通知中心处理
+//当视频做好准备时
+- (void)videoDidFinishLaunch:(NSNotification *)aNotification {
+    MLOG(@"视频准备好了");
+}
+
 
 #pragma mark 网络请求
 
@@ -1703,79 +1949,112 @@
 
 #pragma mark - UIImagePickerControllerDelegate
 - (void)imagePickerController:(UIImagePickerController *)picker didFinishPickingMediaWithInfo:(NSDictionary<NSString *, id> *)info {
-    //获取七牛Token
-    [MBProgressHUD showMessage:@"更新封面中.."];
-    [LYHttpPoster postHttpRequestByPost:[NSString stringWithFormat:@"%@/mobile/getQiniuToken", REQUESTHEADER] andParameter:@{} success:^(id successResponse) {
-        if ([[NSString stringWithFormat:@"%@", successResponse[@"code"]] isEqualToString:@"200"]) {
-
-            NSString *token = successResponse[@"data"][@"qiniuToken"];
-
-            //获取当前时间
-            NSDate *now                     = [NSDate date];
-            NSCalendar *calendar            = [NSCalendar currentCalendar];
-            NSUInteger unitFlags            = NSYearCalendarUnit | NSMonthCalendarUnit | NSDayCalendarUnit | NSHourCalendarUnit | NSMinuteCalendarUnit | NSSecondCalendarUnit;
-            NSDateComponents *dateComponent = [calendar components:unitFlags fromDate:now];
-            NSInteger year                  = [dateComponent year];
-            NSInteger month                 = [dateComponent month];
-            NSInteger day                   = [dateComponent day];
-            NSInteger hour                  = [dateComponent hour];
-            NSInteger minute                = [dateComponent minute];
-            NSInteger second                = [dateComponent second];
-
-            NSString *locationString = [NSString stringWithFormat:@"iosLvYue_CircleCover_%@_%ld%ld%ld%ld%ld%ld", [LYUserService sharedInstance].userID, (long) year, (long) month, (long) day, (long) hour, (long) minute, (long) second];
-
-            //压缩
-            UIImage *editImage = info[UIImagePickerControllerEditedImage];
-            NSData *savedData  = UIImageJPEGRepresentation(editImage, 0.3);
-
-            //七牛上传图片
-            QNUploadManager *upManager = [[QNUploadManager alloc] init];
-            [upManager putData:savedData key:locationString token:token
-                      complete:^(QNResponseInfo *info, NSString *key, NSDictionary *resp) {
-                          MLOG(@"七牛返回内容 : info = \n%@ \n resp = \n%@", info, resp);
-                          if (resp == nil) {
-                              [MBProgressHUD hideHUD];
-                              [MBProgressHUD showError:@"上传失败"];
-                          } else { //如果七牛上传成功
-                              //同步服务器
-                              [LYHttpPoster postHttpRequestByPost:[NSString stringWithFormat:@"%@/mobile/user/updateNotice", REQUESTHEADER] andParameter:@{ @"token": token,
-                                                                                                                                                            @"user_id": [LYUserService sharedInstance].userID,
-                                                                                                                                                            @"circle_cover": locationString }
-                                  success:^(id successResponse) {
-                                      if ([[NSString stringWithFormat:@"%@", successResponse[@"code"]] isEqualToString:@"200"]) {
-                                          [MBProgressHUD hideHUD];
-                                          //弹出
-                                          [self dismissViewControllerAnimated:YES completion:^{
-                                              //重新请求/刷新
-                                              [self getDataFromWeb];
-                                          }];
-                                      } else {
-                                          [MBProgressHUD hideHUD];
-                                          [MBProgressHUD showError:[NSString stringWithFormat:@"%@", successResponse[@"msg"]]];
-                                      }
-                                  }
-                                  andFailure:^(id failureResponse) {
-                                      [MBProgressHUD hideHUD];
-                                      [MBProgressHUD showError:@"3服务器繁忙,请重试"];
-                                  }];
-                          }
-                      }
-                        option:nil];
-
-        } else {
-            [MBProgressHUD hideHUD];
-            [MBProgressHUD showError:[NSString stringWithFormat:@"%@", successResponse[@"msg"]]];
+    if (isupdateVideo == YES) {
+        //发布视频
+        NSString *mediaType = [info objectForKey:UIImagePickerControllerMediaType];
+        if ([mediaType isEqualToString:(NSString *) kUTTypeMovie]) { //如果是录制视频
+            NSURL *url          = [info objectForKey:UIImagePickerControllerMediaURL];
+            NSString *urlString = [url path];
+            if (UIVideoAtPathIsCompatibleWithSavedPhotosAlbum(urlString)) {
+                //保存视频到相簿
+                UISaveVideoAtPathToSavedPhotosAlbum(urlString, self, @selector(video:didFinishSavingWithError:contextInfo:), nil); //保存视频到相簿
+            }
         }
+        [self dismissViewControllerAnimated:YES completion:nil];
+        
     }
-        andFailure:^(id failureResponse) {
-            [MBProgressHUD hideHUD];
-            [MBProgressHUD showError:@"4服务器繁忙,请重试"];
-        }];
+    else {
+        //获取七牛Token
+        [MBProgressHUD showMessage:@"更新封面中.."];
+        [LYHttpPoster postHttpRequestByPost:[NSString stringWithFormat:@"%@/mobile/getQiniuToken", REQUESTHEADER] andParameter:@{} success:^(id successResponse) {
+            if ([[NSString stringWithFormat:@"%@", successResponse[@"code"]] isEqualToString:@"200"]) {
+                
+                NSString *token = successResponse[@"data"][@"qiniuToken"];
+                
+                //获取当前时间
+                NSDate *now                     = [NSDate date];
+                NSCalendar *calendar            = [NSCalendar currentCalendar];
+                NSUInteger unitFlags            = NSYearCalendarUnit | NSMonthCalendarUnit | NSDayCalendarUnit | NSHourCalendarUnit | NSMinuteCalendarUnit | NSSecondCalendarUnit;
+                NSDateComponents *dateComponent = [calendar components:unitFlags fromDate:now];
+                NSInteger year                  = [dateComponent year];
+                NSInteger month                 = [dateComponent month];
+                NSInteger day                   = [dateComponent day];
+                NSInteger hour                  = [dateComponent hour];
+                NSInteger minute                = [dateComponent minute];
+                NSInteger second                = [dateComponent second];
+                
+                NSString *locationString = [NSString stringWithFormat:@"iosLvYue_CircleCover_%@_%ld%ld%ld%ld%ld%ld", [LYUserService sharedInstance].userID, (long) year, (long) month, (long) day, (long) hour, (long) minute, (long) second];
+                
+                //压缩
+                UIImage *editImage = info[UIImagePickerControllerEditedImage];
+                NSData *savedData  = UIImageJPEGRepresentation(editImage, 0.3);
+                
+                //七牛上传图片
+                QNUploadManager *upManager = [[QNUploadManager alloc] init];
+                [upManager putData:savedData key:locationString token:token
+                          complete:^(QNResponseInfo *info, NSString *key, NSDictionary *resp) {
+                              MLOG(@"七牛返回内容 : info = \n%@ \n resp = \n%@", info, resp);
+                              if (resp == nil) {
+                                  [MBProgressHUD hideHUD];
+                                  [MBProgressHUD showError:@"上传失败"];
+                              } else { //如果七牛上传成功
+                                  //同步服务器
+                                  [LYHttpPoster postHttpRequestByPost:[NSString stringWithFormat:@"%@/mobile/user/updateNotice", REQUESTHEADER] andParameter:@{ @"token": token,
+                                                                                                                                                                @"user_id": [LYUserService sharedInstance].userID,
+                                                                                                                                                                @"circle_cover": locationString }
+                                                              success:^(id successResponse) {
+                                                                  if ([[NSString stringWithFormat:@"%@", successResponse[@"code"]] isEqualToString:@"200"]) {
+                                                                      [MBProgressHUD hideHUD];
+                                                                      //弹出
+                                                                      [self dismissViewControllerAnimated:YES completion:^{
+                                                                          //重新请求/刷新
+                                                                          [self getDataFromWeb];
+                                                                      }];
+                                                                  } else {
+                                                                      [MBProgressHUD hideHUD];
+                                                                      [MBProgressHUD showError:[NSString stringWithFormat:@"%@", successResponse[@"msg"]]];
+                                                                  }
+                                                              }
+                                                           andFailure:^(id failureResponse) {
+                                                               [MBProgressHUD hideHUD];
+                                                               [MBProgressHUD showError:@"3服务器繁忙,请重试"];
+                                                           }];
+                              }
+                          }
+                            option:nil];
+                
+            } else {
+                [MBProgressHUD hideHUD];
+                [MBProgressHUD showError:[NSString stringWithFormat:@"%@", successResponse[@"msg"]]];
+            }
+        }
+                                 andFailure:^(id failureResponse) {
+                                     [MBProgressHUD hideHUD];
+                                     [MBProgressHUD showError:@"4服务器繁忙,请重试"];
+                                 }];
+    }
+    
+    
 }
 
 
 - (void)imagePickerControllerDidCancel:(UIImagePickerController *)picker {
     [self dismissViewControllerAnimated:YES completion:nil];
+}
+
+//视频保存后的回调
+- (void)video:(NSString *)videoPath didFinishSavingWithError:(NSError *)error contextInfo:(void *)contextInfo{
+    if (error) {
+        NSLog(@"保存视频过程中发生错误，错误信息:%@", error.localizedDescription);
+    } else {
+        MLOG(@"视频保存成功.");
+        //跳转到发布界面
+        PublishVideoViewController *dest = [[PublishVideoViewController alloc] init];
+        dest.videoPath                   = videoPath;
+        [self.navigationController pushViewController:dest animated:YES];
+        //恢复初始化
+        isupdateVideo = NO;
+    }
 }
 
 

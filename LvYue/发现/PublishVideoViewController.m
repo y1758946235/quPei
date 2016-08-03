@@ -558,26 +558,57 @@
                               [MBProgressHUD hideHUDForView:self.view animated:YES];
                               [MBProgressHUD showError:@"视频发布失败,请检查网络"];
                           } else {
-                              //服务器同步备份
-                              [LYHttpPoster postHttpRequestByPost:[NSString stringWithFormat:@"%@/mobile/video/add", REQUESTHEADER] andParameter:@{ @"token": token,
-                                                                                                                                                    @"user_id": [LYUserService sharedInstance].userID,
-                                                                                                                                                    @"type": self.categoryID,
-                                                                                                                                                    @"video": locationString,
-                                                                                                                                                    @"describe": self.videoDescView.text }
-                                  success:^(id successResponse) {
-                                      if ([[NSString stringWithFormat:@"%@", successResponse[@"code"]] isEqualToString:@"200"]) {
-                                          [MBProgressHUD hideHUDForView:self.view animated:YES];
-                                          [MBProgressHUD showSuccess:@"上传成功"];
-                                          [self.navigationController popViewControllerAnimated:YES];
-                                      } else {
-                                          [MBProgressHUD hideHUDForView:self.view animated:YES];
-                                          [MBProgressHUD showError:[NSString stringWithFormat:@"%@", successResponse[@"msg"]]];
-                                      }
-                                  }
-                                  andFailure:^(id failureResponse) {
-                                      [MBProgressHUD hideHUDForView:self.view animated:YES];
-                                      [MBProgressHUD showError:@"请检查网络"];
-                                  }];
+                              //服务器视频同步备份
+//                              [LYHttpPoster postHttpRequestByPost:[NSString stringWithFormat:@"%@/mobile/video/add", REQUESTHEADER] andParameter:@{ @"token": token,
+//                                                                                                                                                    @ sharedInstance].userID,
+//                                                                                                                                                    @"type": self.categoryID,
+//                                                                                                                                                    @"video": locationString,
+//                                                                                                                                                    @"describe": self.videoDescView.text }
+//                                  success:^(id successResponse) {
+//                                      if ([[NSString stringWithFormat:@"%@", successResponse[@"code"]] isEqualToString:@"200"]) {
+//                                          [MBProgressHUD hideHUDForView:self.view animated:YES];
+//                                          [MBProgressHUD showSuccess:@"上传成功"];
+//                                          [self.navigationController popViewControllerAnimated:YES];
+//                                      } else {
+//                                          [MBProgressHUD hideHUDForView:self.view animated:YES];
+//                                          [MBProgressHUD showError:[NSString stringWithFormat:@"%@", successResponse[@"msg"]]];
+//                                      }
+//                                  }
+//                                  andFailure:^(id failureResponse) {
+//                                      [MBProgressHUD hideHUDForView:self.view animated:YES];
+//                                      [MBProgressHUD showError:@"请检查网络"];
+//                                  }];
+                              
+                              [LYHttpPoster postHttpRequestByPost:[NSString stringWithFormat:@"%@/mobile/notice/publish", REQUESTHEADER] andParameter:@{
+                                                @"publisher": [NSString stringWithFormat:@"%@", [LYUserService sharedInstance].userID],
+                                                @"noticeDetail": self.videoDescView.text,
+                                                @"photos": @"",
+                                                @"noticeType":@"0",
+                                                @"hotId":@"0",
+                                                @"nType":@"2",
+                                                @"videoUrl":locationString
+                                                }
+                                                          success:^(id successResponse) {
+                                                              MLOG(@"发送朋友圈:%@", successResponse);
+                                                              
+                                                              if ([[NSString stringWithFormat:@"%@", successResponse[@"code"]] isEqualToString:@"200"]) {
+                                                                  [MBProgressHUD hideHUDForView:self.view];
+                                                                  [MBProgressHUD hideHUD];
+                                                                  [MBProgressHUD showSuccess:@"提交成功"];
+                                                                  
+                                                                  //Block返回，让其reloadData
+                                                                  //                    self.isPublishBlock(@"");
+                                                                  [self.navigationController popViewControllerAnimated:YES];
+                                                                  [[NSNotificationCenter defaultCenter] postNotificationName:@"ReloadFriendCircleVC" object:nil];
+                                                              } else {
+                                                                  [MBProgressHUD hideHUD];
+                                                                  [MBProgressHUD showError:[NSString stringWithFormat:@"%@", successResponse[@"msg"]]];
+                                                              }
+                                                          }
+                                                       andFailure:^(id failureResponse) {
+                                                           [MBProgressHUD hideHUD];
+                                                           [MBProgressHUD showError:@"服务器繁忙,请重试"];
+                                                       }];
                           }
                       }
                         option:nil];

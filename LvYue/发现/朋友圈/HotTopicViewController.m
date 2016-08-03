@@ -25,8 +25,12 @@
 #define kSingleContentHeight 17.895f
 @interface HotTopicViewController ()<UITableViewDelegate, UITableViewDataSource, UITextViewDelegate, UIActionSheetDelegate>{
     UILabel* shortLabel;    //内容Label
+    UIImageView* backImageView;    //话题背景图
+    UILabel* joinLabel;            //参与人数
+    
     CGFloat contentHeight;  //内容真实高度
     UIButton* joinBtn;      //话题参与按钮
+    UIButton* lookAllBtn;   //查看按钮
     UIView* headerView;     //头部视图
     
     UIView *_addView;
@@ -42,6 +46,8 @@
     NSInteger _currentPage;        //当前分页
     
     NSMutableArray* _topicArray;   //话题内容
+    
+    
     
     /*****************评论中回复他人用到的过渡字段*******************/
     NSString *_reply;           //回复的对象id
@@ -100,6 +106,7 @@
     _commentList   = [NSMutableArray array];
     _praiseList    = [NSMutableArray array];
     _noticeList    = [NSMutableArray array];
+    _topicArray    = [NSMutableArray array];
     _coverImageUrl = nil;
     
     //右边按钮
@@ -112,114 +119,117 @@
 
 //设置tableview的头部view
 - (void)createHeaderView {
-    headerView = [[UIView alloc] init];
-    //背景图
-    UIImageView* backImageView = [[UIImageView alloc] init];
-    backImageView.x = 0;
-    backImageView.y = 0;
-    backImageView.width = kMainScreenWidth;
-    backImageView.height = 160;
-    TopicTitle* titleModel = _topicArray[0];
-    NSString* imgStr = [NSString stringWithFormat:@"%@%@",IMAGEHEADER,titleModel.back_img];
-    NSURL* url = [NSURL URLWithString:imgStr];
-    [backImageView sd_setImageWithURL:url placeholderImage:[UIImage imageNamed:@"朋友圈背景"] options:SDWebImageRetryFailed];
-    
-    //backImageView.image = [UIImage imageNamed:@"朋友圈背景"];
-    //backImageView.userInteractionEnabled = YES;
-    [headerView addSubview:backImageView];
-    
-    //背景上的文字
-    UILabel* joinLabel = [[UILabel alloc] init];
-    NSString* partNumsStr = [NSString stringWithFormat:@"%@人参与",titleModel.partNums];
-    joinLabel.text = partNumsStr;
-    joinLabel.textColor = [UIColor whiteColor];
-    joinLabel.width = 80;
-    joinLabel.height = 20;
-    joinLabel.font = kFont14;
-    joinLabel.centerX = kMainScreenWidth*0.5;
-    joinLabel.y = backImageView.height - joinLabel.height - 10;
-//    joinLabel.backgroundColor = [UIColor redColor];
-    [backImageView addSubview:joinLabel];
-    
-    UILabel* titleLabel = [[UILabel alloc] init];
-    NSString* titleStr = [NSString stringWithFormat:@"#%@#",titleModel.title];
-    //NSString* titleStr = @"#那些美好的风景#";
-    titleLabel.text = titleStr;
-    titleLabel.font = kFont20;
-    titleLabel.textColor = [UIColor whiteColor];
-    NSDictionary* attrs = @{
-                            NSFontAttributeName:kFont20
-                            };
-    CGSize titleSize = [titleStr boundingRectWithSize:CGSizeMake(320, 50) options:NSStringDrawingTruncatesLastVisibleLine attributes:attrs context:nil].size;
-    titleLabel.width = titleSize.width;
-    titleLabel.height = 35;
-    titleLabel.centerX = kMainScreenWidth*0.5;
-    titleLabel.y = joinLabel.y - titleLabel.height;
-//    titleLabel.backgroundColor = [UIColor redColor];
-    [backImageView addSubview:titleLabel];
-    
-    //简略内容Label
-    shortLabel = [[UILabel alloc] init];
-    shortLabel.numberOfLines = 0;
-    shortLabel.font = kFont14;
-    shortLabel.x = 10;
-    shortLabel.y = backImageView.height + shortLabel.x;
-    shortLabel.width = kMainScreenWidth - 2*shortLabel.x;
-    shortLabel.height = 80;
-    //计算高度
-//    NSString* contentStr = @"此刻她是白锦曦，是苏眠，是《美人为馅》里的绝色警花…时间倒退，她是毓秀，是小寒，是采月，是袭香，是唤云，是八姐，是成君，是灵珊，是梅超风，是小风筝，是佟腊月，是无数无数传奇的女子…记不清多少的前世今生，她总是时而娇俏，时而狠辣，时而温柔，时而霸气，时而为情所伤，时而绝不回头…她是独立女性的代表，是绝对的演技派…时间再倒退，上戏的操场上，长发及腰的白族姑娘，十五岁的大学生，翩翩舞姿迷倒了大部分男生，但她总是安静地沉浸在戏剧的世界中，不受尘世骚扰…她信佛、念经、放生、执着…她度己亦度人，在方寸的屏幕间把热泪洒尽…她是杨蓉，她是天地的钟灵之秀…明天是她的生日，是一次新的起航…人间最美不过是把自身所学淋漓尽致地挥洒…我们渴望未来的日子里有更多的传奇女子涌现，比如刘楚玉，这是我接这个项目的唯一理由… 因为有杨蓉，戏的世界如此美好！";
-    NSString* contentStr = [NSString stringWithFormat:@"%@", titleModel.intro];
-    NSDictionary* shortLabelAttrs = @{
-                            NSFontAttributeName:kFont14
-                            };
-    CGSize shortLabelSize = [contentStr boundingRectWithSize:CGSizeMake(shortLabel.width, 1000) options:NSStringDrawingUsesLineFragmentOrigin | NSStringDrawingUsesFontLeading attributes:shortLabelAttrs context:nil].size;
-    contentHeight = shortLabelSize.height;
-    if (shortLabelSize.height > 80) { //4行
+
+        headerView = [[UIView alloc] init];
+        //背景图
+        backImageView = [[UIImageView alloc] init];
+        backImageView.x = 0;
+        backImageView.y = 0;
+        backImageView.width = kMainScreenWidth;
+        backImageView.height = 160;
+        TopicTitle* titleModel = _topicArray[0];
+        NSString* imgStr = [NSString stringWithFormat:@"%@%@",IMAGEHEADER,titleModel.back_img];
+        NSURL* url = [NSURL URLWithString:imgStr];
+        [backImageView sd_setImageWithURL:url placeholderImage:[UIImage imageNamed:@"朋友圈背景"] options:SDWebImageRetryFailed];
+        
+        //backImageView.image = [UIImage imageNamed:@"朋友圈背景"];
+        //backImageView.userInteractionEnabled = YES;
+        [headerView addSubview:backImageView];
+        
+        //背景上的文字
+        joinLabel = [[UILabel alloc] init];
+        NSString* partNumsStr = [NSString stringWithFormat:@"%@人参与",titleModel.partNums];
+        joinLabel.text = partNumsStr;
+        joinLabel.textColor = [UIColor whiteColor];
+        joinLabel.width = 80;
+        joinLabel.height = 20;
+        joinLabel.font = kFont14;
+        joinLabel.centerX = kMainScreenWidth*0.5;
+        joinLabel.y = backImageView.height - joinLabel.height - 10;
+        //    joinLabel.backgroundColor = [UIColor redColor];
+        [backImageView addSubview:joinLabel];
+        
+        UILabel* titleLabel = [[UILabel alloc] init];
+        NSString* titleStr = [NSString stringWithFormat:@"#%@#",titleModel.title];
+        //NSString* titleStr = @"#那些美好的风景#";
+        titleLabel.text = titleStr;
+        titleLabel.font = kFont20;
+        titleLabel.textColor = [UIColor whiteColor];
+        NSDictionary* attrs = @{
+                                NSFontAttributeName:kFont20
+                                };
+        CGSize titleSize = [titleStr boundingRectWithSize:CGSizeMake(320, 50) options:NSStringDrawingTruncatesLastVisibleLine attributes:attrs context:nil].size;
+        titleLabel.width = titleSize.width;
+        titleLabel.height = 35;
+        titleLabel.centerX = kMainScreenWidth*0.5;
+        titleLabel.y = joinLabel.y - titleLabel.height;
+        //    titleLabel.backgroundColor = [UIColor redColor];
+        [backImageView addSubview:titleLabel];
+        
+        //简略内容Label
+        shortLabel = [[UILabel alloc] init];
+        shortLabel.numberOfLines = 0;
+        shortLabel.font = kFont14;
+        shortLabel.x = 10;
+        shortLabel.y = backImageView.height + shortLabel.x;
+        shortLabel.width = kMainScreenWidth - 2*shortLabel.x;
         shortLabel.height = 80;
-    }
-    else {
-        shortLabel.height = shortLabelSize.height;
+        //计算高度
+        //    NSString* contentStr = @"此刻她是白锦曦，是苏眠，是《美人为馅》里的绝色警花…时间倒退，她是毓秀，是小寒，是采月，是袭香，是唤云，是八姐，是成君，是灵珊，是梅超风，是小风筝，是佟腊月，是无数无数传奇的女子…记不清多少的前世今生，她总是时而娇俏，时而狠辣，时而温柔，时而霸气，时而为情所伤，时而绝不回头…她是独立女性的代表，是绝对的演技派…时间再倒退，上戏的操场上，长发及腰的白族姑娘，十五岁的大学生，翩翩舞姿迷倒了大部分男生，但她总是安静地沉浸在戏剧的世界中，不受尘世骚扰…她信佛、念经、放生、执着…她度己亦度人，在方寸的屏幕间把热泪洒尽…她是杨蓉，她是天地的钟灵之秀…明天是她的生日，是一次新的起航…人间最美不过是把自身所学淋漓尽致地挥洒…我们渴望未来的日子里有更多的传奇女子涌现，比如刘楚玉，这是我接这个项目的唯一理由… 因为有杨蓉，戏的世界如此美好！";
+        NSString* contentStr = [NSString stringWithFormat:@"%@", titleModel.intro];
+        NSDictionary* shortLabelAttrs = @{
+                                          NSFontAttributeName:kFont14
+                                          };
+        CGSize shortLabelSize = [contentStr boundingRectWithSize:CGSizeMake(shortLabel.width, 1000) options:NSStringDrawingUsesLineFragmentOrigin | NSStringDrawingUsesFontLeading attributes:shortLabelAttrs context:nil].size;
+        contentHeight = shortLabelSize.height;
+        if (shortLabelSize.height > 80) { //4行
+            shortLabel.height = 80;
+        }
+        else {
+            shortLabel.height = shortLabelSize.height;
+            
+        }
+        shortLabel.text = contentStr;
+        [headerView addSubview:shortLabel];
         
-    }
-    shortLabel.text = contentStr;
-    [headerView addSubview:shortLabel];
-    
-    //设置查看按钮
-    UIButton* lookAllBtn = [UIButton buttonWithType:UIButtonTypeCustom];
-    [lookAllBtn setTitle:@"查看全部" forState:UIControlStateNormal];
-    [lookAllBtn setTitleColor:[UIColor blueColor] forState:UIControlStateNormal];
-    lookAllBtn.titleLabel.font = kFont16;
-    if (shortLabel.height < 65) { //内容少
-        [lookAllBtn setFrame:CGRectZero];
-    }
-    else {
-        [lookAllBtn setFrame:CGRectMake(shortLabel.x, CGRectGetMaxY(shortLabel.frame)+shortLabel.x, 80, 20)];
+        //设置查看按钮
+        lookAllBtn = [UIButton buttonWithType:UIButtonTypeCustom];
+        [lookAllBtn setTitle:@"查看全部" forState:UIControlStateNormal];
+        [lookAllBtn setTitleColor:[UIColor blueColor] forState:UIControlStateNormal];
+        lookAllBtn.titleLabel.font = kFont16;
+        if (shortLabel.height < 65) { //内容少
+            [lookAllBtn setFrame:CGRectZero];
+        }
+        else {
+            [lookAllBtn setFrame:CGRectMake(shortLabel.x, CGRectGetMaxY(shortLabel.frame)+3, 80, 20)];
+            
+        }
+        [lookAllBtn addTarget:self action:@selector(lookAllClick:) forControlEvents:UIControlEventTouchUpInside];
+        [headerView addSubview:lookAllBtn];
         
-    }
-    [lookAllBtn addTarget:self action:@selector(lookAllClick:) forControlEvents:UIControlEventTouchUpInside];
-    [headerView addSubview:lookAllBtn];
+        //参与按钮
+        joinBtn = [UIButton buttonWithType:UIButtonTypeCustom];
+        [joinBtn setBackgroundColor:THEME_COLOR];
+        [joinBtn setTitle:@"参与话题" forState:UIControlStateNormal];
+        [joinBtn setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
+        joinBtn.titleLabel.font = kFont14;
+        joinBtn.x = shortLabel.x;
+        joinBtn.y = 2 * joinBtn.x + CGRectGetMaxY(shortLabel.frame)+lookAllBtn.height;
+        joinBtn.width = kMainScreenWidth - 2* joinBtn.x;
+        joinBtn.height = 45;
+        joinBtn.layer.cornerRadius = 10.0f;
+        joinBtn.layer.masksToBounds = YES;
+        [headerView addSubview:joinBtn];
+        
+        //设置headerView的frame
+        headerView.x = 0;
+        headerView.y = 0;
+        headerView.width = kMainScreenWidth;
+        headerView.height = CGRectGetMaxY(joinBtn.frame) + 15;
+        headerView.backgroundColor = [UIColor whiteColor];
+        //_tableView.tableHeaderView = headerView;
     
-    //参与按钮
-    joinBtn = [UIButton buttonWithType:UIButtonTypeCustom];
-    [joinBtn setBackgroundColor:THEME_COLOR];
-    [joinBtn setTitle:@"参与话题" forState:UIControlStateNormal];
-    [joinBtn setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
-    joinBtn.titleLabel.font = kFont14;
-    joinBtn.x = shortLabel.x;
-    joinBtn.y = 2 * joinBtn.x + CGRectGetMaxY(shortLabel.frame)+lookAllBtn.height;
-    joinBtn.width = kMainScreenWidth - 2* joinBtn.x;
-    joinBtn.height = 45;
-    joinBtn.layer.cornerRadius = 10.0f;
-    joinBtn.layer.masksToBounds = YES;
-    [headerView addSubview:joinBtn];
-    
-    //设置headerView的frame
-    headerView.x = 0;
-    headerView.y = 0;
-    headerView.width = kMainScreenWidth;
-    headerView.height = CGRectGetMaxY(joinBtn.frame) + 15;
-    headerView.backgroundColor = [UIColor whiteColor];
-    //_tableView.tableHeaderView = headerView;
+   
 }
 
 
@@ -410,8 +420,24 @@
                 publishLabel.text          = @"发布动态";
                 [publishBtn addSubview:publishLabel];
 
+               //发布视频
+               UIButton *publishVideoBtn = [[UIButton alloc] initWithFrame:CGRectMake(0, 44, _addView.frame.size.width, 44)];
+               [publishVideoBtn addTarget:self action:@selector(publishVideoClick:) forControlEvents:UIControlEventTouchUpInside];
+               [_addView addSubview:publishVideoBtn];
+               
+               UIImageView *publishVideoView = [[UIImageView alloc] initWithFrame:CGRectMake((44 - 20) / 2, (44 - 20) / 2, 20, 20)];
+               publishVideoView.image        = [UIImage imageNamed:@"个人动态"];
+               publishVideoView.contentMode  = UIViewContentModeScaleAspectFit;
+               [publishVideoBtn addSubview:publishVideoView];
+               
+               UILabel *publishVideoLabel      = [[UILabel alloc] initWithFrame:CGRectMake(CGRectGetMaxX(publishVideoView.frame), 0, _addView.frame.size.width - CGRectGetMaxX(publishVideoView.frame), 44)];
+               publishVideoLabel.textAlignment = NSTextAlignmentCenter;
+               publishVideoLabel.font          = [UIFont systemFontOfSize:17];
+               publishVideoLabel.text          = @"发布动态";
+               [publishVideoBtn addSubview:publishVideoLabel];
+               
                 //消息
-                UIButton *msgBtn = [[UIButton alloc] initWithFrame:CGRectMake(0, 44, _addView.frame.size.width, 44)];
+                UIButton *msgBtn = [[UIButton alloc] initWithFrame:CGRectMake(0, 88, _addView.frame.size.width, 44)];
                 [msgBtn addTarget:self action:@selector(pushMessageList) forControlEvents:UIControlEventTouchUpInside];
                 [_addView addSubview:msgBtn];
 
@@ -955,6 +981,7 @@
     [_commentList removeAllObjects];
     [_praiseList removeAllObjects];
     [_noticeList removeAllObjects];
+    
     AFHTTPRequestOperationManager* manager = [AFHTTPRequestOperationManager manager];
     NSString *urlStr = [NSString stringWithFormat:@"%@/mobile/notice/iosNoticeList", REQUESTHEADER];
     
@@ -984,6 +1011,7 @@
         [MBProgressHUD hideAllHUDsForView:self.view animated:YES];
         if ([[NSString stringWithFormat:@"%@", responseObject[@"code"]] isEqualToString:@"200"]) {
             _dataDict = [NSMutableDictionary dictionaryWithDictionary:responseObject[@"data"]];
+           
             //保存模型数组
             for (NSDictionary *dict in _dataDict[@"noticeList"]) {
                 
@@ -1026,21 +1054,34 @@
 
 //获取详情
 - (void)getTopicDetail {
-    NSNumber* topicInt = [NSNumber numberWithInteger:self.topic_id];
+    //NSNumber* topicInt = [NSNumber numberWithInteger:self.topic_id]
+    
     NSString* urlStr = [NSString stringWithFormat:@"%@/mobile/notice/getHotTopicDetail",REQUESTHEADER];
     NSDictionary* params = @{
-                             @"topic_id":topicInt
+                             @"topic_id":self.topic_id
                              };
     
     [MBProgressHUD showMessage:nil toView:self.view];
-    [LYHttpPoster postHttpRequestByGet:urlStr andParameter:params success:^(id successResponse) {
+    [LYHttpPoster postHttpRequestByPost:urlStr andParameter:params success:^(id successResponse) {
     [MBProgressHUD hideAllHUDsForView:self.view animated:YES];
+        MLOG(@"话题详情%@",successResponse);
         if ([[NSString stringWithFormat:@"%@",successResponse[@"code"]] isEqualToString:@"200"]) {
-            NSMutableArray* detailM = successResponse[@"topic"];
-            for (NSDictionary* dict in detailM) {
-                TopicTitle* model = [TopicTitle topicTitleWithDict:dict];
-                [_topicArray addObject:model];
-            }
+            NSMutableArray* detailM = successResponse[@"data"][@"topic"];
+            
+//            for (NSDictionary* dict in detailM) {
+//                TopicTitle* model = [TopicTitle topicTitleWithDict:dict];
+//                [_topicArray addObject:model];
+//            }
+            TopicTitle* model = [[TopicTitle alloc] init];
+            model.ID = [NSString stringWithFormat:@"%@", successResponse[@"data"][@"topic"][@"id"]];
+            model.title =[NSString stringWithFormat:@"%@", successResponse[@"data"][@"topic"][@"title"]];
+            model.partNums =[NSString stringWithFormat:@"%@", successResponse[@"data"][@"topic"][@"partNums"]];
+            model.back_img =[NSString stringWithFormat:@"%@", successResponse[@"data"][@"topic"][@"back_img"]];
+            model.intro =[NSString stringWithFormat:@"%@", successResponse[@"data"][@"topic"][@"intro"]];
+            [_topicArray addObject:model];
+            
+            [self createHeaderView];
+            _tableView.tableHeaderView = headerView;
             [_tableView.mj_header endRefreshing];
             [_tableView reloadData];
         }
