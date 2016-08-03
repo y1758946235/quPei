@@ -58,6 +58,7 @@
     [self.iconImageView sd_setImageWithURL:data.giftIconURL placeholderImage:[UIImage imageNamed:@"logo108"]];
     self.nameLabel.text    = data.giftName;
     self.coinNumLabel.text = [NSString stringWithFormat:@"%ld", (long) data.giftPrice];
+    [self.coinNumLabel sizeToFit];
 }
 
 - (void)selected {

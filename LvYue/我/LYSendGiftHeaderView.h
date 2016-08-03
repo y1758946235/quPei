@@ -8,7 +8,11 @@
 
 #import <UIKit/UIKit.h>
 
+typedef void (^LYSendGiftFetchCoinBlock)(id sender);
+
 @interface LYSendGiftHeaderView : UICollectionReusableView
+
+@property (nonatomic, copy) LYSendGiftFetchCoinBlock fetchCoinBlock;
 
 - (void)configData:(NSString *)userName avatarImageURL:(NSString *)avatarImageURL accountAmount:(NSString *)accountAmount;
 

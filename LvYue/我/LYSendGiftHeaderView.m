@@ -44,6 +44,9 @@
 }
 
 - (IBAction)clickGetCoinButton:(id)sender {
+    if (self.fetchCoinBlock) {
+        self.fetchCoinBlock(sender);
+    }
 }
 
 @end

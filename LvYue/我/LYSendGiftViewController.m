@@ -7,6 +7,7 @@
 //
 
 #import "KFAlertView.h"
+#import "LYGetCoinViewController.h"
 #import "LYHttpPoster.h"
 #import "LYSendGiftCollectionViewCell.h"
 #import "LYSendGiftHeaderView.h"
@@ -63,7 +64,13 @@ static NSString *const LYSendGiftCollectionViewCellIdentity = @"LYSendGiftCollec
 }
 
 - (UICollectionReusableView *)collectionView:(UICollectionView *)collectionView viewForSupplementaryElementOfKind:(NSString *)kind atIndexPath:(NSIndexPath *)indexPath {
-    self.headerView = [collectionView dequeueReusableSupplementaryViewOfKind:UICollectionElementKindSectionHeader withReuseIdentifier:LYSendGiftHeaderViewIdentity forIndexPath:indexPath];
+    self.headerView                = [collectionView dequeueReusableSupplementaryViewOfKind:UICollectionElementKindSectionHeader withReuseIdentifier:LYSendGiftHeaderViewIdentity forIndexPath:indexPath];
+    __weak typeof(self) weakSelf   = self;
+    self.headerView.fetchCoinBlock = ^(id sender) {
+        LYGetCoinViewController *vc = [LYGetCoinViewController new];
+        vc.accountAmount            = [weakSelf.accountAmount integerValue];
+        [weakSelf.navigationController pushViewController:vc animated:YES];
+    };
     [self.headerView configData:self.userName avatarImageURL:self.avatarImageURL accountAmount:self.accountAmount];
     return self.headerView;
 }
