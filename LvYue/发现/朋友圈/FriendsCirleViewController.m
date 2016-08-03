@@ -1373,12 +1373,13 @@
          */
         FriendsCircleMessage *message = _messageArray[indexPath.row];
         cell.separatorLine.frame      = CGRectMake(0, [message returnCellHeight] - 1, SCREEN_WIDTH, 1);
-
+        
         //保持最新的评论数据 和  点赞数据
         [message setCommentList:_commentList[indexPath.row]];
         [message setPraiseList:_praiseList[indexPath.row]];
-        [cell initWithModel:message];
-
+        NSString* temp = nil;
+        [cell initWithModel:message topicStr:temp];
+        
         //记录当前cell的数据源索引
         cell.tag = indexPath.row;
 

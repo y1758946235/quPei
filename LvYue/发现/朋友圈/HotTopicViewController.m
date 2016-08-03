@@ -31,6 +31,8 @@
     UIImageView* backImageView;    //话题背景图
     UILabel* joinLabel;            //参与人数
     CGFloat margin;                //下移距离
+    NSString* topicStr;            //热门话题
+    
     
     CGFloat contentHeight;  //内容真实高度
     UIButton* joinBtn;      //话题参与按钮
@@ -192,6 +194,7 @@
         
         UILabel* titleLabel = [[UILabel alloc] init];
         NSString* titleStr = [NSString stringWithFormat:@"#%@#",titleModel.title];
+        topicStr  = titleStr;
         //NSString* titleStr = @"#那些美好的风景#";
         titleLabel.text = titleStr;
         titleLabel.font = kFont20;
@@ -321,7 +324,8 @@
             //保持最新的评论数据 和  点赞数据
             [message setCommentList:_commentList[indexPath.row]];
             [message setPraiseList:_praiseList[indexPath.row]];
-            [cell initWithModel:message];
+            NSString* tempStr = topicStr;
+            [cell initWithModel:message topicStr:tempStr];
             
             //记录当前cell的数据源索引
             cell.tag = indexPath.row;
@@ -387,7 +391,7 @@
             //保持最新的评论数据 和  点赞数据
             [message setCommentList:_commentList[indexPath.row]];
             [message setPraiseList:_praiseList[indexPath.row]];
-            [cell initWithModel:message];
+            [cell initWithModel:message topicStr:topicStr];
             
             //记录当前cell的数据源索引
             cell.tag = indexPath.row;
@@ -1431,7 +1435,8 @@
     //获取网络
     //加载数据
     [self postRequest];
-    //[self getHotTopic];
+    [self getHotTopic];
+
 }
 
 //上拉

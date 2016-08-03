@@ -127,7 +127,12 @@
 
 
 //设置图片 视频
-- (void)setImageArrayAndFit:(FriendsCircleMessage *)model{
+/**
+ *  @author KF, 16-08-03 21:08:59
+ *  @param topicStr 热门话题标题
+ *  @param contentStr 热门话题标题+说说内容
+ */
+- (void)setImageArrayAndFit:(FriendsCircleMessage *)model topicStr:(NSString *)topicStr contentStr:contentStr{
     NSString *imageStr = model.imageStr;
     
     //先清空之前的UIImageView
@@ -153,6 +158,13 @@
     _contentLabel.frame = CGRectMake(CGRectGetMaxX(_headImg.frame)+5, CGRectGetMaxY(_nameLabel.frame) + 5,SCREEN_WIDTH - CGRectGetMaxX(_headImg.frame) - 5, requeiredSize1.height);
     
     CGFloat currentHeight = CGRectGetMaxY(_contentLabel.frame);
+    //设置富文本
+    NSMutableAttributedString* attrString = [[NSMutableAttributedString alloc] initWithString:contentStr];
+    NSDictionary* params = @{
+                             NSForegroundColorAttributeName:THEME_COLOR
+                             };
+    [attrString addAttributes:params range:NSMakeRange(0, topicStr.length)];
+    _contentLabel.attributedText = attrString;
 
     if ([model.nType isEqualToString:@"1"]) {    //图文
         //判断 保证imageArray不为null 或者 @“”
@@ -374,11 +386,15 @@
     [photoBowserViewController showImageWithIndex:index andCount:_imageArray.count];
 }
 
-- (void)initWithModel:(FriendsCircleMessage *)model{
+- (void)initWithModel:(FriendsCircleMessage *)model topicStr:(NSString *)topicStr{
 
     [self.headImg sd_setImageWithURL:[NSURL URLWithString:model.headImgStr]];
     self.nameLabel.text = model.name;
-    self.contentLabel.text = model.content;
+    if (!topicStr) {
+        topicStr = @"";
+    }
+    NSString* tempStr = [NSString stringWithFormat:@"%@",topicStr];
+    self.contentLabel.text = [NSString stringWithFormat:@"%@%@",tempStr,model.content];
     self.timeLabel.text = [model getTime];
     self.commentNum.text = [NSString stringWithFormat:@"%ld",(long)[model.commentArray count]];
     self.praiseNum.text = model.praiseNum;
@@ -402,7 +418,7 @@
     
     
     //设置图片 视频
-    [self setImageArrayAndFit:model];
+    [self setImageArrayAndFit:model topicStr:tempStr contentStr:self.contentLabel.text];
 }
 
 //确定单个评论的cell

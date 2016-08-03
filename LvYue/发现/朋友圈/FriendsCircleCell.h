@@ -39,6 +39,6 @@
 
 @property (nonatomic,strong) UIView *separatorLine;//分割线
 
-- (void)initWithModel:(FriendsCircleMessage *)model;
+- (void)initWithModel:(FriendsCircleMessage *)model topicStr:(NSString *)topicStr;
 
 @end
