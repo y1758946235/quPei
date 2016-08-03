@@ -123,10 +123,15 @@
             }
 
             //3.向后台请求
-            [LYHttpPoster postHttpRequestByPost:[NSString stringWithFormat:@"%@/mobile/notice/publish", REQUESTHEADER] andParameter:@{ @"publisher": [NSString stringWithFormat:@"%@", [LYUserService sharedInstance].userID],
-                                                                                                                                       @"noticeType": @"0",
-                                                                                                                                       @"noticeDetail": _textView.text,
-                                                                                                                                       @"photos": photoString }
+            [LYHttpPoster postHttpRequestByPost:[NSString stringWithFormat:@"%@/mobile/notice/publish", REQUESTHEADER] andParameter:@{
+                                                @"publisher": [NSString stringWithFormat:@"%@", [LYUserService sharedInstance].userID],
+                                                @"noticeDetail": _textView.text,
+                                                @"photos": photoString,
+                                                @"noticeType":@"0",
+                                                @"hotId":@"0",
+                                                @"nType":@"1",
+                                                @"videoUrl":@""
+                                                }
                 success:^(id successResponse) {
                     MLOG(@"发送朋友圈:%@", successResponse);
                     if ([[NSString stringWithFormat:@"%@", successResponse[@"code"]] isEqualToString:@"200"]) {

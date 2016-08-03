@@ -22,6 +22,12 @@
 @property (nonatomic,copy) NSString *commentUserName; //评论人名字
 @property (nonatomic,copy) NSString *replyUserName; //回复人名字
 
+@property (nonatomic, copy) NSString* isHot;     //热门话题Id
+@property (nonatomic, copy) NSString* videoUrl;  //视频地址
+@property (nonatomic, copy) NSString* nType;     //1图文说说;2.视频
+
+
+
 @property (nonatomic,assign) CGFloat cellHeight;//cell的自适应高度
 
 - (id)initWithDict:(NSDictionary *)dict;

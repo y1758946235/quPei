@@ -13,6 +13,14 @@
 #import "JJPhotoBowserViewController.h"
 #import "LYUserService.h"
 
+#import "FMDB.h"
+#import <AVFoundation/AVFoundation.h>
+@interface FriendsCircleCell(){
+    UIImageView* imgView;  //播放标志
+    UIImageView* previewImageView;  //视频截图
+}
+
+@end
 @implementation FriendsCircleCell
 - (id)initWithStyle:(UITableViewCellStyle)style reuseIdentifier:(NSString *)reuseIdentifier{
     
@@ -51,6 +59,12 @@
         _contentLabel.numberOfLines = 0;
         _contentLabel.textColor = [UIColor blackColor];
         [self addSubview:_contentLabel];
+
+        //视频
+        _videoBtn = [UIButton buttonWithType:UIButtonTypeCustom];
+        //[_videoBtn setFrame:CGRectZero];
+        [self addSubview:_videoBtn];
+        
         //时间
         _timeLabel = [[UILabel alloc]initWithFrame:CGRectMake(CGRectGetMaxX(_headImg.frame)+5, CGRectGetMaxY(_contentLabel.frame)+5,150,20)];
         _timeLabel.font = [UIFont systemFontOfSize:13];
@@ -73,6 +87,7 @@
         _commentNum.font = [UIFont systemFontOfSize:13];
         _commentNum.textAlignment = NSTextAlignmentCenter;
         [self addSubview:_commentNum];
+        
 
         //点赞
         _praiseBtn = [[UIButton alloc]initWithFrame:CGRectMake(CGRectGetMinX(_commentNum.frame)-20, CGRectGetMinY(_timeLabel.frame), 20, 25)];
@@ -113,7 +128,6 @@
 
 //设置图片
 - (void)setImageArrayAndFit:(FriendsCircleMessage *)model{
-
     NSString *imageStr = model.imageStr;
     
     //先清空之前的UIImageView
@@ -140,42 +154,86 @@
     
     CGFloat currentHeight = CGRectGetMaxY(_contentLabel.frame);
 
-    //判断 保证imageArray不为null 或者 @“”
-    if (![imageStr isKindOfClass:[NSNull class]] && imageStr.length) {
-        
-        //分割字符串
-        NSArray *arr = [imageStr componentsSeparatedByString:@";"]; //从字符A中分隔成2个元素的数组
-        NSMutableArray *imageArray = [[NSMutableArray alloc] initWithArray:arr];
-        if ([[imageArray lastObject] isEqualToString:@""]) {
-            [imageArray removeLastObject];
-        }
-        if (imageArray.count) {
-            //照片，当上传了照片 分割字符串会多一个元素
-            for (int i = 0; i < imageArray.count; i++) {
-                
-                CGFloat btnWidth = 75;
-                CGFloat margin = 5;//间距
-                CGFloat btnX = CGRectGetMaxX(_headImg.frame)+ 5 + (btnWidth+margin)*(i%3);
-                CGFloat btnY = CGRectGetMaxY(_contentLabel.frame) + 5 + (btnWidth+margin)*(i/3);
-                UIImageView *imageView = [[UIImageView alloc]initWithFrame:CGRectMake(btnX,btnY, btnWidth, btnWidth)];
-                imageView.userInteractionEnabled = YES;
-                imageView.backgroundColor = [UIColor lightGrayColor];
-                [imageView sd_setImageWithURL:[NSURL URLWithString:[NSString stringWithFormat:@"%@%@",IMAGEHEADER,imageArray[i]]] placeholderImage:[UIImage imageNamed:@"PlaceImage"] options:SDWebImageRetryFailed];
-                //图片urlStr数组
-                [_imageArray addObject:[NSString stringWithFormat:@"%@%@",IMAGEHEADER,imageArray[i]]];
-                imageView.tag = 100 + i;
-                imageView.contentMode = UIViewContentModeScaleAspectFill;
-                imageView.clipsToBounds = YES;
-                
-                //添加手势，单击放大
-                UITapGestureRecognizer *tap = [[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(tapClick:)];
-                [imageView addGestureRecognizer:tap];
-                [self addSubview:imageView];
-                
-                currentHeight = CGRectGetMaxY(imageView.frame);
+    if ([model.nType isEqualToString:@"1"]) {    //图文
+        //判断 保证imageArray不为null 或者 @“”
+        if (![imageStr isKindOfClass:[NSNull class]] && imageStr.length) {
+            
+            //分割字符串
+            NSArray *arr = [imageStr componentsSeparatedByString:@";"]; //从字符A中分隔成2个元素的数组
+            NSMutableArray *imageArray = [[NSMutableArray alloc] initWithArray:arr];
+            if ([[imageArray lastObject] isEqualToString:@""]) {
+                [imageArray removeLastObject];
+            }
+            if (imageArray.count) {
+                //照片，当上传了照片 分割字符串会多一个元素
+                for (int i = 0; i < imageArray.count; i++) {
+                    
+                    CGFloat btnWidth = 75;
+                    CGFloat margin = 5;//间距
+                    CGFloat btnX = CGRectGetMaxX(_headImg.frame)+ 5 + (btnWidth+margin)*(i%3);
+                    CGFloat btnY = CGRectGetMaxY(_contentLabel.frame) + 5 + (btnWidth+margin)*(i/3);
+                    UIImageView *imageView = [[UIImageView alloc]initWithFrame:CGRectMake(btnX,btnY, btnWidth, btnWidth)];
+                    imageView.userInteractionEnabled = YES;
+                    imageView.backgroundColor = [UIColor lightGrayColor];
+                    [imageView sd_setImageWithURL:[NSURL URLWithString:[NSString stringWithFormat:@"%@%@",IMAGEHEADER,imageArray[i]]] placeholderImage:[UIImage imageNamed:@"PlaceImage"] options:SDWebImageRetryFailed];
+                    //图片urlStr数组
+                    [_imageArray addObject:[NSString stringWithFormat:@"%@%@",IMAGEHEADER,imageArray[i]]];
+                    imageView.tag = 100 + i;
+                    imageView.contentMode = UIViewContentModeScaleAspectFill;
+                    imageView.clipsToBounds = YES;
+                    
+                    //添加手势，单击放大
+                    UITapGestureRecognizer *tap = [[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(tapClick:)];
+                    [imageView addGestureRecognizer:tap];
+                    [self addSubview:imageView];
+                    
+                    currentHeight = CGRectGetMaxY(imageView.frame);
+                }
             }
         }
+    
     }
+    else if([model.nType isEqualToString:@"2"]){//视频
+        //增加视频播放按钮
+        //_videoBtn.backgroundColor = [UIColor redColor];
+        _videoBtn.width = 90;
+        _videoBtn.height = _videoBtn.width;
+        _videoBtn.x = CGRectGetMaxX(_headImg.frame)+ 5;
+        _videoBtn.y = CGRectGetMaxY(_contentLabel.frame) + 5;
+
+        if (!previewImageView) {
+            previewImageView = [[UIImageView alloc] init];
+            previewImageView.height = 75;
+            previewImageView.width = previewImageView.height;
+            previewImageView.x = 0;
+            previewImageView.y = previewImageView.x;
+            previewImageView.image = nil;
+            [self loadPreviewImageWithURLString:model.videoUrl];
+            //previewImageView.userInteractionEnabled = YES;
+            //[_videoBtn addSubview:previewImageView];
+        }
+        else {
+            [self loadPreviewImageWithURLString:model.videoUrl];
+        }
+        
+        [_videoBtn setImage:previewImageView.image forState:UIControlStateNormal];
+        
+        
+        if (!imgView) {
+            imgView = [[UIImageView alloc] init];
+            imgView.height = 40;
+            imgView.width = imgView.height;
+            imgView.x = (_videoBtn.width - imgView.height)* 0.5;
+            imgView.y = imgView.x;
+            imgView.image = [UIImage imageNamed:@"播放-1"];
+            imgView.userInteractionEnabled = YES;
+            [_videoBtn addSubview:imgView];
+        }
+        
+        [self addSubview:_videoBtn];
+        currentHeight = CGRectGetMaxY(_videoBtn.frame);
+    }
+    
     
     //自适应timeLabel的宽度
     _timeLabel.frame = CGRectMake(CGRectGetMaxX(_headImg.frame)+5, currentHeight + 5,150,20);
@@ -191,6 +249,92 @@
     _commentTableView.frame = CGRectMake(CGRectGetMinX(_timeLabel.frame), CGRectGetMaxY(_timeLabel.frame)+10, SCREEN_WIDTH-CGRectGetMinX(_timeLabel.frame)-20, [self returnTableViewHeightWithModel:model]);
     [_commentTableView reloadData];
 }
+
+
+/**
+ *  获取第0秒钟的视频截图
+ */
+- (void)loadPreviewImageWithURLString:(NSString *)urlString {
+    //打开数据库
+    [kAppDelegate.dataBaseQueue inDatabase:^(FMDatabase *db) {
+        NSURL* testUrl = [NSURL URLWithString:@"http://7xlcz5.com2.z0.glb.qiniucdn.com/iosLvYueVideoCircle_VideoByLoader50050_201682224738/形象视频.mp4"];
+        NSURL* test2Url = [NSURL URLWithString:@"https://segmentfault.com/q/1010000002576009"];
+        NSURL* test3Url = [NSURL URLWithString:@"http://developer.qiniu.com/code/v7/sdk/php.html"];
+        NSURL *url = [NSURL URLWithString:urlString];
+        NSString *imageDataString = @"";
+        if ([kAppDelegate.dataBase open]) {
+            //条件查询
+            NSString *searchSql = [NSString stringWithFormat:@"SELECT * FROM '%@' WHERE video_url = '%@'", @"VideoPreviewImage", urlString];
+            FMResultSet *result = [kAppDelegate.dataBase executeQuery:searchSql];
+            BOOL isExist = NO;
+            while ([result next]) {
+                isExist = YES;
+                imageDataString = [result stringForColumn:@"imageData"];
+            }
+            if (isExist) {
+                [kAppDelegate.dataBase close];
+                NSData *imageData = [[NSData alloc] initWithBase64EncodedString:imageDataString options:NSDataBase64DecodingIgnoreUnknownCharacters];
+                [previewImageView setImage:[UIImage imageWithData:imageData]];
+            } else {
+                [kAppDelegate.dataBase close];
+                //请求截取缩略图
+                [self thumbnailImageRequest:0.0 withURL:url];
+            }
+        }
+    }];
+}
+
+/**
+ *  截取指定时间的视频缩略图
+ *
+ *  @param timeBySecond 时间点
+ */
+- (void)thumbnailImageRequest:(CGFloat)timeBySecond withURL:(NSURL *)url {
+    //异步并发截取
+    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
+        //根据url创建AVURLAsset
+        AVURLAsset *urlAsset = [AVURLAsset assetWithURL:url];
+        //根据AVURLAsset创建AVAssetImageGenerator
+        AVAssetImageGenerator *imageGenerator = [AVAssetImageGenerator assetImageGeneratorWithAsset:urlAsset];
+        /*截图
+         * requestTime:缩略图创建时间
+         * actualTime:缩略图实际生成的时间
+         */
+        NSError *error = nil;
+        CMTime time = CMTimeMakeWithSeconds(timeBySecond, 10); //CMTime是表示电影时间信息的结构体，第一个参数表示是视频第几秒，第二个参数表示每秒帧数.(如果要活的某一秒的第几帧可以使用CMTimeMake方法)
+        CMTime actualTime;
+        CGImageRef cgImage = [imageGenerator copyCGImageAtTime:time actualTime:&actualTime error:&error];
+        if (error) {
+            NSLog(@"截取视频缩略图时发生错误，错误信息：%@", error.localizedDescription);
+            return;
+        }
+        CMTimeShow(actualTime);
+        UIImage *image = [UIImage imageWithCGImage:cgImage]; //转化为UIImage
+        NSData *imageData = UIImageJPEGRepresentation(image, 0.3);
+        NSString *dataString = [imageData base64EncodedStringWithOptions:NSDataBase64Encoding64CharacterLineLength];
+        NSString *urlString = [url absoluteString];
+        //回到主线程
+        dispatch_async(dispatch_get_main_queue(), ^{
+            [previewImageView setImage:image];
+            //缓存图片
+            [kAppDelegate.dataBaseQueue inDatabase:^(FMDatabase *db) {
+                if ([kAppDelegate.dataBase open]) {
+                    NSString *insertSql = [NSString stringWithFormat:@"INSERT INTO '%@'('%@','%@') VALUES('%@','%@')", @"VideoPreviewImage", @"video_url", @"imageData", urlString, dataString];
+                    BOOL isSuccess = [kAppDelegate.dataBase executeUpdate:insertSql];
+                    if (isSuccess) {
+                        MLOG(@"预览图缓存成功!");
+                    } else {
+                        MLOG(@"预览图缓存失败!");
+                    }
+                    [kAppDelegate.dataBase close];
+                }
+            }];
+            CGImageRelease(cgImage);
+        });
+    });
+}
+
+
 
 - (CGFloat)returnTableViewHeightWithModel:(FriendsCircleMessage *)model {
 
@@ -245,7 +389,18 @@
     }else{
         _deleteBtn.hidden = YES;
     }
-    //设置图片
+    
+//    if ([model.nType isEqualToString:@"1"]) {  //图文
+//        //设置图片
+//        [self setImageArrayAndFit:model];
+//    }
+//    else if([model.nType isEqualToString:@"2"]) { //视频
+//        //设置视频
+//        
+//    }
+    
+    
+    //设置图片 视频
     [self setImageArrayAndFit:model];
 }
 

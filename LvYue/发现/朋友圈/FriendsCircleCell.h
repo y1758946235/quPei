@@ -33,6 +33,8 @@
 @property (nonatomic,strong) NSArray *commentArray;//评论数据源
 
 @property (nonatomic,strong) NSMutableArray *imageArray;//图片数组
+@property (nonatomic,strong) UIButton *videoBtn;    //视频按钮
+
 @property (nonatomic,strong) UIView *separatorLine;//分割线
 
 - (void)initWithModel:(FriendsCircleMessage *)model;

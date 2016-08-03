@@ -34,6 +34,11 @@
         } else {
             _replyUserName = [NSString stringWithFormat:@"%@",dict[@"reply_user"]];
         }
+        
+        //热门话题
+        self.isHot = [NSString stringWithFormat:@"%@", dict[@"isHot"]]; //1是 2不是
+        self.videoUrl = [NSString stringWithFormat:@"%@%@",IMAGEHEADER, dict[@"videoUrl"]];
+        self.nType = [NSString stringWithFormat:@"%@", dict[@"nType"]];
     }
     return self;
 }
@@ -49,6 +54,7 @@
 }
 
 - (CGFloat)returnCellHeight{
+    
     
     //判断   保证imageArray不为null 或者 @“”
     CGFloat imageHeight = 0.0;
@@ -70,6 +76,10 @@
     
     if (imageHeight == 0) {
         imageHeight += 5;
+    }
+    
+    if ([self.nType isEqualToString:@"2"]) { //视频
+        imageHeight  = 75;
     }
 
     //获取评论的所需高度
@@ -95,7 +105,7 @@
     //获取文本所需的高度
     CGSize contentSize = [_content sizeWithFont:[UIFont systemFontOfSize:13] constrainedToSize:CGSizeMake(SCREEN_WIDTH - 50 - 5, 1000) lineBreakMode:UILineBreakModeCharacterWrap];
     
-    return imageHeight + contentSize.height + commentHeight + 95;
+    return imageHeight + contentSize.height + commentHeight + 95 - 10;
 }
 
 - (NSString *)getTime{
