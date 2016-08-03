@@ -30,6 +30,7 @@
 #import "VipInfoViewController.h"
 #import "WhoComeViewController.h"
 
+#import "LYSendGiftViewController.h"
 #import "VideoCommitViewController.h"
 #import <MediaPlayer/MediaPlayer.h>
 
@@ -170,7 +171,7 @@
     isupdateVideo  = NO;
     isFriendVideo  = NO;
 
-    _tableView                 = [[UITableView alloc] initWithFrame:CGRectMake(0, 0, self.view.frame.size.width, self.view.frame.size.height) style:UITableViewStyleGrouped];
+    _tableView                 = [[UITableView alloc] initWithFrame:CGRectMake(0, 0, self.view.frame.size.width, self.view.frame.size.height-64-49) style:UITableViewStyleGrouped];
     _tableView.backgroundColor = [UIColor whiteColor];
     _tableView.delegate        = self;
     _tableView.dataSource      = self;
@@ -660,7 +661,12 @@
 }
 
 - (void)senderGift:(UIButton *)sender {
-    // NSLog(@"senderGift");
+    FriendsCircleMessage *message = _messageArray[sender.tag -10];
+    LYSendGiftViewController* vc =[[LYSendGiftViewController alloc] init];
+    vc.avatarImageURL = message.headImgStr;
+    vc.friendID = message.userId;
+    vc.userName = message.name;
+    [self.navigationController pushViewController:vc animated:YES];
 }
 
 
@@ -1354,8 +1360,9 @@
     [cell.reportBtn addTarget:self action:@selector(reportClick:) forControlEvents:UIControlEventTouchUpInside];
 
     //送礼
-    [cell.reportBtn addTarget:self action:@selector(senderGift:) forControlEvents:UIControlEventTouchUpInside];
-
+    [cell.giftBtn addTarget:self action:@selector(senderGift:) forControlEvents:UIControlEventTouchUpInside];
+    cell.giftBtn.tag = 10 + indexPath.row;
+    
     //添加分割线
     if (_messageArray.count) {
 #pragma mark - 下拉tableview，增加报错

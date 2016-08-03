@@ -163,7 +163,7 @@
 
 - (UITableView *)tableView {
     if (!_tableView) {
-        _tableView                                = [[UITableView alloc] initWithFrame:CGRectMake(0, 99, kMainScreenWidth, kMainScreenHeight - 99) style:UITableViewStyleGrouped];
+        _tableView                                = [[UITableView alloc] initWithFrame:CGRectMake(0, 0, kMainScreenWidth, kMainScreenHeight - 99) style:UITableViewStyleGrouped];
         _tableView.backgroundColor                = [UIColor groupTableViewBackgroundColor];
         _tableView.delegate                       = self;
         _tableView.dataSource                     = self;
@@ -517,10 +517,12 @@
         [UIView animateWithDuration:kNavigationHiddenAnimationDuration animations:^{
             //TOP
 
-            self.navigationView.alpha = 1.0;
+            //self.navigationView.alpha = 1.0;
+            self.navigationView.hidden = YES;
+            
             //self.navigationView.frame = CGRectMake(0, 20, kMainScreenWidth, 79);
-            self.navigationView.frame = CGRectMake(0, 20, kMainScreenWidth, 43);
-            self.tableView.frame      = CGRectMake(0, 99, kMainScreenWidth, kMainScreenHeight - 99);
+            self.navigationView.frame = CGRectMake(0, 20, kMainScreenWidth, 0);
+            self.tableView.frame      = CGRectMake(0, 0, kMainScreenWidth, kMainScreenHeight - 99);
             _statusBarHidden          = NO;
             [self setNeedsStatusBarAppearanceUpdate];
         }];

@@ -647,6 +647,7 @@ static NSString *notice_index;
             if (type == UserLoginStateTypeWaitToLogin) {
                 [[LYUserService sharedInstance] jumpToLoginWithController:self.tabBarController];
             } else {
+                isNew                     = NO;
                 VideoListViewController *video = [[VideoListViewController alloc] init];
                 [self.navigationController pushViewController:video animated:YES];
             }
@@ -1446,9 +1447,6 @@ static NSString *notice_index;
     _endY = scrollView.contentOffset.y;
 }
 
-- (void)didReceiveMemoryWarning {
-    [super didReceiveMemoryWarning];
-    // Dispose of any resources that can be recreated.
-}
+
 
 @end

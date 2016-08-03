@@ -10,7 +10,7 @@
 #import "LYUserService.h"
 #import "FriendsCircleCell.h"
 #import "FriendsCircleMessage.h"
-#import "DetailDataViewController.h"
+#import "LYDetailDataViewController.h"
 #import "AFNetworking.h"
 #import "MBProgressHUD+NJ.h"
 #import "MJRefresh.h"
@@ -30,6 +30,7 @@
     UILabel* shortLabel;    //内容Label
     UIImageView* backImageView;    //话题背景图
     UILabel* joinLabel;            //参与人数
+    CGFloat margin;                //下移距离
     
     CGFloat contentHeight;  //内容真实高度
     UIButton* joinBtn;      //话题参与按钮
@@ -125,8 +126,12 @@
     [self postRequest];
     //话题详情
     [self getTopicDetail];
+    
+    //获取热门动态
+    [self getHotTopic];
     //上拉下拉刷新
     [self addRefresh];
+    
     [self addObserver];
 }
 
@@ -240,7 +245,9 @@
             [lookAllBtn setFrame:CGRectMake(shortLabel.x, CGRectGetMaxY(shortLabel.frame)+3, 80, 20)];
             
         }
+        lookAllBtn.selected = YES;
         [lookAllBtn addTarget:self action:@selector(lookAllClick:) forControlEvents:UIControlEventTouchUpInside];
+    
         [headerView addSubview:lookAllBtn];
         
         //参与按钮
@@ -305,7 +312,7 @@
         
         //送礼
         [cell.giftBtn addTarget:self action:@selector(senderGift:) forControlEvents:UIControlEventTouchUpInside];
-        
+        cell.giftBtn.tag = 10+indexPath.row;
         //添加分割线
         if (_hotMessageArray.count) {
             FriendsCircleMessage *message = _hotMessageArray[indexPath.row];
@@ -482,30 +489,59 @@
 //点击头像
 - (void)tapHeadImg:(UITapGestureRecognizer *)tap {
     NSInteger userId                                   = [_noticeList[tap.view.tag][@"user_id"] integerValue];
-    DetailDataViewController *detailDataViewController = [[DetailDataViewController alloc] init];
-    detailDataViewController.friendId                  = userId;
+    LYDetailDataViewController *detailDataViewController = [[LYDetailDataViewController alloc] init];
+    detailDataViewController.userId                  = [NSString stringWithFormat:@"%ld",(long)userId];
     [self.navigationController pushViewController:detailDataViewController animated:YES];
 }
 
 #pragma mark - 点击方法
 //改变frame
 - (void)lookAllClick:(UIButton*)sender {
-    [UIView animateWithDuration:0.05 animations:^{//隐藏按钮
-        [sender setFrame:CGRectZero];
-    } completion:^(BOOL finished) {
-        [UIView animateWithDuration:0.1 animations:^{//展开内容
-            //下移距离
-            CGFloat margin = contentHeight - shortLabel.height;
-            //内容
-            shortLabel.height = contentHeight;
-            //参与按钮下移
-            joinBtn.y = joinBtn.y + margin - 20;
-            
-            //headerView变大
-            headerView.height = CGRectGetMaxY(joinBtn.frame) + 15;
-            _tableView.tableHeaderView = headerView;
+    if (sender.selected == YES) {
+        [UIView animateWithDuration:0.05 animations:^{//下移按钮
+            //[sender setFrame:CGRectZero];
+            [sender setTitle:@"收起" forState:UIControlStateNormal];
+        } completion:^(BOOL finished) {
+            [UIView animateWithDuration:0.1 animations:^{//展开内容
+                //下移距离
+                margin = contentHeight - shortLabel.height;
+                //内容
+                shortLabel.height = contentHeight;
+                sender.y = sender.y + margin;
+                
+                //参与按钮下移
+                joinBtn.y = joinBtn.y + margin;
+                
+                //headerView变大
+                headerView.height = CGRectGetMaxY(joinBtn.frame) + 15;
+                _tableView.tableHeaderView = headerView;
+                sender.selected = NO;
+            }];
         }];
-    }];
+    }
+    else {
+        [UIView animateWithDuration:0.05 animations:^{//隐藏按钮
+            //[sender setFrame:CGRectZero];
+            [sender setTitle:@"全部查看" forState:UIControlStateNormal];
+        } completion:^(BOOL finished) {
+            [UIView animateWithDuration:0.1 animations:^{//收起内容
+                //下移距离
+             
+                //内容
+                shortLabel.height = shortLabel.height - margin;
+                
+                sender.y = sender.y - margin;
+                //参与按钮下移
+                joinBtn.y = joinBtn.y - margin;
+                
+                //headerView变大
+                headerView.height = CGRectGetMaxY(joinBtn.frame) + 15;
+                _tableView.tableHeaderView = headerView;
+                sender.selected = YES;
+            }];
+        }];
+    }
+    
 }
 
 // +号  按钮
@@ -640,8 +676,11 @@
 }
 
 - (void)senderGift:(UIButton *)sender {
-    LYSendGiftViewController* vc = [[LYSendGiftViewController alloc] init];
-    
+    FriendsCircleMessage *message = _messageArray[sender.tag -10];
+    LYSendGiftViewController* vc =[[LYSendGiftViewController alloc] init];
+    vc.avatarImageURL = message.headImgStr;
+    vc.friendID = message.userId;
+    vc.userName = message.name;
     [self.navigationController pushViewController:vc animated:YES];
 }
 
@@ -1152,7 +1191,7 @@
 - (void)postRequest {
     //清空数据源
     [_messageArray removeAllObjects];
-    [_hotMessageArray removeAllObjects];
+    //[_hotMessageArray removeAllObjects];
     [_commentList removeAllObjects];
     [_praiseList removeAllObjects];
     [_noticeList removeAllObjects];
@@ -1202,6 +1241,84 @@
                 //消息模型数组
                 FriendsCircleMessage *message = [[FriendsCircleMessage alloc] initWithDict:dict];
                 [_messageArray addObject:message];
+                
+//                if ([message.isHot isEqualToString:@"1"]) { //是热门动态
+//                    [_hotMessageArray addObject:message];
+//                }
+            }
+            [_tableView reloadData];
+            //评论列表
+            for (int i = 0; i < [_dataDict[@"noticeList"] count]; i++) {
+                
+                NSMutableArray *array = [_dataDict[@"noticeList"][i][@"commentList"] mutableCopy];
+                [_commentList addObject:array];
+            }
+            //点赞列表
+            for (int i = 0; i < [_dataDict[@"noticeList"] count]; i++) {
+                
+                NSMutableArray *array = [_dataDict[@"noticeList"][i][@"praiseList"] mutableCopy];
+                [_praiseList addObject:array];
+            }
+            
+            [_tableView.mj_header endRefreshing];
+            [_tableView reloadData];
+            
+        }
+        else {
+            
+            [MBProgressHUD hideAllHUDsForView:self.view animated:YES];
+            [MBProgressHUD showError:responseObject[@"msg"]];
+        }
+    } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
+        NSLog(@"获取朋友圈列表%@", error);
+        [MBProgressHUD hideAllHUDsForView:self.view animated:YES];
+        [MBProgressHUD showError:@"请检查您的网络"];
+    }];
+}
+
+//获取热门动态
+- (void)getHotTopic{
+    
+    [_hotMessageArray removeAllObjects];
+    
+    AFHTTPRequestOperationManager* manager = [AFHTTPRequestOperationManager manager];
+    NSString *urlStr = [NSString stringWithFormat:@"%@/mobile/notice/iosNoticeList", REQUESTHEADER];
+    
+    NSDictionary *parameters;
+    //热门话题
+    if (!self.userId) { //游客
+        if (!self.userId) {
+            self.userId = @"";
+        }
+        parameters = @{ @"userId": [NSString stringWithFormat:@"%@", self.userId],
+                        @"noticeType": @"0",
+                        @"pageNum": [NSString stringWithFormat:@"%d", (int) _currentPage],
+                        @"hotId":self.topic_id,
+                        @"type": @"6" };
+    }
+    else { //用户
+        parameters = @{ @"userId": [NSString stringWithFormat:@"%@", self.userId],
+                        @"noticeType": @"0",
+                        @"pageNum": [NSString stringWithFormat:@"%d", (int) _currentPage],
+                        @"hotId":self.topic_id,
+                        @"type": @"6" };
+    }
+    [MBProgressHUD showMessage:nil toView:self.view];
+    [manager POST:urlStr parameters:parameters success:^(AFHTTPRequestOperation *operation, id responseObject) {
+        MLOG(@"获取热门动态列表：%@", responseObject);
+        [MBProgressHUD hideAllHUDsForView:self.view animated:YES];
+        if ([[NSString stringWithFormat:@"%@", responseObject[@"code"]] isEqualToString:@"200"]) {
+            _dataDict = [NSMutableDictionary dictionaryWithDictionary:responseObject[@"data"]];
+            
+            //保存模型数组
+            for (NSDictionary *dict in _dataDict[@"noticeList"]) {
+                
+                //消息-数据源数组
+                [_noticeList addObject:dict];
+                
+                //消息模型数组
+                FriendsCircleMessage *message = [[FriendsCircleMessage alloc] initWithDict:dict];
+                //[_messageArray addObject:message];
                 
                 if ([message.isHot isEqualToString:@"1"]) { //是热门动态
                     [_hotMessageArray addObject:message];
