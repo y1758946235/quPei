@@ -19,13 +19,12 @@
 
 - (void)layoutSubviews {
     [super layoutSubviews];
-    
+
     //设置HomeCollectionViewCell的frame
-//    CGRect collectionRect = self.frame;
-//    collectionRect.origin.x = collectionRect.origin.x + 5;
-//    collectionRect.size.width = collectionRect.size.width - 10;
-//    self.frame = collectionRect;
-    
+    //    CGRect collectionRect = self.frame;
+    //    collectionRect.origin.x = collectionRect.origin.x + 5;
+    //    collectionRect.size.width = collectionRect.size.width - 10;
+    //    self.frame = collectionRect;
 }
 
 
@@ -34,8 +33,8 @@
     if (self = [super initWithFrame:frame]) {
         self.backgroundColor = [UIColor colorWithRed:245 / 255.0 green:245 / 255.0 blue:245 / 255.0 alpha:1];
         //self.backgroundColor = [UIColor redColor];
-        
-        
+
+
         /**
          *  @author KF, 16-07-14 10:07:22
          *
@@ -177,7 +176,7 @@
     //    }
 
     //气质改为头像
-    [self.userShowImgView sd_setImageWithURL:[NSURL URLWithString:[NSString stringWithFormat:@"%@%@", IMAGEHEADER, model.icon]] placeholderImage:[UIImage imageNamed:@"默认头像"] options:SDWebImageRetryFailed];
+    [self.userShowImgView sd_setImageWithURL:[NSURL URLWithString:[NSString stringWithFormat:@"%@%@", IMAGEHEADER, model.icon]] placeholderImage:[UIImage imageNamed:@"PlaceImage"] options:SDWebImageRetryFailed];
 
     //self.videoBtn.hidden = NO;
 
@@ -206,13 +205,13 @@
     //    }
     self.noteLabel.text = model.signature;
 
-    self.noteLabel.frame = CGRectMake(10, model.cellHeight - model.textHeight-5, (SCREEN_WIDTH - 5) / 2 - 20, model.textHeight);
+    self.noteLabel.frame = CGRectMake(10, model.cellHeight - model.textHeight - 5, (SCREEN_WIDTH - 5) / 2 - 20, model.textHeight);
 
     _userHeadImgView.frame = CGRectMake(5, model.imageHeight - 25, 50, 50);
-    _userShowImgView.frame = CGRectMake(5, 0, (SCREEN_WIDTH - 10) / 2-10, model.imageHeight);
-    
-    _userShowImgView.layer.cornerRadius = 5.0f;
-    _userShowImgView.layer.masksToBounds = YES;
+    _userShowImgView.frame = CGRectMake(5, 0, (SCREEN_WIDTH - 10) / 2 - 10, model.imageHeight);
+
+    //    _userShowImgView.layer.cornerRadius = 5.0f;
+    //    _userShowImgView.layer.masksToBounds = YES;
     //播放按钮
     [_videoBtn setFrame:CGRectMake((_userShowImgView.width - 50) * 0.5, _userShowImgView.height * 0.5 - 0.5 * 50, 50, 50)];
 
@@ -238,7 +237,7 @@
     }
 
     //vip认证
-    _vipNoteView.frame = CGRectMake(5,CGRectGetMaxY(_nameLabel.frame) + 2, 20, 20);
+    _vipNoteView.frame = CGRectMake(5, CGRectGetMaxY(_nameLabel.frame) + 2, 20, 20);
     //认证视频标志
     _video_authView.x      = CGRectGetMaxX(_vipNoteView.frame) + 5;
     _video_authView.y      = _vipNoteView.y;

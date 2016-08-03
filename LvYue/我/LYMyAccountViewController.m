@@ -13,6 +13,7 @@
 #import "LYUserService.h"
 #import "MBProgressHUD+NJ.h"
 #import "VipInfoViewController.h"
+#import "WalletDetailViewController.h"
 #import "WithDrawRedNumViewController.h"
 #import "WithdrawRedViewController.h"
 
@@ -37,6 +38,7 @@ static NSString *const LYMyAccountTableViewCellIdentity = @"LYMyAccountTableView
 
     self.navigationItem.title = @"我的账户";
     self.view.backgroundColor = RGBCOLOR(247, 247, 247);
+    [self setRightButton:[UIImage imageNamed:@"明细"] title:nil target:self action:@selector(p_pushDetail:)];
 
     [self p_loadAccountAmount];
 
@@ -52,7 +54,6 @@ static NSString *const LYMyAccountTableViewCellIdentity = @"LYMyAccountTableView
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath {
     return 44.f;
 }
-
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
     LYMyAccountTableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:LYMyAccountTableViewCellIdentity forIndexPath:indexPath];
@@ -127,6 +128,11 @@ static NSString *const LYMyAccountTableViewCellIdentity = @"LYMyAccountTableView
             [MBProgressHUD hideHUDForView:self.view];
             [MBProgressHUD showError:@"查询余额失败，请重试"];
         }];
+}
+
+- (void)p_pushDetail:(id)sender {
+    WalletDetailViewController *vc = [[WalletDetailViewController alloc] init];
+    [self.navigationController pushViewController:vc animated:YES];
 }
 
 

@@ -568,11 +568,8 @@
 		6B8088441D509A75001CD14D /* LYGetCoinHeaderView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 6B8088431D509A75001CD14D /* LYGetCoinHeaderView.xib */; };
 		6B9094C81D4F36E000037DD0 /* LYMyGiftViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 6B9094C61D4F36E000037DD0 /* LYMyGiftViewController.m */; };
 		6B9094C91D4F36E000037DD0 /* LYMyGiftViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 6B9094C71D4F36E000037DD0 /* LYMyGiftViewController.xib */; };
-
-		6B9094CC1D4F49E500037DD0 /* DXPopover.m in Sources */ = {isa = PBXBuildFile; fileRef = 6B9094CB1D4F49E500037DD0 /* DXPopover.m */; };
 		6B9094D01D4F52C300037DD0 /* LYMyGiftTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 6B9094CE1D4F52C300037DD0 /* LYMyGiftTableViewCell.m */; };
 		6B9094D11D4F52C300037DD0 /* LYMyGiftTableViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 6B9094CF1D4F52C300037DD0 /* LYMyGiftTableViewCell.xib */; };
-
 		6B9644BD1D4EFFEB00833212 /* LYEssenceTipViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 6B9644BB1D4EFFEB00833212 /* LYEssenceTipViewController.m */; };
 		6B9E70281D5070A600142458 /* LYGetCoinViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 6B9E70271D5070A600142458 /* LYGetCoinViewController.m */; };
 		6BA818A11D4EDEB8007AB115 /* LYFocusOnAndFansViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 6BA818A01D4EDEB8007AB115 /* LYFocusOnAndFansViewController.m */; };
@@ -613,12 +610,10 @@
 		855FAB1C1C33ADB500440773 /* JumpAnimationView.m in Sources */ = {isa = PBXBuildFile; fileRef = 855FAB1B1C33ADB500440773 /* JumpAnimationView.m */; };
 		855FAB261C33C7F400440773 /* VideoPlayerCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 855FAB241C33C7F400440773 /* VideoPlayerCell.m */; };
 		85641E7F1C2BD9A500CEC162 /* VideoCategoryBar.m in Sources */ = {isa = PBXBuildFile; fileRef = 85641E7E1C2BD9A500CEC162 /* VideoCategoryBar.m */; };
-		85A4762F1C46C6EE00841B68 /* UIView+QuickFactory.m in Sources */ = {isa = PBXBuildFile; fileRef = 85A4762E1C46C6EE00841B68 /* UIView+QuickFactory.m */; };
 		85A476321C46C71200841B68 /* UILabel+QuickLabel.m in Sources */ = {isa = PBXBuildFile; fileRef = 85A476311C46C71200841B68 /* UILabel+QuickLabel.m */; };
 		85A476351C46C72D00841B68 /* UIButton+QuickButton.m in Sources */ = {isa = PBXBuildFile; fileRef = 85A476341C46C72D00841B68 /* UIButton+QuickButton.m */; };
 		85A476381C46C75D00841B68 /* UITextField+QuickTextField.m in Sources */ = {isa = PBXBuildFile; fileRef = 85A476371C46C75D00841B68 /* UITextField+QuickTextField.m */; };
 		85A4763B1C46C77C00841B68 /* UITextView+QuickTextView.m in Sources */ = {isa = PBXBuildFile; fileRef = 85A4763A1C46C77C00841B68 /* UITextView+QuickTextView.m */; };
-		85A4763E1C46C7AF00841B68 /* UIImageView+QuickImageView.m in Sources */ = {isa = PBXBuildFile; fileRef = 85A4763D1C46C7AF00841B68 /* UIImageView+QuickImageView.m */; };
 		9167397B1BF5B590001452CF /* libcrypto.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 9167397A1BF5B590001452CF /* libcrypto.a */; };
 		9167397F1BF5B605001452CF /* libUMessage_Sdk_1.2.0.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 9167397E1BF5B605001452CF /* libUMessage_Sdk_1.2.0.a */; };
 		916739811BF5B61D001452CF /* libUMSocial_Sdk_4.2.5.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 916739801BF5B61D001452CF /* libUMSocial_Sdk_4.2.5.a */; };
@@ -1856,13 +1851,9 @@
 		6B9094C51D4F36E000037DD0 /* LYMyGiftViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LYMyGiftViewController.h; sourceTree = "<group>"; };
 		6B9094C61D4F36E000037DD0 /* LYMyGiftViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LYMyGiftViewController.m; sourceTree = "<group>"; };
 		6B9094C71D4F36E000037DD0 /* LYMyGiftViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = LYMyGiftViewController.xib; sourceTree = "<group>"; };
-
-		6B9094CA1D4F49E500037DD0 /* DXPopover.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DXPopover.h; sourceTree = "<group>"; };
-		6B9094CB1D4F49E500037DD0 /* DXPopover.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DXPopover.m; sourceTree = "<group>"; };
 		6B9094CD1D4F52C300037DD0 /* LYMyGiftTableViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LYMyGiftTableViewCell.h; sourceTree = "<group>"; };
 		6B9094CE1D4F52C300037DD0 /* LYMyGiftTableViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LYMyGiftTableViewCell.m; sourceTree = "<group>"; };
 		6B9094CF1D4F52C300037DD0 /* LYMyGiftTableViewCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = LYMyGiftTableViewCell.xib; sourceTree = "<group>"; };
-
 		6B9644BA1D4EFFEB00833212 /* LYEssenceTipViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LYEssenceTipViewController.h; sourceTree = "<group>"; };
 		6B9644BB1D4EFFEB00833212 /* LYEssenceTipViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LYEssenceTipViewController.m; sourceTree = "<group>"; };
 		6B9E70261D5070A600142458 /* LYGetCoinViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LYGetCoinViewController.h; sourceTree = "<group>"; };
@@ -1932,8 +1923,6 @@
 		855FAB241C33C7F400440773 /* VideoPlayerCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = VideoPlayerCell.m; sourceTree = "<group>"; };
 		85641E7D1C2BD9A500CEC162 /* VideoCategoryBar.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = VideoCategoryBar.h; sourceTree = "<group>"; };
 		85641E7E1C2BD9A500CEC162 /* VideoCategoryBar.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = VideoCategoryBar.m; sourceTree = "<group>"; };
-		85A4762D1C46C6EE00841B68 /* UIView+QuickFactory.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIView+QuickFactory.h"; sourceTree = "<group>"; };
-		85A4762E1C46C6EE00841B68 /* UIView+QuickFactory.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIView+QuickFactory.m"; sourceTree = "<group>"; };
 		85A476301C46C71200841B68 /* UILabel+QuickLabel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UILabel+QuickLabel.h"; sourceTree = "<group>"; };
 		85A476311C46C71200841B68 /* UILabel+QuickLabel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UILabel+QuickLabel.m"; sourceTree = "<group>"; };
 		85A476331C46C72D00841B68 /* UIButton+QuickButton.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIButton+QuickButton.h"; sourceTree = "<group>"; };
@@ -1942,8 +1931,6 @@
 		85A476371C46C75D00841B68 /* UITextField+QuickTextField.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UITextField+QuickTextField.m"; sourceTree = "<group>"; };
 		85A476391C46C77C00841B68 /* UITextView+QuickTextView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UITextView+QuickTextView.h"; sourceTree = "<group>"; };
 		85A4763A1C46C77C00841B68 /* UITextView+QuickTextView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UITextView+QuickTextView.m"; sourceTree = "<group>"; };
-		85A4763C1C46C7AF00841B68 /* UIImageView+QuickImageView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIImageView+QuickImageView.h"; sourceTree = "<group>"; };
-		85A4763D1C46C7AF00841B68 /* UIImageView+QuickImageView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIImageView+QuickImageView.m"; sourceTree = "<group>"; };
 		9167397A1BF5B590001452CF /* libcrypto.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libcrypto.a; path = lib/libcrypto.a; sourceTree = "<group>"; };
 		9167397E1BF5B605001452CF /* libUMessage_Sdk_1.2.0.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; path = libUMessage_Sdk_1.2.0.a; sourceTree = "<group>"; };
 		916739801BF5B61D001452CF /* libUMSocial_Sdk_4.2.5.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; path = libUMSocial_Sdk_4.2.5.a; sourceTree = "<group>"; };
@@ -4860,8 +4847,6 @@
 				187308C71BB8E02200B071CE /* LYHttpPoster.m */,
 				18A946911BC4C53400132342 /* LYFactory.h */,
 				18A946921BC4C53400132342 /* LYFactory.m */,
-				85A4762D1C46C6EE00841B68 /* UIView+QuickFactory.h */,
-				85A4762E1C46C6EE00841B68 /* UIView+QuickFactory.m */,
 				85A476301C46C71200841B68 /* UILabel+QuickLabel.h */,
 				85A476311C46C71200841B68 /* UILabel+QuickLabel.m */,
 				85A476331C46C72D00841B68 /* UIButton+QuickButton.h */,
@@ -4870,8 +4855,6 @@
 				85A476371C46C75D00841B68 /* UITextField+QuickTextField.m */,
 				85A476391C46C77C00841B68 /* UITextView+QuickTextView.h */,
 				85A4763A1C46C77C00841B68 /* UITextView+QuickTextView.m */,
-				85A4763C1C46C7AF00841B68 /* UIImageView+QuickImageView.h */,
-				85A4763D1C46C7AF00841B68 /* UIImageView+QuickImageView.m */,
 				6B55B07F1D4B62A100EBD172 /* LYPopoverView.h */,
 				6B55B0801D4B62A100EBD172 /* LYPopoverView.m */,
 			);
@@ -5139,15 +5122,6 @@
 				186698641BCFC474008A3A0C /* RefundTableViewCell.m */,
 			);
 			name = "退款成功";
-			sourceTree = "<group>";
-		};
-		6B55B07B1D4B5F6A00EBD172 /* DXPopover */ = {
-			isa = PBXGroup;
-			children = (
-				6B9094CA1D4F49E500037DD0 /* DXPopover.h */,
-				6B9094CB1D4F49E500037DD0 /* DXPopover.m */,
-			);
-			path = DXPopover;
 			sourceTree = "<group>";
 		};
 		6B5F25441D5058E800778C21 /* 个人账户 */ = {
@@ -6871,7 +6845,6 @@
 				91D825581BD9C8AF0019764F /* FriendsCircleMessage.m in Sources */,
 				6BDD2A131D48A21D00693ADF /* LYSendGiftHeaderView.m in Sources */,
 				A79AA7E41BEAFAB10065684F /* QNUserAgent.m in Sources */,
-				85A4763E1C46C7AF00841B68 /* UIImageView+QuickImageView.m in Sources */,
 				182E161D1BED8ADE00362612 /* FMDatabasePool.m in Sources */,
 				98E5726F1CB78C3B00824A34 /* ScrollView.m in Sources */,
 				09549D021D153AF3008A721C /* NSDateFormatter+Category.m in Sources */,
@@ -7006,7 +6979,6 @@
 				09549D141D153AF3008A721C /* EMChatLocationBubbleView.m in Sources */,
 				09D02A761C48C5AA004C7BE9 /* MJRefreshAutoFooter.m in Sources */,
 				09540CB11BBFC77E00A8AEF3 /* BundingDetailViewController.m in Sources */,
-				85A4762F1C46C6EE00841B68 /* UIView+QuickFactory.m in Sources */,
 				0932F4A61BE07813005C12B5 /* WXModel.m in Sources */,
 				A79AA7DF1BEAFAB10065684F /* QNUrlSafeBase64.m in Sources */,
 				A71785621BF45D2800FFAD51 /* PeopleLiveViewController.m in Sources */,

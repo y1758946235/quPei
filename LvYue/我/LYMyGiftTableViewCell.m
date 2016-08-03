@@ -49,7 +49,7 @@
             break;
         }
         case LYMyGiftViewControllerTypeSend: {
-            NSString *userName = [dic[@"userName"] length] > 5 ? [NSString stringWithFormat:@"%@...", [dic[@"userName"] substringToIndex:5]] : dic[@"userName"];
+            NSString *userName = [dic[@"userName"] length] > 6 ? [NSString stringWithFormat:@"%@...", [dic[@"userName"] substringToIndex:4]] : dic[@"userName"];
             contentAttrStr     = [[NSMutableAttributedString alloc] initWithString:[NSString stringWithFormat:@"我送给%@一%@价值\n%@金币的%@", userName, dic[@"word"], dic[@"price"], dic[@"gift_name"]]];
             // 用户名颜色
             [contentAttrStr addAttribute:NSForegroundColorAttributeName value:RGBCOLOR(46, 186, 239) range:NSMakeRange(3, userName.length)];

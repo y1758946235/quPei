@@ -131,10 +131,10 @@ static NSString *notice_index;
     [super viewWillAppear:animated];
 
     //    refreshType = @"near";
-    currentPage = 1;
+    currentPage  = 1;
     currentPage2 = 1;
     if (!topBtn) {
-        topBtn = [[UIButton alloc] initWithFrame:CGRectMake(0, 0, SCREEN_WIDTH / 4, 49)];
+        topBtn                 = [[UIButton alloc] initWithFrame:CGRectMake(0, 0, SCREEN_WIDTH / 4, 49)];
         topBtn.backgroundColor = [UIColor clearColor];
         [topBtn addTarget:self action:@selector(bringToTop) forControlEvents:UIControlEventTouchUpInside];
         [self.tabBarController.tabBar addSubview:topBtn];
@@ -154,13 +154,13 @@ static NSString *notice_index;
     [super viewDidLoad];
 
 
-    _guideArray = [[NSMutableArray alloc] init];
-    _hotArray = [[NSMutableArray alloc] init];
-    _heightArr = [[NSMutableArray alloc] init];
+    _guideArray   = [[NSMutableArray alloc] init];
+    _hotArray     = [[NSMutableArray alloc] init];
+    _heightArr    = [[NSMutableArray alloc] init];
     _heightHotArr = [[NSMutableArray alloc] init];
 
-    isNew = YES;
-    isFirst = YES;
+    isNew       = YES;
+    isFirst     = YES;
     isAutoLogin = NO;
 
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(autoLogin:) name:@"autoLogin" object:nil];
@@ -172,7 +172,7 @@ static NSString *notice_index;
     [self createScrollView]; //创建轮播图
     [self createScrollView2];
 
-    self.clManager.delegate = self;
+    self.clManager.delegate        = self;
     self.clManager.desiredAccuracy = kCLLocationAccuracyBest;
     if ([[[UIDevice currentDevice] systemVersion] floatValue] >= 9) {
         _clManager.allowsBackgroundLocationUpdates = NO;
@@ -230,7 +230,7 @@ static NSString *notice_index;
         [_animationView setCenter:CGPointMake(kMainScreenWidth / 2, kMainScreenHeight - 50 - 44)];
         [_animationView setBounds:CGRectMake(0, 0, 70, 70)];
         _animationView.layer.masksToBounds = YES;
-        _animationView.backgroundColor = [UIColor clearColor];
+        _animationView.backgroundColor     = [UIColor clearColor];
 #warning 隐藏发布按钮
         //[_animationView addSubview:self.publishBtn];
     }
@@ -242,17 +242,17 @@ static NSString *notice_index;
     if (!_publishBtn) {
         _publishBtn = [UIButton buttonWithType:UIButtonTypeCustom];
         [_publishBtn setBackgroundImage:[UIImage imageNamed:@"拍"] forState:UIControlStateNormal];
-        _publishBtn.frame = CGRectMake(0, 0, _animationView.bounds.size.width, _animationView.bounds.size.height);
-        _publishBtn.imageView.contentMode = UIViewContentModeScaleAspectFit;
+        _publishBtn.frame                         = CGRectMake(0, 0, _animationView.bounds.size.width, _animationView.bounds.size.height);
+        _publishBtn.imageView.contentMode         = UIViewContentModeScaleAspectFit;
         _publishBtn.imageView.layer.masksToBounds = YES;
-        _publishBtn.alpha = 0.90;
+        _publishBtn.alpha                         = 0.90;
         [_publishBtn addTarget:self action:@selector(showChooseView) forControlEvents:UIControlEventTouchUpInside];
     }
     return _publishBtn;
 }
 
 - (void)showChooseView {
-    _shadowView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, SCREEN_WIDTH, SCREEN_HEIGHT + 64 + 49)];
+    _shadowView                 = [[UIView alloc] initWithFrame:CGRectMake(0, 0, SCREEN_WIDTH, SCREEN_HEIGHT + 64 + 49)];
     _shadowView.backgroundColor = [UIColor colorWithWhite:0 alpha:0.7];
     [[UIApplication sharedApplication].keyWindow addSubview:_shadowView];
     UITapGestureRecognizer *tapGR = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(hidden)];
@@ -278,11 +278,11 @@ static NSString *notice_index;
 
     [UIView animateWithDuration:kNavigationHiddenAnimationDuration * 3 delay:0.0 usingSpringWithDamping:0.4 initialSpringVelocity:30 options:UIViewAnimationOptionAllowAnimatedContent animations:^{
         //BOTTOM
-        self.publishBtn.alpha = 0.35;
+        self.publishBtn.alpha    = 0.35;
         self.animationView.frame = CGRectMake(kMainScreenWidth / 2 - 18, kMainScreenHeight - 20 - 47, 36, 36);
-        self.publishBtn.frame = CGRectMake(0, 0, 36, 36);
-        pubRequirementBtn.frame = CGRectMake(SCREEN_WIDTH / 2 - 110, SCREEN_HEIGHT - 180, 80, 80);
-        pubSkillBtn.frame = CGRectMake(SCREEN_WIDTH / 2 + 45, SCREEN_HEIGHT - 180, 80, 80);
+        self.publishBtn.frame    = CGRectMake(0, 0, 36, 36);
+        pubRequirementBtn.frame  = CGRectMake(SCREEN_WIDTH / 2 - 110, SCREEN_HEIGHT - 180, 80, 80);
+        pubSkillBtn.frame        = CGRectMake(SCREEN_WIDTH / 2 + 45, SCREEN_HEIGHT - 180, 80, 80);
     }
                      completion:nil];
 }
@@ -291,8 +291,8 @@ static NSString *notice_index;
     [_shadowView removeFromSuperview];
 
     PublishRequirementViewController *vc = [[PublishRequirementViewController alloc] init];
-    vc.isPushSkill = NO;
-    vc.isFromDetail = NO;
+    vc.isPushSkill                       = NO;
+    vc.isFromDetail                      = NO;
     [self.navigationController pushViewController:vc animated:YES];
 }
 
@@ -300,8 +300,8 @@ static NSString *notice_index;
     [_shadowView removeFromSuperview];
 
     PublishRequirementViewController *vc = [[PublishRequirementViewController alloc] init];
-    vc.isPushSkill = YES;
-    vc.isFromDetail = NO;
+    vc.isPushSkill                       = YES;
+    vc.isFromDetail                      = NO;
     [self.navigationController pushViewController:vc animated:YES];
 }
 
@@ -311,19 +311,19 @@ static NSString *notice_index;
 
     [UIView animateWithDuration:kNavigationHiddenAnimationDuration * 3 delay:0.0 usingSpringWithDamping:0.35 initialSpringVelocity:50 options:UIViewAnimationOptionAllowAnimatedContent animations:^{
         //BOTTOM
-        self.publishBtn.alpha = 0.90;
+        self.publishBtn.alpha    = 0.90;
         self.animationView.frame = CGRectMake(kMainScreenWidth / 2 - 36, kMainScreenHeight - 88 - 44, 70, 70);
-        self.publishBtn.frame = CGRectMake(0, 0, 70, 70);
+        self.publishBtn.frame    = CGRectMake(0, 0, 70, 70);
     }
                      completion:nil];
 }
 
 - (void)createCollectionView {
     UICollectionViewFlowLayout *flowLayout = [[UICollectionViewFlowLayout alloc] init];
-    flowLayout.sectionInset = UIEdgeInsetsMake(10, 0, 10, 0);
-    flowLayout.minimumInteritemSpacing = 10;
-    flowLayout.minimumLineSpacing = 10;
-    flowLayout.headerReferenceSize = CGSizeMake(SCREEN_WIDTH, SCREEN_WIDTH / 2 + 35);
+    flowLayout.sectionInset                = UIEdgeInsetsMake(10, 0, 10, 0);
+    flowLayout.minimumInteritemSpacing     = 10;
+    flowLayout.minimumLineSpacing          = 10;
+    flowLayout.headerReferenceSize         = CGSizeMake(SCREEN_WIDTH, SCREEN_WIDTH / 2 + 35);
 
     _waterFlowLayout = [[LYWaterFlowLayout alloc] init];
 
@@ -336,17 +336,17 @@ static NSString *notice_index;
         return SCREEN_WIDTH / 2 + 35;
     }];
 
-    _collectionView = [[UICollectionView alloc] initWithFrame:CGRectMake(0, 0, SCREEN_WIDTH + 5, SCREEN_HEIGHT) collectionViewLayout:_waterFlowLayout];
-    _collectionView.delegate = self;
-    _collectionView.dataSource = self;
-    _collectionView.backgroundColor = [UIColor whiteColor];
+    _collectionView                      = [[UICollectionView alloc] initWithFrame:CGRectMake(0, 0, SCREEN_WIDTH + 5, SCREEN_HEIGHT - 64.f - 49.f) collectionViewLayout:_waterFlowLayout];
+    _collectionView.delegate             = self;
+    _collectionView.dataSource           = self;
+    _collectionView.backgroundColor      = [UIColor whiteColor];
     _collectionView.alwaysBounceVertical = YES;
 
-    _hotCollectionView = [[UICollectionView alloc] initWithFrame:CGRectMake(0, 64, SCREEN_WIDTH + 5, SCREEN_HEIGHT - 64 - 49) collectionViewLayout:flowLayout];
-    _hotCollectionView.delegate = self;
-    _hotCollectionView.dataSource = self;
-    _hotCollectionView.backgroundColor = [UIColor whiteColor];
-    _hotCollectionView.hidden = YES;
+    _hotCollectionView                      = [[UICollectionView alloc] initWithFrame:CGRectMake(0, 64, SCREEN_WIDTH + 5, SCREEN_HEIGHT - 64 - 49) collectionViewLayout:flowLayout];
+    _hotCollectionView.delegate             = self;
+    _hotCollectionView.dataSource           = self;
+    _hotCollectionView.backgroundColor      = [UIColor whiteColor];
+    _hotCollectionView.hidden               = YES;
     _hotCollectionView.alwaysBounceVertical = YES;
 
     [_collectionView registerClass:[HomeCollectionViewCell class] forCellWithReuseIdentifier:@"newCell"];
@@ -367,16 +367,16 @@ static NSString *notice_index;
 
     //添加地图定位的图片
     UIImageView *locImage = [[UIImageView alloc] initWithFrame:CGRectMake(0, 0, 10.5, leftView.frame.size.height)];
-    locImage.image = [UIImage imageNamed:@"定位"];
-    locImage.contentMode = UIViewContentModeScaleAspectFit;
+    locImage.image        = [UIImage imageNamed:@"定位"];
+    locImage.contentMode  = UIViewContentModeScaleAspectFit;
     [leftView addSubview:locImage];
 
     //添加当前城市名
-    locLabel = [[UILabel alloc] initWithFrame:CGRectMake(CGRectGetMaxX(locImage.frame) + 2, 0, leftView.frame.size.width, locImage.frame.size.height)];
-    locLabel.font = [UIFont systemFontOfSize:16];
+    locLabel               = [[UILabel alloc] initWithFrame:CGRectMake(CGRectGetMaxX(locImage.frame) + 2, 0, leftView.frame.size.width, locImage.frame.size.height)];
+    locLabel.font          = [UIFont systemFontOfSize:16];
     locLabel.textAlignment = NSTextAlignmentCenter;
-    locLabel.textColor = [UIColor whiteColor];
-    locLabel.text = @"定位中";
+    locLabel.textColor     = [UIColor whiteColor];
+    locLabel.text          = @"定位中";
     [leftView addSubview:locLabel];
 
     UIBarButtonItem *left = [[UIBarButtonItem alloc] initWithCustomView:leftView];
@@ -391,7 +391,7 @@ static NSString *notice_index;
     [newBtn setTitle:@"最新" forState:UIControlStateNormal];
     [newBtn setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
     newBtn.titleLabel.font = [UIFont systemFontOfSize:18];
-    newBtn.tag = 101;
+    newBtn.tag             = 101;
     [newBtn addTarget:self action:@selector(changeState:) forControlEvents:UIControlEventTouchUpInside];
     [centerView addSubview:newBtn];
 
@@ -400,16 +400,16 @@ static NSString *notice_index;
     [hotBtn setTitle:@"热门" forState:UIControlStateNormal];
     [hotBtn setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
     hotBtn.titleLabel.font = [UIFont systemFontOfSize:18];
-    hotBtn.tag = 102;
+    hotBtn.tag             = 102;
     [hotBtn addTarget:self action:@selector(changeState:) forControlEvents:UIControlEventTouchUpInside];
     //[centerView addSubview:hotBtn];
 
     //视频圈
     UIButton *videoBtn = [UIButton buttonWithType:UIButtonTypeCustom];
-    videoBtn.x = CGRectGetMaxX(newBtn.frame) + 10;
-    videoBtn.y = 0;
-    videoBtn.width = 80;
-    videoBtn.height = 25;
+    videoBtn.x         = CGRectGetMaxX(newBtn.frame) + 10;
+    videoBtn.y         = 0;
+    videoBtn.width     = 80;
+    videoBtn.height    = 25;
     //[videoBtn setBackgroundColor:[UIColor redColor]];
     videoBtn.tag = 103;
     [videoBtn setTitle:@"视频圈" forState:UIControlStateNormal];
@@ -419,7 +419,7 @@ static NSString *notice_index;
     [centerView addSubview:videoBtn];
 
 
-    lineView = [[UIView alloc] initWithFrame:CGRectMake(centerView.frame.size.width / 2 - 50, 32, 52, 3)];
+    lineView                 = [[UIView alloc] initWithFrame:CGRectMake(centerView.frame.size.width / 2 - 50, 32, 52, 3)];
     lineView.backgroundColor = [UIColor whiteColor];
     [centerView addSubview:lineView];
 
@@ -431,8 +431,8 @@ static NSString *notice_index;
 
     //添加扩展功能的图片
     UIImageView *searchImg = [[UIImageView alloc] initWithFrame:CGRectMake(0, 0, 30, rightBtn.frame.size.height)];
-    searchImg.image = [UIImage imageNamed:@"搜索"];
-    searchImg.contentMode = UIViewContentModeScaleAspectFit;
+    searchImg.image        = [UIImage imageNamed:@"搜索"];
+    searchImg.contentMode  = UIViewContentModeScaleAspectFit;
     [rightBtn addSubview:searchImg];
     [rightBtn addTarget:self action:@selector(turnToSearch) forControlEvents:UIControlEventTouchUpInside];
 
@@ -446,32 +446,32 @@ static NSString *notice_index;
     [_collectionView addSubview:headView];
 
     UIImageView *stateImg = [[UIImageView alloc] initWithFrame:CGRectMake(10, kMainScreenWidth / 2 + 10, 20, 20)];
-    stateImg.image = [UIImage imageNamed:@"动态"];
+    stateImg.image        = [UIImage imageNamed:@"动态"];
     [headView addSubview:stateImg];
 
-    UILabel *stateLabel = [[UILabel alloc] initWithFrame:CGRectMake(37, kMainScreenWidth / 2 + 5, 100, 30)];
-    stateLabel.text = @"最新动态";
-    stateLabel.textColor = [UIColor colorWithRed:29 / 255.0 green:189 / 255.0 blue:159 / 255.0 alpha:1];
-    stateLabel.font = [UIFont systemFontOfSize:16];
+    UILabel *stateLabel      = [[UILabel alloc] initWithFrame:CGRectMake(37, kMainScreenWidth / 2 + 5, 100, 30)];
+    stateLabel.text          = @"最新动态";
+    stateLabel.textColor     = [UIColor colorWithRed:29 / 255.0 green:189 / 255.0 blue:159 / 255.0 alpha:1];
+    stateLabel.font          = [UIFont systemFontOfSize:16];
     stateLabel.textAlignment = NSTextAlignmentLeft;
     [headView addSubview:stateLabel];
 
-    cycleBannerViewBottom = [KDCycleBannerView new];
-    cycleBannerViewBottom.frame = CGRectMake(0, 0, kMainScreenWidth, kMainScreenWidth / 2); //位置及宽高
-    cycleBannerViewBottom.datasource = self;
-    cycleBannerViewBottom.delegate = self;
-    cycleBannerViewBottom.continuous = YES;         //是否连续显示
-    cycleBannerViewBottom.autoPlayTimeInterval = 4; //时间间隔
+    cycleBannerViewBottom                      = [KDCycleBannerView new];
+    cycleBannerViewBottom.frame                = CGRectMake(0, 0, kMainScreenWidth, kMainScreenWidth / 2); //位置及宽高
+    cycleBannerViewBottom.datasource           = self;
+    cycleBannerViewBottom.delegate             = self;
+    cycleBannerViewBottom.continuous           = YES; //是否连续显示
+    cycleBannerViewBottom.autoPlayTimeInterval = 4;   //时间间隔
     [headView addSubview:cycleBannerViewBottom];
 
-    cycleBannerViewBottom2 = [KDCycleBannerView new];
-    cycleBannerViewBottom2.frame = CGRectMake(0, 0, kMainScreenWidth, kMainScreenWidth / 2); //位置及宽高
-    cycleBannerViewBottom2.datasource = self;
-    cycleBannerViewBottom2.delegate = self;
-    cycleBannerViewBottom2.continuous = YES;         //是否连续显示
-    cycleBannerViewBottom2.autoPlayTimeInterval = 4; //时间间隔
+    cycleBannerViewBottom2                      = [KDCycleBannerView new];
+    cycleBannerViewBottom2.frame                = CGRectMake(0, 0, kMainScreenWidth, kMainScreenWidth / 2); //位置及宽高
+    cycleBannerViewBottom2.datasource           = self;
+    cycleBannerViewBottom2.delegate             = self;
+    cycleBannerViewBottom2.continuous           = YES; //是否连续显示
+    cycleBannerViewBottom2.autoPlayTimeInterval = 4;   //时间间隔
 
-    scrollImageArray = [[NSMutableArray alloc] init];
+    scrollImageArray          = [[NSMutableArray alloc] init];
     scrollImageActionURLArray = [[NSMutableArray alloc] init];
     [LYHttpPoster postHttpRequestByPost:[NSString stringWithFormat:@"%@/assets/homeImg", REQUESTHEADER] andParameter:@{} success:^(id successResponse) {
         MLOG(@"轮播图结果:%@", successResponse);
@@ -479,7 +479,7 @@ static NSString *notice_index;
 
             NSArray *array = successResponse[@"data"][@"imgs"];
             for (NSDictionary *dict in array) {
-                NSString *imgStr = dict[@"img"];
+                NSString *imgStr  = dict[@"img"];
                 NSString *imgName = [NSString stringWithFormat:@"%@%@", IMAGEHEADER, imgStr];
                 [scrollImageArray addObject:imgName];
                 [scrollImageActionURLArray addObject:dict[@"actionUrl"]];
@@ -494,7 +494,7 @@ static NSString *notice_index;
 
         }];
 
-    UIView *noteView = [[UIView alloc] initWithFrame:CGRectMake(0, 64, SCREEN_WIDTH, 30)];
+    UIView *noteView         = [[UIView alloc] initWithFrame:CGRectMake(0, 64, SCREEN_WIDTH, 30)];
     noteView.backgroundColor = [UIColor colorWithWhite:0.5 alpha:0.5];
 #warning 隐藏发布按钮
     //[self.view addSubview:noteView];
@@ -502,7 +502,7 @@ static NSString *notice_index;
     _scrollView = [[ScrollView alloc] initWithFrame:CGRectMake(40, 5, SCREEN_WIDTH - 50, 20)];
     [noteView addSubview:_scrollView];
 
-    rssArray = [NSMutableArray arrayWithObjects:@"", nil];
+    rssArray  = [NSMutableArray arrayWithObjects:@"", nil];
     needIdArr = [NSMutableArray arrayWithObjects:@"", nil];
     [_scrollView.newsButton addTarget:self action:@selector(topInfoClicked:) forControlEvents:UIControlEventTouchUpInside];
     [UIView animateWithDuration:0.7 delay:0 options:0 animations:^() {
@@ -518,7 +518,7 @@ static NSString *notice_index;
         }];
 
     UIImageView *noteImg = [[UIImageView alloc] initWithFrame:CGRectMake(10, 5, 20, 20)];
-    noteImg.image = [UIImage imageNamed:@"小喇叭"];
+    noteImg.image        = [UIImage imageNamed:@"小喇叭"];
 
     [noteView addSubview:noteImg];
 }
@@ -527,20 +527,20 @@ static NSString *notice_index;
 - (void)topInfoClicked:(UIButton *)btn {
 
     if (countInt <= rssArray.count) {
-        NSString *str = rssArray[countInt];
+        NSString *str  = rssArray[countInt];
         NSArray *array = [str componentsSeparatedByString:@" "];
 
         if (array.count > 1) {
             if ([needIdArr[countInt][@"horn"][@"type"] integerValue] == 0) {
                 RequirementDetailViewController *rlVC = [[RequirementDetailViewController alloc] init];
-                rlVC.needId = needIdArr[countInt][@"horn"][@"need_id"];
-                rlVC.isMyself = NO;
-                rlVC.needName = array[2];
+                rlVC.needId                           = needIdArr[countInt][@"horn"][@"need_id"];
+                rlVC.isMyself                         = NO;
+                rlVC.needName                         = array[2];
                 [self.navigationController pushViewController:rlVC animated:YES];
             } else if ([needIdArr[countInt][@"horn"][@"type"] integerValue] == 1) {
                 SkillDetailViewController *rlVC = [[SkillDetailViewController alloc] init];
-                rlVC.skillId = needIdArr[countInt][@"horn"][@"skill_id"];
-                rlVC.skillUserId = needIdArr[countInt][@"horn"][@"user_id"];
+                rlVC.skillId                    = needIdArr[countInt][@"horn"][@"skill_id"];
+                rlVC.skillUserId                = needIdArr[countInt][@"horn"][@"user_id"];
                 [self.navigationController pushViewController:rlVC animated:YES];
             }
         }
@@ -555,7 +555,7 @@ static NSString *notice_index;
             [needIdArr removeAllObjects];
             for (int i = 0; i < 10; i++) {
                 NSDictionary *dic = [successResponse[@"data"][@"data"] objectForKey:[NSString stringWithFormat:@"horns_%d", i]];
-                NSString *str = @"";
+                NSString *str     = @"";
                 if ([dic[@"horn"][@"type"] integerValue] == 0) {
                     str = [NSString stringWithFormat:@"%@ 发布了 %@ 的需求", dic[@"userName"], dic[@"smallName"]];
                 } else if ([dic[@"horn"][@"type"] integerValue] == 1) {
@@ -580,14 +580,14 @@ static NSString *notice_index;
     countInt++;
     //    long num = [rssArray count] >= 3 ? 3:[rssArray count];
     if (countInt >= [rssArray count])
-        countInt = 0;
-    CATransition *animation = [CATransition animation];
-    animation.delegate = self;
-    animation.duration = 0.5f;
-    animation.timingFunction = UIViewAnimationCurveEaseInOut;
-    animation.fillMode = kCAFillModeForwards;
+        countInt                  = 0;
+    CATransition *animation       = [CATransition animation];
+    animation.delegate            = self;
+    animation.duration            = 0.5f;
+    animation.timingFunction      = UIViewAnimationCurveEaseInOut;
+    animation.fillMode            = kCAFillModeForwards;
     animation.removedOnCompletion = YES;
-    animation.type = @"cube";
+    animation.type                = @"cube";
 
     [_scrollView.layer addAnimation:animation forKey:@"animationID"];
     if (rssArray.count != 0) {
@@ -599,13 +599,13 @@ static NSString *notice_index;
     headView2 = [[UIView alloc] initWithFrame:CGRectMake(0, 0, kMainScreenWidth, kMainScreenWidth / 2 + 35)];
 
     UIImageView *stateImg = [[UIImageView alloc] initWithFrame:CGRectMake(10, kMainScreenWidth / 2 + 10, 20, 20)];
-    stateImg.image = [UIImage imageNamed:@"内容"];
+    stateImg.image        = [UIImage imageNamed:@"内容"];
     [headView2 addSubview:stateImg];
 
-    UILabel *stateLabel = [[UILabel alloc] initWithFrame:CGRectMake(37, kMainScreenWidth / 2 + 5, 100, 30)];
-    stateLabel.text = @"热门内容";
-    stateLabel.textColor = [UIColor colorWithRed:29 / 255.0 green:189 / 255.0 blue:159 / 255.0 alpha:1];
-    stateLabel.font = [UIFont systemFontOfSize:16];
+    UILabel *stateLabel      = [[UILabel alloc] initWithFrame:CGRectMake(37, kMainScreenWidth / 2 + 5, 100, 30)];
+    stateLabel.text          = @"热门内容";
+    stateLabel.textColor     = [UIColor colorWithRed:29 / 255.0 green:189 / 255.0 blue:159 / 255.0 alpha:1];
+    stateLabel.font          = [UIFont systemFontOfSize:16];
     stateLabel.textAlignment = NSTextAlignmentLeft;
     [headView2 addSubview:stateLabel];
 
@@ -615,8 +615,8 @@ static NSString *notice_index;
 - (void)turnToSearch {
 
     SearchNearbyViewController *nextV = [[SearchNearbyViewController alloc] init];
-    nextV.latitude = latitude;
-    nextV.longitude = longitude;
+    nextV.latitude                    = latitude;
+    nextV.longitude                   = longitude;
     [self.navigationController pushViewController:nextV animated:YES];
 }
 
@@ -626,15 +626,15 @@ static NSString *notice_index;
             lineView.frame = CGRectMake(self.navigationItem.titleView.frame.size.width / 2 - 60, 32, 52, 3);
         }];
         _hotCollectionView.hidden = YES;
-        _collectionView.hidden = NO;
-        isNew = YES;
+        _collectionView.hidden    = NO;
+        isNew                     = YES;
     } else if (btn.tag == 102) { //热门
         [UIView animateWithDuration:0.3 animations:^{
             lineView.frame = CGRectMake(self.navigationItem.titleView.frame.size.width / 2 + 8, 32, 52, 3);
         }];
         _hotCollectionView.hidden = NO;
-        _collectionView.hidden = YES;
-        isNew = NO;
+        _collectionView.hidden    = YES;
+        isNew                     = NO;
         if (isFirst) {
             [self headerRefreshing];
             isFirst = NO;
@@ -728,7 +728,7 @@ static NSString *notice_index;
                             } else {
                                 NSMutableArray *arr = [[NSMutableArray alloc] init];
                                 for (NSDictionary *dict in successResponse[@"data"][@"list"]) {
-                                    homeModel = [[HomeModel alloc] initWithDict:dict];
+                                    homeModel              = [[HomeModel alloc] initWithDict:dict];
                                     homeModel.isShowAction = YES;
                                     [_guideArray addObject:homeModel];
                                     [arr addObject:homeModel];
@@ -782,15 +782,15 @@ static NSString *notice_index;
                                     NSData *data = [NSData dataWithContentsOfURL:[NSURL URLWithString:[NSString stringWithFormat:@"%@%@", IMAGEHEADER, model.imgName]]];
 
                                     UIImage *image = [UIImage imageWithData:data];
-                                    CGSize size = CGSizeFromString(NSStringFromCGSize(image.size));
-                                    model.image = image;
+                                    CGSize size    = CGSizeFromString(NSStringFromCGSize(image.size));
+                                    model.image    = image;
 
                                     model.imageHeight = (SCREEN_WIDTH - 20) / size.width * size.height;
 
-                                    CGRect rect = [model.intro boundingRectWithSize:CGSizeMake(SCREEN_WIDTH - 20, 70) options:(NSStringDrawingUsesLineFragmentOrigin | NSStringDrawingUsesFontLeading) attributes:@{ NSFontAttributeName: [UIFont systemFontOfSize:16] } context:nil];
+                                    CGRect rect      = [model.intro boundingRectWithSize:CGSizeMake(SCREEN_WIDTH - 20, 70) options:(NSStringDrawingUsesLineFragmentOrigin | NSStringDrawingUsesFontLeading) attributes:@{ NSFontAttributeName: [UIFont systemFontOfSize:16] } context:nil];
                                     model.textHeight = rect.size.height;
 
-                                    CGFloat height = ((SCREEN_WIDTH - 20) / size.width * size.height + 35 + rect.size.height);
+                                    CGFloat height   = ((SCREEN_WIDTH - 20) / size.width * size.height + 35 + rect.size.height);
                                     model.cellHeight = height;
 
                                     [_heightHotArr addObject:[NSString stringWithFormat:@"%f", height]];
@@ -846,7 +846,7 @@ static NSString *notice_index;
                             } else {
                                 NSMutableArray *arr = [[NSMutableArray alloc] init];
                                 for (NSDictionary *dict in successResponse[@"data"][@"list"]) {
-                                    homeModel = [[HomeModel alloc] initWithDict:dict];
+                                    homeModel              = [[HomeModel alloc] initWithDict:dict];
                                     homeModel.isShowAction = YES;
                                     [_guideArray addObject:homeModel];
                                     [arr addObject:homeModel];
@@ -901,15 +901,15 @@ static NSString *notice_index;
                                     NSData *data = [NSData dataWithContentsOfURL:[NSURL URLWithString:[NSString stringWithFormat:@"%@%@", IMAGEHEADER, model.imgName]]];
 
                                     UIImage *image = [UIImage imageWithData:data];
-                                    CGSize size = CGSizeFromString(NSStringFromCGSize(image.size));
-                                    model.image = image;
+                                    CGSize size    = CGSizeFromString(NSStringFromCGSize(image.size));
+                                    model.image    = image;
 
                                     model.imageHeight = (SCREEN_WIDTH - 20) / size.width * size.height;
 
-                                    CGRect rect = [model.intro boundingRectWithSize:CGSizeMake(SCREEN_WIDTH - 20, 70) options:(NSStringDrawingUsesLineFragmentOrigin | NSStringDrawingUsesFontLeading) attributes:@{ NSFontAttributeName: [UIFont systemFontOfSize:16] } context:nil];
+                                    CGRect rect      = [model.intro boundingRectWithSize:CGSizeMake(SCREEN_WIDTH - 20, 70) options:(NSStringDrawingUsesLineFragmentOrigin | NSStringDrawingUsesFontLeading) attributes:@{ NSFontAttributeName: [UIFont systemFontOfSize:16] } context:nil];
                                     model.textHeight = rect.size.height;
 
-                                    CGFloat height = ((SCREEN_WIDTH - 20) / size.width * size.height + 35 + rect.size.height);
+                                    CGFloat height   = ((SCREEN_WIDTH - 20) / size.width * size.height + 35 + rect.size.height);
                                     model.cellHeight = height;
 
                                     [_heightHotArr addObject:[NSString stringWithFormat:@"%f", height]];
@@ -960,7 +960,7 @@ static NSString *notice_index;
                             [_guideArray removeAllObjects];
                             [_heightArr removeAllObjects];
                             for (NSDictionary *dict in successResponse[@"data"][@"list"]) {
-                                homeModel = [[HomeModel alloc] initWithDict:dict];
+                                homeModel              = [[HomeModel alloc] initWithDict:dict];
                                 homeModel.isShowAction = YES;
                                 [_guideArray addObject:homeModel];
                             }
@@ -1010,18 +1010,18 @@ static NSString *notice_index;
                                 NSData *data = [NSData dataWithContentsOfURL:[NSURL URLWithString:[NSString stringWithFormat:@"%@%@", IMAGEHEADER, model.imgName]]];
 
                                 UIImage *image = [UIImage imageWithData:data];
-                                CGSize size = CGSizeFromString(NSStringFromCGSize(image.size));
-                                model.image = image;
+                                CGSize size    = CGSizeFromString(NSStringFromCGSize(image.size));
+                                model.image    = image;
 
                                 model.imageHeight = (SCREEN_WIDTH - 20) / size.width * size.height;
                                 if (!image) {
                                     model.imageHeight = 0;
                                 }
 
-                                CGRect rect = [model.intro boundingRectWithSize:CGSizeMake(SCREEN_WIDTH - 20, 60) options:(NSStringDrawingUsesLineFragmentOrigin | NSStringDrawingUsesFontLeading) attributes:@{ NSFontAttributeName: [UIFont systemFontOfSize:16] } context:nil];
+                                CGRect rect      = [model.intro boundingRectWithSize:CGSizeMake(SCREEN_WIDTH - 20, 60) options:(NSStringDrawingUsesLineFragmentOrigin | NSStringDrawingUsesFontLeading) attributes:@{ NSFontAttributeName: [UIFont systemFontOfSize:16] } context:nil];
                                 model.textHeight = rect.size.height;
 
-                                CGFloat height = (model.imageHeight + 35 + rect.size.height);
+                                CGFloat height   = (model.imageHeight + 35 + rect.size.height);
                                 model.cellHeight = height;
 
                                 [_heightHotArr addObject:[NSString stringWithFormat:@"%f", height]];
@@ -1054,7 +1054,7 @@ static NSString *notice_index;
                             [_guideArray removeAllObjects];
                             [_heightArr removeAllObjects];
                             for (NSDictionary *dict in successResponse[@"data"][@"list"]) {
-                                homeModel = [[HomeModel alloc] initWithDict:dict];
+                                homeModel              = [[HomeModel alloc] initWithDict:dict];
                                 homeModel.isShowAction = YES;
                                 [_guideArray addObject:homeModel];
                             }
@@ -1102,18 +1102,18 @@ static NSString *notice_index;
                                 NSData *data = [NSData dataWithContentsOfURL:[NSURL URLWithString:[NSString stringWithFormat:@"%@%@", IMAGEHEADER, model.imgName]]];
 
                                 UIImage *image = [UIImage imageWithData:data];
-                                CGSize size = CGSizeFromString(NSStringFromCGSize(image.size));
-                                model.image = image;
+                                CGSize size    = CGSizeFromString(NSStringFromCGSize(image.size));
+                                model.image    = image;
 
                                 model.imageHeight = (SCREEN_WIDTH - 20) / size.width * size.height;
                                 if (!image) {
                                     model.imageHeight = 0;
                                 }
 
-                                CGRect rect = [model.intro boundingRectWithSize:CGSizeMake(SCREEN_WIDTH - 20, 70) options:(NSStringDrawingUsesLineFragmentOrigin | NSStringDrawingUsesFontLeading) attributes:@{ NSFontAttributeName: [UIFont systemFontOfSize:16] } context:nil];
+                                CGRect rect      = [model.intro boundingRectWithSize:CGSizeMake(SCREEN_WIDTH - 20, 70) options:(NSStringDrawingUsesLineFragmentOrigin | NSStringDrawingUsesFontLeading) attributes:@{ NSFontAttributeName: [UIFont systemFontOfSize:16] } context:nil];
                                 model.textHeight = rect.size.height;
 
-                                CGFloat height = (model.imageHeight + 35 + rect.size.height);
+                                CGFloat height   = (model.imageHeight + 35 + rect.size.height);
                                 model.cellHeight = height;
 
                                 [_heightHotArr addObject:[NSString stringWithFormat:@"%f", height]];
@@ -1151,19 +1151,19 @@ static NSString *notice_index;
 
         if (indexPath.row > 1) {
             HomeCollectionViewCell *cell = [collectionView dequeueReusableCellWithReuseIdentifier:@"newCell" forIndexPath:indexPath];
-            cell.delegate = self;
-            homeModel = _guideArray[indexPath.row - 2];
+            cell.delegate                = self;
+            homeModel                    = _guideArray[indexPath.row - 2];
             [cell fillData:homeModel];
             return cell;
         } else {
             UICollectionViewCell *cell = [collectionView dequeueReusableCellWithReuseIdentifier:@"cell" forIndexPath:indexPath];
-            cell.backgroundColor = [UIColor clearColor];
+            cell.backgroundColor       = [UIColor clearColor];
             return cell;
         }
     } else {
         HotMessageCollectionViewCell *cell = [collectionView dequeueReusableCellWithReuseIdentifier:@"hotCell" forIndexPath:indexPath];
-        cell.backgroundColor = [UIColor clearColor];
-        hotModel = _hotArray[indexPath.row];
+        cell.backgroundColor               = [UIColor clearColor];
+        hotModel                           = _hotArray[indexPath.row];
         [cell fillData:hotModel];
         return cell;
     }
@@ -1182,9 +1182,9 @@ static NSString *notice_index;
         } else {
 
             if (collectionView == _collectionView) {
-                HomeModel *model = _guideArray[indexPath.item - 2];
+                HomeModel *model                 = _guideArray[indexPath.item - 2];
                 LYDetailDataViewController *deta = [[LYDetailDataViewController alloc] init];
-                deta.userId = model.id;
+                deta.userId                      = model.id;
                 [self.navigationController pushViewController:deta animated:YES];
             } else {
                 HotModel *model = _hotArray[indexPath.item];
@@ -1204,72 +1204,72 @@ static NSString *notice_index;
 }
 
 - (void)collectionView:(UICollectionView *)collectionView willDisplayCell:(UICollectionViewCell *)cell forItemAtIndexPath:(NSIndexPath *)indexPath {
-    if (indexPath.item > 1 && collectionView == _collectionView) {
-
-        homeModel = _guideArray[indexPath.item - 2];
-        if (homeModel.isShowAction) {
-            homeModel.isShowAction = NO;
-
-            CGRect rect = cell.frame;
-            rect.size.width = cell.frame.size.width + 3;
-
-            UIView *hideView1 = [[UIView alloc] initWithFrame:CGRectMake(0, 0, rect.size.width / 2, rect.size.height / 2)];
-            [cell addSubview:hideView1];
-            hideView1.backgroundColor = [UIColor colorWithRed:244 / 255.0 green:245 / 255.0 blue:246 / 255.0 alpha:1];
-
-            UIView *hideView2 = [[UIView alloc] initWithFrame:CGRectMake(rect.size.width / 2, 0, rect.size.width / 2, rect.size.height / 2)];
-            [cell addSubview:hideView2];
-            hideView2.backgroundColor = [UIColor colorWithRed:244 / 255.0 green:245 / 255.0 blue:246 / 255.0 alpha:1];
-
-            UIView *hideView3 = [[UIView alloc] initWithFrame:CGRectMake(0, rect.size.height / 2, rect.size.width / 2, rect.size.height / 2)];
-            [cell addSubview:hideView3];
-            hideView3.backgroundColor = [UIColor colorWithRed:244 / 255.0 green:245 / 255.0 blue:246 / 255.0 alpha:1];
-
-            UIView *hideView4 = [[UIView alloc] initWithFrame:CGRectMake(rect.size.width / 2, rect.size.height / 2, rect.size.width / 2, rect.size.height / 2)];
-            [cell addSubview:hideView4];
-            hideView4.backgroundColor = [UIColor colorWithRed:244 / 255.0 green:245 / 255.0 blue:246 / 255.0 alpha:1];
-
-
-            UIView *hideView5 = [[UIView alloc] initWithFrame:CGRectMake(rect.size.width / 2, 0, 0, rect.size.height / 2)];
-            [cell addSubview:hideView5];
-            hideView5.backgroundColor = [UIColor colorWithRed:244 / 255.0 green:245 / 255.0 blue:246 / 255.0 alpha:1];
-
-            UIView *hideView6 = [[UIView alloc] initWithFrame:CGRectMake(0, rect.size.height / 2, rect.size.width / 2, 0)];
-            [cell addSubview:hideView6];
-            hideView6.backgroundColor = [UIColor colorWithRed:244 / 255.0 green:245 / 255.0 blue:246 / 255.0 alpha:1];
-
-            UIView *hideView7 = [[UIView alloc] initWithFrame:CGRectMake(rect.size.width / 2, rect.size.height / 2, 0, rect.size.height / 2)];
-            [cell addSubview:hideView7];
-            hideView7.backgroundColor = [UIColor colorWithRed:244 / 255.0 green:245 / 255.0 blue:246 / 255.0 alpha:1];
-
-            UIView *hideView8 = [[UIView alloc] initWithFrame:CGRectMake(rect.size.width / 2, rect.size.height / 2, rect.size.width / 2, 0)];
-            [cell addSubview:hideView8];
-            hideView8.backgroundColor = [UIColor colorWithRed:244 / 255.0 green:245 / 255.0 blue:246 / 255.0 alpha:1];
-
-            [UIView animateWithDuration:0.6 delay:.0 options:UIViewAnimationOptionCurveEaseOut animations:^{
-
-                hideView1.frame = CGRectMake(0, 0, 0, 0);
-                hideView2.frame = CGRectMake(rect.size.width, 0, 0, 0);
-                hideView3.frame = CGRectMake(0, rect.size.height, 0, 0);
-                hideView4.frame = CGRectMake(rect.size.width, rect.size.height, 0, 0);
-
-                hideView5.frame = CGRectMake(0, 0, rect.size.width, 0);
-                hideView6.frame = CGRectMake(0, 0, 0, rect.size.height);
-                hideView7.frame = CGRectMake(0, rect.size.height, rect.size.width, 0);
-                hideView8.frame = CGRectMake(rect.size.width, 0, 0, rect.size.height);
-            }
-                completion:^(BOOL finished) {
-                    [hideView1 removeFromSuperview];
-                    [hideView2 removeFromSuperview];
-                    [hideView3 removeFromSuperview];
-                    [hideView4 removeFromSuperview];
-                    [hideView5 removeFromSuperview];
-                    [hideView6 removeFromSuperview];
-                    [hideView7 removeFromSuperview];
-                    [hideView8 removeFromSuperview];
-                }];
-        }
-    }
+//    if (indexPath.item > 1 && collectionView == _collectionView) {
+//
+//        homeModel = _guideArray[indexPath.item - 2];
+//        if (homeModel.isShowAction) {
+//            homeModel.isShowAction = NO;
+//
+//            CGRect rect     = cell.frame;
+//            rect.size.width = cell.frame.size.width + 3;
+//
+//            UIView *hideView1 = [[UIView alloc] initWithFrame:CGRectMake(0, 0, rect.size.width / 2, rect.size.height / 2)];
+//            [cell addSubview:hideView1];
+//            hideView1.backgroundColor = [UIColor colorWithRed:244 / 255.0 green:245 / 255.0 blue:246 / 255.0 alpha:1];
+//
+//            UIView *hideView2 = [[UIView alloc] initWithFrame:CGRectMake(rect.size.width / 2, 0, rect.size.width / 2, rect.size.height / 2)];
+//            [cell addSubview:hideView2];
+//            hideView2.backgroundColor = [UIColor colorWithRed:244 / 255.0 green:245 / 255.0 blue:246 / 255.0 alpha:1];
+//
+//            UIView *hideView3 = [[UIView alloc] initWithFrame:CGRectMake(0, rect.size.height / 2, rect.size.width / 2, rect.size.height / 2)];
+//            [cell addSubview:hideView3];
+//            hideView3.backgroundColor = [UIColor colorWithRed:244 / 255.0 green:245 / 255.0 blue:246 / 255.0 alpha:1];
+//
+//            UIView *hideView4 = [[UIView alloc] initWithFrame:CGRectMake(rect.size.width / 2, rect.size.height / 2, rect.size.width / 2, rect.size.height / 2)];
+//            [cell addSubview:hideView4];
+//            hideView4.backgroundColor = [UIColor colorWithRed:244 / 255.0 green:245 / 255.0 blue:246 / 255.0 alpha:1];
+//
+//
+//            UIView *hideView5 = [[UIView alloc] initWithFrame:CGRectMake(rect.size.width / 2, 0, 0, rect.size.height / 2)];
+//            [cell addSubview:hideView5];
+//            hideView5.backgroundColor = [UIColor colorWithRed:244 / 255.0 green:245 / 255.0 blue:246 / 255.0 alpha:1];
+//
+//            UIView *hideView6 = [[UIView alloc] initWithFrame:CGRectMake(0, rect.size.height / 2, rect.size.width / 2, 0)];
+//            [cell addSubview:hideView6];
+//            hideView6.backgroundColor = [UIColor colorWithRed:244 / 255.0 green:245 / 255.0 blue:246 / 255.0 alpha:1];
+//
+//            UIView *hideView7 = [[UIView alloc] initWithFrame:CGRectMake(rect.size.width / 2, rect.size.height / 2, 0, rect.size.height / 2)];
+//            [cell addSubview:hideView7];
+//            hideView7.backgroundColor = [UIColor colorWithRed:244 / 255.0 green:245 / 255.0 blue:246 / 255.0 alpha:1];
+//
+//            UIView *hideView8 = [[UIView alloc] initWithFrame:CGRectMake(rect.size.width / 2, rect.size.height / 2, rect.size.width / 2, 0)];
+//            [cell addSubview:hideView8];
+//            hideView8.backgroundColor = [UIColor colorWithRed:244 / 255.0 green:245 / 255.0 blue:246 / 255.0 alpha:1];
+//
+//            [UIView animateWithDuration:0.6 delay:.0 options:UIViewAnimationOptionCurveEaseOut animations:^{
+//
+//                hideView1.frame = CGRectMake(0, 0, 0, 0);
+//                hideView2.frame = CGRectMake(rect.size.width, 0, 0, 0);
+//                hideView3.frame = CGRectMake(0, rect.size.height, 0, 0);
+//                hideView4.frame = CGRectMake(rect.size.width, rect.size.height, 0, 0);
+//
+//                hideView5.frame = CGRectMake(0, 0, rect.size.width, 0);
+//                hideView6.frame = CGRectMake(0, 0, 0, rect.size.height);
+//                hideView7.frame = CGRectMake(0, rect.size.height, rect.size.width, 0);
+//                hideView8.frame = CGRectMake(rect.size.width, 0, 0, rect.size.height);
+//            }
+//                completion:^(BOOL finished) {
+//                    [hideView1 removeFromSuperview];
+//                    [hideView2 removeFromSuperview];
+//                    [hideView3 removeFromSuperview];
+//                    [hideView4 removeFromSuperview];
+//                    [hideView5 removeFromSuperview];
+//                    [hideView6 removeFromSuperview];
+//                    [hideView7 removeFromSuperview];
+//                    [hideView8 removeFromSuperview];
+//                }];
+//        }
+//    }
 }
 
 - (CGSize)collectionView:(UICollectionView *)collectionView layout:(UICollectionViewLayout *)collectionViewLayout sizeForItemAtIndexPath:(NSIndexPath *)indexPath {
@@ -1293,7 +1293,7 @@ static NSString *notice_index;
     [_clManager stopUpdatingLocation];
     CLLocation *currentLocation = [locations lastObject];
 
-    latitude = [NSString stringWithFormat:@"%f", currentLocation.coordinate.latitude];
+    latitude  = [NSString stringWithFormat:@"%f", currentLocation.coordinate.latitude];
     longitude = [NSString stringWithFormat:@"%f", currentLocation.coordinate.longitude];
 
     if (!kAppDelegate.deviceToken) {
@@ -1311,13 +1311,13 @@ static NSString *notice_index;
     [_clManager stopUpdatingLocation];
 
     //初始化检索对象
-    self.searcher = [[BMKGeoCodeSearch alloc] init];
+    self.searcher          = [[BMKGeoCodeSearch alloc] init];
     self.searcher.delegate = self;
 
     //发起反向地理编码检索
-    CLLocationCoordinate2D pt = (CLLocationCoordinate2D){[latitude floatValue], [longitude floatValue]};
+    CLLocationCoordinate2D pt                           = (CLLocationCoordinate2D){[latitude floatValue], [longitude floatValue]};
     BMKReverseGeoCodeOption *reverseGeoCodeSearchOption = [[BMKReverseGeoCodeOption alloc] init];
-    reverseGeoCodeSearchOption.reverseGeoPoint = pt;
+    reverseGeoCodeSearchOption.reverseGeoPoint          = pt;
     [self.searcher reverseGeoCode:reverseGeoCodeSearchOption];
     BOOL flag = [self.searcher reverseGeoCode:reverseGeoCodeSearchOption];
     if (flag) {
@@ -1335,7 +1335,7 @@ static NSString *notice_index;
     } else {
         //        [MBProgressHUD showError:@"用户拒绝授权,请在设置中开启"];
         longitude = @"120.027860";
-        latitude = @"30.245586";
+        latitude  = @"30.245586";
         if (!kAppDelegate.deviceToken) {
             kAppDelegate.deviceToken = @"bb63b19106f3108798b7a271447e40df8a75c0b7cec8d99f54b43728713edc37";
         }
@@ -1381,7 +1381,7 @@ static NSString *notice_index;
 
 - (void)cycleBannerView:(KDCycleBannerView *)bannerView didSelectedAtIndex:(NSUInteger)index {
     CollectWebViewController *vc = [CollectWebViewController new];
-    vc.url = scrollImageActionURLArray[index];
+    vc.url                       = scrollImageActionURLArray[index];
     [self.navigationController pushViewController:vc animated:YES];
 }
 
@@ -1420,17 +1420,17 @@ static NSString *notice_index;
     if (offSet_Y > 0) {
         [UIView animateWithDuration:kNavigationHiddenAnimationDuration * 3 delay:0.0 usingSpringWithDamping:0.35 initialSpringVelocity:50 options:UIViewAnimationOptionAllowAnimatedContent animations:^{
             //BOTTOM
-            self.publishBtn.alpha = 0.35;
+            self.publishBtn.alpha    = 0.35;
             self.animationView.frame = CGRectMake(kMainScreenWidth / 2 - 18, kMainScreenHeight - 20 - 47, 36, 36);
-            self.publishBtn.frame = CGRectMake(0, 0, 36, 36);
+            self.publishBtn.frame    = CGRectMake(0, 0, 36, 36);
         }
                          completion:nil];
     } else {
         [UIView animateWithDuration:kNavigationHiddenAnimationDuration * 3 delay:0.0 usingSpringWithDamping:0.35 initialSpringVelocity:50 options:UIViewAnimationOptionAllowAnimatedContent animations:^{
             //BOTTOM
-            self.publishBtn.alpha = 0.90;
+            self.publishBtn.alpha    = 0.90;
             self.animationView.frame = CGRectMake(kMainScreenWidth / 2 - 36, kMainScreenHeight - 88 - 44, 70, 70);
-            self.publishBtn.frame = CGRectMake(0, 0, 70, 70);
+            self.publishBtn.frame    = CGRectMake(0, 0, 70, 70);
         }
                          completion:nil];
     }
