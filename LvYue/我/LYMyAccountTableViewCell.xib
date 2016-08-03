@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="10117" systemVersion="15E65" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES">
+    <dependencies>
+        <deployment identifier="iOS"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="10085"/>
+        <capability name="Constraints to layout margins" minToolsVersion="6.0"/>
+    </dependencies>
+    <objects>
+        <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner"/>
+        <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
+        <tableViewCell contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" id="KGk-i7-Jjw" customClass="LYMyAccountTableViewCell">
+            <rect key="frame" x="0.0" y="0.0" width="320" height="44"/>
+            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+            <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="KGk-i7-Jjw" id="H2p-sc-9uM">
+                <rect key="frame" x="0.0" y="0.0" width="320" height="43.5"/>
+                <autoresizingMask key="autoresizingMask"/>
+                <subviews>
+                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="nHI-93-gyp">
+                        <rect key="frame" x="41" y="13" width="38" height="18"/>
+                        <fontDescription key="fontDescription" type="system" pointSize="15"/>
+                        <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
+                        <nil key="highlightedColor"/>
+                    </label>
+                    <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="ZWd-bO-40c">
+                        <rect key="frame" x="8" y="8" width="28" height="28"/>
+                        <constraints>
+                            <constraint firstAttribute="width" constant="28" id="h21-mb-Q81"/>
+                            <constraint firstAttribute="height" constant="28" id="xhG-Xj-JiN"/>
+                        </constraints>
+                    </imageView>
+                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="ytU-Yf-J8H">
+                        <rect key="frame" x="205" y="5" width="100" height="33"/>
+                        <color key="backgroundColor" red="0.0" green="0.77825468778610229" blue="0.7601204514503479" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                        <constraints>
+                            <constraint firstAttribute="height" constant="33" id="TtP-Uh-sU2"/>
+                            <constraint firstAttribute="width" constant="100" id="uF9-Eb-6UX"/>
+                        </constraints>
+                        <state key="normal" title="获取金币">
+                            <color key="titleColor" red="1" green="1" blue="1" alpha="1" colorSpace="calibratedRGB"/>
+                        </state>
+                        <connections>
+                            <action selector="clickFetchCoinButton:" destination="KGk-i7-Jjw" eventType="touchUpInside" id="sOl-sv-GZ5"/>
+                        </connections>
+                    </button>
+                    <imageView hidden="YES" userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="icon_leftArrow" translatesAutoresizingMaskIntoConstraints="NO" id="Esg-QX-exS">
+                        <rect key="frame" x="290" y="14" width="15" height="15"/>
+                        <constraints>
+                            <constraint firstAttribute="height" constant="15" id="qgs-IS-0hV"/>
+                            <constraint firstAttribute="width" constant="15" id="zfF-Mx-iRt"/>
+                        </constraints>
+                    </imageView>
+                </subviews>
+                <constraints>
+                    <constraint firstItem="nHI-93-gyp" firstAttribute="leading" secondItem="ZWd-bO-40c" secondAttribute="trailing" constant="5" id="308-BX-GsD"/>
+                    <constraint firstAttribute="trailingMargin" secondItem="Esg-QX-exS" secondAttribute="trailing" constant="7" id="Mr6-N2-1X7"/>
+                    <constraint firstAttribute="leadingMargin" secondItem="ZWd-bO-40c" secondAttribute="leading" id="Pos-LW-l2j"/>
+                    <constraint firstItem="ytU-Yf-J8H" firstAttribute="centerY" secondItem="H2p-sc-9uM" secondAttribute="centerY" id="YQZ-JH-5FO"/>
+                    <constraint firstItem="nHI-93-gyp" firstAttribute="centerY" secondItem="H2p-sc-9uM" secondAttribute="centerY" id="afB-6c-IJt"/>
+                    <constraint firstItem="ZWd-bO-40c" firstAttribute="centerY" secondItem="H2p-sc-9uM" secondAttribute="centerY" id="bor-K9-pGV"/>
+                    <constraint firstItem="Esg-QX-exS" firstAttribute="centerY" secondItem="H2p-sc-9uM" secondAttribute="centerY" id="ptl-IR-MOE"/>
+                    <constraint firstAttribute="trailingMargin" secondItem="ytU-Yf-J8H" secondAttribute="trailing" constant="7" id="unz-VC-0hd"/>
+                </constraints>
+            </tableViewCellContentView>
+            <connections>
+                <outlet property="contentLabel" destination="nHI-93-gyp" id="5sI-z6-nPk"/>
+                <outlet property="fetchCoinButton" destination="ytU-Yf-J8H" id="hIN-TY-xTj"/>
+                <outlet property="iconImageView" destination="ZWd-bO-40c" id="UgH-MJ-rW5"/>
+                <outlet property="rightArrowImageView" destination="Esg-QX-exS" id="XaJ-HJ-oam"/>
+            </connections>
+        </tableViewCell>
+    </objects>
+    <resources>
+        <image name="icon_leftArrow" width="15" height="15"/>
+    </resources>
+</document>

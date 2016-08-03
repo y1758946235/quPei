@@ -9,6 +9,7 @@
 #import "FXBlurView.h"
 #import "LYBlurImageCache.h"
 #import "LYEssenceTipViewController.h"
+#import "LYGetCoinViewController.h"
 #import "LYHttpPoster.h"
 #import "LYUserService.h"
 #import "MBProgressHUD+NJ.h"
@@ -41,14 +42,48 @@
     self.title = @"打赏查看";
 
     [self p_loadUserInfo];
+    [self p_loadAccountAmount];
 }
 
 #pragma mark - UIAlertViewDelegate
 
 - (void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex {
+
+    // 确认打赏的弹框
+    if (alertView.tag == 101) {
+        if (buttonIndex == 1) {
+            // 金币不够则跳转充值界面
+            if ([self.accountAmount integerValue] < self.tipAmount) {
+                UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"豆客" message:@"账户金币不足，请先充值" delegate:self cancelButtonTitle:@"取消" otherButtonTitles:@"获取金币", nil];
+                [alert show];
+                return;
+            }
+
+            [LYHttpPoster postHttpRequestByPost:[NSString stringWithFormat:@"%@/mobile/user/gotoEssenceImg", REQUESTHEADER]
+                andParameter:@{
+                    @"user_id": [LYUserService sharedInstance].userID,
+                    @"img_id": self.bulrImageID
+                }
+                success:^(id successResponse) {
+                    if ([successResponse[@"code"] integerValue] == 200) {
+                        [MBProgressHUD showSuccess:@"打赏成功"];
+                        [self.navigationController popViewControllerAnimated:YES];
+                    } else {
+                        [MBProgressHUD showError:[NSString stringWithFormat:@"%@", successResponse[@"msg"]]];
+                    }
+                }
+                andFailure:^(id failureResponse) {
+                    [MBProgressHUD showError:@"打赏失败，请重试"];
+                }];
+        }
+        return;
+    }
+
     // 跳转充值界面
     if (buttonIndex == 1) {
-        //TODO:跳转充值界面
+        LYGetCoinViewController *vc = [[LYGetCoinViewController alloc] init];
+        vc.accountAmount            = [self.accountAmount integerValue];
+        [self.navigationController pushViewController:vc animated:YES];
     }
 }
 
@@ -72,7 +107,7 @@
             @"user_id": [LYUserService sharedInstance].userID
         }
         success:^(id successResponse) {
-            [MBProgressHUD hideHUD];
+            [MBProgressHUD hideHUDForView:self.view animated:YES];
             if ([successResponse[@"code"] integerValue] == 200) {
 
                 self.userName  = successResponse[@"data"][@"user"][@"name"];
@@ -84,18 +119,21 @@
             }
         }
         andFailure:^(id failureResponse) {
-            [MBProgressHUD hideHUD];
+            [MBProgressHUD hideHUDForView:self.view animated:YES];
             [MBProgressHUD showError:@"服务器繁忙,请重试"];
         }];
 }
 
 - (void)p_loadAccountAmount {
+    MBProgressHUD *hub = [[MBProgressHUD alloc] initWithView:self.view];
+    [hub show:YES];
     [LYHttpPoster postHttpRequestByPost:[NSString stringWithFormat:@"%@/mobile/need/hongdou", REQUESTHEADER]
         andParameter:@{
             @"user_id": [LYUserService sharedInstance].userID
         }
         success:^(id successResponse) {
             MLOG(@"结果:%@", successResponse);
+            [hub hide:YES];
             if ([[NSString stringWithFormat:@"%@", successResponse[@"code"]] isEqualToString:@"200"]) {
                 self.accountAmount = [NSString stringWithFormat:@"%@", successResponse[@"data"][@"data"][@"hongdou"]];
             } else {
@@ -103,34 +141,16 @@
             }
         }
         andFailure:^(id failureResponse) {
+            [hub hide:YES];
             [MBProgressHUD showError:@"查询余额失败，请重试"];
         }];
 }
 
 - (void)p_tipToWatch:(id)sender {
-    // 金币不够则跳转充值界面
-    if ([self.accountAmount integerValue] < self.tipAmount) {
-        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"豆客" message:@"账户金币不足，请先充值" delegate:self cancelButtonTitle:@"取消" otherButtonTitles:@"获取金币", nil];
-        [alert show];
-        return;
-    }
 
-    [LYHttpPoster postHttpRequestByPost:[NSString stringWithFormat:@"%@/mobile/user/gotoEssenceImg", REQUESTHEADER]
-        andParameter:@{
-            @"user_id": [LYUserService sharedInstance].userID,
-            @"img_id": self.bulrImageID
-        }
-        success:^(id successResponse) {
-            if ([successResponse[@"code"] integerValue] == 200) {
-                [MBProgressHUD showSuccess:@"打赏成功"];
-                [self.navigationController popViewControllerAnimated:YES];
-            } else {
-                [MBProgressHUD showError:[NSString stringWithFormat:@"%@", successResponse[@"msg"]]];
-            }
-        }
-        andFailure:^(id failureResponse) {
-            [MBProgressHUD showError:@"打赏失败，请重试"];
-        }];
+    UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"豆客" message:[NSString stringWithFormat:@"确认要打赏%d金币查看该相片吗？", self.tipAmount] delegate:self cancelButtonTitle:@"取消" otherButtonTitles:@"确认", nil];
+    alert.tag          = 101; // 点击打赏查看按钮的弹框
+    [alert show];
 }
 
 #pragma mark - Getter

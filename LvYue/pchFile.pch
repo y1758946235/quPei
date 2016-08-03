@@ -84,13 +84,11 @@
 //#define REQUESTHEADER     @"http://lianhttp://wangqiaosai.vicp.hk:18165g0608.imwork.net:12485"
 //#define REQUESTHEADER     @"http://182.254.153.99:8080/lvyue-web-1.0.0-RELEASE2"             //gjh测试账号
 
-#define REQUESTHEADER     @"http://121.42.156.36:8088/lvyue2"  //吴书杰测试
 
-//#define REQUESTHEADER     @"http://192.168.1.110:8080"             //吴书杰本地测试
+//#define REQUESTHEADER       @"http://114.215.184.120:8080"   //服务器正式地址
+//#define REQUESTHEADER     @"http://192.168.1.110:8080"       //本地测试地址
+#define REQUESTHEADER     @"http://121.42.156.36:8088/lvyue2"  //服务器测试地址
 
-
-//正式
-//#define REQUESTHEADER       @"http://114.215.184.120:8080" //阿里7云ip4
 
 #define IMAGEHEADER         @"http://7xlcz5.com2.z0.glb.qiniucdn.com/"    //七牛请求头
 

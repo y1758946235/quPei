@@ -25,6 +25,11 @@
 
 @implementation LYDetailDataDefalutTableViewCell
 
+- (void)prepareForReuse {
+    self.lySwitch.hidden             = YES;
+    self.lyLeftArrowImageView.hidden = YES;
+}
+
 - (void)awakeFromNib {
     [super awakeFromNib];
 
