@@ -167,12 +167,12 @@ static NSString *const LYDetailDataPhotoTableViewCellIdentity   = @"LYDetailData
            }
         ],
         @[
-           @{
-               @"title": @"TA的超能力",
-               @"value": @"",
-               @"rowHeight": @44,
-               @"actionVC": @""
-           },
+           //           @{
+           //               @"title": @"TA的超能力",
+           //               @"value": @"",
+           //               @"rowHeight": @44,
+           //               @"actionVC": @"PublishRequirementViewController"
+           //           },
            @{
                @"title": @"屏蔽用户状态",
                @"value": @"",
@@ -249,8 +249,7 @@ static NSString *const LYDetailDataPhotoTableViewCellIdentity   = @"LYDetailData
         // 我的动态  TA 的气质  精华相册
         if (indexPath.row == 3 || indexPath.row == 4 || indexPath.row == 5) {
             LYDetailDataPhotoTableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:LYDetailDataPhotoTableViewCellIdentity forIndexPath:indexPath];
-            //            LYDetailDataPhotoTableViewCell *cell = [[[NSBundle mainBundle] loadNibNamed:@"LYDetailDataPhotoTableViewCell" owner:self options:nil] objectAtIndex:0];
-            BOOL essenceImage = NO;
+            BOOL essenceImage                    = NO;
             if (indexPath.row == 5) {
                 essenceImage = YES;
             }
@@ -325,6 +324,12 @@ static NSString *const LYDetailDataPhotoTableViewCellIdentity   = @"LYDetailData
         if (indexPath.section == 0 && (indexPath.row == 3 || indexPath.row == 4 || indexPath.row == 5)) {
             [vc setValue:[NSString stringWithFormat:@"%ld", (long) self.infoModel.id] forKey:@"userId"];
         }
+
+        // TA 的超能力
+        //        if (indexPath.section == 2 && indexPath.row == 0) {
+        //            [vc setValue:self.userId forKey:@"userId"];
+        //        }
+
 
         [self.navigationController pushViewController:vc animated:YES];
     }
@@ -529,14 +534,14 @@ forRowAtIndexPath:(NSIndexPath *)indexPath {
                                 }
                                 success:^(id successResponse) {
                                     if ([successResponse[@"code"] integerValue] == 200) {
-                                        NSMutableArray *array = [[NSMutableArray alloc] init];
-                                        [successResponse[@"data"][@"list"]
-                                            enumerateObjectsUsingBlock:^(id _Nonnull obj,
-                                                                         NSUInteger idx,
-                                                                         BOOL *_Nonnull stop) {
-                                                [array addObject:obj[@"img_name"]];
-                                            }];
-                                        weakSelf.jingHuaImageURLArray = [array copy];
+                                        //                                        NSMutableArray *array = [[NSMutableArray alloc] init];
+                                        //                                        [successResponse[@"data"][@"list"]
+                                        //                                            enumerateObjectsUsingBlock:^(id _Nonnull obj,
+                                        //                                                                         NSUInteger idx,
+                                        //                                                                         BOOL *_Nonnull stop) {
+                                        //                                                [array addObject:obj[@"img_name"]];
+                                        //                                            }];
+                                        weakSelf.jingHuaImageURLArray = [successResponse[@"data"][@"list"] copy];
                                         [LYDetailDataViewController
                                             configTableViewDataArray:weakSelf.detailInfoModel
                                                            infoModel:weakSelf.infoModel

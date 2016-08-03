@@ -9,6 +9,7 @@
 #import "FXBlurView.h"
 #import "LYBlurImageCache.h"
 #import "LYDetailDataPhotoTableViewCell.h"
+#import "LYUserService.h"
 #import "SDWebImageManager.h"
 
 @interface LYDetailDataPhotoTableViewCell ()
@@ -46,7 +47,7 @@
 
     self.lyTitleLabel.text = title;
 
-    if ([imageURLArray isEqual:[NSNull null]] || [imageURLArray isEqual:@""]) {
+    if (!imageURLArray || [imageURLArray isEqual:[NSNull null]] || [imageURLArray isEqual:@""]) {
         return;
     }
     [imageURLArray enumerateObjectsUsingBlock:^(id _Nonnull obj, NSUInteger idx, BOOL *_Nonnull stop) {
@@ -58,14 +59,20 @@
             return;
         }
 
-        NSURL *imageURL = [NSURL URLWithString:[NSString stringWithFormat:@"%@%@", IMAGEHEADER, obj]];
+        NSURL *imageURL;
+        if (essenceImage) {
+            imageURL = [NSURL URLWithString:[NSString stringWithFormat:@"%@%@", IMAGEHEADER, obj[@"img_name"]]];
+        } else {
+            imageURL = [NSURL URLWithString:[NSString stringWithFormat:@"%@%@", IMAGEHEADER, obj]];
+        }
 
         [[SDWebImageManager sharedManager] downloadImageWithURL:imageURL options:SDWebImageRetryFailed progress:nil completed:^(UIImage *image, NSError *error, SDImageCacheType cacheType, BOOL finished, NSURL *imageURL) {
             if (error) {
                 return;
             }
-            // 精华相册需要模糊
-            if (essenceImage) {
+            BOOL flag = essenceImage && ([obj[@"isBo"] integerValue] != 1 || [obj[@"user_id"] isEqual:[LYUserService sharedInstance].userID]);
+            // 精华相册需要模糊  没打赏的才模糊  不是自己才模糊
+            if (flag) {
                 // 读取缓存图片
                 __block UIImage *blurImage = [[LYBlurImageCache shareCache] objectForKey:imageURL.absoluteString];
                 // 没有缓存重新模糊图片
@@ -115,5 +122,6 @@
         }];
     }];
 }
+
 
 @end
