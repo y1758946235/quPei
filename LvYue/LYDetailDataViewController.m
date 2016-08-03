@@ -284,12 +284,12 @@ static NSString *const LYDetailDataPhotoTableViewCellIdentity   = @"LYDetailData
     }
 
     // TA 的超能力
-    if (indexPath.section == 2 && indexPath.row == 0) {
-        [cell showLeftArrowImageView];
-    }
+    //    if (indexPath.section == 2 && indexPath.row == 0) {
+    //        [cell showLeftArrowImageView];
+    //    }
 
     // 屏蔽用户
-    if (indexPath.section == 2 && indexPath.row == 1) {
+    if (indexPath.section == 2 && indexPath.row == 0) {
         [cell showSwitchWithOn:self.shield
                   valueChanged:^(UISwitch *sender) {
                       [self p_changShield];
