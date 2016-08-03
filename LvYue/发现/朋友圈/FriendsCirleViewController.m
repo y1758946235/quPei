@@ -1012,7 +1012,7 @@
                 [_addView addSubview:publishVideoBtn];
                 
                 UIImageView *publishVideoView = [[UIImageView alloc] initWithFrame:CGRectMake((44 - 20) / 2, (44 - 20) / 2, 20, 20)];
-                publishVideoView.image        = [UIImage imageNamed:@"个人动态"];
+                publishVideoView.image        = [UIImage imageNamed:@"video"];
                 publishVideoView.contentMode  = UIViewContentModeScaleAspectFit;
                 [publishVideoBtn addSubview:publishVideoView];
                 

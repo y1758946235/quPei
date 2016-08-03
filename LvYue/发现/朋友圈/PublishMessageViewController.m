@@ -54,7 +54,7 @@
     _placeHolder           = [[UILabel alloc] initWithFrame:CGRectMake(5, 5, 200, 20)];
     _placeHolder.font      = [UIFont systemFontOfSize:13];
     _placeHolder.textColor = UIColorWithRGBA(169, 169, 169, 1);
-    _placeHolder.text      = @"邀请小伙伴们一起游玩吧!";
+    _placeHolder.text      = @"小伙伴们一起发表评论吧!";
 
     _tableView                = [[UITableView alloc] initWithFrame:CGRectMake(0, 0, self.view.frame.size.width, self.view.frame.size.height) style:UITableViewStylePlain];
     _tableView.delegate       = self;
@@ -228,6 +228,8 @@
         }
 
         cell.selectionStyle = UITableViewCellSelectionStyleNone;
+        //隐藏
+        cell.hidden = YES;
         return cell;
     } else {
 
@@ -287,7 +289,11 @@
 
     if (indexPath.row == 0) {
         return 150;
-    } else if (indexPath.row == 2) {
+    }
+    else if (indexPath.row == 1) {
+        return  0.01;
+    }
+    else if (indexPath.row == 2) {
         UITableViewCell *cell = [self tableView:_tableView cellForRowAtIndexPath:indexPath];
         return cell.frame.size.height;
     }

@@ -138,7 +138,7 @@
     _coverImageUrl = nil;
     
     //右边按钮
-    [self setRightButton:[UIImage imageNamed:@"more"] title:@"" target:self action:@selector(addClick) rect:CGRectMake(0, 0, 43, 43)];
+    //[self setRightButton:[UIImage imageNamed:@"more"] title:@"" target:self action:@selector(addClick) rect:CGRectMake(0, 0, 43, 43)];
     [self setLeftButton:[UIImage imageNamed:@"返回"] title:nil target:self action:@selector(back)];
     
     //设置tableview的头部view
@@ -247,6 +247,7 @@
         joinBtn.height = 45;
         joinBtn.layer.cornerRadius = 10.0f;
         joinBtn.layer.masksToBounds = YES;
+        [joinBtn addTarget:self action:@selector(publishClick) forControlEvents:UIControlEventTouchUpInside];
         [headerView addSubview:joinBtn];
         
         //设置headerView的frame

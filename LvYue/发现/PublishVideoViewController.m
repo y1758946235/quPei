@@ -51,9 +51,9 @@
     self.categoryID = @"";
     //add subview
     [self.view addSubview:self.tableView];
-    [self.view addSubview:self.pickerCover];
-    [self.view addSubview:self.assistentView];
-    [self.view addSubview:self.pickerView];
+//    [self.view addSubview:self.pickerCover];
+//    [self.view addSubview:self.assistentView];
+//    [self.view addSubview:self.pickerView];
     //请求预览视频截图
     [self thumbnailImageRequest:0.0f withURL:[NSURL fileURLWithPath:self.videoPath]];
     //add notifications
@@ -305,6 +305,8 @@
         self.categoryLabel  = categoryLabel;
         cell.accessoryType  = UITableViewCellAccessoryDisclosureIndicator;
         cell.selectionStyle = UITableViewCellSelectionStyleNone;
+        //隐藏cell
+        cell.hidden = YES;
     } else { //视频描述
         UILabel *titleLabel      = [[UILabel alloc] initWithFrame:CGRectMake(15, 0, 200, 20)];
         titleLabel.text          = @"视频描述(最多不超过200个字)";
@@ -323,24 +325,25 @@
 #pragma mark - UITableViewDelegate
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
     [tableView deselectRowAtIndexPath:indexPath animated:YES];
-    if (indexPath.row == 0) { //点击选择分类
-        [_tableView endEditing:YES];
-        //设置默认选中第一行
-        [self pickerView:self.pickerView didSelectRow:0 inComponent:0];
-        [self.pickerView selectRow:0 inComponent:0 animated:NO];
-        [UIView animateWithDuration:0.2 delay:0.0 options:UIViewAnimationOptionCurveEaseInOut animations:^{
-            self.pickerCover.alpha   = 0.4;
-            self.assistentView.frame = CGRectMake(0, self.view.frame.size.height - self.pickerView.frame.size.height - 30, self.assistentView.frame.size.width, self.assistentView.frame.size.height);
-            self.pickerView.frame    = CGRectMake(0, self.view.frame.size.height - self.pickerView.frame.size.height, self.pickerView.frame.size.width, self.pickerView.frame.size.height);
-        }
-                         completion:nil];
-    }
+//    if (indexPath.row == 0) { //点击选择分类
+//        [_tableView endEditing:YES];
+//        //设置默认选中第一行
+//        [self pickerView:self.pickerView didSelectRow:0 inComponent:0];
+//        [self.pickerView selectRow:0 inComponent:0 animated:NO];
+//        [UIView animateWithDuration:0.2 delay:0.0 options:UIViewAnimationOptionCurveEaseInOut animations:^{
+//            self.pickerCover.alpha   = 0.4;
+//            self.assistentView.frame = CGRectMake(0, self.view.frame.size.height - self.pickerView.frame.size.height - 30, self.assistentView.frame.size.width, self.assistentView.frame.size.height);
+//            self.pickerView.frame    = CGRectMake(0, self.view.frame.size.height - self.pickerView.frame.size.height, self.pickerView.frame.size.width, self.pickerView.frame.size.height);
+//        }
+//                         completion:nil];
+//    }
 }
 
 
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath {
     if (indexPath.row == 0) {
-        return 64.0;
+//        return 64.0;
+        return 0.01f;
     } else {
         return 150.0f;
     }
