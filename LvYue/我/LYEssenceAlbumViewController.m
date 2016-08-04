@@ -52,6 +52,10 @@ static NSString *const LYEssenceAlbumCollectionViewCellIdentity =
 - (void)viewWillAppear:(BOOL)animated {
     [super viewWillAppear:animated];
 
+    // 这两个数据源是懒加载的，所以刷新数据前清空
+    self.imageURLArray = nil;
+    self.imageArray    = nil;
+
     [self p_loadData];
 }
 

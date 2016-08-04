@@ -17,17 +17,19 @@
                     <rect key="frame" x="0.0" y="0.0" width="320" height="240"/>
                 </imageView>
                 <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="NnW-zl-Xn6">
-                    <rect key="frame" x="0.0" y="140" width="160" height="100"/>
+                    <rect key="frame" x="0.0" y="160" width="160" height="80"/>
                     <subviews>
-                        <label opaque="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="关注" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="2" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Zma-7g-2f5">
-                            <rect key="frame" x="48" y="39" width="53" height="21"/>
+                        <label opaque="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="关注" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="2" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Zma-7g-2f5">
+                            <rect key="frame" x="65" y="31" width="30" height="18"/>
                             <fontDescription key="fontDescription" type="system" pointSize="15"/>
                             <color key="textColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                             <nil key="highlightedColor"/>
                         </label>
                     </subviews>
                     <constraints>
-                        <constraint firstAttribute="height" constant="100" id="VZv-Np-aVC"/>
+                        <constraint firstItem="Zma-7g-2f5" firstAttribute="centerY" secondItem="NnW-zl-Xn6" secondAttribute="centerY" id="0cH-28-IC7"/>
+                        <constraint firstItem="Zma-7g-2f5" firstAttribute="centerX" secondItem="NnW-zl-Xn6" secondAttribute="centerX" id="Ge0-Iu-DnV"/>
+                        <constraint firstAttribute="height" constant="80" id="VZv-Np-aVC"/>
                     </constraints>
                 </view>
                 <button hidden="YES" opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="UI9-x0-jAS">
@@ -81,23 +83,26 @@
                     </state>
                 </button>
                 <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="eFD-od-fDZ">
-                    <rect key="frame" x="160" y="140" width="160" height="100"/>
+                    <rect key="frame" x="160" y="160" width="160" height="80"/>
                     <subviews>
-                        <label opaque="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="粉丝" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="2" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="2KI-S7-qGY">
-                            <rect key="frame" x="75" y="39" width="34" height="21"/>
+                        <label opaque="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="粉丝" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="2" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="2KI-S7-qGY">
+                            <rect key="frame" x="65" y="31" width="30" height="18"/>
                             <fontDescription key="fontDescription" type="system" pointSize="15"/>
                             <color key="textColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                             <nil key="highlightedColor"/>
                         </label>
                     </subviews>
                     <constraints>
-                        <constraint firstAttribute="height" constant="100" id="mCj-gl-4ap"/>
+                        <constraint firstItem="2KI-S7-qGY" firstAttribute="centerX" secondItem="eFD-od-fDZ" secondAttribute="centerX" id="a1L-CU-30e"/>
+                        <constraint firstAttribute="height" constant="80" id="mCj-gl-4ap"/>
+                        <constraint firstItem="2KI-S7-qGY" firstAttribute="centerY" secondItem="eFD-od-fDZ" secondAttribute="centerY" id="smS-dN-Iro"/>
                     </constraints>
                 </view>
             </subviews>
             <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
             <constraints>
                 <constraint firstItem="vgo-Kv-Kp3" firstAttribute="top" secondItem="iN0-l3-epB" secondAttribute="top" constant="50" id="0ur-1w-sXd"/>
+                <constraint firstItem="LiA-lV-7ul" firstAttribute="width" relation="lessThanOrEqual" secondItem="iN0-l3-epB" secondAttribute="width" multiplier="0.35" id="6iY-td-QPG"/>
                 <constraint firstItem="NnW-zl-Xn6" firstAttribute="leading" secondItem="iN0-l3-epB" secondAttribute="leading" id="7ZZ-OC-Ao8"/>
                 <constraint firstItem="LiA-lV-7ul" firstAttribute="top" secondItem="vgo-Kv-Kp3" secondAttribute="bottom" constant="20" id="89u-3o-kKU"/>
                 <constraint firstItem="vgo-Kv-Kp3" firstAttribute="centerX" secondItem="iN0-l3-epB" secondAttribute="centerX" id="8mc-OW-XhH"/>
