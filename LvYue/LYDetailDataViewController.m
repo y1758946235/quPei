@@ -6,6 +6,7 @@
 //  Copyright © 2016年 OLFT. All rights reserved.
 //
 
+#import "BuyVipViewController.h"
 #import "ChatViewController.h"
 #import "DXPopover.h"
 #import "FriendsCirleViewController.h"
@@ -438,7 +439,8 @@ forRowAtIndexPath:(NSIndexPath *)indexPath {
         }
         case LYDetailDataAlertViewEnumWatchContact: {
             if (buttonIndex == 1) {
-                // 成为会员
+                BuyVipViewController *vc = [[BuyVipViewController alloc] init];
+                [self.navigationController pushViewController:vc animated:YES];
             }
             break;
         }
