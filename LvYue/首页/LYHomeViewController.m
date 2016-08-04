@@ -133,17 +133,17 @@ static NSString *notice_index;
     //    refreshType = @"near";
     currentPage  = 1;
     currentPage2 = 1;
-    if (!topBtn) {
-        topBtn                 = [[UIButton alloc] initWithFrame:CGRectMake(0, 0, SCREEN_WIDTH / 4, 49)];
-        topBtn.backgroundColor = [UIColor clearColor];
-        [topBtn addTarget:self action:@selector(bringToTop) forControlEvents:UIControlEventTouchUpInside];
-        [self.tabBarController.tabBar addSubview:topBtn];
-    }
-    topBtn.hidden = NO;
+    //    if (!topBtn) {
+    //        topBtn                 = [[UIButton alloc] initWithFrame:CGRectMake(0, 0, SCREEN_WIDTH / 4, 49)];
+    //        topBtn.backgroundColor = [UIColor clearColor];
+    //        [topBtn addTarget:self action:@selector(bringToTop) forControlEvents:UIControlEventTouchUpInside];
+    //        [self.tabBarController.tabBar addSubview:topBtn];
+    //    }
+    //    topBtn.hidden = NO;
 }
 
 - (void)viewWillDisappear:(BOOL)animated {
-    topBtn.hidden = YES;
+//    topBtn.hidden = YES;
 }
 
 - (BOOL)prefersStatusBarHidden {
@@ -647,7 +647,7 @@ static NSString *notice_index;
             if (type == UserLoginStateTypeWaitToLogin) {
                 [[LYUserService sharedInstance] jumpToLoginWithController:self.tabBarController];
             } else {
-                isNew                     = NO;
+                isNew                          = NO;
                 VideoListViewController *video = [[VideoListViewController alloc] init];
                 [self.navigationController pushViewController:video animated:YES];
             }
@@ -1205,72 +1205,72 @@ static NSString *notice_index;
 }
 
 - (void)collectionView:(UICollectionView *)collectionView willDisplayCell:(UICollectionViewCell *)cell forItemAtIndexPath:(NSIndexPath *)indexPath {
-//    if (indexPath.item > 1 && collectionView == _collectionView) {
-//
-//        homeModel = _guideArray[indexPath.item - 2];
-//        if (homeModel.isShowAction) {
-//            homeModel.isShowAction = NO;
-//
-//            CGRect rect     = cell.frame;
-//            rect.size.width = cell.frame.size.width + 3;
-//
-//            UIView *hideView1 = [[UIView alloc] initWithFrame:CGRectMake(0, 0, rect.size.width / 2, rect.size.height / 2)];
-//            [cell addSubview:hideView1];
-//            hideView1.backgroundColor = [UIColor colorWithRed:244 / 255.0 green:245 / 255.0 blue:246 / 255.0 alpha:1];
-//
-//            UIView *hideView2 = [[UIView alloc] initWithFrame:CGRectMake(rect.size.width / 2, 0, rect.size.width / 2, rect.size.height / 2)];
-//            [cell addSubview:hideView2];
-//            hideView2.backgroundColor = [UIColor colorWithRed:244 / 255.0 green:245 / 255.0 blue:246 / 255.0 alpha:1];
-//
-//            UIView *hideView3 = [[UIView alloc] initWithFrame:CGRectMake(0, rect.size.height / 2, rect.size.width / 2, rect.size.height / 2)];
-//            [cell addSubview:hideView3];
-//            hideView3.backgroundColor = [UIColor colorWithRed:244 / 255.0 green:245 / 255.0 blue:246 / 255.0 alpha:1];
-//
-//            UIView *hideView4 = [[UIView alloc] initWithFrame:CGRectMake(rect.size.width / 2, rect.size.height / 2, rect.size.width / 2, rect.size.height / 2)];
-//            [cell addSubview:hideView4];
-//            hideView4.backgroundColor = [UIColor colorWithRed:244 / 255.0 green:245 / 255.0 blue:246 / 255.0 alpha:1];
-//
-//
-//            UIView *hideView5 = [[UIView alloc] initWithFrame:CGRectMake(rect.size.width / 2, 0, 0, rect.size.height / 2)];
-//            [cell addSubview:hideView5];
-//            hideView5.backgroundColor = [UIColor colorWithRed:244 / 255.0 green:245 / 255.0 blue:246 / 255.0 alpha:1];
-//
-//            UIView *hideView6 = [[UIView alloc] initWithFrame:CGRectMake(0, rect.size.height / 2, rect.size.width / 2, 0)];
-//            [cell addSubview:hideView6];
-//            hideView6.backgroundColor = [UIColor colorWithRed:244 / 255.0 green:245 / 255.0 blue:246 / 255.0 alpha:1];
-//
-//            UIView *hideView7 = [[UIView alloc] initWithFrame:CGRectMake(rect.size.width / 2, rect.size.height / 2, 0, rect.size.height / 2)];
-//            [cell addSubview:hideView7];
-//            hideView7.backgroundColor = [UIColor colorWithRed:244 / 255.0 green:245 / 255.0 blue:246 / 255.0 alpha:1];
-//
-//            UIView *hideView8 = [[UIView alloc] initWithFrame:CGRectMake(rect.size.width / 2, rect.size.height / 2, rect.size.width / 2, 0)];
-//            [cell addSubview:hideView8];
-//            hideView8.backgroundColor = [UIColor colorWithRed:244 / 255.0 green:245 / 255.0 blue:246 / 255.0 alpha:1];
-//
-//            [UIView animateWithDuration:0.6 delay:.0 options:UIViewAnimationOptionCurveEaseOut animations:^{
-//
-//                hideView1.frame = CGRectMake(0, 0, 0, 0);
-//                hideView2.frame = CGRectMake(rect.size.width, 0, 0, 0);
-//                hideView3.frame = CGRectMake(0, rect.size.height, 0, 0);
-//                hideView4.frame = CGRectMake(rect.size.width, rect.size.height, 0, 0);
-//
-//                hideView5.frame = CGRectMake(0, 0, rect.size.width, 0);
-//                hideView6.frame = CGRectMake(0, 0, 0, rect.size.height);
-//                hideView7.frame = CGRectMake(0, rect.size.height, rect.size.width, 0);
-//                hideView8.frame = CGRectMake(rect.size.width, 0, 0, rect.size.height);
-//            }
-//                completion:^(BOOL finished) {
-//                    [hideView1 removeFromSuperview];
-//                    [hideView2 removeFromSuperview];
-//                    [hideView3 removeFromSuperview];
-//                    [hideView4 removeFromSuperview];
-//                    [hideView5 removeFromSuperview];
-//                    [hideView6 removeFromSuperview];
-//                    [hideView7 removeFromSuperview];
-//                    [hideView8 removeFromSuperview];
-//                }];
-//        }
-//    }
+    //    if (indexPath.item > 1 && collectionView == _collectionView) {
+    //
+    //        homeModel = _guideArray[indexPath.item - 2];
+    //        if (homeModel.isShowAction) {
+    //            homeModel.isShowAction = NO;
+    //
+    //            CGRect rect     = cell.frame;
+    //            rect.size.width = cell.frame.size.width + 3;
+    //
+    //            UIView *hideView1 = [[UIView alloc] initWithFrame:CGRectMake(0, 0, rect.size.width / 2, rect.size.height / 2)];
+    //            [cell addSubview:hideView1];
+    //            hideView1.backgroundColor = [UIColor colorWithRed:244 / 255.0 green:245 / 255.0 blue:246 / 255.0 alpha:1];
+    //
+    //            UIView *hideView2 = [[UIView alloc] initWithFrame:CGRectMake(rect.size.width / 2, 0, rect.size.width / 2, rect.size.height / 2)];
+    //            [cell addSubview:hideView2];
+    //            hideView2.backgroundColor = [UIColor colorWithRed:244 / 255.0 green:245 / 255.0 blue:246 / 255.0 alpha:1];
+    //
+    //            UIView *hideView3 = [[UIView alloc] initWithFrame:CGRectMake(0, rect.size.height / 2, rect.size.width / 2, rect.size.height / 2)];
+    //            [cell addSubview:hideView3];
+    //            hideView3.backgroundColor = [UIColor colorWithRed:244 / 255.0 green:245 / 255.0 blue:246 / 255.0 alpha:1];
+    //
+    //            UIView *hideView4 = [[UIView alloc] initWithFrame:CGRectMake(rect.size.width / 2, rect.size.height / 2, rect.size.width / 2, rect.size.height / 2)];
+    //            [cell addSubview:hideView4];
+    //            hideView4.backgroundColor = [UIColor colorWithRed:244 / 255.0 green:245 / 255.0 blue:246 / 255.0 alpha:1];
+    //
+    //
+    //            UIView *hideView5 = [[UIView alloc] initWithFrame:CGRectMake(rect.size.width / 2, 0, 0, rect.size.height / 2)];
+    //            [cell addSubview:hideView5];
+    //            hideView5.backgroundColor = [UIColor colorWithRed:244 / 255.0 green:245 / 255.0 blue:246 / 255.0 alpha:1];
+    //
+    //            UIView *hideView6 = [[UIView alloc] initWithFrame:CGRectMake(0, rect.size.height / 2, rect.size.width / 2, 0)];
+    //            [cell addSubview:hideView6];
+    //            hideView6.backgroundColor = [UIColor colorWithRed:244 / 255.0 green:245 / 255.0 blue:246 / 255.0 alpha:1];
+    //
+    //            UIView *hideView7 = [[UIView alloc] initWithFrame:CGRectMake(rect.size.width / 2, rect.size.height / 2, 0, rect.size.height / 2)];
+    //            [cell addSubview:hideView7];
+    //            hideView7.backgroundColor = [UIColor colorWithRed:244 / 255.0 green:245 / 255.0 blue:246 / 255.0 alpha:1];
+    //
+    //            UIView *hideView8 = [[UIView alloc] initWithFrame:CGRectMake(rect.size.width / 2, rect.size.height / 2, rect.size.width / 2, 0)];
+    //            [cell addSubview:hideView8];
+    //            hideView8.backgroundColor = [UIColor colorWithRed:244 / 255.0 green:245 / 255.0 blue:246 / 255.0 alpha:1];
+    //
+    //            [UIView animateWithDuration:0.6 delay:.0 options:UIViewAnimationOptionCurveEaseOut animations:^{
+    //
+    //                hideView1.frame = CGRectMake(0, 0, 0, 0);
+    //                hideView2.frame = CGRectMake(rect.size.width, 0, 0, 0);
+    //                hideView3.frame = CGRectMake(0, rect.size.height, 0, 0);
+    //                hideView4.frame = CGRectMake(rect.size.width, rect.size.height, 0, 0);
+    //
+    //                hideView5.frame = CGRectMake(0, 0, rect.size.width, 0);
+    //                hideView6.frame = CGRectMake(0, 0, 0, rect.size.height);
+    //                hideView7.frame = CGRectMake(0, rect.size.height, rect.size.width, 0);
+    //                hideView8.frame = CGRectMake(rect.size.width, 0, 0, rect.size.height);
+    //            }
+    //                completion:^(BOOL finished) {
+    //                    [hideView1 removeFromSuperview];
+    //                    [hideView2 removeFromSuperview];
+    //                    [hideView3 removeFromSuperview];
+    //                    [hideView4 removeFromSuperview];
+    //                    [hideView5 removeFromSuperview];
+    //                    [hideView6 removeFromSuperview];
+    //                    [hideView7 removeFromSuperview];
+    //                    [hideView8 removeFromSuperview];
+    //                }];
+    //        }
+    //    }
 }
 
 - (CGSize)collectionView:(UICollectionView *)collectionView layout:(UICollectionViewLayout *)collectionViewLayout sizeForItemAtIndexPath:(NSIndexPath *)indexPath {
@@ -1446,7 +1446,6 @@ static NSString *notice_index;
 - (void)scrollViewDidEndDragging:(UIScrollView *)scrollView willDecelerate:(BOOL)decelerate {
     _endY = scrollView.contentOffset.y;
 }
-
 
 
 @end
