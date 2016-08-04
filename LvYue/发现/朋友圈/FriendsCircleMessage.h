@@ -22,9 +22,12 @@
 @property (nonatomic,copy) NSString *commentUserName; //评论人名字
 @property (nonatomic,copy) NSString *replyUserName; //回复人名字
 
-@property (nonatomic, copy) NSString* isHot;     //是否为热门动态
+@property (nonatomic, copy) NSString* isHot;     //是否为热门热门话题的热门动态
 @property (nonatomic, copy) NSString* videoUrl;  //视频地址
 @property (nonatomic, copy) NSString* nType;     //1图文说说;2.视频
+
+@property (nonatomic, copy) NSString* hotName;  //热门话题名字
+@property (nonatomic, copy) NSString* hot_id;   //热门话题的ID
 
 
 

@@ -39,6 +39,9 @@
         self.isHot = [NSString stringWithFormat:@"%@", dict[@"isHot"]]; //1是 2不是
         self.videoUrl = [NSString stringWithFormat:@"%@%@",IMAGEHEADER, dict[@"videoUrl"]];
         self.nType = [NSString stringWithFormat:@"%@", dict[@"nType"]];
+        self.hotName = [NSString stringWithFormat:@"%@",dict[@"hotName"]];
+        self.hot_id = [NSString stringWithFormat:@"%@", dict[@"hot_id"]];
+        
     }
     return self;
 }

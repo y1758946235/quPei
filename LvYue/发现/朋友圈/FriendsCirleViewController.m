@@ -33,6 +33,7 @@
 #import "LYSendGiftViewController.h"
 #import "VideoCommitViewController.h"
 #import <MediaPlayer/MediaPlayer.h>
+#import <objc/runtime.h>
 
 #define kSingleContentHeight 17.895f
 
@@ -1331,6 +1332,14 @@
     [self.navigationController pushViewController:detailDataViewController animated:YES];
 }
 
+- (void)hotTapTitle:(UITapGestureRecognizer *)tap {
+    HotTopicViewController *vc = [[HotTopicViewController alloc] init];
+    vc.userId                  = self.userId;
+     NSNumber *tag = (NSNumber *)objc_getAssociatedObject(tap, @"hotTapTitleTag");
+    vc.topic_id                = [NSString stringWithFormat:@"%ld", [tag integerValue]-100];
+    [self.navigationController pushViewController:vc animated:YES];
+}
+
 
 #pragma mark - UITableViewDataSource & Delegate
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
@@ -1377,9 +1386,25 @@
         //保持最新的评论数据 和  点赞数据
         [message setCommentList:_commentList[indexPath.row]];
         [message setPraiseList:_praiseList[indexPath.row]];
-        //设置富文本
+        //设置富文
         NSString* temp = nil;
+        if ([message.hot_id isEqualToString:@"0"]) { //非话题
+            temp = nil;
+        }
+        else {
+            temp = [NSString stringWithFormat:@"#%@#",message.hotName];
+        }
         [cell initWithModel:message topicStr:temp];
+        
+        
+        //NSInteger tagInteger  = cell.contentLabel.tag;
+        //cell.contentLabel.userInteractionEnabled = YES;
+        UITapGestureRecognizer* hotTap = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(hotTapTitle:)];
+        objc_setAssociatedObject(hotTap, @"hotTapTitleTag", @([message.hot_id integerValue] + 100), OBJC_ASSOCIATION_RETAIN_NONATOMIC);
+        [cell.contentLabel addGestureRecognizer:hotTap];
+        
+//        hotTap.view.tag = [message.hot_id integerValue] + 100;
+        
         
         //记录当前cell的数据源索引
         cell.tag = indexPath.row;

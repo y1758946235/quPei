@@ -55,6 +55,7 @@
         
         //内容
         _contentLabel = [[UILabel alloc]initWithFrame:CGRectMake(CGRectGetMaxX(_headImg.frame)+5, CGRectGetMaxY(_nameLabel.frame),SCREEN_WIDTH - CGRectGetMaxX(_headImg.frame) - 5, 20)];
+        _contentLabel.userInteractionEnabled = YES;
         _contentLabel.font = [UIFont systemFontOfSize:15];
         _contentLabel.numberOfLines = 0;
         _contentLabel.textColor = [UIColor blackColor];
@@ -154,8 +155,8 @@
     [_imageArray removeAllObjects];
     
     //获取文本所需的高度
-    CGSize requeiredSize1 = [_contentLabel boundingRectWithSize:CGSizeMake(SCREEN_WIDTH - CGRectGetMaxX(_headImg.frame) - 5, 0)];
-    _contentLabel.frame = CGRectMake(CGRectGetMaxX(_headImg.frame)+5, CGRectGetMaxY(_nameLabel.frame) + 5,SCREEN_WIDTH - CGRectGetMaxX(_headImg.frame) - 5, requeiredSize1.height);
+    CGSize requeiredSize1 = [_contentLabel boundingRectWithSize:CGSizeMake(SCREEN_WIDTH - CGRectGetMaxX(_headImg.frame) - 20, 0)];
+    _contentLabel.frame = CGRectMake(CGRectGetMaxX(_headImg.frame)+5, CGRectGetMaxY(_nameLabel.frame) + 5,SCREEN_WIDTH - CGRectGetMaxX(_headImg.frame) - 20, requeiredSize1.height);
     
     CGFloat currentHeight = CGRectGetMaxY(_contentLabel.frame);
     //设置富文本
