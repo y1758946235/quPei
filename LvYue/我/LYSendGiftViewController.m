@@ -197,11 +197,24 @@ static NSString *const LYSendGiftCollectionViewCellIdentity = @"LYSendGiftCollec
 - (void)p_sendGift:(NSInteger)index {
     [MBProgressHUD showHUDAddedTo:self.view animated:YES];
 
+    NSInteger type = 0;
+    switch (self.type) {
+        case LYSendGiftFunTypeDefalut: {
+            type = 1;
+            break;
+        }
+        case LYSendGiftFunTypeInvite: {
+            type = 2;
+            break;
+        }
+    }
+
     [LYHttpPoster postHttpRequestByPost:[NSString stringWithFormat:@"%@/mobile/gift/present", REQUESTHEADER]
         andParameter:@{
             @"userId": [LYUserService sharedInstance].userID,
             @"otherId": self.friendID,
-            @"giftId": @(self.giftInfoList[index].giftId)
+            @"giftId": @(self.giftInfoList[index].giftId),
+            @"type": @(type)
         }
         success:^(id successResponse) {
             [MBProgressHUD hideHUDForView:self.view animated:YES];

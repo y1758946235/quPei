@@ -328,6 +328,10 @@ static NSString *const LYDetailDataPhotoTableViewCellIdentity   = @"LYDetailData
         // 个人动态，TA 的气质，精华相册
         if (indexPath.section == 0 && (indexPath.row == 3 || indexPath.row == 4 || indexPath.row == 5)) {
             [vc setValue:[NSString stringWithFormat:@"%ld", (long) self.infoModel.id] forKey:@"userId"];
+            // 个人动态
+            if (indexPath.row == 3) {
+                [vc setValue:@NO forKey:@"isFriendsCircle"];
+            }
         }
 
         // TA 的超能力
@@ -424,11 +428,10 @@ forRowAtIndexPath:(NSIndexPath *)indexPath {
         case LYDetailDataAlertViewEnumSendGift: {
             if (buttonIndex == 1) {
                 LYSendGiftViewController *vc = [LYSendGiftViewController new];
-
-                vc.friendID = [NSString stringWithFormat:@"%ld", (long) self.infoModel.id];
-
-                vc.userName       = self.infoModel.name;
-                vc.avatarImageURL = self.infoModel.icon;
+                vc.type                      = LYSendGiftFunTypeInvite;
+                vc.friendID                  = [NSString stringWithFormat:@"%ld", (long) self.infoModel.id];
+                vc.userName                  = self.infoModel.name;
+                vc.avatarImageURL            = self.infoModel.icon;
                 [self.navigationController pushViewController:vc animated:YES];
             }
             break;
