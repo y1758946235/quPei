@@ -176,6 +176,7 @@
         //backImageView.image = [UIImage imageNamed:@"朋友圈背景"];
         //backImageView.userInteractionEnabled = YES;
         [headerView addSubview:backImageView];
+    
         //获取热门话题Id
         self.hotId = titleModel.ID;
     

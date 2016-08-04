@@ -8,6 +8,7 @@
 
 #import <UIKit/UIKit.h>
 
+@class DayWallet;
 @interface WalletDetailCell : UITableViewCell
 
 @property (weak, nonatomic) IBOutlet UILabel *timeLabel;           //时间
@@ -15,6 +16,8 @@
 @property (weak, nonatomic) IBOutlet UILabel *titleLabel;          //内容
 
 @property (weak, nonatomic) IBOutlet UILabel *moneyLabel;          //钱数
+
+@property (nonatomic, strong) DayWallet* dayWallet;
 
 + (instancetype)cellWithTableView:(UITableView *)tableView indexPath:(NSIndexPath *)indexPath;
 

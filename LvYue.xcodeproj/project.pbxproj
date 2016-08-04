@@ -542,6 +542,7 @@
 		3A334A671D503C38003B8385 /* TopicTitle.m in Sources */ = {isa = PBXBuildFile; fileRef = 3A334A661D503C38003B8385 /* TopicTitle.m */; };
 		3A55D1351D21206600FB591B /* KFAlertView.m in Sources */ = {isa = PBXBuildFile; fileRef = 3A55D1341D21206600FB591B /* KFAlertView.m */; };
 		3A55D13B1D220E8800FB591B /* UIView+KFFrame.m in Sources */ = {isa = PBXBuildFile; fileRef = 3A55D13A1D220E8800FB591B /* UIView+KFFrame.m */; };
+		3AA553DD1D52ECB7002CD36C /* DayWallet.m in Sources */ = {isa = PBXBuildFile; fileRef = 3AA553DC1D52ECB7002CD36C /* DayWallet.m */; };
 		3AA798491D23B42F002135E4 /* WalletDetailViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 3AA798481D23B42F002135E4 /* WalletDetailViewController.m */; };
 		3AA7984C1D23C175002135E4 /* BaseViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 3AA7984B1D23C175002135E4 /* BaseViewController.m */; };
 		3ABAF1541D349A1A006DF5C6 /* libz.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = 3ABAF1531D349A1A006DF5C6 /* libz.tbd */; };
@@ -1808,6 +1809,8 @@
 		3A55D1341D21206600FB591B /* KFAlertView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = KFAlertView.m; sourceTree = "<group>"; };
 		3A55D1391D220E8800FB591B /* UIView+KFFrame.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIView+KFFrame.h"; sourceTree = "<group>"; };
 		3A55D13A1D220E8800FB591B /* UIView+KFFrame.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIView+KFFrame.m"; sourceTree = "<group>"; };
+		3AA553DB1D52ECB7002CD36C /* DayWallet.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DayWallet.h; sourceTree = "<group>"; };
+		3AA553DC1D52ECB7002CD36C /* DayWallet.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DayWallet.m; sourceTree = "<group>"; };
 		3AA798471D23B42F002135E4 /* WalletDetailViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WalletDetailViewController.h; sourceTree = "<group>"; };
 		3AA798481D23B42F002135E4 /* WalletDetailViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WalletDetailViewController.m; sourceTree = "<group>"; };
 		3AA7984A1D23C175002135E4 /* BaseViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BaseViewController.h; sourceTree = "<group>"; };
@@ -3864,6 +3867,7 @@
 		097577BC1BC63BFE0048163E /* Model */ = {
 			isa = PBXGroup;
 			children = (
+				3AA553DA1D52D650002CD36C /* 钱包明细 */,
 				6BC56C6E1D4CA96200B22B61 /* 礼物 */,
 				0991EEB51C4DFBB5001D9FD3 /* 屏蔽列表 */,
 				09CF96181C23B54200FF755D /* 最近来访 */,
@@ -5033,6 +5037,15 @@
 				3A334A661D503C38003B8385 /* TopicTitle.m */,
 			);
 			name = Model;
+			sourceTree = "<group>";
+		};
+		3AA553DA1D52D650002CD36C /* 钱包明细 */ = {
+			isa = PBXGroup;
+			children = (
+				3AA553DB1D52ECB7002CD36C /* DayWallet.h */,
+				3AA553DC1D52ECB7002CD36C /* DayWallet.m */,
+			);
+			name = "钱包明细";
 			sourceTree = "<group>";
 		};
 		3AA798461D23A359002135E4 /* 钱包明细 */ = {
@@ -6800,6 +6813,7 @@
 				187308B21BB8D34300B071CE /* RootNavigationController.m in Sources */,
 				980FCECC1CE72F1200956912 /* IQMediaPickerControllerConstants.m in Sources */,
 				09E8D7B91BCFD11E00E56F50 /* VipModel.m in Sources */,
+				3AA553DD1D52ECB7002CD36C /* DayWallet.m in Sources */,
 				A79AA7DE1BEAFAB10065684F /* QNFile.m in Sources */,
 				98D30A711C97C5B4008EE11F /* NewRigisterViewController.m in Sources */,
 				980FCEAF1CE72F1200956912 /* IQAssetsPickerController.m in Sources */,

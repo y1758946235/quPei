@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="10117" systemVersion="15F34" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="10117" systemVersion="15G31" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES">
     <dependencies>
         <deployment identifier="iOS"/>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="10085"/>
@@ -24,21 +24,14 @@
                         <color key="textColor" white="0.66666666666666663" alpha="1" colorSpace="calibratedWhite"/>
                         <nil key="highlightedColor"/>
                     </label>
-                    <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" misplaced="YES" translatesAutoresizingMaskIntoConstraints="NO" id="faR-17-mgC">
-                        <rect key="frame" x="73" y="2" width="45" height="47"/>
-                        <constraints>
-                            <constraint firstAttribute="height" constant="47" id="ELB-Et-GNb"/>
-                            <constraint firstAttribute="width" constant="47" id="xnN-uD-L3B"/>
-                        </constraints>
-                    </imageView>
-                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" misplaced="YES" text="购买礼物" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Emn-7d-AaZ">
-                        <rect key="frame" x="135" y="13" width="90" height="21"/>
+                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="购买礼物" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Emn-7d-AaZ">
+                        <rect key="frame" x="137" y="13" width="90" height="21"/>
                         <constraints>
                             <constraint firstAttribute="height" constant="21" id="8IK-N4-MNE"/>
                             <constraint firstAttribute="width" constant="90" id="9GX-7v-Shb"/>
                         </constraints>
                         <fontDescription key="fontDescription" type="system" pointSize="16"/>
-                        <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
+                        <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
                         <nil key="highlightedColor"/>
                     </label>
                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="（金币）" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="YPl-m1-VrY">
@@ -58,9 +51,16 @@
                             <constraint firstAttribute="height" constant="21" id="e0J-k3-fBF"/>
                         </constraints>
                         <fontDescription key="fontDescription" type="system" pointSize="15"/>
-                        <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
+                        <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
                         <nil key="highlightedColor"/>
                     </label>
+                    <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="faR-17-mgC">
+                        <rect key="frame" x="73" y="1" width="47" height="47"/>
+                        <constraints>
+                            <constraint firstAttribute="height" constant="47" id="ELB-Et-GNb"/>
+                            <constraint firstAttribute="width" constant="47" id="xnN-uD-L3B"/>
+                        </constraints>
+                    </imageView>
                 </subviews>
                 <constraints>
                     <constraint firstAttribute="trailing" secondItem="YPl-m1-VrY" secondAttribute="trailing" constant="7" id="157-xB-Bc8"/>
@@ -68,12 +68,26 @@
                     <constraint firstItem="EE5-cA-gU2" firstAttribute="leading" secondItem="H2p-sc-9uM" secondAttribute="leading" constant="17" id="Fdl-H4-8qx"/>
                     <constraint firstItem="YPl-m1-VrY" firstAttribute="leading" secondItem="aNU-LV-aVH" secondAttribute="trailing" constant="1" id="JY2-Y9-atx"/>
                     <constraint firstItem="faR-17-mgC" firstAttribute="centerY" secondItem="H2p-sc-9uM" secondAttribute="centerY" id="Lnb-bi-6Tg"/>
+                    <constraint firstItem="faR-17-mgC" firstAttribute="leading" secondItem="EE5-cA-gU2" secondAttribute="trailing" constant="14" id="Sv9-hm-Xqv"/>
                     <constraint firstItem="YPl-m1-VrY" firstAttribute="centerY" secondItem="H2p-sc-9uM" secondAttribute="centerY" id="TCD-N0-WbH"/>
                     <constraint firstItem="Emn-7d-AaZ" firstAttribute="leading" secondItem="faR-17-mgC" secondAttribute="trailing" constant="17" id="TeD-Sa-P5Y"/>
+                    <constraint firstItem="faR-17-mgC" firstAttribute="leading" secondItem="H2p-sc-9uM" secondAttribute="leading" constant="73" id="U5g-tJ-d6e"/>
                     <constraint firstItem="Emn-7d-AaZ" firstAttribute="centerY" secondItem="H2p-sc-9uM" secondAttribute="centerY" id="ZOy-3Q-13P"/>
                     <constraint firstItem="faR-17-mgC" firstAttribute="leading" secondItem="EE5-cA-gU2" secondAttribute="trailing" constant="14" id="d8y-2Q-D06"/>
+                    <constraint firstItem="Emn-7d-AaZ" firstAttribute="leading" secondItem="faR-17-mgC" secondAttribute="trailing" constant="17" id="mZC-EF-BH1"/>
+                    <constraint firstItem="Emn-7d-AaZ" firstAttribute="leading" secondItem="faR-17-mgC" secondAttribute="trailing" constant="17" id="mvK-Bz-TYn"/>
                     <constraint firstItem="EE5-cA-gU2" firstAttribute="centerY" secondItem="H2p-sc-9uM" secondAttribute="centerY" id="odT-bZ-dWK"/>
+                    <constraint firstItem="faR-17-mgC" firstAttribute="leading" secondItem="EE5-cA-gU2" secondAttribute="trailing" constant="14" id="z0r-VL-pdk"/>
                 </constraints>
+                <variation key="default">
+                    <mask key="constraints">
+                        <exclude reference="Sv9-hm-Xqv"/>
+                        <exclude reference="d8y-2Q-D06"/>
+                        <exclude reference="z0r-VL-pdk"/>
+                        <exclude reference="TeD-Sa-P5Y"/>
+                        <exclude reference="mZC-EF-BH1"/>
+                    </mask>
+                </variation>
             </tableViewCellContentView>
             <connections>
                 <outlet property="iconImgView" destination="faR-17-mgC" id="W65-UU-xeP"/>
@@ -81,7 +95,7 @@
                 <outlet property="timeLabel" destination="EE5-cA-gU2" id="I4E-WO-Pq6"/>
                 <outlet property="titleLabel" destination="Emn-7d-AaZ" id="i1R-lz-X32"/>
             </connections>
-            <point key="canvasLocation" x="437" y="401.5"/>
+            <point key="canvasLocation" x="583" y="410.5"/>
         </tableViewCell>
     </objects>
 </document>

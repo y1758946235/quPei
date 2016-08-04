@@ -102,6 +102,12 @@ static int buttonH = 40;
         NSString* titleRow = [NSString stringWithFormat:@"%@年 %@月",self.yearStr, self.monthStr];
         [self.delegate datePicker:self didClickButtonIndex:1 titleRow:titleRow];
     }
+    
+    if ([self.delegate respondsToSelector:@selector(datePicker:didClickButtonIndex:year:month:)]) {
+        
+        //NSString* titleRow = [NSString stringWithFormat:@"%@年 %@月",self.yearStr, self.monthStr];
+        [self.delegate datePicker:self didClickButtonIndex:1 year:self.yearStr month:self.monthStr];
+    }
 
 }
 

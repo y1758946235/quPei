@@ -22,6 +22,8 @@ typedef NS_OPTIONS(NSUInteger, KFDatePickerMode) {
 @optional
 -  (void)datePicker:(KFDatePicker *)datePicker didClickButtonIndex:(NSInteger)buttonIndex titleRow:(NSString *)titleRow;
 
+@optional
+-  (void)datePicker:(KFDatePicker *)datePicker didClickButtonIndex:(NSInteger)buttonIndex year:(NSString *)year month:(NSString *)month;
 @end
 
 @interface KFDatePicker : UIView

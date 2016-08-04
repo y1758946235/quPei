@@ -1377,6 +1377,7 @@
         //保持最新的评论数据 和  点赞数据
         [message setCommentList:_commentList[indexPath.row]];
         [message setPraiseList:_praiseList[indexPath.row]];
+        //设置富文本
         NSString* temp = nil;
         [cell initWithModel:message topicStr:temp];
         

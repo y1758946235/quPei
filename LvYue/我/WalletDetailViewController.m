@@ -14,6 +14,11 @@
 #import "UIView+KFFrame.h"
 #import "WalletDetailCell.h"
 #import "KFDatePicker.h"
+#import "LYUserService.h"
+#import "LYHttpPoster.h"
+#import "DayWallet.h"
+
+#import "MBProgressHUD+NJ.h"
 
 @interface WalletDetailViewController ()<UITableViewDelegate, UITableViewDataSource, KFDatePickerDelegate>
 
@@ -24,18 +29,25 @@
 @property (nonatomic, weak) UIView* lineView;       //白色线条
 
 @property (nonatomic, weak) UITableView* tableView; //数据列表
+@property (nonatomic, weak) UIPickerView *pickerView; //时间选择器
+@property (nonatomic, strong) NSMutableArray* walletArray; //钱包数据
 
-
-@property (nonatomic, weak) UIPickerView *pickerView;
-
+@property (nonatomic, copy) NSString* walletType;  //收入或支付 1.收入;2.支出
+@property (nonatomic, copy) NSString* year;  //年份
+@property (nonatomic, copy) NSString* month;  //月份
 
 
 @end
 
 @implementation WalletDetailViewController
+#pragma mark - 懒加载
 
-
-
+- (NSMutableArray *)walletArray {
+    if (!_walletArray) {
+        _walletArray = [NSMutableArray array];
+    }
+    return _walletArray;
+}
 
 static int headViewH = 71;
 - (UIView *)headerView {
@@ -52,13 +64,15 @@ static int headViewH = 71;
         dataBtn.x = (kMainScreenWidth - dataBtn.width)*0.5;
         dataBtn.y = 5;
         //设置假数据
-        [dataBtn setTitle:@"2016年02月" forState:UIControlStateNormal];
+        NSString* titleStr = [NSString stringWithFormat:@"%@年 %@月",self.year, self.month];
+        [dataBtn setTitle:titleStr forState:UIControlStateNormal];
         dataBtn.titleLabel.font = kFont14;
         [dataBtn setImage:[UIImage imageNamed:@"选择时间"] forState:UIControlStateNormal];
         [dataBtn setImageEdgeInsets:UIEdgeInsetsMake(0, 120, 0, 0)];
         [dataBtn setTitleEdgeInsets:UIEdgeInsetsMake(0, 0, 0, 20)];
         [dataBtn addTarget:self action:@selector(choseTime:) forControlEvents:UIControlEventTouchUpInside];
         self.dateBtn = dataBtn;
+        
         [_headerView addSubview:dataBtn];
 
         //收入按钮
@@ -74,7 +88,7 @@ static int headViewH = 71;
         incomeBtn.titleLabel.font = kFont14;
         [incomeBtn setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
         [incomeBtn setTitle:@"收入" forState:UIControlStateSelected];
-        [incomeBtn setTitleColor:[UIColor redColor] forState:UIControlStateSelected];
+        [incomeBtn setTitleColor:[UIColor whiteColor] forState:UIControlStateSelected];
         //添加事件
         [incomeBtn addTarget:self action:@selector(choseView:) forControlEvents:UIControlEventTouchUpInside];
         self.incomeBtn = incomeBtn;
@@ -94,10 +108,11 @@ static int headViewH = 71;
         payBtn.titleLabel.font = kFont14;
         [payBtn setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
         [payBtn setTitle:@"支出" forState:UIControlStateSelected];
-        [payBtn setTitleColor:[UIColor redColor] forState:UIControlStateSelected];
+        [payBtn setTitleColor:[UIColor whiteColor] forState:UIControlStateSelected];
         //添加事件
         [payBtn addTarget:self action:@selector(choseView:) forControlEvents:UIControlEventTouchUpInside];
         self.payBtn = payBtn;
+        self.payBtn.alpha = 0.5;
         [_headerView addSubview:payBtn];
 
         //白色线条
@@ -126,6 +141,7 @@ static int headViewH = 71;
     return _tableView;
 }
 
+#pragma mark - 视图加载
 - (void)viewWillAppear:(BOOL)animated {
     [super viewWillAppear:animated];
 
@@ -142,30 +158,47 @@ static int headViewH = 71;
     [super viewDidLoad];
 
     [self setUI];
+    [self getWalletData];
 }
 
 //设置UI
 - (void)setUI {
     self.title = @"钱包明细";
     self.view.backgroundColor = RGBCOLOR(241, 240, 246);
+    _walletType = @"1";
+    
+    //设置初始状态
+    NSDate *  currentYear=[NSDate date];
+    NSDateFormatter *dateformatterYear=[[NSDateFormatter alloc] init];
+    [dateformatterYear setDateFormat:@"YYYY"];
+    NSString * yearStr=[dateformatterYear stringFromDate:currentYear];
+    self.year = yearStr;
+    
+    NSDate *  currentMonth=[NSDate date];
+    NSDateFormatter *dateformatterMonth=[[NSDateFormatter alloc] init];
+    [dateformatterMonth setDateFormat:@"MM"];
+    NSString * monthStr=[dateformatterMonth stringFromDate:currentMonth];
+    self.month = monthStr;
     
     //设置头部的视图
     self.headerView.hidden = NO;
     
     self.tableView.hidden = NO;
-    
-    
 
-    
 }
 
-
+#pragma mark - 点击方法
 //选择收入或支出
 - (void)choseView:(UIButton *)sender {
     self.payBtn.selected = NO;
+    self.payBtn.alpha = 1.0f;
     self.incomeBtn.selected = NO;
+    self.incomeBtn.alpha = 1.0f;
     if ([sender.titleLabel.text isEqualToString:@"收入"]) {
+        self.payBtn.alpha = 0.5;
         self.incomeBtn.selected = YES;
+        
+        _walletType = @"1";
         //改变frame
         [UIView animateWithDuration:0.2 animations:^{
             self.lineView.centerX =  self.incomeBtn.centerX;
@@ -173,11 +206,14 @@ static int headViewH = 71;
     }
     else if ([sender.titleLabel.text isEqualToString:@"支出"]) {
         self.payBtn.selected = YES;
+        self.incomeBtn.alpha = 0.5;
+        _walletType = @"2";
         [UIView animateWithDuration:0.2 animations:^{
             self.lineView.centerX =  self.payBtn.centerX;
         }];
     }
-    [self.tableView reloadData];
+    [self getWalletData];
+    //[self.tableView reloadData];
     
 }
 
@@ -202,13 +238,47 @@ static int headViewH = 71;
     [datePicker show];
 }
 
-#pragma amrk - KFDatePickerDelegate
-- (void)datePicker:(KFDatePicker *)datePicker didClickButtonIndex:(NSInteger)buttonIndex titleRow:(NSString *)titleRow {
+#pragma mark - 网络请求
+- (void)getWalletData {
+    [_walletArray removeAllObjects];
+    
+    NSString* urlStr = [NSString stringWithFormat:@"%@/mobile/user/getWalletDetails",REQUESTHEADER];
+    
+    NSDictionary* params = @{
+                             @"userId":[LYUserService sharedInstance].userID,
+                             @"year":self.year,
+                             @"month":self.month,
+                             @"type":_walletType
+                             };
+    
+    [LYHttpPoster postHttpRequestByPost:urlStr andParameter:params success:^(id successResponse) {
+        MLOG(@"钱包明细:%@",successResponse);
+        if ([[NSString stringWithFormat:@"%@", successResponse[@"code"]] isEqualToString:@"200"]) {
+            NSMutableArray* dictM = successResponse[@"data"][@"details"];
+            
+            for (NSDictionary* dict in dictM) {
+                DayWallet* model = [[DayWallet alloc] initWithDict:dict];
+                [self.walletArray addObject:model];
+            }
+            [_tableView reloadData];
+        }
+    } andFailure:^(id failureResponse) {
+       [MBProgressHUD showError:@"服务器繁忙,请重试"];
+    }];
+    
+}
+
+#pragma mark - KFDatePickerDelegate
+- (void)datePicker:(KFDatePicker *)datePicker didClickButtonIndex:(NSInteger)buttonIndex year:(NSString *)year month:(NSString *)month {
     if (buttonIndex == 0) {
     }
     else if (buttonIndex == 1) { //确定
+        NSString* titleRow = [NSString stringWithFormat:@"%@年 %@月",year,month];
         [self.dateBtn setTitle:titleRow forState:UIControlStateNormal];
+        self.year = year;
+        self.month = month;
         
+        [self getWalletData];
     }
     [datePicker dismiss];
 }
@@ -222,11 +292,11 @@ static int headViewH = 71;
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
     NSInteger count = 0;
     if (self.incomeBtn.selected == YES) {
-        count = 1;
+        count = _walletArray.count;
     }
     else if (self.incomeBtn.selected == NO) {
         
-        count = 4;
+        count = _walletArray.count;
     }
     return count;
 }
@@ -237,31 +307,29 @@ static int headViewH = 71;
     
     //获取模型
     [UIImage imageNamed:@"礼物"];
-    NSArray* timeArr;
-    NSArray* iconArr;
-    NSArray* titleArr;
-    NSArray* numArr;
-    if (self.incomeBtn.selected == YES) {
-        timeArr = @[@"05日"];
-        iconArr = @[@"礼物"];
-        titleArr = @[@"收到礼物"];
-        numArr = @[@"+380"];
-
-    }
-    else if (self.incomeBtn.selected == NO) {
-        
-      timeArr = @[@"05日", @"04日", @"04日", @"04日"];
-      iconArr = @[@"礼物", @"会员-0", @"金币", @"提现"];
-      titleArr = @[@"购买礼物", @"购买会员", @"充值金币", @"提现"];
-      numArr = @[@"-380", @"-60", @"-100", @"-500"];
-
-    }
+//    NSArray* timeArr;
+//    NSArray* iconArr;
+//    NSArray* titleArr;
+//    NSArray* numArr;
+//    if (self.incomeBtn.selected == YES) { //收入
+//        timeArr = @[@"05日"];
+//        iconArr = @[@"礼物"];
+//        titleArr = @[@"收到礼物"];
+//        numArr = @[@"+380"];
+//
+//    }
+//    else if (self.incomeBtn.selected == NO) { //支出
+//        
+//      timeArr = @[@"05日", @"04日", @"04日", @"04日"];
+//      iconArr = @[@"礼物", @"会员-0", @"金币", @"提现"];
+//      titleArr = @[@"购买礼物", @"购买会员", @"充值金币", @"提现"];
+//      numArr = @[@"-380", @"-60", @"-100", @"-500"];
+//
+//    }
+    DayWallet* dayWallet = self.walletArray[indexPath.row];
+    cell.dayWallet = dayWallet;
     
-    cell.timeLabel.text = timeArr[indexPath.row];
-    cell.iconImgView.image = [UIImage imageNamed:iconArr[indexPath.row]];
-    cell.titleLabel.text = titleArr[indexPath.row];
-    cell.moneyLabel.text = numArr[indexPath.row];
-        return cell;
+    return cell;
 }
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
