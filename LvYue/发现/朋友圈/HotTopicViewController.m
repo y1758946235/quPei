@@ -44,26 +44,26 @@
 
 
     UIView *_addView;
-    UIButton *_clearBtn;              //透明按钮
-    UIView *_inputView;               //输入条
-    UITextView *_textView;            //输入框
-    NSDictionary *_dataDict;          //数据源
-    NSDictionary *_hotDataDict;       //热门数据源
-    UIButton *_sendBtn;               //发送按钮
-    
-    NSMutableArray *_messageArray;    //全部热门话题模型数组
-    NSMutableArray *_hotMessageArray; //最热话题模型数组
-    
-    NSMutableArray *_commentList;     //评论列表
-    NSMutableArray *_praiseList;      //点赞列表
-    
-    NSMutableArray *_hotCommentList;     //热门动态评论列表
-    NSMutableArray *_hotPraiseList;      //热门动态点赞列表
-    
-    NSMutableArray *_noticeList;      //消息列表
-    NSMutableArray *_hotNoticeList;    //热门消息列表
-    
-    NSInteger _currentPage;           //当前分页
+    UIButton *_clearBtn;        //透明按钮
+    UIView *_inputView;         //输入条
+    UITextView *_textView;      //输入框
+    NSDictionary *_dataDict;    //数据源
+    NSDictionary *_hotDataDict; //热门数据源
+    UIButton *_sendBtn;         //发送按钮
+
+    NSMutableArray<FriendsCircleMessage *> *_messageArray;    //全部热门话题模型数组
+    NSMutableArray<FriendsCircleMessage *> *_hotMessageArray; //最热话题模型数组
+
+    NSMutableArray *_commentList; //评论列表
+    NSMutableArray *_praiseList;  //点赞列表
+
+    NSMutableArray *_hotCommentList; //热门动态评论列表
+    NSMutableArray *_hotPraiseList;  //热门动态点赞列表
+
+    NSMutableArray *_noticeList;    //消息列表
+    NSMutableArray *_hotNoticeList; //热门消息列表
+
+    NSInteger _currentPage; //当前分页
 
     NSMutableArray *_topicArray; //话题内容
 
@@ -88,7 +88,7 @@
 @property (nonatomic, strong) MPMoviePlayerViewController *player; //视频播放
 @property (nonatomic, copy) NSString *hotId;                       //热门话题Id
 
-@property (nonatomic, assign) BOOL isHotDataList;    //是否为热门动态
+@property (nonatomic, assign) BOOL isHotDataList; //是否为热门动态
 
 @end
 
@@ -163,7 +163,7 @@
     _hotNoticeList   = [NSMutableArray array];
     _topicArray      = [NSMutableArray array];
     _coverImageUrl   = nil;
-    _isHotDataList = YES;
+    _isHotDataList   = YES;
     //右边按钮
     //[self setRightButton:[UIImage imageNamed:@"more"] title:@"" target:self action:@selector(addClick) rect:CGRectMake(0, 0, 43, 43)];
     [self setLeftButton:[UIImage imageNamed:@"返回"] title:nil target:self action:@selector(back)];
@@ -324,31 +324,29 @@
         //送礼
         [cell.giftBtn addTarget:self action:@selector(senderHotGift:) forControlEvents:UIControlEventTouchUpInside];
         cell.giftBtn.tag = 10 + indexPath.row;
-        
-        
+
+
         //添加分割线
         if (_hotMessageArray.count) {
             FriendsCircleMessage *message = _hotMessageArray[indexPath.row];
             cell.separatorLine.frame      = CGRectMake(0, [message returnCellHeight] - 1, SCREEN_WIDTH, 1);
 
             cell.giftBtn.hidden = NO;
-            NSString* tempId =nil;
+            NSString *tempId    = nil;
             if (self.userId == nil) {
                 self.userId = @"";
-                tempId = @"wo";
-            }
-            else {
+                tempId      = @"wo";
+            } else {
                 tempId = self.userId;
             }
-            if ([[NSString stringWithFormat:@"%@",message.userId] isEqualToString:tempId]) {
+            if ([[NSString stringWithFormat:@"%@", message.userId] isEqualToString:tempId]) {
                 cell.giftBtn.hidden = YES;
-                
             }
-            
+
             //保持最新的评论数据 和  点赞数据
             [message setCommentList:_hotCommentList[indexPath.row]];
             [message setPraiseList:_hotPraiseList[indexPath.row]];
-            
+
             NSString *tempStr = topicStr;
             [cell initWithModel:message topicStr:tempStr];
 
@@ -409,26 +407,24 @@
         if (_messageArray.count) {
             FriendsCircleMessage *message = _messageArray[indexPath.row];
             cell.separatorLine.frame      = CGRectMake(0, [message returnCellHeight] - 1, SCREEN_WIDTH, 1);
-            
+
             cell.giftBtn.hidden = NO;
-            NSString* tempId =nil;
+            NSString *tempId    = nil;
             if (self.userId == nil) {
                 self.userId = @"";
-                tempId = @"wo";
-            }
-            else {
+                tempId      = @"wo";
+            } else {
                 tempId = self.userId;
             }
-            if ([[NSString stringWithFormat:@"%@",message.userId] isEqualToString:tempId]) {
+            if ([[NSString stringWithFormat:@"%@", message.userId] isEqualToString:tempId]) {
                 cell.giftBtn.hidden = YES;
-                
             }
 
             //保持最新的评论数据 和  点赞数据
 
             [message setCommentList:_commentList[indexPath.row]];
             [message setPraiseList:_praiseList[indexPath.row]];
-            
+
             [cell initWithModel:message topicStr:topicStr];
             //NSInteger tagInteger  = cell.contentLabel.tag;
             //cell.contentLabel.userInteractionEnabled = YES;
@@ -535,7 +531,7 @@
     [[LYUserService sharedInstance] fetchLoginStateWithCompeletionBlock:^(UserLoginStateType type) {
         if (type == UserLoginStateTypeWaitToLogin) {
             [[LYUserService sharedInstance] jumpToLoginWithController:self.tabBarController];
-            return ;
+            return;
         }
     }];
     NSInteger userId                                     = [_hotNoticeList[tap.view.tag][@"user_id"] integerValue];
@@ -548,7 +544,7 @@
     [[LYUserService sharedInstance] fetchLoginStateWithCompeletionBlock:^(UserLoginStateType type) {
         if (type == UserLoginStateTypeWaitToLogin) {
             [[LYUserService sharedInstance] jumpToLoginWithController:self.tabBarController];
-            return ;
+            return;
         }
     }];
     NSInteger userId                                     = [_noticeList[tap.view.tag][@"user_id"] integerValue];
@@ -707,7 +703,7 @@
     [[LYUserService sharedInstance] fetchLoginStateWithCompeletionBlock:^(UserLoginStateType type) {
         if (type == UserLoginStateTypeWaitToLogin) {
             [[LYUserService sharedInstance] jumpToLoginWithController:self.tabBarController];
-            return ;
+            return;
         }
     }];
 
@@ -752,10 +748,10 @@
     [[LYUserService sharedInstance] fetchLoginStateWithCompeletionBlock:^(UserLoginStateType type) {
         if (type == UserLoginStateTypeWaitToLogin) {
             [[LYUserService sharedInstance] jumpToLoginWithController:self.tabBarController];
-            return ;
+            return;
         }
     }];
-    
+
     ReportViewController *vc = [[ReportViewController alloc] init];
     [self.navigationController pushViewController:vc animated:YES];
 }
@@ -764,7 +760,7 @@
     [[LYUserService sharedInstance] fetchLoginStateWithCompeletionBlock:^(UserLoginStateType type) {
         if (type == UserLoginStateTypeWaitToLogin) {
             [[LYUserService sharedInstance] jumpToLoginWithController:self.tabBarController];
-            return ;
+            return;
         }
     }];
 
@@ -777,10 +773,10 @@
     [[LYUserService sharedInstance] fetchLoginStateWithCompeletionBlock:^(UserLoginStateType type) {
         if (type == UserLoginStateTypeWaitToLogin) {
             [[LYUserService sharedInstance] jumpToLoginWithController:self.tabBarController];
-            return ;
+            return;
         }
     }];
-    
+
     FriendsCircleMessage *message = _hotMessageArray[sender.tag - 10];
     LYSendGiftViewController *vc  = [[LYSendGiftViewController alloc] init];
     vc.avatarImageURL             = message.headImgStr;
@@ -793,7 +789,7 @@
     [[LYUserService sharedInstance] fetchLoginStateWithCompeletionBlock:^(UserLoginStateType type) {
         if (type == UserLoginStateTypeWaitToLogin) {
             [[LYUserService sharedInstance] jumpToLoginWithController:self.tabBarController];
-            return ;
+            return;
         }
     }];
 
@@ -909,7 +905,7 @@
     [[LYUserService sharedInstance] fetchLoginStateWithCompeletionBlock:^(UserLoginStateType type) {
         if (type == UserLoginStateTypeWaitToLogin) {
             [[LYUserService sharedInstance] jumpToLoginWithController:self.tabBarController];
-            return ;
+            return;
         }
     }];
 
@@ -966,11 +962,11 @@
     _reply     = notification.userInfo[@"reply"];
     _noticeId  = notification.userInfo[@"noticeId"];
     _replyName = notification.userInfo[@"replyName"];
-    
-#warning [[notification.userInfo[@"index"] integerValue]][@"user_id"];
+
+#warning[[notification.userInfo[@"index"] integerValue]][@"user_id"];
     _commenter = _noticeList[[notification.userInfo[@"index"] integerValue]][@"user_id"];
     //_hotCommentList = _hotNoticeList[[notification.userInfo[@"index"] integerValue]][@"user_id"];
-    
+
     //btn.tag*10，末尾为1表示对他人评论
     _sendBtn.tag = [notification.userInfo[@"index"] integerValue] * 10 + 1;
 
@@ -1004,7 +1000,7 @@
     [[LYUserService sharedInstance] fetchLoginStateWithCompeletionBlock:^(UserLoginStateType type) {
         if (type == UserLoginStateTypeWaitToLogin) {
             [[LYUserService sharedInstance] jumpToLoginWithController:self.tabBarController];
-            return ;
+            return;
         }
     }];
 
@@ -1016,15 +1012,13 @@
         cell = (FriendsCircleCell *) [[btn superview] superview];
     }
     NSIndexPath *indexPath = [self.tableView indexPathForCell:cell];
-    if (indexPath.section == 0) {//热门动态
+    if (indexPath.section == 0) { //热门动态
         self.isHotDataList = YES;
-    }
-    else {
+    } else {
         self.isHotDataList = NO;
     }
 
 
-    
     _inputView = nil;
     if (!_inputView) {
 
@@ -1096,16 +1090,16 @@
             //评论
             AFHTTPRequestOperationManager *manager = [AFHTTPRequestOperationManager manager];
             [MBProgressHUD showMessage:@"正在加载"];
-            NSDictionary* tempDict;
+
+            NSArray<FriendsCircleMessage *> *tempDict;
             if (self.isHotDataList == YES) { //所处section，0是
-                tempDict = _hotDataDict;
+                tempDict = _hotMessageArray;
+            } else {
+                tempDict = _messageArray;
             }
-            else {
-                tempDict = _dataDict;
-            }
-  
+
             NSString *urlStr = [NSString stringWithFormat:@"%@/mobile/notice/comment", REQUESTHEADER];
-            [manager POST:urlStr parameters:@{ @"noticeId": tempDict[@"noticeList"][sender.tag / 10][@"id"],
+            [manager POST:urlStr parameters:@{ @"noticeId": tempDict[sender.tag / 10].ID,
                                                @"commentType": @"0",
                                                @"commenter": [NSString stringWithFormat:@"%@", [LYUserService sharedInstance].userID],
                                                @"commentDetail": detailStr }
@@ -1119,28 +1113,27 @@
                         //1.隐藏输入框 评论显示+1
                         [self hiddenAddView];
                         //2.手动加入数据源
-                        NSString *comment_id = responseObject[@"data"][@"id"];//获取传回的Id
+                        NSString *comment_id = responseObject[@"data"][@"id"]; //获取传回的Id
                         NSDictionary *dict   = @{ @"comment_id": comment_id,
                                                 @"comment_user": [NSString stringWithFormat:@"%@", [LYUserService sharedInstance].userDetail.userName],
                                                 @"comment_user_id": [NSString stringWithFormat:@"%@", [LYUserService sharedInstance].userID],
                                                 @"detail": detailStr,
-                                                @"notice_id": tempDict[@"noticeList"][sender.tag / 10][@"id"],
+                                                @"notice_id": tempDict[sender.tag / 10].ID,
                                                 @"reply_user": @"",
                                                 @"reply_user_id": @"",
                                                 @"type": @"0" };
-                        NSString* isHot = [NSString stringWithFormat:@"%@", tempDict[@"noticeList"][sender.tag / 10][@"isHot"]];
-                        if ([isHot isEqualToString:@"1"]) { //isHot 1.是;2.不是
+
+                        NSString *isHot = tempDict[sender.tag / 10].isHot;
+                        if ([isHot isEqualToString:@"1"]) {  //isHot 1.是;2.不是
                             if (self.isHotDataList == YES) { //是
                                 //tempDict = _hotDataDict;
                                 [_hotCommentList[sender.tag / 10] addObject:dict];
-                            }
-                            else {
+                            } else {
                                 //tempDict = _dataDict;
                                 [_commentList[sender.tag / 10] addObject:dict];
                             }
-                            
-                        }
-                        else if ([isHot isEqualToString:@"2"]) {
+
+                        } else if ([isHot isEqualToString:@"2"]) {
                             [_commentList[sender.tag / 10] addObject:dict];
                         }
                         //3.重载评论
@@ -1170,20 +1163,18 @@
             AFHTTPRequestOperationManager *manager = [AFHTTPRequestOperationManager manager];
             [MBProgressHUD showMessage:@"正在加载"];
             //通过_noticeId获取到id,再获取到isHot，判断
-           // NSMutableArray* dictM = [NSMutableArray array];
-            NSDictionary* tempDict;
-            for (FriendsCircleMessage* message in _messageArray) {
-                if ([message.ID isEqualToString:_noticeId]) { //获取到评论的message
-                    if ([message.isHot isEqualToString:@"1"]) { //是热门
-                        tempDict = _hotDataDict;
-                    }
-                    else {
-                        tempDict = _dataDict;
+            // NSMutableArray* dictM = [NSMutableArray array];
+            NSArray<FriendsCircleMessage *> *tempDict;
+            for (FriendsCircleMessage *message in _messageArray) {
+                if ([message.ID isEqualToString:[NSString stringWithFormat:@"%@", _noticeId]]) { //获取到评论的message
+                    if ([message.isHot isEqualToString:@"1"]) {                          //是热门
+                        tempDict = _hotMessageArray;
+                    } else {
+                        tempDict = _messageArray;
                     }
                 }
             }
-            
-            
+
             NSString *urlStr = [NSString stringWithFormat:@"%@/mobile/notice/comment", REQUESTHEADER];
             [manager POST:urlStr parameters:@{ @"noticeId": _noticeId,
                                                @"commentType": @"1",
@@ -1205,24 +1196,22 @@
                                                 @"comment_user": [NSString stringWithFormat:@"%@", [LYUserService sharedInstance].userDetail.userName],
                                                 @"comment_user_id": [NSString stringWithFormat:@"%@", [LYUserService sharedInstance].userID],
                                                 @"detail": detailStr,
-                                                @"notice_id": tempDict[@"noticeList"][sender.tag / 10][@"id"],
+                                                @"notice_id": tempDict[sender.tag / 10].ID,
                                                 @"reply_user": _replyName,
                                                 @"reply_user_id": _reply,
                                                 @"type": @"1" };
-                        
-                        NSString* isHot = [NSString stringWithFormat:@"%@", tempDict[@"noticeList"][sender.tag / 10][@"isHot"]];
-                        if ([isHot isEqualToString:@"1"]) { //isHot 1.是;2.不是
+
+                        NSString *isHot = [NSString stringWithFormat:@"%@", tempDict[sender.tag / 10].isHot];
+                        if ([isHot isEqualToString:@"1"]) {  //isHot 1.是;2.不是
                             if (self.isHotDataList == YES) { //是
                                 //tempDict = _hotDataDict;
                                 [_hotCommentList[sender.tag / 10] addObject:dict];
-                            }
-                            else {
+                            } else {
                                 //tempDict = _dataDict;
                                 [_commentList[sender.tag / 10] addObject:dict];
                             }
                             //              [_hotCommentList[sender.tag / 10] addObject:dict];
-                        }
-                        else if ([isHot isEqualToString:@"2"]) {
+                        } else if ([isHot isEqualToString:@"2"]) {
                             [_commentList[sender.tag / 10] addObject:dict];
                         }
                         /**
@@ -1265,7 +1254,7 @@
     [[LYUserService sharedInstance] fetchLoginStateWithCompeletionBlock:^(UserLoginStateType type) {
         if (type == UserLoginStateTypeWaitToLogin) {
             [[LYUserService sharedInstance] jumpToLoginWithController:self.tabBarController];
-            return ;
+            return;
         }
     }];
 
@@ -1277,18 +1266,17 @@
     } else {
         cell = (FriendsCircleCell *) [[sender superview] superview];
     }
-    NSIndexPath *indexPath = [self.tableView indexPathForCell:cell];
-    NSMutableArray* tempNoticeListM = [NSMutableArray array];
-    NSMutableArray* tempPraiseListM = [NSMutableArray array];
-    if (indexPath.section == 0) {//热门动态
+    NSIndexPath *indexPath          = [self.tableView indexPathForCell:cell];
+    NSMutableArray *tempNoticeListM = [NSMutableArray array];
+    NSMutableArray *tempPraiseListM = [NSMutableArray array];
+    if (indexPath.section == 0) { //热门动态
         tempNoticeListM = _hotNoticeList;
         tempPraiseListM = _hotPraiseList;
-    }
-    else {
+    } else {
         tempNoticeListM = _noticeList;
         tempPraiseListM = _praiseList;
     }
-    NSInteger row          = indexPath.row;
+    NSInteger row = indexPath.row;
 
     if (sender.selected == NO) {
         //按钮变红，数量+1,tag+1
@@ -1313,18 +1301,17 @@
                                             @"praise_id": praise_id,
                                             @"praise_user": [NSString stringWithFormat:@"%@", [LYUserService sharedInstance].userDetail.userName],
                                             @"praise_user_id": [NSString stringWithFormat:@"%@", [LYUserService sharedInstance].userID] };
-                    
+
                     if (indexPath.section == 0) {
                         [_hotPraiseList[row] addObject:dict];
-//                        NSIndexSet* indexSet = [[NSIndexSet alloc] initWithIndex:0];
-//                        _tableView reloadSections:<#(nonnull NSIndexSet *)#> withRowAnimation:<#(UITableViewRowAnimation)#>
+                        //                        NSIndexSet* indexSet = [[NSIndexSet alloc] initWithIndex:0];
+                        //                        _tableView reloadSections:<#(nonnull NSIndexSet *)#> withRowAnimation:<#(UITableViewRowAnimation)#>
                         [_tableView reloadData];
-                    }
-                    else {
+                    } else {
                         [_praiseList[row] addObject:dict];
                         [_tableView reloadData];
                     }
-                    
+
                 } else {
 
                     [MBProgressHUD showError:responseObject[@"msg"]];
@@ -1337,7 +1324,7 @@
             }];
     } else {
 
-        
+
         //获得点赞的praise_id   先遍历比较，若praise_user_id等于自己的user_id。获取praise_id
         NSString *praise_id = @"";
         NSDictionary *deltDict;
@@ -1363,12 +1350,12 @@
                 [sender setImage:[UIImage imageNamed:@"Hearts gray"] forState:UIControlStateNormal];
 
                 //手动从数据源中移除
-//                [_praiseList[row] removeObject:deltDict];
-//                [_hotPraiseList[row] removeObject:deltDict];
-                
+                //                [_praiseList[row] removeObject:deltDict];
+                //                [_hotPraiseList[row] removeObject:deltDict];
+
                 [tempPraiseListM[row] removeObject:deltDict];
                 [_tableView reloadData];
-                
+
             } else {
 
                 [MBProgressHUD showError:responseObject[@"msg"]];
@@ -1387,7 +1374,7 @@
     [[LYUserService sharedInstance] fetchLoginStateWithCompeletionBlock:^(UserLoginStateType type) {
         if (type == UserLoginStateTypeWaitToLogin) {
             [[LYUserService sharedInstance] jumpToLoginWithController:self.tabBarController];
-            return ;
+            return;
         }
     }];
 
@@ -1421,12 +1408,12 @@
                         [_hotMessageArray addObject:message];
                     }
                 }
-                
+
                 [_commentList removeObjectAtIndex:sender.tag];
                 [_praiseList removeObjectAtIndex:sender.tag];
                 [_hotCommentList removeObjectAtIndex:sender.tag];
                 [_hotPraiseList removeObjectAtIndex:sender.tag];
-                
+
                 [_tableView reloadData];
             } else {
 
