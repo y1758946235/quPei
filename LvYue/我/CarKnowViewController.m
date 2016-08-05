@@ -55,7 +55,7 @@
     UIImageView *logeImg = [[UIImageView alloc] init];
     logeImg.center = CGPointMake(kMainScreenWidth / 2, 50);
     logeImg.bounds = CGRectMake(0, 0, 88, 55);
-    logeImg.image = [UIImage imageNamed:@"login-bg"];
+    logeImg.image = [UIImage imageNamed:@"bg"];
     [self.scroll addSubview:logeImg];
     
     UILabel *carLabel = [[UILabel alloc] init];

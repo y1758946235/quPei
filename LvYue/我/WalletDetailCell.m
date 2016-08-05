@@ -44,7 +44,7 @@
     //    cell.moneyLabel.text = numArr[indexPath.row];
     
     self.timeLabel.text = dayWallet.day;
-    //smallType: type为1时,1.收到礼物;2.充值金币  3.打赏照片;4.送礼退款;   type为2时,1.购买礼物;2.购买会员;3.提现;4.提现
+    //smallType: type为1时,1.收到礼物;2.充值金币  3.打赏照片;4.送礼退款;   type为2时,1.购买礼物;2.购买会员;3.提现;4.打赏
     //      timeArr = @[@"05日", @"04日", @"04日", @"04日"];
     //      iconArr = @[@"礼物", @"会员-0", @"金币", @"提现"];
     //      titleArr = @[@"购买礼物", @"购买会员", @"充值金币", @"提现"];
@@ -62,11 +62,11 @@
                 self.titleLabel.text = @"充值金币";
                 break;
             case 3:
-                self.iconImgView.image = [UIImage imageNamed:@"礼物-1"];
+                self.iconImgView.image = [UIImage imageNamed:@"award"];
                 self.titleLabel.text = @"打赏照片";
                 break;
             case 4:
-                self.iconImgView.image = [UIImage imageNamed:@"发现2"];
+                self.iconImgView.image = [UIImage imageNamed:@"金币"];
                 self.titleLabel.text = @"送礼退款";
                 break;
   
@@ -90,8 +90,8 @@
                 self.titleLabel.text = @"提现";
                 break;
             case 4:
-                self.iconImgView.image = [UIImage imageNamed:@"礼物-1"];
-                self.titleLabel.text = @"提现";
+                self.iconImgView.image = [UIImage imageNamed:@"金币"];
+                self.titleLabel.text = @"打赏";
                 break;
             default:
                 break;

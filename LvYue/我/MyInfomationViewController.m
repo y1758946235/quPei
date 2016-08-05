@@ -352,7 +352,7 @@
     } else if (indexPath.section == 1) {
         switch (indexPath.row) {
             case 0: {
-                self.bgView = [[bgView alloc] initWithFrame:self.view.frame];
+                self.bgView = [[bgView alloc] initWithFrame:CGRectMake(0, -64, self.view.width, self.view.height)];
                 [self.view addSubview:self.bgView];
                 [self createChangeNameView];
             } break;

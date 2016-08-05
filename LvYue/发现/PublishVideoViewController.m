@@ -434,11 +434,12 @@
 
 //点击发布
 - (void)publishMyVideo:(UIButton *)sender {
-    if (![self.categoryID isEqualToString:@""] && self.categoryID) {
-        [self loadVideo];
-    } else {
-        [MBProgressHUD showError:@"请选择视频类型"];
-    }
+//    if (![self.categoryID isEqualToString:@""] && self.categoryID) {
+//        [self loadVideo];
+//    } else {
+//        [MBProgressHUD showError:@"请选择视频类型"];
+//    }
+    [self loadVideo];
 }
 
 
