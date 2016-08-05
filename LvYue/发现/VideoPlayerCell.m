@@ -63,7 +63,7 @@
     [self loadPreviewImageWithURLString:model.url];
     self.timeLabel.text = [model getPerfectTime];
     self.descLabel.text = [NSString stringWithFormat:@"%@", model.videoDesc];
-    [self.iconView sd_setImageWithURL:[NSURL URLWithString:model.owner.icon] placeholderImage:[UIImage imageNamed:@"头像"]];
+    [self.iconView sd_setImageWithURL:[NSURL URLWithString:model.owner.icon] placeholderImage:[UIImage imageNamed:@"默认头像"]];
     [self.vipIcon setHidden:([model.owner.isVip isEqualToString:@"1"] ? NO : YES)];
     self.nameLabel.text = [NSString stringWithFormat:@"%@", model.owner.name];
     self.sexIcon.image = [UIImage imageNamed:([model.owner.sex isEqualToString:@"0"] ? @"男" : @"女")];

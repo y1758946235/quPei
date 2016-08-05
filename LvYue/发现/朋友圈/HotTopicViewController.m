@@ -130,6 +130,12 @@
 }
 
 #pragma mark - 视图加载
+
+- (void)viewWillAppear:(BOOL)animated {
+    [super viewWillAppear:animated];
+    [self addObserver];
+}
+
 - (void)viewDidLoad {
     self.title = @"热门话题";
     [self setUI];
@@ -144,8 +150,13 @@
     //上拉下拉刷新
     [self addRefresh];
 
-    [self addObserver];
 }
+
+- (void)viewWillDisappear:(BOOL)animated {
+    [super viewWillDisappear:animated];
+    [[NSNotificationCenter defaultCenter] removeObserver:self];
+}
+
 
 
 - (void)setUI {
@@ -1726,6 +1737,12 @@
     //更新朋友圈
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(reloadFriendCircle:) name:@"ReloadFriendCircleVC" object:nil];
 }
+
+//- (void)dealloc {
+//    //[super dealloc];
+//    [[NSNotificationCenter defaultCenter] removeObserver:self name:@"commentClick" object:nil];
+//    
+//}
 
 //添加刷新
 - (void)addRefresh {

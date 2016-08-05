@@ -139,7 +139,7 @@
     //    [self getHotTopic];
     //    //[self getDataFromWeb];
     //    //注册通知
-    //    [self addObserver];
+        [self addObserver];
 }
 
 
@@ -189,7 +189,7 @@
     [self getHotTopic];
     //[self getDataFromWeb];
     //注册通知
-    [self addObserver];
+    //[self addObserver];
     //数据*******
 
 
@@ -559,7 +559,7 @@
 
     [manager POST:urlStr parameters:parameters success:^(AFHTTPRequestOperation *operation, id responseObject) {
         MLOG(@"获取朋友圈列表:%@", responseObject);
-        [MBProgressHUD hideAllHUDsForView:self.view animated:YES];
+        [MBProgressHUD hideHUD];
 
         if ([[NSString stringWithFormat:@"%@", responseObject[@"code"]] isEqualToString:@"200"]) {
 
@@ -603,13 +603,13 @@
 
         } else {
 
-            [MBProgressHUD hideAllHUDsForView:self.view animated:YES];
+            [MBProgressHUD hideHUD];
             [MBProgressHUD showError:responseObject[@"msg"]];
         }
     }
         failure:^(AFHTTPRequestOperation *operation, NSError *error) {
             NSLog(@"获取朋友圈列表失败%@", error);
-            [MBProgressHUD hideAllHUDsForView:self.view animated:YES];
+            [MBProgressHUD hideHUD];
             [MBProgressHUD showError:@"请检查您的网络"];
         }];
 }
@@ -661,6 +661,12 @@
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(showActionSheet:) name:@"deleteMyComment" object:nil];
     //更新朋友圈
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(reloadFriendCircle:) name:@"ReloadFriendCircleVC" object:nil];
+}
+
+- (void)dealloc {
+    //[super dealloc];
+    [[NSNotificationCenter defaultCenter] removeObserver:self name:@"commentClick" object:nil];
+    
 }
 
 
