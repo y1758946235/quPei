@@ -1091,6 +1091,8 @@
             AFHTTPRequestOperationManager *manager = [AFHTTPRequestOperationManager manager];
             [MBProgressHUD showMessage:@"正在加载"];
 
+            
+            
             NSArray<FriendsCircleMessage *> *tempDict;
             if (self.isHotDataList == YES) { //所处section，0是
                 tempDict = _hotMessageArray;
@@ -1377,6 +1379,29 @@
             return;
         }
     }];
+    
+    //取出cell
+    FriendsCircleCell *cell;
+    if (kSystemVersion >= 8.0) {
+        cell = (FriendsCircleCell *) [sender superview];
+    } else {
+        cell = (FriendsCircleCell *) [[sender superview] superview];
+    }
+    NSIndexPath *indexPath = [self.tableView indexPathForCell:cell];
+    if (indexPath.section == 0) { //热门动态
+        self.isHotDataList = YES;
+    } else {
+        self.isHotDataList = NO;
+    }
+    
+    
+    NSArray<FriendsCircleMessage *> *tempDict;
+    if (self.isHotDataList == YES) { //所处section，0
+        tempDict = _hotMessageArray;
+    } else {
+        tempDict = _messageArray;
+    }
+    
 
     NSString *noticeId = _noticeList[sender.tag][@"id"];
 
@@ -1391,28 +1416,77 @@
 
             if ([[NSString stringWithFormat:@"%@", responseObject[@"code"]] isEqualToString:@"200"]) {
 
-                //移除该消息
-                NSDictionary *notice = _noticeList[sender.tag];
-                [_noticeList removeObject:notice];
-
-                //先清空模型数组
-                [_messageArray removeAllObjects];
-                [_hotMessageArray removeAllObjects];
-                //保存模型数组
-                for (NSDictionary *dict in _noticeList) {
-
-                    //消息模型数组
-                    FriendsCircleMessage *message = [[FriendsCircleMessage alloc] initWithDict:dict];
-                    [_messageArray addObject:message];
-                    if ([message.isHot isEqualToString:@"1"]) { //是热门动态
+                
+                if (self.isHotDataList == YES) { //所处section，0
+                    //移除该消息
+                    NSDictionary *notice = _hotNoticeList[sender.tag];
+                    [_hotNoticeList removeObject:notice];
+                    
+                    //先清空模型数组
+                    [_hotMessageArray removeAllObjects];
+                    //[_hotMessageArray removeAllObjects];
+                    //保存模型数组
+                    for (NSDictionary *dict in _hotNoticeList) {
+                        
+                        //消息模型数组
+                        FriendsCircleMessage *message = [[FriendsCircleMessage alloc] initWithDict:dict];
                         [_hotMessageArray addObject:message];
+                        if ([message.isHot isEqualToString:@"1"]) { //是热门动态
+                            [_hotMessageArray addObject:message];
+                        }
                     }
-                }
+                    
+//                    [_commentList removeObjectAtIndex:sender.tag];
+//                    [_praiseList removeObjectAtIndex:sender.tag];
+                    [_hotCommentList removeObjectAtIndex:sender.tag];
+                    [_hotPraiseList removeObjectAtIndex:sender.tag];
+                } else {
+                    //移除该消息
+                    NSDictionary *notice = _noticeList[sender.tag];
+                    [_noticeList removeObject:notice];
+                    
+                    //先清空模型数组
+                    [_messageArray removeAllObjects];
+                    //[_hotMessageArray removeAllObjects];
+                    //保存模型数组
+                    for (NSDictionary *dict in _noticeList) {
+                        
+                        //消息模型数组
+                        FriendsCircleMessage *message = [[FriendsCircleMessage alloc] initWithDict:dict];
+                        [_messageArray addObject:message];
+//                        if ([message.isHot isEqualToString:@"1"]) { //是热门动态
+//                            [_hotMessageArray addObject:message];
+//                        }
+                    }
+                    
+                    [_commentList removeObjectAtIndex:sender.tag];
+                    [_praiseList removeObjectAtIndex:sender.tag];
+//                    [_hotCommentList removeObjectAtIndex:sender.tag];
+//                    [_hotPraiseList removeObjectAtIndex:sender.tag];
 
-                [_commentList removeObjectAtIndex:sender.tag];
-                [_praiseList removeObjectAtIndex:sender.tag];
-                [_hotCommentList removeObjectAtIndex:sender.tag];
-                [_hotPraiseList removeObjectAtIndex:sender.tag];
+                }
+//                //移除该消息
+//                NSDictionary *notice = _noticeList[sender.tag];
+//                [_noticeList removeObject:notice];
+//
+//                //先清空模型数组
+//                [_messageArray removeAllObjects];
+//                [_hotMessageArray removeAllObjects];
+//                //保存模型数组
+//                for (NSDictionary *dict in _noticeList) {
+//
+//                    //消息模型数组
+//                    FriendsCircleMessage *message = [[FriendsCircleMessage alloc] initWithDict:dict];
+//                    [_messageArray addObject:message];
+//                    if ([message.isHot isEqualToString:@"1"]) { //是热门动态
+//                        [_hotMessageArray addObject:message];
+//                    }
+//                }
+//
+//                [_commentList removeObjectAtIndex:sender.tag];
+//                [_praiseList removeObjectAtIndex:sender.tag];
+//                [_hotCommentList removeObjectAtIndex:sender.tag];
+//                [_hotPraiseList removeObjectAtIndex:sender.tag];
 
                 [_tableView reloadData];
             } else {
