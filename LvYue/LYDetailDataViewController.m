@@ -36,7 +36,8 @@ typedef NS_ENUM(NSUInteger, LYDetailDataRelationShipEnum) {
 
 typedef NS_ENUM(NSUInteger, LYDetailDataAlertViewEnum) {
     LYDetailDataAlertViewEnumSendGift     = 1, // 送礼
-    LYDetailDataAlertViewEnumWatchContact = 2  // 查看联系方式
+    LYDetailDataAlertViewEnumWatchContact = 2, // 查看联系方式
+    LYDetailDataAlertViewEnumChangeRemark = 3  // 修改备注
 };
 
 
@@ -200,11 +201,8 @@ static NSString *const LYDetailDataPhotoTableViewCellIdentity   = @"LYDetailData
 
     [self p_loadData];
 
-    // 用户自己则不现实加好友发消息、右上角的汉堡按钮
+    // 用户自己则不显示加好友发消息、右上角的汉堡按钮
     if (!self.mySelf) {
-
-        self.tableView.tableFooterView = self.tableViewFooterView;
-
         [self setRightButton:[UIImage imageNamed:@"more"] title:nil target:self action:@selector(p_clickRightBarButtonItem:)];
     }
 
@@ -343,6 +341,29 @@ static NSString *const LYDetailDataPhotoTableViewCellIdentity   = @"LYDetailData
 
         [self.navigationController pushViewController:vc animated:YES];
     }
+
+    // 备注
+    if (indexPath.section == 0 && indexPath.row == 1) {
+        if (self.mySelf) { // 自己的话不能修改
+            return;
+        }
+
+        if (self.status == LYDetailDataRelationShipEnumDelete) {
+            // 修改备注
+            UIAlertView *alert                         = [[UIAlertView alloc] init];
+            alert.alertViewStyle                       = UIAlertViewStylePlainTextInput;
+            alert.title                                = @"豆客";
+            [alert textFieldAtIndex:0].placeholder     = @"请输入备注";
+            [alert textFieldAtIndex:0].clearButtonMode = UITextFieldViewModeAlways;
+            [alert addButtonWithTitle:@"取消"];
+            [alert addButtonWithTitle:@"确定"];
+            alert.tag      = LYDetailDataAlertViewEnumChangeRemark;
+            alert.delegate = self;
+            [alert show];
+        } else {
+            [MBProgressHUD showError:@"你们还不是好友"];
+        }
+    }
 }
 
 - (void)tableView:(UITableView *)tableView
@@ -444,6 +465,12 @@ forRowAtIndexPath:(NSIndexPath *)indexPath {
             }
             break;
         }
+        case LYDetailDataAlertViewEnumChangeRemark: {
+            if (buttonIndex == 1) {
+                [self p_changRemark:[alertView textFieldAtIndex:0].text];
+            }
+            break;
+        }
     }
 }
 
@@ -513,6 +540,8 @@ forRowAtIndexPath:(NSIndexPath *)indexPath {
                     if (!weakSelf.infoModel.auth_video) {
                         weakSelf.tableView.tableHeaderView = weakSelf.invitateTableViewHeaderView;
                     }
+                    // 加好友 发消息
+                    self.tableView.tableFooterView = self.tableViewFooterView;
                 }
 
                 [weakSelf.detailDataHeaderView configData:weakSelf.infoModel mySelf:weakSelf.mySelf];
@@ -890,6 +919,39 @@ forRowAtIndexPath:(NSIndexPath *)indexPath {
  */
 - (void)p_clickRightBarButtonItem:(UIBarButtonItem *)sender {
     [LYPopoverView showPopoverViewAtPoint:CGPointMake(SCREEN_WIDTH - 15.f, 10.f) inView:self.view type:LYPopoverViewItemTypeDefault delegate:self];
+}
+
+/**
+ *  修改备注
+ */
+- (void)p_changRemark:(NSString *)remark {
+    [MBProgressHUD showHUDAddedTo:self.view animated:YES];
+    [LYHttpPoster postHttpRequestByPost:[NSString stringWithFormat:@"%@%@", REQUESTHEADER, @"/mobile/userFriend/update"]
+        andParameter:@{
+            @"user_id": [LYUserService sharedInstance].userID,
+            @"friend_user_id": self.userId,
+            @"remark": remark
+        }
+        success:^(id successResponse) {
+            [MBProgressHUD hideHUDForView:self.view];
+            if ([successResponse[@"code"] integerValue] == 200) {
+                self.remark = remark;
+                [LYDetailDataViewController
+                    configTableViewDataArray:self.detailInfoModel
+                                   infoModel:self.infoModel
+                                      remark:self.remark
+                        dynamicImageURLArray:self.dynamicImageURLArray
+                      taDeQiZhiImageURLArray:self.taDeQiZhiImageURLArray
+                        jingHuaImageURLArray:self.jingHuaImageURLArray];
+                [self.tableView reloadRowsAtIndexPaths:@[[NSIndexPath indexPathForRow:1 inSection:0]] withRowAnimation:UITableViewRowAnimationFade];
+            } else {
+                [MBProgressHUD showError:[NSString stringWithFormat:@"%@", successResponse[@"msg"]]];
+            }
+        }
+        andFailure:^(id failureResponse) {
+            [MBProgressHUD hideHUDForView:self.view];
+            [MBProgressHUD showError:@"服务器繁忙，请重试"];
+        }];
 }
 
 #pragma mark - Getter
