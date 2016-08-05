@@ -47,7 +47,7 @@
     flowLayout.minimumInteritemSpacing     = 5;
     flowLayout.minimumLineSpacing          = 5;
 
-    _collectionView                      = [[UICollectionView alloc] initWithFrame:CGRectMake(0, 0, SCREEN_WIDTH, SCREEN_HEIGHT) collectionViewLayout:flowLayout];
+    _collectionView                      = [[UICollectionView alloc] initWithFrame:CGRectMake(0, 0, SCREEN_WIDTH, SCREEN_HEIGHT - 64.f) collectionViewLayout:flowLayout];
     _collectionView.delegate             = self;
     _collectionView.dataSource           = self;
     _collectionView.backgroundColor      = [UIColor clearColor];

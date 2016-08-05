@@ -198,7 +198,7 @@ static NSString *const LYEssenceAlbumCollectionViewCellIdentity =
     if (!_collectionView) {
         _collectionView = ({
             UICollectionView *collectionView = [[UICollectionView alloc]
-                       initWithFrame:CGRectMake(0, 0, SCREEN_WIDTH, SCREEN_HEIGHT)
+                       initWithFrame:CGRectMake(0, 0, SCREEN_WIDTH, SCREEN_HEIGHT - 64.f)
                 collectionViewLayout:self.collectionViewLayout];
             collectionView.backgroundColor      = [UIColor whiteColor];
             collectionView.dataSource           = self;
