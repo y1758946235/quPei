@@ -159,7 +159,7 @@
 
     //取消边界边缘化
     [self setEdgesForExtendedLayout:UIRectEdgeNone];
-
+    
 
     //初始化
     _messageArray  = [NSMutableArray array];
@@ -316,7 +316,7 @@
 //下拉
 - (void)headerRereshing {
     _currentPage = 1;
-
+    //[MBProgressHUD showMessage:@"正在加载"];
     //获取网络
     //加载数据
     [self postRequest];
@@ -326,7 +326,7 @@
 //上拉
 //上拉加载方法
 - (void)footerRefreshing {
-
+    
     _currentPage++;
 
     AFHTTPRequestOperationManager *manager = [AFHTTPRequestOperationManager manager];
@@ -555,7 +555,7 @@
     }
 
 
-    [MBProgressHUD showMessage:nil toView:self.view];
+    [MBProgressHUD showMessage:nil];
 
     [manager POST:urlStr parameters:parameters success:^(AFHTTPRequestOperation *operation, id responseObject) {
         MLOG(@"获取朋友圈列表:%@", responseObject);
