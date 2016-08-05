@@ -28,6 +28,7 @@
 
 @property (nonatomic, copy) NSString* hotName;  //热门话题名字
 @property (nonatomic, copy) NSString* hot_id;   //热门话题的ID
+@property (nonatomic, copy) NSString* ID;   //id 与"notice_id" = 1245;一致
 
 
 

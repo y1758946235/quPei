@@ -41,6 +41,7 @@
         self.nType = [NSString stringWithFormat:@"%@", dict[@"nType"]];
         self.hotName = [NSString stringWithFormat:@"%@",dict[@"hotName"]];
         self.hot_id = [NSString stringWithFormat:@"%@", dict[@"hot_id"]];
+        self.ID = [NSString stringWithFormat:@"%@",dict[@"id"]];
         
     }
     return self;

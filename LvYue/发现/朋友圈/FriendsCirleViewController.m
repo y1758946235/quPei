@@ -204,20 +204,7 @@
 }
 
 - (void)setStatus {
-    //初始化头部segment
-    UISegmentedControl *segmentedControl = [[UISegmentedControl alloc] initWithFrame:CGRectMake(0, 0, 120, 30)];
-    segmentedControl.tintColor           = [UIColor whiteColor];
-    [segmentedControl insertSegmentWithTitle:@"全部" atIndex:0 animated:YES];
-    [segmentedControl insertSegmentWithTitle:@"关注" atIndex:1 animated:YES];
-    NSDictionary *attrs = @{
-        NSFontAttributeName: kFont16
-    };
-    [segmentedControl setTitleTextAttributes:attrs forState:UIControlStateNormal];
-    [segmentedControl setTitleTextAttributes:attrs forState:UIControlStateSelected];
-
-    self.navigationItem.titleView         = segmentedControl;
-    segmentedControl.selectedSegmentIndex = 0;
-    [segmentedControl addTarget:self action:@selector(controlPressed:) forControlEvents:UIControlEventValueChanged];
+    
 
     //数据
     if ([self.userId isEqualToString:@""] || [self.userId isKindOfClass:[NSNull class]] || self.userId == nil) {
@@ -230,12 +217,27 @@
 
     if (_isFriendsCircle) {
         [self setRightButton:[UIImage imageNamed:@"more"] title:@"" target:self action:@selector(addClick) rect:CGRectMake(0, 0, 43, 43)];
+        //初始化头部segment
+        UISegmentedControl *segmentedControl = [[UISegmentedControl alloc] initWithFrame:CGRectMake(0, 0, 120, 30)];
+        segmentedControl.tintColor           = [UIColor whiteColor];
+        [segmentedControl insertSegmentWithTitle:@"全部" atIndex:0 animated:YES];
+        [segmentedControl insertSegmentWithTitle:@"关注" atIndex:1 animated:YES];
+        NSDictionary *attrs = @{
+                                NSFontAttributeName: kFont16
+                                };
+        [segmentedControl setTitleTextAttributes:attrs forState:UIControlStateNormal];
+        [segmentedControl setTitleTextAttributes:attrs forState:UIControlStateSelected];
+        
+        self.navigationItem.titleView         = segmentedControl;
+        segmentedControl.selectedSegmentIndex = 0;
+        [segmentedControl addTarget:self action:@selector(controlPressed:) forControlEvents:UIControlEventValueChanged];
     } else {
         self.title                                    = @"Ta的动态";
         self.navigationController.navigationBarHidden = NO;
         if ([self.userId isEqualToString:[LYUserService sharedInstance].userID]) {
             [self setRightButton:nil title:@"最近来访" target:self action:@selector(whoCome) rect:CGRectMake(0, 0, 80, 20)];
         }
+        
     }
 
     //获得朋友圈消息列表
@@ -251,6 +253,13 @@
         MLOG(@"%ld", (long) selectedIndex);
         isAttention = NO;
     } else { //关注
+        [[LYUserService sharedInstance] fetchLoginStateWithCompeletionBlock:^(UserLoginStateType type) {
+            if (type == UserLoginStateTypeWaitToLogin) {
+                [[LYUserService sharedInstance] jumpToLoginWithController:self.tabBarController];
+                return ;
+            }
+        }];
+        
         MLOG(@"%ld", (long) selectedIndex);
         isAttention = YES;
     }
@@ -657,11 +666,23 @@
 
 //举报
 - (void)reportClick:(UIButton *)sender {
+    [[LYUserService sharedInstance] fetchLoginStateWithCompeletionBlock:^(UserLoginStateType type) {
+        if (type == UserLoginStateTypeWaitToLogin) {
+            [[LYUserService sharedInstance] jumpToLoginWithController:self.tabBarController];
+            return ;
+        }
+    }];
     ReportViewController *vc = [[ReportViewController alloc] init];
     [self.navigationController pushViewController:vc animated:YES];
 }
 
 - (void)senderGift:(UIButton *)sender {
+    [[LYUserService sharedInstance] fetchLoginStateWithCompeletionBlock:^(UserLoginStateType type) {
+        if (type == UserLoginStateTypeWaitToLogin) {
+            [[LYUserService sharedInstance] jumpToLoginWithController:self.tabBarController];
+            return ;
+        }
+    }];
     FriendsCircleMessage *message = _messageArray[sender.tag -10];
     LYSendGiftViewController* vc =[[LYSendGiftViewController alloc] init];
     vc.avatarImageURL = message.headImgStr;
@@ -731,7 +752,12 @@
 
 //点击回复
 - (void)commentClick:(NSNotification *)notification {
-
+    [[LYUserService sharedInstance] fetchLoginStateWithCompeletionBlock:^(UserLoginStateType type) {
+        if (type == UserLoginStateTypeWaitToLogin) {
+            [[LYUserService sharedInstance] jumpToLoginWithController:self.tabBarController];
+            return ;
+        }
+    }];
     _inputView = nil;
     if (!_inputView) {
 
@@ -805,6 +831,12 @@
     //
     //    }
     //    else{
+    [[LYUserService sharedInstance] fetchLoginStateWithCompeletionBlock:^(UserLoginStateType type) {
+        if (type == UserLoginStateTypeWaitToLogin) {
+            [[LYUserService sharedInstance] jumpToLoginWithController:self.tabBarController];
+            return ;
+        }
+    }];
     _inputView = nil;
     if (!_inputView) {
 
@@ -1123,6 +1155,7 @@
         [self hiddenAddView];
 
         PublishMessageViewController *publishMessageViewController = [[PublishMessageViewController alloc] init];
+        publishMessageViewController.hotId = @"0";
         [self.navigationController pushViewController:publishMessageViewController animated:YES];
     } else {
         if ([[LYUserService sharedInstance].userDetail.isVip isEqualToString:@"0"]) {
@@ -1134,6 +1167,7 @@
             [self hiddenAddView];
 
             PublishMessageViewController *publishMessageViewController = [[PublishMessageViewController alloc] init];
+            publishMessageViewController.hotId = @"0";
             [self.navigationController pushViewController:publishMessageViewController animated:YES];
         }
     }
@@ -1190,7 +1224,12 @@
 
 //删除朋友圈 自己发的消息
 - (void)deleteNoticeClick:(UIButton *)sender {
-
+    [[LYUserService sharedInstance] fetchLoginStateWithCompeletionBlock:^(UserLoginStateType type) {
+        if (type == UserLoginStateTypeWaitToLogin) {
+            [[LYUserService sharedInstance] jumpToLoginWithController:self.tabBarController];
+            return ;
+        }
+    }];
     NSString *noticeId = _noticeList[sender.tag][@"id"];
 
     AFHTTPRequestOperationManager *manager = [AFHTTPRequestOperationManager manager];
@@ -1237,7 +1276,13 @@
 
 //点赞&取消赞
 - (void)praiseClick:(UIButton *)sender {
-
+    [[LYUserService sharedInstance] fetchLoginStateWithCompeletionBlock:^(UserLoginStateType type) {
+        if (type == UserLoginStateTypeWaitToLogin) {
+            [[LYUserService sharedInstance] jumpToLoginWithController:self.tabBarController];
+            return ;
+        }
+    }];
+    
     //取出cell
     FriendsCircleCell *cell;
     if (kSystemVersion >= 8.0) {
@@ -1274,7 +1319,7 @@
                     [_praiseList[row] addObject:dict];
                 } else {
 
-                    [MBProgressHUD showError:responseObject[@"msg"]];
+                    //[MBProgressHUD showError:responseObject[@"msg"]];
                 }
             }
             failure:^(AFHTTPRequestOperation *operation, NSError *error) {
@@ -1325,6 +1370,12 @@
 
 //点击头像
 - (void)tapHeadImg:(UITapGestureRecognizer *)tap {
+    [[LYUserService sharedInstance] fetchLoginStateWithCompeletionBlock:^(UserLoginStateType type) {
+        if (type == UserLoginStateTypeWaitToLogin) {
+            [[LYUserService sharedInstance] jumpToLoginWithController:self.tabBarController];
+            return ;
+        }
+    }];
 
     NSInteger userId                                     = [_noticeList[tap.view.tag][@"user_id"] integerValue];
     LYDetailDataViewController *detailDataViewController = [[LYDetailDataViewController alloc] init];
@@ -1332,7 +1383,14 @@
     [self.navigationController pushViewController:detailDataViewController animated:YES];
 }
 
+//点击热门话题
 - (void)hotTapTitle:(UITapGestureRecognizer *)tap {
+//    [[LYUserService sharedInstance] fetchLoginStateWithCompeletionBlock:^(UserLoginStateType type) {
+//        if (type == UserLoginStateTypeWaitToLogin) {
+//            [[LYUserService sharedInstance] jumpToLoginWithController:self.tabBarController];
+//            return ;
+//        }
+//    }];
     HotTopicViewController *vc = [[HotTopicViewController alloc] init];
     vc.userId                  = self.userId;
      NSNumber *tag = (NSNumber *)objc_getAssociatedObject(tap, @"hotTapTitleTag");
@@ -1364,10 +1422,11 @@
     cell.headImg.tag                = indexPath.row;
     UITapGestureRecognizer *headTap = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(tapHeadImg:)];
     [cell.headImg addGestureRecognizer:headTap];
-
+    
     //举报
     [cell.reportBtn addTarget:self action:@selector(reportClick:) forControlEvents:UIControlEventTouchUpInside];
 
+   
     //送礼
     [cell.giftBtn addTarget:self action:@selector(senderGift:) forControlEvents:UIControlEventTouchUpInside];
     cell.giftBtn.tag = 10 + indexPath.row;
@@ -1382,6 +1441,20 @@
          */
         FriendsCircleMessage *message = _messageArray[indexPath.row];
         cell.separatorLine.frame      = CGRectMake(0, [message returnCellHeight] - 1, SCREEN_WIDTH, 1);
+
+        cell.giftBtn.hidden = NO;
+        NSString* tempId =nil;
+        if (self.userId == nil) {
+            self.userId = @"";
+            tempId = @"wo";
+        }
+        else {
+            tempId = self.userId;
+        }
+        if ([[NSString stringWithFormat:@"%@",message.userId] isEqualToString:tempId]) {
+            cell.giftBtn.hidden = YES;
+            
+        }
         
         //保持最新的评论数据 和  点赞数据
         [message setCommentList:_commentList[indexPath.row]];
@@ -1721,6 +1794,12 @@
 
 #pragma mark - clickTopButton:
 - (void)clickTipButton:(UIButton *)sender {
+//    [[LYUserService sharedInstance] fetchLoginStateWithCompeletionBlock:^(UserLoginStateType type) {
+//        if (type == UserLoginStateTypeWaitToLogin) {
+//            [[LYUserService sharedInstance] jumpToLoginWithController:self.tabBarController];
+//            return ;
+//        }
+//    }];
     MLOG(@"%@", sender);
     HotTopicViewController *vc = [[HotTopicViewController alloc] init];
     vc.userId                  = self.userId;
@@ -1740,6 +1819,12 @@
 
 //点击播放按钮
 - (void)playVideo:(UIButton *)sender {
+    [[LYUserService sharedInstance] fetchLoginStateWithCompeletionBlock:^(UserLoginStateType type) {
+        if (type == UserLoginStateTypeWaitToLogin) {
+            [[LYUserService sharedInstance] jumpToLoginWithController:self.tabBarController];
+            return ;
+        }
+    }];
     //#warning 权限开关
     //    if ([[LYUserService sharedInstance].userDetail.isVip isEqualToString:@"1"]) {
     //        NSInteger index = sender.tag - 100;
@@ -1756,6 +1841,7 @@
      *
      *  @brief 权限开关
      */
+    
     if ([[LYUserService sharedInstance] canPlayVideo]) { //如果没有权限约束
         NSInteger index               = sender.tag - 100;
         FriendsCircleMessage *message = _messageArray[index];
