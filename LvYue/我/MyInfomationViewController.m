@@ -164,7 +164,11 @@
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath {
     if (indexPath.section == 0) {
         return 90;
-    } else {
+    }else {
+        if (indexPath.section == 2&&indexPath.row == 3) {
+            return 0.01f;
+        }
+        
         return 40;
     }
 }
@@ -253,6 +257,7 @@
                 }
                 cell2.accessoryType  = UITableViewCellAccessoryNone;
                 cell2.selectionStyle = UITableViewCellSelectionStyleNone;
+                cell2.hidden = YES;
             }
             if (indexPath.row == 4) {
                 cell2.accessoryType  = UITableViewCellAccessoryNone;
@@ -360,13 +365,13 @@
                 if ([self.isKnowSex integerValue] == 2) {
                     [[[UIAlertView alloc] initWithTitle:@"" message:@"您已经实名认证，不能修改" delegate:self cancelButtonTitle:@"确定" otherButtonTitles:nil] show];
                 } else {
-                    self.bgView = [[bgView alloc] initWithFrame:self.view.frame];
+                    self.bgView = [[bgView alloc] initWithFrame:CGRectMake(0, -64, self.view.width, self.view.height)];
                     [self.view addSubview:self.bgView];
                     [self createChangeSexView];
                 }
             } break;
             case 2: {
-                self.bgView = [[bgView alloc] initWithFrame:self.view.frame];
+                self.bgView = [[bgView alloc] initWithFrame:CGRectMake(0, -64, self.view.width, self.view.height)];
                 [self.view addSubview:self.bgView];
                 [self createChangeAgeView];
             } break;
@@ -392,7 +397,7 @@
             } break;
             case 2: {
 
-                self.bgView = [[bgView alloc] initWithFrame:self.view.frame];
+                self.bgView = [[bgView alloc] initWithFrame:CGRectMake(0, -64, self.view.width, self.view.height)];
                 [self.view addSubview:self.bgView];
                 [self createChangeJobView];
 
@@ -439,7 +444,7 @@
                 [self.navigationController pushViewController:pdrVC animated:YES];
             } break;
             default: {
-                self.bgView = [[bgView alloc] initWithFrame:self.view.frame];
+                self.bgView = [[bgView alloc] initWithFrame:CGRectMake(0, -64, self.view.width, self.view.height)];
                 [self.view addSubview:self.bgView];
                 [self CreateEmailView];
             } break;
