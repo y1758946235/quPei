@@ -133,17 +133,17 @@ static NSString *notice_index;
     //    refreshType = @"near";
     currentPage  = 1;
     currentPage2 = 1;
-    //    if (!topBtn) {
-    //        topBtn                 = [[UIButton alloc] initWithFrame:CGRectMake(0, 0, SCREEN_WIDTH / 4, 49)];
-    //        topBtn.backgroundColor = [UIColor clearColor];
-    //        [topBtn addTarget:self action:@selector(bringToTop) forControlEvents:UIControlEventTouchUpInside];
-    //        [self.tabBarController.tabBar addSubview:topBtn];
-    //    }
-    //    topBtn.hidden = NO;
+    if (!topBtn) {
+        topBtn                 = [[UIButton alloc] initWithFrame:CGRectMake(0, 0, SCREEN_WIDTH / 4, 49)];
+        topBtn.backgroundColor = [UIColor clearColor];
+        [topBtn addTarget:self action:@selector(bringToTop) forControlEvents:UIControlEventTouchUpInside];
+        [self.tabBarController.tabBar addSubview:topBtn];
+    }
+    topBtn.hidden = NO;
 }
 
 - (void)viewWillDisappear:(BOOL)animated {
-//    topBtn.hidden = YES;
+    topBtn.hidden = YES;
 }
 
 - (BOOL)prefersStatusBarHidden {
@@ -1388,9 +1388,8 @@ static NSString *notice_index;
 
 //返回顶部
 - (void)bringToTop {
-
     if (isNew) {
-        [_collectionView setContentOffset:CGPointMake(0, -64) animated:YES];
+        [_collectionView setContentOffset:CGPointMake(0, 0) animated:YES];
     } else {
         [_hotCollectionView setContentOffset:CGPointMake(0, 0) animated:YES];
     }
