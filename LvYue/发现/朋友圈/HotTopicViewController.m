@@ -144,6 +144,7 @@ static NSString* const str = @"cc";
     self.title = @"热门话题";
     [self setUI];
     
+    NSLog(@"%@", self.topic_id);
     //获得朋友圈消息列表
     [self postRequest];
     //话题详情
@@ -350,7 +351,7 @@ static NSString* const str = @"cc";
 
             cell.giftBtn.hidden = NO;
             NSString *tempId    = nil;
-            if (self.userId == nil) {
+            if (self.userId == nil|| [self.userId isEqualToString:@""]) {
                 self.userId = @"";
                 tempId      = @"wo";
             } else {
@@ -427,7 +428,7 @@ static NSString* const str = @"cc";
 
             cell.giftBtn.hidden = NO;
             NSString *tempId    = nil;
-            if (self.userId == nil) {
+            if (self.userId == nil|| [self.userId isEqualToString:@""]) {
                 self.userId = @"";
                 tempId      = @"wo";
             } else {
@@ -1539,7 +1540,7 @@ static NSString* const str = @"cc";
     //        self.userId = @"";
     //    }
     //热门话题
-    if (!self.userId) { //游客
+    if (!self.userId || [self.userId isEqualToString:@""]) { //游客
         if (!self.userId) {
             self.userId = @"";
         }
@@ -1618,7 +1619,7 @@ static NSString* const str = @"cc";
 
     NSDictionary *parameters;
     //热门话题
-    if (!self.userId) { //游客
+    if (!self.userId || [self.userId isEqualToString:@""]) { //游客
         if (!self.userId) {
             self.userId = @"";
         }
@@ -1783,7 +1784,7 @@ static NSString* const str = @"cc";
     NSDictionary *parameters;
     //type 0->自己的动态 1->自己的动态加上userID
     //热门话题
-    if (!self.userId) { //游客
+    if (!self.userId || [self.userId isEqualToString:@""]) { //游客
         if (!self.userId) {
             self.userId = @"";
         }

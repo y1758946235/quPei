@@ -1647,7 +1647,7 @@
     }
 
     //一个热门话题的高度
-    static CGFloat hotTipH = 35;
+    static CGFloat hotTipH = 25;
 
     //设置热门话题
     if (!hotBackView) {
@@ -1741,7 +1741,7 @@
     MLOG(@"%@", sender);
     HotTopicViewController *vc = [[HotTopicViewController alloc] init];
     vc.userId                  = self.userId;
-    vc.topic_id                = [NSString stringWithFormat:@"%ld", sender.tag - 1000];
+    vc.topic_id                = [NSString stringWithFormat:@"%d", sender.tag - 1000];
     [self.navigationController pushViewController:vc animated:YES];
 }
 

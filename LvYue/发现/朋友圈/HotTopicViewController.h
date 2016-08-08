@@ -8,7 +8,7 @@
 
 #import "BaseViewController.h"
 
-NS_ASSUME_NONNULL_BEGIN
+//NS_ASSUME_NONNULL_BEGIN
 @interface HotTopicViewController : BaseViewController
 
 @property (nonatomic,strong) NSString *userId; //sssws
@@ -16,8 +16,8 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic,strong) NSString *personName;
 
 
-@property (nonatomic, assign) NSString* topic_id;//热门话题id
+@property (nonatomic, copy) NSString* topic_id;//热门话题id
 
 @end
 
-NS_ASSUME_NONNULL_END
+//NS_ASSUME_NONNULL_END
