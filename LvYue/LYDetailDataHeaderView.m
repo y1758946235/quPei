@@ -35,6 +35,10 @@
 
     self.avatarImageView.layer.cornerRadius  = 5.f;
     self.avatarImageView.layer.masksToBounds = YES;
+
+    UITapGestureRecognizer *tap                 = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(tapAvatarImageView:)];
+    self.avatarImageView.userInteractionEnabled = YES;
+    [self.avatarImageView addGestureRecognizer:tap];
 }
 
 - (void)configData:(MyInfoModel *)infoModel mySelf:(BOOL)mySelf {
@@ -114,6 +118,13 @@
 - (IBAction)clickPlayVideoButton:(id)sender {
     if (self.playAuthVideoBlock) {
         self.playAuthVideoBlock();
+    }
+}
+
+// 点击头像
+- (void)tapAvatarImageView:(UITapGestureRecognizer *)sender {
+    if (self.tapAvatarImageViewBlock) {
+        self.tapAvatarImageViewBlock(self.avatarImageView);
     }
 }
 

@@ -7,6 +7,7 @@
 //
 
 #import "BuyVipViewController.h"
+#import "BuyVipViewController.h"
 #import "ChatViewController.h"
 #import "DXPopover.h"
 #import "FriendsCirleViewController.h"
@@ -19,6 +20,7 @@
 #import "LYSendGiftViewController.h"
 #import "ReportViewController.h"
 #import "SendBuddyRequestMessageController.h"
+#import "VideoKnowViewController.h"
 #import <MediaPlayer/MediaPlayer.h>
 
 #import "ChatSendHelper.h"
@@ -37,14 +39,21 @@ typedef NS_ENUM(NSUInteger, LYDetailDataRelationShipEnum) {
 typedef NS_ENUM(NSUInteger, LYDetailDataAlertViewEnum) {
     LYDetailDataAlertViewEnumSendGift     = 1, // 送礼
     LYDetailDataAlertViewEnumWatchContact = 2, // 查看联系方式
-    LYDetailDataAlertViewEnumChangeRemark = 3  // 修改备注
+    LYDetailDataAlertViewEnumChangeRemark = 3, // 修改备注
+    LYDetailDataAlertViewEnumBecomeVip    = 4, // 成为会员
+    LYDetailDataAlertViewEnumVedioAuth    = 5  // 视频认证
+};
+
+typedef NS_ENUM(NSUInteger, LYDetailDataActionSheetEnum) {
+    LYDetailDataActionSheetEnumFriendShip  = 0, // 删除好友时显示
+    LYDetailDataActionSheetEnumWatchAvatar = 1  // 查看头像时
 };
 
 
 static NSString *const LYInviteVedioAuthMessage =
     @"TA 还未通过形象视频认证，请谨慎联系。确认送礼并邀请 TA 认证形象视频吗？如果对方不认证，系统会返回您购买该礼物的金币";
 static NSString *const LYPlayAuthVideoMessage1 = @"为了公平起见，你需要成为会员才能观看到更多人的形象视频，否则每天只能观看六个人的视频。";
-static NSString *const LYPlayAuthVideoMessage2 = @"为了公平起见，你需要上传自己的形象认证视频才能观看更多人的形象视频，否者每天只能观看两人的形象视频。";
+static NSString *const LYPlayAuthVideoMessage2 = @"为了公平起见，你需要上传自己的形象认证视频才能观看更多人的形象视频，否则每天只能观看两人的形象视频。";
 
 static NSArray<NSArray *> *LYDetailDataTableViewDataArray;
 static NSString *const LYDetailDataTableViewDefaultCellIdentity = @"LYDetailDataTableViewDefaultCellIdentity";
@@ -84,6 +93,8 @@ static NSString *const LYDetailDataPhotoTableViewCellIdentity   = @"LYDetailData
 @property (nonatomic, strong) UIView *invitateTableViewHeaderView;
 // 包含发消息、加好友
 @property (nonatomic, strong) UIView *tableViewFooterView;
+// 查看用户头像使用
+@property (nonatomic, strong) UIButton *watchAvatarButton;
 
 @end
 
@@ -112,8 +123,8 @@ static NSString *const LYDetailDataPhotoTableViewCellIdentity   = @"LYDetailData
            },
            @{
                @"title": @"地区",
-               @"value": detailInfoModel && detailInfoModel.city.length
-                             ? detailInfoModel.city
+               @"value": detailInfoModel && detailInfoModel.cityName.length
+                             ? detailInfoModel.cityName
                              : @"暂无信息",
                @"rowHeight": @44,
                @"actionVC": @""
@@ -386,56 +397,79 @@ forRowAtIndexPath:(NSIndexPath *)indexPath {
 - (void)actionSheet:(UIActionSheet *)actionSheet
     clickedButtonAtIndex:(NSInteger)buttonIndex {
 
-    __weak typeof(self) weakSelf = self;
+    switch (actionSheet.tag) {
+        case LYDetailDataActionSheetEnumFriendShip: {
+            __weak typeof(self) weakSelf = self;
 
-    if (buttonIndex == 0) {
-        [MBProgressHUD showMessage:@"删除中.."];
-        [LYHttpPoster
-            postHttpRequestByPost:
-                [NSString stringWithFormat:@"%@/mobile/userFriend/iosDelete",
-                                           REQUESTHEADER]
-            andParameter:@{
-                @"user_id": [LYUserService sharedInstance].userID,
-                @"friend_user_id": weakSelf.userId
-            }
-            success:^(id successResponse) {
-                if ([[NSString stringWithFormat:@"%@", successResponse[@"code"]]
-                        isEqualToString:@"200"]) {
-                    //调用环信"删除好友"的方法
-                    EMError *error = nil;
-                    BOOL isSuccess = [[EaseMob sharedInstance]
-                                          .chatManager removeBuddy:weakSelf.userId
-                                                  removeFromRemote:YES
-                                                             error:&error];
-                    if (isSuccess && !error) {
-                        [MBProgressHUD hideHUD];
-                        //删除之前的用户对话
-                        [[EaseMob sharedInstance]
-                                .chatManager removeConversationByChatter:self.userId
-                                                          deleteMessages:YES
-                                                             append2Chat:YES];
-                        //发送更新会话列表的通知
-                        [[NSNotificationCenter defaultCenter]
-                            postNotificationName:@"LY_ReloadConversationList"
-                                          object:nil];
-                        [MBProgressHUD showSuccess:@"删除成功"];
-                        [self.navigationController popToRootViewControllerAnimated:YES];
-                        //手动更新好友列表
-                        [[NSNotificationCenter defaultCenter]
-                            postNotificationName:@"refreshMyBuddyList"
-                                          object:nil];
+            if (buttonIndex == 0) {
+                [MBProgressHUD showMessage:@"删除中.."];
+                [LYHttpPoster
+                    postHttpRequestByPost:
+                        [NSString stringWithFormat:@"%@/mobile/userFriend/iosDelete",
+                                                   REQUESTHEADER]
+                    andParameter:@{
+                        @"user_id": [LYUserService sharedInstance].userID,
+                        @"friend_user_id": weakSelf.userId
                     }
-                } else {
-                    [MBProgressHUD hideHUD];
-                    [MBProgressHUD
-                        showError:[NSString
-                                      stringWithFormat:@"%@", successResponse[@"msg"]]];
-                }
+                    success:^(id successResponse) {
+                        if ([[NSString stringWithFormat:@"%@", successResponse[@"code"]]
+                                isEqualToString:@"200"]) {
+                            //调用环信"删除好友"的方法
+                            EMError *error = nil;
+                            BOOL isSuccess = [[EaseMob sharedInstance]
+                                                  .chatManager removeBuddy:weakSelf.userId
+                                                          removeFromRemote:YES
+                                                                     error:&error];
+                            if (isSuccess && !error) {
+                                [MBProgressHUD hideHUD];
+                                //删除之前的用户对话
+                                [[EaseMob sharedInstance]
+                                        .chatManager removeConversationByChatter:self.userId
+                                                                  deleteMessages:YES
+                                                                     append2Chat:YES];
+                                //发送更新会话列表的通知
+                                [[NSNotificationCenter defaultCenter]
+                                    postNotificationName:@"LY_ReloadConversationList"
+                                                  object:nil];
+                                [MBProgressHUD showSuccess:@"删除成功"];
+                                [self.navigationController popToRootViewControllerAnimated:YES];
+                                //手动更新好友列表
+                                [[NSNotificationCenter defaultCenter]
+                                    postNotificationName:@"refreshMyBuddyList"
+                                                  object:nil];
+                            }
+                        } else {
+                            [MBProgressHUD hideHUD];
+                            [MBProgressHUD
+                                showError:[NSString
+                                              stringWithFormat:@"%@", successResponse[@"msg"]]];
+                        }
+                    }
+                    andFailure:^(id failureResponse) {
+                        [MBProgressHUD hideHUD];
+                        [MBProgressHUD showError:@"服务器繁忙,请重试"];
+                    }];
             }
-            andFailure:^(id failureResponse) {
-                [MBProgressHUD hideHUD];
-                [MBProgressHUD showError:@"服务器繁忙,请重试"];
-            }];
+            break;
+        }
+        case LYDetailDataActionSheetEnumWatchAvatar: {
+            // 保存相片
+            if (buttonIndex == 0) {
+                //保存到用户的本地相册中
+                UIImageWriteToSavedPhotosAlbum(((UIImageView *) [self.watchAvatarButton viewWithTag:8088]).image, self, @selector(image:didFinishSavingWithError:contextInfo:), nil);
+            }
+            break;
+        }
+    }
+}
+
+//图片保存回调处理方法
+- (void)image:(UIImage *)image didFinishSavingWithError:(NSError *)error contextInfo:(void *)contextInfo {
+
+    if (error) {
+        [MBProgressHUD showError:@"保存失败"];
+    } else {
+        [MBProgressHUD showSuccess:@"保存成功"];
     }
 }
 
@@ -469,6 +503,18 @@ forRowAtIndexPath:(NSIndexPath *)indexPath {
             if (buttonIndex == 1) {
                 [self p_changRemark:[alertView textFieldAtIndex:0].text];
             }
+            break;
+        }
+        case LYDetailDataAlertViewEnumBecomeVip: {
+            if (buttonIndex == 1) {
+                BuyVipViewController *vc = [[BuyVipViewController alloc] init];
+                [self.navigationController pushViewController:vc animated:YES];
+            }
+            break;
+        }
+        case LYDetailDataAlertViewEnumVedioAuth: {
+            VideoKnowViewController *vc = [[VideoKnowViewController alloc] init];
+            [self.navigationController pushViewController:vc animated:YES];
             break;
         }
     }
@@ -685,6 +731,7 @@ forRowAtIndexPath:(NSIndexPath *)indexPath {
                      cancelButtonTitle:@"取消"
                 destructiveButtonTitle:@"删除"
                      otherButtonTitles:nil];
+            actionSheet.tag = LYDetailDataActionSheetEnumFriendShip;
             [actionSheet showInView:self.view];
             break;
         }
@@ -752,9 +799,7 @@ forRowAtIndexPath:(NSIndexPath *)indexPath {
     [MBProgressHUD showMessage:nil];
     __weak typeof(self) weakSelf = self;
     [LYHttpPoster
-        postHttpRequestByPost:[NSString
-                                  stringWithFormat:@"%@/mobile/video/openVideo",
-                                                   REQUESTHEADER]
+        postHttpRequestByPost:[NSString stringWithFormat:@"%@/mobile/video/openVideo", REQUESTHEADER]
         andParameter:@{
             @"user_id": [LYUserService sharedInstance].userID,
             @"video_id": @"1",
@@ -780,29 +825,26 @@ forRowAtIndexPath:(NSIndexPath *)indexPath {
                            isEqualToString:@"199"]) {
                 [MBProgressHUD hideHUD];
                 UIAlertView *alertView = [[UIAlertView alloc]
-                        initWithTitle:@""
+                        initWithTitle:@"豆客"
                               message:LYPlayAuthVideoMessage1
                              delegate:weakSelf
                     cancelButtonTitle:nil
-                    otherButtonTitles:@"知道了", nil];
-                alertView.tag = 903;
+                    otherButtonTitles:@"成为会员", nil];
+                alertView.tag = LYDetailDataAlertViewEnumBecomeVip;
                 [alertView show];
-            } else if ([[NSString stringWithFormat:@"%@", successResponse[@"code"]]
-                           isEqualToString:@"198"]) {
+            } else if ([[NSString stringWithFormat:@"%@", successResponse[@"code"]] isEqualToString:@"198"]) {
                 [MBProgressHUD hideHUD];
                 UIAlertView *alertView = [[UIAlertView alloc]
-                        initWithTitle:@""
+                        initWithTitle:@"豆客"
                               message:LYPlayAuthVideoMessage2
                              delegate:weakSelf
                     cancelButtonTitle:nil
-                    otherButtonTitles:@"知道了", nil];
-                alertView.tag = 904;
+                    otherButtonTitles:@"去认证", nil];
+                alertView.tag = LYDetailDataAlertViewEnumVedioAuth;
                 [alertView show];
             } else {
                 [MBProgressHUD hideHUD];
-                [MBProgressHUD
-                    showError:[NSString
-                                  stringWithFormat:@"%@", successResponse[@"msg"]]];
+                [MBProgressHUD showError:[NSString stringWithFormat:@"%@", successResponse[@"msg"]]];
             }
         }
         andFailure:^(id failureResponse) {
@@ -954,6 +996,49 @@ forRowAtIndexPath:(NSIndexPath *)indexPath {
         }];
 }
 
+- (void)p_watchAvatarImage:(UIImage *)image {
+    self.watchAvatarButton = [[UIButton alloc] initWithFrame:[UIScreen mainScreen].bounds];
+    [self.watchAvatarButton setBackgroundColor:[UIColor blackColor]];
+    [self.view addSubview:self.watchAvatarButton];
+
+    UIImageView *imgV                     = [[UIImageView alloc] init];
+    imgV.tag                              = 8088;
+    CGFloat scale                         = image.size.height / image.size.width;
+    imgV.center                           = CGPointMake(kMainScreenWidth / 2, kMainScreenHeight / 2);
+    imgV.bounds                           = CGRectMake(0, 0, kMainScreenWidth, kMainScreenWidth * scale);
+    imgV.image                            = image;
+    imgV.userInteractionEnabled           = YES;
+    UILongPressGestureRecognizer *longTap = [[UILongPressGestureRecognizer alloc] initWithTarget:self action:@selector(p_saveToUserAlbum:)];
+    UITapGestureRecognizer *tap           = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(p_hideWatchAvatarButton:)];
+    [imgV addGestureRecognizer:longTap];
+    [imgV addGestureRecognizer:tap];
+    [self.watchAvatarButton addSubview:imgV];
+
+    [self.navigationController setNavigationBarHidden:YES];
+}
+
+- (void)p_hideWatchAvatarButton:(id)sender {
+    [self.navigationController setNavigationBarHidden:NO];
+
+    [UIView animateWithDuration:0.3f
+        animations:^{
+            self.watchAvatarButton.alpha = 0.0f;
+        }
+        completion:^(BOOL finished) {
+            [self.watchAvatarButton removeFromSuperview];
+        }];
+}
+
+- (void)p_saveToUserAlbum:(UILongPressGestureRecognizer *)sender {
+    if ([sender state] == UIGestureRecognizerStateBegan) {
+        UIActionSheet *save   = [[UIActionSheet alloc] initWithTitle:nil delegate:self cancelButtonTitle:@"取消" destructiveButtonTitle:@"保存图片" otherButtonTitles:nil];
+        save.delegate         = self;
+        save.actionSheetStyle = UIActionSheetStyleBlackOpaque;
+        save.tag              = LYDetailDataActionSheetEnumWatchAvatar;
+        [save showInView:self.watchAvatarButton];
+    }
+}
+
 #pragma mark - Getter
 
 - (UITableView *)tableView {
@@ -994,6 +1079,9 @@ forRowAtIndexPath:(NSIndexPath *)indexPath {
         };
         _detailDataHeaderView.sendGiftButtonBlock = ^{
             [weakSelf p_sendGift];
+        };
+        _detailDataHeaderView.tapAvatarImageViewBlock = ^(UIImageView *imageView) {
+            [weakSelf p_watchAvatarImage:imageView.image];
         };
     }
     return _detailDataHeaderView;

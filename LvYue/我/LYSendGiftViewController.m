@@ -8,6 +8,7 @@
 
 #import "KFAlertView.h"
 #import "LYGetCoinViewController.h"
+#import "LYGetCoinViewController.h"
 #import "LYHttpPoster.h"
 #import "LYSendGiftCollectionViewCell.h"
 #import "LYSendGiftHeaderView.h"
@@ -132,6 +133,9 @@ static NSString *const LYSendGiftCollectionViewCellIdentity = @"LYSendGiftCollec
         case LYSendGiftAlertTypeAccountAmount: {
             // 跳转充值页面
             if (buttonIndex == 1) {
+                LYGetCoinViewController *vc = [LYGetCoinViewController new];
+                vc.accountAmount            = [self.accountAmount integerValue];
+                [self.navigationController pushViewController:vc animated:YES];
             }
             break;
         }
