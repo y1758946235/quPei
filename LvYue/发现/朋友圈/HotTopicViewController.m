@@ -27,7 +27,9 @@
 #import <objc/runtime.h>
 
 #define kSingleContentHeight 17.895f
+static NSString* const str = @"cc";
 @interface HotTopicViewController () <UITableViewDelegate, UITableViewDataSource, UITextViewDelegate, UIActionSheetDelegate> {
+    
     UILabel *shortLabel;        //内容Label
     UIImageView *backImageView; //话题背景图
     UILabel *joinLabel;         //参与人数
@@ -83,7 +85,7 @@
     UIImage *_localCoverImage; //本地缓存的图片
 }
 
-@property (nonatomic, weak) UITableView *tableView; //主tableview
+@property (nonatomic, weak) UITableView *tableView; //主tableView
 
 @property (nonatomic, strong) MPMoviePlayerViewController *player; //视频播放
 @property (nonatomic, copy) NSString *hotId;                       //热门话题Id
@@ -99,7 +101,7 @@
         UITableView *tableView = [[UITableView alloc] initWithFrame:self.view.bounds style:UITableViewStyleGrouped];
         tableView.dataSource   = self;
         tableView.delegate     = self;
-
+        
         [self createHeaderView];
         _tableView                 = tableView;
         _tableView.tableHeaderView = headerView;
@@ -107,6 +109,7 @@
     }
     return _tableView;
 }
+
 
 
 - (MPMoviePlayerViewController *)player {
@@ -137,9 +140,10 @@
 }
 
 - (void)viewDidLoad {
+    [super viewDidLoad];
     self.title = @"热门话题";
     [self setUI];
-
+    
     //获得朋友圈消息列表
     [self postRequest];
     //话题详情
@@ -176,9 +180,11 @@
     _coverImageUrl   = nil;
     _isHotDataList   = YES;
     //右边按钮
-    //[self setRightButton:[UIImage imageNamed:@"more"] title:@"" target:self action:@selector(addClick) rect:CGRectMake(0, 0, 43, 43)];
-    [self setLeftButton:[UIImage imageNamed:@"返回"] title:nil target:self action:@selector(back)];
-
+//    [self setRightButton:[UIImage imageNamed:@"more"] title:@"" target:self action:@selector(addClick) rect:CGRectMake(0, 0, 43, 43)];
+    //[self setLeftButton:[UIImage imageNamed:@"返回"] title:nil target:self action:@selector(back)];
+//    UIBarButtonItem* leftItem = [[UIBarButtonItem alloc] initWithImage:[UIImage imageNamed:@"返回"] style:UIBarButtonItemStyleDone target:self action:@selector(back)];
+//    self.navigationItem.leftBarButtonItem = leftItem;
+   
     //设置tableview的头部view
     //[self createHeaderView];
 }
@@ -245,7 +251,6 @@
     shortLabel.width         = kMainScreenWidth - 2 * shortLabel.x;
     shortLabel.height        = 80;
     //计算高度
-    //    NSString* contentStr = @"此刻她是白锦曦，是苏眠，是《美人为馅》里的绝色警花…时间倒退，她是毓秀，是小寒，是采月，是袭香，是唤云，是八姐，是成君，是灵珊，是梅超风，是小风筝，是佟腊月，是无数无数传奇的女子…记不清多少的前世今生，她总是时而娇俏，时而狠辣，时而温柔，时而霸气，时而为情所伤，时而绝不回头…她是独立女性的代表，是绝对的演技派…时间再倒退，上戏的操场上，长发及腰的白族姑娘，十五岁的大学生，翩翩舞姿迷倒了大部分男生，但她总是安静地沉浸在戏剧的世界中，不受尘世骚扰…她信佛、念经、放生、执着…她度己亦度人，在方寸的屏幕间把热泪洒尽…她是杨蓉，她是天地的钟灵之秀…明天是她的生日，是一次新的起航…人间最美不过是把自身所学淋漓尽致地挥洒…我们渴望未来的日子里有更多的传奇女子涌现，比如刘楚玉，这是我接这个项目的唯一理由… 因为有杨蓉，戏的世界如此美好！";
     NSString *contentStr          = [NSString stringWithFormat:@"%@", titleModel.intro];
     NSDictionary *shortLabelAttrs = @{
         NSFontAttributeName: kFont14
@@ -315,6 +320,7 @@
     }
     //return _messageArray.count;
 }
+
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
     if (indexPath.section == 0) { //热门动态

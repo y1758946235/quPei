@@ -153,7 +153,6 @@ static NSString *notice_index;
 - (void)viewDidLoad {
     [super viewDidLoad];
 
-
     _guideArray   = [[NSMutableArray alloc] init];
     _hotArray     = [[NSMutableArray alloc] init];
     _heightArr    = [[NSMutableArray alloc] init];
@@ -169,6 +168,7 @@ static NSString *notice_index;
 
     [self createCollectionView];
     [self createNavigationView];
+    
     [self createScrollView]; //创建轮播图
     [self createScrollView2];
 
@@ -1426,6 +1426,10 @@ static NSString *notice_index;
         }
                          completion:nil];
     } else {
+//        [self scrollViewWillBeginDragging:scrollView];
+        //设置恢复
+        //self.automaticallyAdjustsScrollViewInsets =NO;
+        
         [UIView animateWithDuration:kNavigationHiddenAnimationDuration * 3 delay:0.0 usingSpringWithDamping:0.35 initialSpringVelocity:50 options:UIViewAnimationOptionAllowAnimatedContent animations:^{
             //BOTTOM
             self.publishBtn.alpha    = 0.90;
