@@ -388,6 +388,15 @@ static NSString* const str = @"cc";
                 cell.praiseBtn.selected = NO;
             }
         }
+//        else { //暂无热门动态
+//            UILabel* backLabel = [[UILabel alloc] initWithFrame:CGRectMake(0, 0, kMainScreenWidth, 100)];
+//            backLabel.backgroundColor = [UIColor clearColor];
+//            backLabel.text = @"暂无热门动态,快来抢沙发";
+//            backLabel.textColor = [UIColor lightGrayColor];
+//            
+//            [cell.contentView addSubview:backLabel];
+//        }
+        
 
         [cell.praiseBtn addTarget:self action:@selector(praiseClick:) forControlEvents:UIControlEventTouchUpInside];
 
@@ -467,6 +476,14 @@ static NSString* const str = @"cc";
                 cell.praiseBtn.selected = NO;
             }
         }
+//        else { //暂无动态
+//            UILabel* backLabel = [[UILabel alloc] initWithFrame:CGRectMake(0, 0, kMainScreenWidth, 100)];
+//            backLabel.backgroundColor = [UIColor clearColor];
+//            backLabel.text = @"暂无动态,快来抢沙发";
+//            backLabel.textColor = [UIColor lightGrayColor];
+//            
+//            [cell.contentView addSubview:backLabel];
+//        }
 
         [cell.praiseBtn addTarget:self action:@selector(praiseClick:) forControlEvents:UIControlEventTouchUpInside];
 
@@ -491,15 +508,19 @@ static NSString* const str = @"cc";
         if (_hotMessageArray.count) {
             FriendsCircleMessage *message = _hotMessageArray[indexPath.row];
             return [message returnCellHeight];
-        } else {
-            return 0.1;
         }
+        else {
+            return 0.01;
+        }
+        
+        
     } else {
         if (_messageArray.count) {
             FriendsCircleMessage *message = _messageArray[indexPath.row];
             return [message returnCellHeight];
-        } else {
-            return 0.1;
+        }
+        else {
+            return 0.01;
         }
     }
 }
@@ -507,6 +528,7 @@ static NSString* const str = @"cc";
 - (UIView *)tableView:(UITableView *)tableView viewForHeaderInSection:(NSInteger)section {
     UIView *containerView             = [[UIView alloc] initWithFrame:CGRectMake(0, 0, kMainScreenWidth, 60)];
     containerView.backgroundColor     = [UIColor clearColor];
+    containerView.hidden = NO;
     UIView *sectionHeaderView         = [[UIView alloc] initWithFrame:CGRectMake(0, 8, kMainScreenWidth, 44)];
     sectionHeaderView.backgroundColor = [UIColor whiteColor];
     //竖线
@@ -526,8 +548,16 @@ static NSString* const str = @"cc";
     titleLabel.width    = 80;
     if (section == 0) { //热门动态
         titleLabel.text = @"热门动态";
+        if (!_hotMessageArray.count) {
+            containerView.height = 0.01;
+            containerView.hidden = YES;
+        }
     } else {
         titleLabel.text = @"全部动态";
+        if (!_messageArray.count) {
+            containerView.height = 0.01;
+            containerView.hidden = YES;
+        }
     }
     titleLabel.textColor = [UIColor blackColor];
     [sectionHeaderView addSubview:titleLabel];
@@ -536,7 +566,22 @@ static NSString* const str = @"cc";
 }
 
 - (CGFloat)tableView:(UITableView *)tableView heightForHeaderInSection:(NSInteger)section {
-    return 60;
+    if (section == 0) {
+        if (!_hotMessageArray.count) {
+            return 0.01;
+        }
+        else {
+            return 60;
+        }
+    }
+    else {
+        if (!_messageArray.count) {
+            return 0.01;
+        }
+        else {
+            return 60;
+        }
+    }
 }
 
 - (CGFloat)tableView:(UITableView *)tableView heightForFooterInSection:(NSInteger)section {
