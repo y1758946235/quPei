@@ -18,7 +18,6 @@
 @property (nonatomic, strong) UIImageView *coinImageView;
 @property (nonatomic, strong) UIImageView *selectedImageView;
 
-
 @end
 
 @implementation LYSendGiftCollectionViewCell

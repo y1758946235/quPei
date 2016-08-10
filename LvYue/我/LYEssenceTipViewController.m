@@ -219,10 +219,20 @@
 - (UILabel *)tipLabel {
     if (!_tipLabel) {
         _tipLabel = ({
-            UILabel *label                     = [[UILabel alloc] initWithFrame:CGRectMake(CGRectGetMinX(self.bulrImageView.frame), CGRectGetMaxY(self.bulrImageView.frame) + 35.f, 0, 0)];
-            label.font                         = [UIFont systemFontOfSize:16.f];
-            NSMutableAttributedString *attrStr = [[NSMutableAttributedString alloc] initWithString:[NSString stringWithFormat:@"打赏%ld金币查看该相片", (long) self.tipAmount]];
-            [attrStr addAttribute:NSForegroundColorAttributeName value:RGBCOLOR(210, 0, 5) range:NSMakeRange(2, [NSString stringWithFormat:@"%ld", (long) self.tipAmount].length)];
+            UILabel *label = [[UILabel alloc] initWithFrame:CGRectMake(CGRectGetMinX(self.bulrImageView.frame), CGRectGetMaxY(self.bulrImageView.frame) + 35.f, 0, 0)];
+            label.font     = [UIFont systemFontOfSize:16.f];
+            NSString *str;
+            if (!self.isReviewed) { // 未审核通过，则显示 @"该相片正在审核中"
+                str = @"该相片正在审核中";
+            } else {
+                str = [NSString stringWithFormat:@"TA要求打赏%ld金币查看该相片", (long) self.tipAmount];
+            }
+            NSMutableAttributedString *attrStr = [[NSMutableAttributedString alloc] initWithString:str];
+
+            if (self.isReviewed) { // 未审核通过
+                [attrStr addAttribute:NSForegroundColorAttributeName value:RGBCOLOR(210, 0, 5) range:NSMakeRange(6, [NSString stringWithFormat:@"%ld", (long) self.tipAmount].length)];
+            }
+
             label.attributedText = [attrStr copy];
             [label sizeToFit];
             label;
@@ -234,7 +244,10 @@
 - (UIButton *)watchButton {
     if (!_watchButton) {
         _watchButton = ({
-            UIButton *button           = [[UIButton alloc] initWithFrame:CGRectMake((SCREEN_WIDTH - 105.f) / 2.f, CGRectGetMaxY(self.tipLabel.frame) + 25.f, 105.f, 35.f)];
+            UIButton *button = [[UIButton alloc] initWithFrame:CGRectMake((SCREEN_WIDTH - 105.f) / 2.f, CGRectGetMaxY(self.tipLabel.frame) + 25.f, 105.f, 35.f)];
+            if (!self.isReviewed) { // 未审核过，则隐藏打赏按钮
+                button.hidden = YES;
+            }
             button.layer.cornerRadius  = 5.f;
             button.layer.masksToBounds = YES;
             [button setTitle:@"打赏查看" forState:UIControlStateNormal];

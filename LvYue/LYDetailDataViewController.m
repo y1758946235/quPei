@@ -246,7 +246,7 @@ static NSString *const LYDetailDataPhotoTableViewCellIdentity   = @"LYDetailData
 - (CGFloat)tableView:(UITableView *)tableView
     heightForHeaderInSection:(NSInteger)section {
     if (section == 0) {
-        return 185.f;
+        return 190.f;
     }
 
     return 10.f;

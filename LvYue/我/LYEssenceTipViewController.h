@@ -14,5 +14,6 @@
 @property (nonatomic, copy) NSString *bulrImageID;
 @property (nonatomic, copy) NSString *bulrImageURL; // 模糊相片地址
 @property (nonatomic, assign) NSInteger tipAmount;  // 打赏金额
+@property (nonatomic, assign) BOOL isReviewed;      // 是否审核过，未审核过的不能进行打赏
 
 @end
