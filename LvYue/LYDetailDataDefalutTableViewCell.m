@@ -28,6 +28,7 @@
 - (void)prepareForReuse {
     self.lySwitch.hidden             = YES;
     self.lyLeftArrowImageView.hidden = YES;
+    self.lyWatchButton.hidden        = YES;
 }
 
 - (void)awakeFromNib {

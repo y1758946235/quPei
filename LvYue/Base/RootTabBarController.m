@@ -48,6 +48,7 @@
     //    _searchNav = [[RootNavigationController alloc] initWithRootViewController:[[SearchViewController alloc] init]];
 
     FriendsCirleViewController *friendsCirleViewController = [[FriendsCirleViewController alloc] init];
+    friendsCirleViewController.isFriendsCircle             = YES;
     _searchNav                                             = [[RootNavigationController alloc] initWithRootViewController:friendsCirleViewController];
 
 
