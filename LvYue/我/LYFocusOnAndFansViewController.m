@@ -123,7 +123,9 @@ static NSString *const LYFocusOnAndFansTableViewCellIdentity = @"LYFocusOnAndFan
 
                 if ([dic[@"isgz"] integerValue] == 1) {
                     [MBProgressHUD showSuccess:@"关注成功"];
-                } else {
+                    
+                }
+                else {
                     [MBProgressHUD showSuccess:@"取消关注成功"];
                 }
 

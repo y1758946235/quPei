@@ -61,6 +61,9 @@
         nav.title                     = navInfos[i][@"title"];
         nav.tabBarItem.selectedImage  = [UIImage imageNamed:navInfos[i][@"selectedImage"]];
         nav.tabBarItem.image          = [UIImage imageNamed:navInfos[i][@"image"]];
+        if (i == 3) { //我的页面
+           
+        }
         [self addChildViewController:nav];
     }
     self.tabBar.selectedImageTintColor = [UIColor colorWithRed:29 / 255.0 green:189 / 255.0 blue:159 / 255.0 alpha:1];
@@ -71,6 +74,9 @@
 
 - (BOOL)tabBarController:(UITabBarController *)tabBarController shouldSelectViewController:(UIViewController *)viewController {
     if ([LYUserService sharedInstance].userID && (![[LYUserService sharedInstance].userID isEqualToString:@""])) { //已登录
+        if (viewController == tabBarController.viewControllers[3]) { //我的页面
+            
+        }
         return YES;
     } else { //未登录
         //如果以游客身份点击了'我'和'对话',直接弹出登陆界面

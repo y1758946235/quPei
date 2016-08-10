@@ -878,7 +878,7 @@ static int assistentViewH = 44;
                                   self.umeng_id = @"";
                               }
                                   [MBProgressHUD showMessage:@"注册中.."];
-                                  [LYHttpPoster postHttpRequestByPost:[NSString stringWithFormat:@"%@/mobile/register",REQUESTHEADER] andParameter:@{@"umeng_id":self.umeng_id,@"mobile":_mobile,@"password":_password,@"captcha":_checkNum,@"name":_nameFiled.text,@"sex":str,@"longitude":_longitude,@"latitude":_latitude,@"icon":locationString,@"age":self.age,@"device_type":@"1",@"province":_province, @"city":_city} success:^(id successResponse) {
+                              [LYHttpPoster postHttpRequestByPost:[NSString stringWithFormat:@"%@/mobile/register",REQUESTHEADER] andParameter:@{@"umeng_id":self.umeng_id,@"mobile":_mobile,@"password":_password,@"captcha":_checkNum,@"name":_nameFiled.text,@"sex":str,@"longitude":_longitude,@"latitude":_latitude,@"icon":locationString,@"age":self.age,@"device_type":@"1",@"province":_province, @"city":_city, @"device_model":@"iPhone"} success:^(id successResponse) {
                                       MLOG(@"注册结果:%@",successResponse);
                                       if ([[NSString stringWithFormat:@"%@",successResponse[@"code"]] isEqualToString:@"200"]) {
                                           [MBProgressHUD hideHUD];

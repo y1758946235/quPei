@@ -346,14 +346,18 @@
 
 #pragma mark - 定时器
 - (void)timeToSendAgain {
+    _getCheckNumBtn.titleLabel.font = kFont16;
     _time --;
     if (_time == 0) {
         [_getCheckNumBtn setTitle:@"获取验证码" forState:UIControlStateNormal];
+        [_getCheckNumBtn setTitleColor:THEME_COLOR forState:UIControlStateNormal];
+        
         _coverBtn.hidden = YES;
         [_timer invalidate];
         _timer = nil;
         _time = 60;
-    } else {
+    }
+    else {
         [_getCheckNumBtn setTitle:[NSString stringWithFormat:@"(%ds)重新获取",_time] forState:UIControlStateNormal];
     }
 }
@@ -378,11 +382,6 @@
             }];
         }
     }
-}
-
-- (void)didReceiveMemoryWarning {
-    [super didReceiveMemoryWarning];
-    // Dispose of any resources that can be recreated.
 }
 
 @end
