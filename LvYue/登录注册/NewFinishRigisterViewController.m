@@ -437,7 +437,7 @@ static int assistentViewH = 44;
     }
     
     
-    UIButton *rigisterBtn = [[UIButton alloc] initWithFrame:CGRectMake(textFieldX, _addressBtn.frame.origin.y + 60, SCREEN_WIDTH - textFieldH, textFieldH+10)];
+    UIButton *rigisterBtn = [[UIButton alloc] initWithFrame:CGRectMake(textFieldX, _addressBtn.frame.origin.y + 53, SCREEN_WIDTH - textFieldH, textFieldH+10)];
     [rigisterBtn setTitle:@"注册" forState:UIControlStateNormal];
     rigisterBtn.backgroundColor = [UIColor colorWithRed:29/255.0 green:189/255.0 blue:159/255.0 alpha:1];
     [rigisterBtn addTarget:self action:@selector(finishRigisterClick:) forControlEvents:UIControlEventTouchUpInside];
