@@ -326,7 +326,7 @@ static int assistentViewH = 44;
     self.upIconBtn.center = CGPointMake(kMainScreenWidth / 2, 134);
     self.upIconBtn.bounds = CGRectMake(0, 0, 100, 100);
     
-    self.upIconBtn.backgroundColor = [UIColor redColor];
+    self.upIconBtn.backgroundColor = THEME_COLOR;
     UIImageView* imageView =[[UIImageView alloc] init];
     imageView.x = 70;
     imageView.y = imageView.x;
