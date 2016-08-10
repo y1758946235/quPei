@@ -133,12 +133,13 @@
     [super viewWillAppear:animated];
 
     //    _currentPage = 1;
-    //
     //    //获得朋友圈消息列表
-    [self postRequest];
+    //[self postRequest];
+    
     //    //热门话题
     //    [self getHotTopic];
     //    //[self getDataFromWeb];
+    
     //    //注册通知
         [self addObserver];
 }
@@ -149,8 +150,6 @@
     //    从runloop中移除
     [timer invalidate];
     timer = nil;
-
-
     [[NSNotificationCenter defaultCenter] removeObserver:self];
 }
 
@@ -161,7 +160,8 @@
     //取消边界边缘化
     [self setEdgesForExtendedLayout:UIRectEdgeNone];
     
-
+    [self setStatus];
+    
     //初始化
     _messageArray  = [NSMutableArray array];
     _commentList   = [NSMutableArray array];
@@ -185,7 +185,7 @@
     _currentPage = 1;
 
     //获得朋友圈消息列表
-    //[self postRequest];
+    [self postRequest];
     //热门话题
     [self getHotTopic];
     //[self getDataFromWeb];
@@ -194,7 +194,7 @@
     //数据*******
 
 
-    [self setStatus];
+    
     //[self getHotTopic];
 
     [self getDataFromWeb];
@@ -206,6 +206,7 @@
 
 - (void)setStatus {
     
+    _isFriendsCircle = YES;
 
     //数据
     if ([self.userId isEqualToString:@""] || [self.userId isKindOfClass:[NSNull class]] || self.userId == nil) {
@@ -516,19 +517,25 @@
                 }
                 type = @"0";
             }
-            parameters = @{ @"userId": [NSString stringWithFormat:@"%@", self.userId],
+            parameters = @{ @"userId": self.userId,
                             @"noticeType": @"0",
                             @"pageNum": [NSString stringWithFormat:@"%d", (int) _currentPage],
                             @"type": type };
 
         } else { //ta的动态
-            parameters = @{ @"userId": [NSString stringWithFormat:@"%@", self.userId],
+            if (!self.userId) {
+                self.userId = @"";
+            }
+            parameters = @{ @"userId": self.userId,
                             @"noticeType": @"0",
                             @"pageNum": [NSString stringWithFormat:@"%d", (int) _currentPage],
                             @"status": @"1",
                             @"type": @"1" };
         }
     } else {
+        if (!self.userId) {
+            self.userId = @"";
+        }
         if (_isFriendsCircle) { //自己的动态
 
             //            NSString* type ;
@@ -541,13 +548,13 @@
             //                }
             //                type = @"0";
             //            }
-            parameters = @{ @"userId": [NSString stringWithFormat:@"%@", self.userId],
+            parameters = @{ @"userId":  self.userId,
                             @"noticeType": @"0",
                             @"pageNum": [NSString stringWithFormat:@"%d", (int) _currentPage],
                             @"type": @"3" };
 
         } else { //ta的动态
-            parameters = @{ @"userId": [NSString stringWithFormat:@"%@", self.userId],
+            parameters = @{ @"userId": self.userId,
                             @"noticeType": @"0",
                             @"pageNum": [NSString stringWithFormat:@"%d", (int) _currentPage],
                             @"status": @"1",

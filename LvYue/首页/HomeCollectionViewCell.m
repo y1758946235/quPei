@@ -19,21 +19,33 @@
 
 - (void)layoutSubviews {
     [super layoutSubviews];
-
+    
+    //self.frame;
+    
     //设置HomeCollectionViewCell的frame
-    //    CGRect collectionRect = self.frame;
-    //    collectionRect.origin.x = collectionRect.origin.x + 5;
-    //    collectionRect.size.width = collectionRect.size.width - 10;
-    //    self.frame = collectionRect;
+    CGRect collectionRect = self.frame;
+    CGFloat rectX = collectionRect.origin.x + 5;
+    collectionRect.origin.x = rectX;
+    CGFloat rectW = collectionRect.size.width - 10;
+    collectionRect.size.width = rectW;
+    self.frame = collectionRect;
 }
 
 
 - (instancetype)initWithFrame:(CGRect)frame {
+    
+//    CGRect collectionRect = frame;
+//    CGFloat rectX = collectionRect.origin.x + 5;
+//    collectionRect.origin.x = rectX;
+//    CGFloat rectW = collectionRect.size.width - 60;
+//    collectionRect.size.width = rectW;
+//    frame = collectionRect;
 
     if (self = [super initWithFrame:frame]) {
-
-        self.layer.cornerRadius  = 10.f;
-        self.layer.masksToBounds = YES;
+        
+        
+//        self.layer.cornerRadius  = 10.f;
+//        self.layer.masksToBounds = YES;
 
         self.backgroundColor = [UIColor colorWithRed:245 / 255.0 green:245 / 255.0 blue:245 / 255.0 alpha:1];
         //self.backgroundColor = [UIColor redColor];
@@ -212,10 +224,10 @@
     self.noteLabel.frame = CGRectMake(10, model.cellHeight - model.textHeight - 5, (SCREEN_WIDTH - 5) / 2 - 20, model.textHeight);
 
     _userHeadImgView.frame = CGRectMake(5, model.imageHeight - 25, 50, 50);
-    _userShowImgView.frame = CGRectMake(5, 0, (SCREEN_WIDTH - 10) / 2 - 10, model.imageHeight);
+    _userShowImgView.frame = CGRectMake(0, 0, (SCREEN_WIDTH - 10) / 2-10, model.imageHeight);
 
-    //    _userShowImgView.layer.cornerRadius = 5.0f;
-    //    _userShowImgView.layer.masksToBounds = YES;
+    _userShowImgView.layer.cornerRadius = 10.0f;
+    _userShowImgView.layer.masksToBounds = YES;
     //播放按钮
     [_videoBtn setFrame:CGRectMake((_userShowImgView.width - 50) * 0.5, _userShowImgView.height * 0.5 - 0.5 * 50, 50, 50)];
 
