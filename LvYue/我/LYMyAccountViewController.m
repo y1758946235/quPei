@@ -28,6 +28,8 @@ static NSString *const LYMyAccountTableViewCellIdentity = @"LYMyAccountTableView
 
 // 账户余额
 @property (nonatomic, assign) NSInteger accountAmount;
+// 是否显示充值  默认不显示
+@property (nonatomic, assign) BOOL showGetCoinButton;
 
 @end
 
@@ -40,6 +42,7 @@ static NSString *const LYMyAccountTableViewCellIdentity = @"LYMyAccountTableView
     self.view.backgroundColor = RGBCOLOR(247, 247, 247);
     [self setRightButton:[UIImage imageNamed:@"明细"] title:nil target:self action:@selector(p_pushDetail:)];
 
+    [self p_getShowGetCoinButton];
     [self p_loadAccountAmount];
 
     [self.tableView reloadData];
@@ -64,11 +67,11 @@ static NSString *const LYMyAccountTableViewCellIdentity = @"LYMyAccountTableView
             vc.accountAmount            = self.accountAmount;
             [self.navigationController pushViewController:vc animated:YES];
         };
-        [cell configData:LYMyAccountTableViewCellTypeCoin coin:[NSString stringWithFormat:@"%@", @(self.accountAmount)]];
+        [cell configData:LYMyAccountTableViewCellTypeCoin coin:[NSString stringWithFormat:@"%@", @(self.accountAmount)] showGetCoinButton:self.showGetCoinButton];
     }
     // 提现
     if (indexPath.row == 1) {
-        [cell configData:LYMyAccountTableViewCellWithDraw coin:@"0"];
+        [cell configData:LYMyAccountTableViewCellWithDraw coin:@"0" showGetCoinButton:self.showGetCoinButton];
     }
 
     return cell;
@@ -135,6 +138,22 @@ static NSString *const LYMyAccountTableViewCellIdentity = @"LYMyAccountTableView
     [self.navigationController pushViewController:vc animated:YES];
 }
 
+- (void)p_getShowGetCoinButton {
+
+    [LYHttpPoster postHttpRequestByPost:[NSString stringWithFormat:@"%@/mobile/user/pay_Set", REQUESTHEADER]
+        andParameter:@{}
+        success:^(id successResponse) {
+            MLOG(@"结果:%@", successResponse);
+            if ([[NSString stringWithFormat:@"%@", successResponse[@"code"]] isEqualToString:@"200"]) {
+                self.showGetCoinButton = [successResponse[@"data"][@"set"][@"sign"] integerValue] == 1 ? YES : NO;
+                [self.tableView reloadData];
+            } else {
+                [MBProgressHUD showError:[NSString stringWithFormat:@"%@", successResponse[@"msg"]]];
+            }
+        }
+        andFailure:^(id failureResponse){
+        }];
+}
 
 #pragma mark - Getter
 

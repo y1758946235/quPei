@@ -19,6 +19,6 @@ typedef void (^FetchCoinBlock)(id sender);
 
 @property (nonatomic, copy) FetchCoinBlock fetchBlock;
 
-- (void)configData:(LYMyAccountTableViewCellType)type coin:(NSString *)coin;
+- (void)configData:(LYMyAccountTableViewCellType)type coin:(NSString *)coin showGetCoinButton:(BOOL)show;
 
 @end

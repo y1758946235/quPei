@@ -34,7 +34,7 @@
     // Configure the view for the selected state
 }
 
-- (void)configData:(LYMyAccountTableViewCellType)type coin:(NSString *)coin {
+- (void)configData:(LYMyAccountTableViewCellType)type coin:(NSString *)coin showGetCoinButton:(BOOL)show {
     switch (type) {
         case LYMyAccountTableViewCellTypeCoin: {
             self.selectionStyle                = UITableViewCellSelectionStyleNone;
@@ -44,6 +44,14 @@
             self.contentLabel.attributedText = [attrStr copy];
             self.fetchCoinButton.hidden      = NO;
             self.rightArrowImageView.hidden  = YES;
+
+            // 显示是否隐藏充值
+            if (show) {
+                self.fetchCoinButton.hidden = NO;
+            } else {
+                self.fetchCoinButton.hidden = YES;
+            }
+
             break;
         }
         case LYMyAccountTableViewCellWithDraw: {
