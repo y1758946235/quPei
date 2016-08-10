@@ -168,6 +168,9 @@
         if (indexPath.section == 2&&indexPath.row == 3) {
             return 0.01f;
         }
+        if (indexPath.section == 3&&indexPath.row == 0) {
+            return 0.01f;
+        }
         
         return 40;
     }
@@ -303,8 +306,10 @@
 #endif
 
             cell2.knowLabel.text = @"";
+            cell2.hidden = NO;
             if (indexPath.row == 0) {
                 cell2.detailLabel.text = _skill;
+                cell2.hidden = YES;
             }
 
             if (indexPath.row == 1) {
