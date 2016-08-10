@@ -29,7 +29,7 @@
 
 - (void)configData:(NSNumber *)coinNum {
     self.coinNumLabel.text = [NSString stringWithFormat:@"%@", coinNum];
-    self.rmbLabel.text     = [NSString stringWithFormat:@"¥ %d", [coinNum integerValue] / 100];
+    self.rmbLabel.text     = [NSString stringWithFormat:@"¥ %d元", [coinNum integerValue] / 100];
 }
 
 @end

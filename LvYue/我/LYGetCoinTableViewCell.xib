@@ -34,30 +34,33 @@
                         <color key="textColor" red="0.20000000000000001" green="0.20000000000000001" blue="0.20000000000000001" alpha="1" colorSpace="calibratedRGB"/>
                         <nil key="highlightedColor"/>
                     </label>
-                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="元" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="aNQ-Od-BMu">
-                        <rect key="frame" x="289" y="12" width="16" height="20"/>
+                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="¥ 218元" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="QNw-j2-q4H">
+                        <rect key="frame" x="237" y="10" width="68" height="24"/>
+                        <color key="backgroundColor" red="1" green="0.69019607839999997" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
+                        <constraints>
+                            <constraint firstAttribute="width" constant="68" id="JqY-Rm-nM7"/>
+                            <constraint firstAttribute="height" constant="24" id="bdO-Jg-cQ8"/>
+                        </constraints>
                         <fontDescription key="fontDescription" type="system" pointSize="16"/>
-                        <color key="textColor" red="0.20000000000000001" green="0.20000000000000001" blue="0.20000000000000001" alpha="1" colorSpace="calibratedRGB"/>
+                        <color key="textColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                         <nil key="highlightedColor"/>
-                    </label>
-                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="¥ 15" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="QNw-j2-q4H">
-                        <rect key="frame" x="246" y="12" width="33" height="21"/>
-                        <fontDescription key="fontDescription" type="system" pointSize="17"/>
-                        <color key="textColor" red="0.82352941180000006" green="0.0" blue="0.019607843140000001" alpha="1" colorSpace="calibratedRGB"/>
-                        <nil key="highlightedColor"/>
+                        <userDefinedRuntimeAttributes>
+                            <userDefinedRuntimeAttribute type="number" keyPath="layer.cornerRadius">
+                                <integer key="value" value="12"/>
+                            </userDefinedRuntimeAttribute>
+                            <userDefinedRuntimeAttribute type="boolean" keyPath="layer.masksToBounds" value="YES"/>
+                        </userDefinedRuntimeAttributes>
                     </label>
                 </subviews>
                 <constraints>
-                    <constraint firstAttribute="trailingMargin" secondItem="aNQ-Od-BMu" secondAttribute="trailing" constant="7" id="3t3-zM-mFO"/>
                     <constraint firstItem="05C-Ao-RnE" firstAttribute="centerY" secondItem="H2p-sc-9uM" secondAttribute="centerY" id="9VW-Eg-78C"/>
                     <constraint firstItem="QNw-j2-q4H" firstAttribute="centerY" secondItem="H2p-sc-9uM" secondAttribute="centerY" id="Anf-9D-ic6"/>
                     <constraint firstItem="05C-Ao-RnE" firstAttribute="leading" secondItem="5Ym-NQ-5ws" secondAttribute="trailing" constant="10" id="CjL-UA-Mus"/>
+                    <constraint firstAttribute="trailingMargin" secondItem="QNw-j2-q4H" secondAttribute="trailing" constant="7" id="JmC-NO-cgV"/>
                     <constraint firstItem="5Ym-NQ-5ws" firstAttribute="leading" secondItem="v5u-g7-g39" secondAttribute="trailing" constant="20" id="KfM-f3-4fp"/>
                     <constraint firstItem="v5u-g7-g39" firstAttribute="leading" secondItem="H2p-sc-9uM" secondAttribute="leadingMargin" constant="7" id="MpI-mB-oBA"/>
                     <constraint firstItem="5Ym-NQ-5ws" firstAttribute="centerY" secondItem="H2p-sc-9uM" secondAttribute="centerY" id="Pe9-N2-pLF"/>
                     <constraint firstItem="v5u-g7-g39" firstAttribute="centerY" secondItem="H2p-sc-9uM" secondAttribute="centerY" id="e9E-26-nrs"/>
-                    <constraint firstItem="aNQ-Od-BMu" firstAttribute="centerY" secondItem="H2p-sc-9uM" secondAttribute="centerY" id="kg6-a5-CFO"/>
-                    <constraint firstItem="aNQ-Od-BMu" firstAttribute="leading" secondItem="QNw-j2-q4H" secondAttribute="trailing" constant="10" id="ogj-EN-zxx"/>
                 </constraints>
             </tableViewCellContentView>
             <connections>

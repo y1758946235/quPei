@@ -6,12 +6,12 @@
 //  Copyright © 2016年 OLFT. All rights reserved.
 //
 
+#import "LYDetailDataViewController.h"
 #import "LYHttpPoster.h"
 #import "LYMyGiftTableViewCell.h"
 #import "LYMyGiftViewController.h"
 #import "LYUserService.h"
 #import "MBProgressHUD+NJ.h"
-
 
 static NSString *const LYMyGiftTableViewCellIdentity = @"LYMyGiftTableViewCellIdentity";
 
@@ -97,6 +97,10 @@ static NSString *const LYMyGiftTableViewCellIdentity = @"LYMyGiftTableViewCellId
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
     [tableView deselectRowAtIndexPath:indexPath animated:YES];
+
+    LYDetailDataViewController *vc = [[LYDetailDataViewController alloc] init];
+    vc.userId                      = self.tableViewDataArray[indexPath.row][@"userId"];
+    [self.navigationController pushViewController:vc animated:YES];
 }
 
 - (void)tableView:(UITableView *)tableView willDisplayCell:(UITableViewCell *)cell forRowAtIndexPath:(NSIndexPath *)indexPath {
