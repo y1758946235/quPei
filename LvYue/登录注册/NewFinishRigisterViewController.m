@@ -176,8 +176,6 @@ static int assistentViewH = 44;
     //_area = areaName;
     //NSString* addressName = [NSString stringWithFormat:@"%@-%@-%@",provinceName, cityName, areaName];
     NSString* addressName = [NSString stringWithFormat:@"%@-%@",provinceName, cityName];
-    
-
 
     //上传地址
     [self updateAdress:addressName];

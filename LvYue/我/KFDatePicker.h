@@ -9,10 +9,12 @@
 #import <UIKit/UIKit.h>
 
 typedef NS_OPTIONS(NSUInteger, KFDatePickerMode) {
-    KFDatePickerModeYear      = 0,
-    KFDatePickerModeMonth  = 1 << 0,
-    KFDatePickerModeDay     = 1 << 1,
-    KFDatePickerModeYearAndMonth     = 1 << 2,
+    KFDatePickerModeYear                    = 0,
+    KFDatePickerModeMonth                   = 1 << 0,
+    KFDatePickerModeDay                     = 1 << 1,
+    KFDatePickerModeYearAndMonth            = 1 << 2,
+    KFDatePickerModeMonthAndDay             = 1 << 3,
+    KFDatePickerModeYearAndMonthAndDay      = 1 << 4,
 };
 
 
@@ -20,10 +22,10 @@ typedef NS_OPTIONS(NSUInteger, KFDatePickerMode) {
 @protocol KFDatePickerDelegate <NSObject>
 
 @optional
--  (void)datePicker:(KFDatePicker *)datePicker didClickButtonIndex:(NSInteger)buttonIndex titleRow:(NSString *)titleRow;
+- (void)datePicker:(KFDatePicker *)datePicker didClickButtonIndex:(NSInteger)buttonIndex titleRow:(NSString *)titleRow;
 
 @optional
--  (void)datePicker:(KFDatePicker *)datePicker didClickButtonIndex:(NSInteger)buttonIndex year:(NSString *)year month:(NSString *)month;
+- (void)datePicker:(KFDatePicker *)datePicker didClickButtonIndex:(NSInteger)buttonIndex year:(NSString *)year month:(NSString *)month;
 @end
 
 @interface KFDatePicker : UIView
@@ -57,7 +59,7 @@ typedef NS_OPTIONS(NSUInteger, KFDatePickerMode) {
 - (void)dismiss;
 
 /**
- *  初始化两个按钮，无需设置frame；点击使用代理
+ *  初始化两个按钮，无需设置frame；点击实现代理
  */
 - (void)initWithCancleBtnTitle:(NSString *)cancleStr cancleColor:(UIColor *)cancleColor confirmBtnTitle:(NSString *)confirmStr confirmColor:(UIColor *)confirmColor;
 

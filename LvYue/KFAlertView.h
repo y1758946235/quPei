@@ -24,12 +24,11 @@
 @property (nonatomic, strong) UIView* contentView;
 
 /**
- *  文字内容
+ *  自定义文字内容
  */
 @property (nonatomic, strong) UILabel* textLabel;
 
 @property (nonatomic, weak) id<KFAlertViewDelegte> delegate;
-
 
 /**
  *  创建AlertView
@@ -47,7 +46,7 @@
 - (void)dismiss;
 
 /**
- *  初始化两个按钮，无需设置frame；点击使用代理
+ *  初始化两个按钮，无需设置frame；点击实现代理
  */
 - (void)initWithCancleBtnTitle:(NSString *)cancleStr cancleColor:(UIColor *)cancleColor confirmBtnTitle:(NSString *)confirmStr confirmColor:(UIColor *)confirmColor;
 

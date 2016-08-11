@@ -42,59 +42,46 @@
 
 
 @implementation KFDatePicker
+static int buttonH = 40; //按钮高度
+static int containerViewH = 250; //背景的view高度
 
-- (UIView *)containerView {
-    if (_containerView == nil) {
-        UIView* containerView = [[UIView alloc] init];
-        containerView.backgroundColor = [UIColor whiteColor];
+
+#pragma mark - 视图加载
+- (instancetype)initWithFrame:(CGRect)frame {
+    if (self = [super initWithFrame:frame]) {
+        self.backgroundColor = RGBACOLOR(0, 0, 0, 0.3);
         
-        
-        _containerView = containerView;
-        [self addSubview:_containerView];
     }
-    return _containerView;
+    return self;
 }
 
-static int buttonH = 40;
-- (UIButton *)cancelBtn {
-    if (_cancelBtn == nil) {
-        UIButton* button = [UIButton buttonWithType:UIButtonTypeCustom];
-        //[button setBackgroundImage:[UIImage imageNamed:@"矩形-9"] forState:UIControlStateNormal];
-        button.size = CGSizeMake(kMainScreenWidth*0.5, buttonH);
-        button.x = 0;
-        button.y = containerViewH - button.height;
-        
-        button.backgroundColor = [UIColor redColor];
-        [button addTarget:self action:@selector(cancleClick:) forControlEvents:UIControlEventTouchUpInside];
-        _cancelBtn = button;
-        [self.containerView addSubview:_cancelBtn];
-    }
-    return _cancelBtn;
++ (instancetype)datePicker {
+    return [[self alloc] init];
 }
 
-- (void)cancleClick:(UIButton *)sender {
-    if ([self.delegate respondsToSelector:@selector(datePicker:didClickButtonIndex:titleRow:)]) {
-        [self.delegate datePicker:self didClickButtonIndex:0 titleRow:nil];
-    }
+- (void)initWithCancleBtnTitle:(NSString *)cancleStr cancleColor:(UIColor *)cancleColor confirmBtnTitle:(NSString *)confirmStr confirmColor:(UIColor *)confirmColor {
+    [self.cancelBtn setTitle:cancleStr forState:UIControlStateNormal];
+    [self.cancelBtn setTitleColor:cancleColor forState:UIControlStateNormal];
     
+    [self.cancelBtn setBackgroundColor:[UIColor clearColor]];
+    
+    [self.containerView addSubview:self.cancelBtn];
+    
+    UIView* devideLine = [[UIView alloc] init];
+    devideLine.width = 1;
+    devideLine.y = self.cancelBtn.y + 2;
+    devideLine.height = buttonH - 4;
+    devideLine.centerX = kMainScreenWidth * 0.5;
+    devideLine.backgroundColor = [UIColor lightGrayColor];
+    [self.containerView addSubview:devideLine];
+    
+    [self.confirmBtn setTitle:confirmStr forState:UIControlStateNormal];
+    [self.confirmBtn setTitleColor:confirmColor forState:UIControlStateNormal];
+    [self.confirmBtn setBackgroundColor:[UIColor clearColor]];
+    [self.containerView addSubview:self.confirmBtn];
 }
 
-- (UIButton *)confirmBtn {
-    if (_confirmBtn == nil) {
-        UIButton* button = [UIButton buttonWithType:UIButtonTypeCustom];
-        //[button setBackgroundImage:[UIImage imageNamed:@"矩形-9"] forState:UIControlStateNormal];
-        button.size = CGSizeMake(kMainScreenWidth*0.5, buttonH);
-        button.x = kMainScreenWidth*0.5;
-        button.y = containerViewH - button.height;
-        
-        button.backgroundColor = [UIColor blueColor];
-        [button addTarget:self action:@selector(confirmClick:) forControlEvents:UIControlEventTouchUpInside];
-        _confirmBtn = button;
-        [self.containerView addSubview:_confirmBtn];
-    }
-    return _confirmBtn;
-}
-
+#pragma mark - 按钮点击方法
 - (void)confirmClick:(UIButton *)sender {
     if ([self.delegate respondsToSelector:@selector(datePicker:didClickButtonIndex:titleRow:)]) {
         
@@ -111,51 +98,23 @@ static int buttonH = 40;
 
 }
 
-- (UIPickerView *)pickerView {
-    if (_pickerView == nil) {
-        UIPickerView* pick = [[UIPickerView alloc] init];
-        pick.x = 0;
-        pick.y = titleLabelH + lineViewH;
-        pick.width = kMainScreenWidth;
-        pick.height = containerViewH - titleLabelH - lineViewH - buttonH;
-        pick.delegate = self;
-        pick.dataSource = self;
-        
-        //灰色线条
-        UIView* grayLineView = [[UIView alloc] init];
-        grayLineView.x = 0;
-        grayLineView.height = 1;
-        grayLineView.y = pick.height - grayLineView.height;
-        grayLineView.width = kMainScreenWidth;
-        grayLineView.backgroundColor = [UIColor lightGrayColor];
-        [pick addSubview:grayLineView];
-        
-        _pickerView = pick;
-        [self.containerView addSubview:_pickerView];
+- (void)cancleClick:(UIButton *)sender {
+    if ([self.delegate respondsToSelector:@selector(datePicker:didClickButtonIndex:titleRow:)]) {
+        [self.delegate datePicker:self didClickButtonIndex:0 titleRow:nil];
     }
-    return _pickerView;
+    
+    if ([self.delegate respondsToSelector:@selector(datePicker:didClickButtonIndex:year:month:)]) {
+        
+        //NSString* titleRow = [NSString stringWithFormat:@"%@年 %@月",self.yearStr, self.monthStr];
+        [self.delegate datePicker:self didClickButtonIndex:0 year:self.yearStr month:self.monthStr];
+    }
+    
 }
 
-- (NSMutableArray *)yearArray{
-    if (!_yearArray) {
-        _yearArray = [[NSMutableArray alloc] init];
-        
-        for (int i = 2015; i <= self.currentYear; i++) {
-            [_yearArray addObject:[NSString stringWithFormat:@"%d",i]];
-        }
-    }
-    return _yearArray;
+- (void)touchesBegan:(NSSet<UITouch *> *)touches withEvent:(UIEvent *)event {
+    [self dismiss];
 }
 
-- (NSMutableArray *)monthArray{
-    if (!_monthArray) {
-        _monthArray = [[NSMutableArray alloc] init];
-        for (int i = 1; i <= 12; i++) {
-            [_monthArray addObject:[NSString stringWithFormat:@"%d月",i]];
-        }
-    }
-    return _monthArray;
-}
 
 /**
  *  获取当前年月
@@ -175,19 +134,6 @@ static int buttonH = 40;
     }
 }
 
-- (instancetype)initWithFrame:(CGRect)frame {
-    if (self = [super initWithFrame:frame]) {
-        self.backgroundColor = RGBACOLOR(0, 0, 0, 0.3);
-
-    }
-    return self;
-}
-
-+ (instancetype)datePicker {
-    return [[self alloc] init];
-}
-
-static int containerViewH = 250;
 
 - (void)show {
     //获取window
@@ -246,11 +192,100 @@ static int containerViewH = 250;
 
 }
 
+#pragma mark - Getter
+- (UIView *)containerView {
+    if (!_containerView) {
+        UIView* containerView = [[UIView alloc] init];
+        containerView.backgroundColor = [UIColor whiteColor];
+        
+        
+        _containerView = containerView;
+        [self addSubview:_containerView];
+    }
+    return _containerView;
+}
+
+- (UIButton *)cancelBtn {
+    if (!_cancelBtn) {
+        UIButton* button = [UIButton buttonWithType:UIButtonTypeCustom];
+        //[button setBackgroundImage:[UIImage imageNamed:@"矩形-9"] forState:UIControlStateNormal];
+        button.size = CGSizeMake(kMainScreenWidth*0.5, buttonH);
+        button.x = 0;
+        button.y = containerViewH - button.height;
+        
+        button.backgroundColor = [UIColor redColor];
+        [button addTarget:self action:@selector(cancleClick:) forControlEvents:UIControlEventTouchUpInside];
+        _cancelBtn = button;
+        [self.containerView addSubview:_cancelBtn];
+    }
+    return _cancelBtn;
+}
+
+- (UIButton *)confirmBtn {
+    if (!_confirmBtn) {
+        UIButton* button = [UIButton buttonWithType:UIButtonTypeCustom];
+        //[button setBackgroundImage:[UIImage imageNamed:@"矩形-9"] forState:UIControlStateNormal];
+        button.size = CGSizeMake(kMainScreenWidth*0.5, buttonH);
+        button.x = kMainScreenWidth*0.5;
+        button.y = containerViewH - button.height;
+        
+        button.backgroundColor = [UIColor blueColor];
+        [button addTarget:self action:@selector(confirmClick:) forControlEvents:UIControlEventTouchUpInside];
+        _confirmBtn = button;
+        [self.containerView addSubview:_confirmBtn];
+    }
+    return _confirmBtn;
+}
+- (UIPickerView *)pickerView {
+    if (!_pickerView) {
+        UIPickerView* pick = [[UIPickerView alloc] init];
+        pick.x = 0;
+        pick.y = titleLabelH + lineViewH;
+        pick.width = kMainScreenWidth;
+        pick.height = containerViewH - titleLabelH - lineViewH - buttonH;
+        pick.delegate = self;
+        pick.dataSource = self;
+        
+        //灰色线条
+        UIView* grayLineView = [[UIView alloc] init];
+        grayLineView.x = 0;
+        grayLineView.height = 1;
+        grayLineView.y = pick.height - grayLineView.height;
+        grayLineView.width = kMainScreenWidth;
+        grayLineView.backgroundColor = [UIColor lightGrayColor];
+        [pick addSubview:grayLineView];
+        
+        _pickerView = pick;
+        [self.containerView addSubview:_pickerView];
+    }
+    return _pickerView;
+}
+
+- (NSMutableArray *)yearArray{
+    if (!_yearArray) {
+        _yearArray = [[NSMutableArray alloc] init];
+        
+        for (int i = 2015; i <= self.currentYear; i++) {
+            [_yearArray addObject:[NSString stringWithFormat:@"%d",i]];
+        }
+    }
+    return _yearArray;
+}
+
+- (NSMutableArray *)monthArray{
+    if (!_monthArray) {
+        _monthArray = [[NSMutableArray alloc] init];
+        for (int i = 1; i <= 12; i++) {
+            [_monthArray addObject:[NSString stringWithFormat:@"%d月",i]];
+        }
+    }
+    return _monthArray;
+}
 
 
-
-static int titleLabelH = 48;
-static int lineViewH   = 2;
+#pragma mark - Setter
+static int titleLabelH = 48; //label的高度
+static int lineViewH   = 2; //分割线
 - (void)setTitleLabel:(UILabel *)titleLabel {
     _titleLabel = titleLabel;
     
@@ -269,30 +304,6 @@ static int lineViewH   = 2;
     lineView.backgroundColor = titleLabel.textColor;
     [self.containerView addSubview:lineView];
 }
-
-
-- (void)initWithCancleBtnTitle:(NSString *)cancleStr cancleColor:(UIColor *)cancleColor confirmBtnTitle:(NSString *)confirmStr confirmColor:(UIColor *)confirmColor {
-    [self.cancelBtn setTitle:cancleStr forState:UIControlStateNormal];
-    [self.cancelBtn setTitleColor:cancleColor forState:UIControlStateNormal];
-    
-    [self.cancelBtn setBackgroundColor:[UIColor clearColor]];
-    
-    [self.containerView addSubview:self.cancelBtn];
-    
-    UIView* devideLine = [[UIView alloc] init];
-    devideLine.width = 1;
-    devideLine.y = self.cancelBtn.y + 2;
-    devideLine.height = buttonH - 4;
-    devideLine.centerX = kMainScreenWidth * 0.5;
-    devideLine.backgroundColor = [UIColor lightGrayColor];
-    [self.containerView addSubview:devideLine];
-    
-    [self.confirmBtn setTitle:confirmStr forState:UIControlStateNormal];
-    [self.confirmBtn setTitleColor:confirmColor forState:UIControlStateNormal];
-    [self.confirmBtn setBackgroundColor:[UIColor clearColor]];
-    [self.containerView addSubview:self.confirmBtn];
-}
-
 
 #pragma mark - Private
 //获得当前月份
@@ -393,10 +404,6 @@ static int lineViewH   = 2;
          self.yearStr = [NSString stringWithFormat:@"%ld",(long)[self.yearArray[row] integerValue]];
     }
     [pickerView reloadAllComponents];
-}
-
-- (void)touchesBegan:(NSSet<UITouch *> *)touches withEvent:(UIEvent *)event {
-    [self dismiss];
 }
 
 @end

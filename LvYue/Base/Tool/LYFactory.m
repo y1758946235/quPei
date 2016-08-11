@@ -10,7 +10,7 @@
 
 @implementation LYFactory
 
-#pragma - 正则匹配
+#pragma mark  - 正则匹配
 
 //判断是否是邮箱
 + (BOOL)isEmailAddress:(NSString*)candidate

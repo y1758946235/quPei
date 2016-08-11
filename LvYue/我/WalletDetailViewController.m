@@ -131,7 +131,7 @@ static int headViewH = 71;
 
 - (UITableView *)tableView {
     if (!_tableView) {
-        UITableView* tableView = [[UITableView alloc] initWithFrame:CGRectMake(0, headViewH, kMainScreenWidth, kMainScreenHeight) style:UITableViewStyleGrouped];
+        UITableView* tableView = [[UITableView alloc] initWithFrame:CGRectMake(0, headViewH, kMainScreenWidth, kMainScreenHeight-80) style:UITableViewStyleGrouped];
         tableView.delegate = self;
         tableView.dataSource = self;
         
@@ -271,6 +271,7 @@ static int headViewH = 71;
 #pragma mark - KFDatePickerDelegate
 - (void)datePicker:(KFDatePicker *)datePicker didClickButtonIndex:(NSInteger)buttonIndex year:(NSString *)year month:(NSString *)month {
     if (buttonIndex == 0) {
+        
     }
     else if (buttonIndex == 1) { //确定
         NSString* titleRow = [NSString stringWithFormat:@"%@年 %@月",year,month];
