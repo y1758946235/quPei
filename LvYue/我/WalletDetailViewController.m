@@ -131,7 +131,7 @@ static int headViewH = 71;
 
 - (UITableView *)tableView {
     if (!_tableView) {
-        UITableView* tableView = [[UITableView alloc] initWithFrame:CGRectMake(0, headViewH, kMainScreenWidth, kMainScreenHeight-80) style:UITableViewStyleGrouped];
+        UITableView* tableView = [[UITableView alloc] initWithFrame:CGRectMake(0, headViewH, kMainScreenWidth, kMainScreenHeight-headViewH-22) style:UITableViewStyleGrouped];
         tableView.delegate = self;
         tableView.dataSource = self;
         
