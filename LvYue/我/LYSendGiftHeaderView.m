@@ -27,6 +27,11 @@
     self.avatarImageView.layer.cornerRadius  = 10.f;
     self.avatarImageView.layer.masksToBounds = YES;
 
+    if (![[[NSUserDefaults standardUserDefaults] valueForKey:@"ShowGetCoinKey"] boolValue]) {
+        self.getCoinLabel.hidden = YES;
+        return;
+    }
+    
     self.getCoinLabel.layer.cornerRadius  = 5.f;
     self.getCoinLabel.layer.masksToBounds = YES;
 }

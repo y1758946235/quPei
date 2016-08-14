@@ -10,7 +10,7 @@
 //#import "NewLoginViewController.h"
 //#import "LoginViewController.h"
 #import "LYUserService.h"
-//#import "LYHttpPoster.h"
+#import "LYHttpPoster.h"
 #import "AppDelegate+EaseMob.h"
 #import "AppDelegate+UMeng.h"
 #import "MBProgressHUD+NJ.h"
@@ -36,6 +36,9 @@
 
     [UIApplication sharedApplication].statusBarStyle = UIStatusBarStyleLightContent;
 
+    // 是否显示充值
+    [self p_getShowGetCoinButton];
+    
     //初始化环信SDK，详细内容在AppDelegate+EaseMob.m 文件中
     [self easemobApplication:application didFinishLaunchingWithOptions:launchOptions];
     //初始化友盟SDK
@@ -98,6 +101,21 @@
     }
 }
 
+- (void)p_getShowGetCoinButton {
+    
+    [LYHttpPoster postHttpRequestByPost:[NSString stringWithFormat:@"%@/mobile/user/pay_Set", REQUESTHEADER]
+                           andParameter:@{}
+                                success:^(id successResponse) {
+                                    MLOG(@"结果:%@", successResponse);
+                                    if ([[NSString stringWithFormat:@"%@", successResponse[@"code"]] isEqualToString:@"200"]) {
+                                        [[NSUserDefaults standardUserDefaults] setValue:@([successResponse[@"data"][@"set"][@"sign"] integerValue] == 1 ? YES : NO) forKey:@"ShowGetCoinKey"];
+                                    } else {
+//                                        [MBProgressHUD showError:[NSString stringWithFormat:@"%@", successResponse[@"msg"]]];
+                                    }
+                                }
+                             andFailure:^(id failureResponse){
+                             }];
+}
 
 #pragma mark - 连接本地数据库
 - (void)updateLocalDataBase {

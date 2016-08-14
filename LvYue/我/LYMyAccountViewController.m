@@ -42,7 +42,8 @@ static NSString *const LYMyAccountTableViewCellIdentity = @"LYMyAccountTableView
     self.view.backgroundColor = RGBCOLOR(247, 247, 247);
     [self setRightButton:[UIImage imageNamed:@"明细"] title:nil target:self action:@selector(p_pushDetail:)];
 
-    [self p_getShowGetCoinButton];
+    self.showGetCoinButton = [[[NSUserDefaults standardUserDefaults] valueForKey:@"ShowGetCoinKey"] boolValue];
+    
     [self p_loadAccountAmount];
 
     [self.tableView reloadData];
@@ -83,7 +84,7 @@ static NSString *const LYMyAccountTableViewCellIdentity = @"LYMyAccountTableView
     // 提现
     if (indexPath.row == 1) {
         WithdrawRedViewController *vc = [[WithdrawRedViewController alloc] init];
-        vc.hongdou                    = [NSString stringWithFormat:@"%d", self.accountAmount];
+        vc.hongdou                    = [NSString stringWithFormat:@"%ld", (long)self.accountAmount];
         [self.navigationController pushViewController:vc animated:YES];
     }
 }
@@ -136,23 +137,6 @@ static NSString *const LYMyAccountTableViewCellIdentity = @"LYMyAccountTableView
 - (void)p_pushDetail:(id)sender {
     WalletDetailViewController *vc = [[WalletDetailViewController alloc] init];
     [self.navigationController pushViewController:vc animated:YES];
-}
-
-- (void)p_getShowGetCoinButton {
-
-    [LYHttpPoster postHttpRequestByPost:[NSString stringWithFormat:@"%@/mobile/user/pay_Set", REQUESTHEADER]
-        andParameter:@{}
-        success:^(id successResponse) {
-            MLOG(@"结果:%@", successResponse);
-            if ([[NSString stringWithFormat:@"%@", successResponse[@"code"]] isEqualToString:@"200"]) {
-                self.showGetCoinButton = [successResponse[@"data"][@"set"][@"sign"] integerValue] == 1 ? YES : NO;
-                [self.tableView reloadData];
-            } else {
-                [MBProgressHUD showError:[NSString stringWithFormat:@"%@", successResponse[@"msg"]]];
-            }
-        }
-        andFailure:^(id failureResponse){
-        }];
 }
 
 #pragma mark - Getter

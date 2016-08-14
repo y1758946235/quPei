@@ -79,6 +79,10 @@
         return;
     }
 
+    // 判断是否显示充值界面
+    if (![[[NSUserDefaults standardUserDefaults] valueForKey:@"ShowGetCoinKey"] boolValue]) {
+        return;
+    }
     // 跳转充值界面
     if (buttonIndex == 1) {
         LYGetCoinViewController *vc = [[LYGetCoinViewController alloc] init];
