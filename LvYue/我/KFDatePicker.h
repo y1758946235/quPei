@@ -7,7 +7,7 @@
 //
 
 #import <UIKit/UIKit.h>
-
+NS_ASSUME_NONNULL_BEGIN
 typedef NS_OPTIONS(NSUInteger, KFDatePickerMode) {
     KFDatePickerModeYear                    = 0,
     KFDatePickerModeMonth                   = 1 << 0,
@@ -16,7 +16,7 @@ typedef NS_OPTIONS(NSUInteger, KFDatePickerMode) {
     KFDatePickerModeMonthAndDay             = 1 << 3,
     KFDatePickerModeYearAndMonthAndDay      = 1 << 4,
 };
-
+//模式增加；日期自定义；代理综合
 
 @class KFDatePicker;
 @protocol KFDatePickerDelegate <NSObject>
@@ -64,3 +64,5 @@ typedef NS_OPTIONS(NSUInteger, KFDatePickerMode) {
 - (void)initWithCancleBtnTitle:(NSString *)cancleStr cancleColor:(UIColor *)cancleColor confirmBtnTitle:(NSString *)confirmStr confirmColor:(UIColor *)confirmColor;
 
 @end
+
+NS_ASSUME_NONNULL_END

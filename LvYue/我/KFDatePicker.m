@@ -29,8 +29,10 @@
 @property (nonatomic,strong) NSMutableArray *yearArray;
 @property (nonatomic,strong) NSMutableArray *monthArray;
 
+//当前年月日
 @property (nonatomic,assign) NSInteger currentYear;
 @property (nonatomic,assign) NSInteger currentMonth;
+@property (nonatomic, assign) NSInteger currentDay;
 
 @property (nonatomic,assign) NSInteger yearRow;
 @property (nonatomic,assign) NSInteger monthRow;
@@ -67,6 +69,7 @@ static int containerViewH = 250; //背景的view高度
     
     [self.containerView addSubview:self.cancelBtn];
     
+    //分割线
     UIView* devideLine = [[UIView alloc] init];
     devideLine.width = 1;
     devideLine.y = self.cancelBtn.y + 2;
@@ -84,6 +87,7 @@ static int containerViewH = 250; //背景的view高度
 #pragma mark - 按钮点击方法
 - (void)confirmClick:(UIButton *)sender {
     if ([self.delegate respondsToSelector:@selector(datePicker:didClickButtonIndex:titleRow:)]) {
+        //判断选择日期模式
         
 //        NSString* titleRow = [self pickerView:self.pickerView titleForRow:_currentMonth forComponent:_currentYear];
         NSString* titleRow = [NSString stringWithFormat:@"%@年 %@月",self.yearStr, self.monthStr];
@@ -134,7 +138,7 @@ static int containerViewH = 250; //背景的view高度
     }
 }
 
-
+#pragma mark 显示
 - (void)show {
     //获取window
     UIWindow* mainWindow = [UIApplication sharedApplication].windows.lastObject;
@@ -160,6 +164,7 @@ static int containerViewH = 250; //背景的view高度
     [self getRow];
     [self.pickerView selectRow:self.yearRow inComponent:0 animated:YES];
     [self.pickerView selectRow:self.monthRow inComponent:1 animated:YES];
+    
     //
     [self pickerView:self.pickerView didSelectRow:self.yearRow inComponent:0];
     [self pickerView:self.pickerView didSelectRow:self.monthRow inComponent:1];
@@ -171,25 +176,33 @@ static int containerViewH = 250; //背景的view高度
     [self removeFromSuperview];
 }
 
-
-//设置设置模式
+//设置模式
 - (void)selectMode {
-    if (self.mode == KFDatePickerModeYearAndMonth) {    //年月
+
+    if (self.mode == KFDatePickerModeYear) {                        //年
+        //设置获得当前年
+        self.currentYear = [self getCurrentYear];
+    }
+    else if (self.mode == KFDatePickerModeMonth) {                  //月
+        self.currentMonth = [self getCurrentMonth];
+    }
+    else if (self.mode == KFDatePickerModeDay) {                    //日
+        self.currentDay = [self getCurrentDay];
+    }
+    else if (self.mode == KFDatePickerModeYearAndMonth) {           //年月
         //设置获得当前年月
         self.currentYear = [self getCurrentYear];
         self.currentMonth = [self getCurrentMonth];
-        
     }
-    else if (self.mode == KFDatePickerModeYear) {
+    else if (self.mode == KFDatePickerModeMonthAndDay) {            //月日
+        self.currentMonth = [self getCurrentMonth];
+        self.currentDay = [self getCurrentDay];
+    }
+    else if (self.mode == KFDatePickerModeYearAndMonthAndDay) {     //年月日
         self.currentYear = [self getCurrentYear];
-    }
-    else if (self.mode == KFDatePickerModeMonth) {
         self.currentMonth = [self getCurrentMonth];
+        self.currentDay = [self getCurrentDay];
     }
-    else if (self.mode == KFDatePickerModeDay) {
-        self.currentMonth = [self getCurrentMonth];
-    }
-
 }
 
 #pragma mark - Getter
@@ -323,6 +336,15 @@ static int lineViewH   = 2; //分割线
     NSDateComponents *dateComponent = [calendar components:unitFlags fromDate:now];
     NSInteger year = [dateComponent year];
     return year;
+}
+
+- (NSInteger)getCurrentDay{
+    NSDate *now = [NSDate date];
+    NSCalendar *calendar = [NSCalendar currentCalendar];
+    NSUInteger unitFlags = NSYearCalendarUnit | NSMonthCalendarUnit | NSDayCalendarUnit | NSHourCalendarUnit | NSMinuteCalendarUnit | NSSecondCalendarUnit;
+    NSDateComponents *dateComponent = [calendar components:unitFlags fromDate:now];
+    NSInteger day = [dateComponent day];
+    return day;
 }
 
 #pragma mark - UIPickerViewDataSource, UIPickerViewDelegate
