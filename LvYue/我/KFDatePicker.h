@@ -10,13 +10,16 @@
 NS_ASSUME_NONNULL_BEGIN
 typedef NS_OPTIONS(NSUInteger, KFDatePickerMode) {
     KFDatePickerModeYear                    = 0,
-    KFDatePickerModeMonth                   = 1 << 0,
-    KFDatePickerModeDay                     = 1 << 1,
-    KFDatePickerModeYearAndMonth            = 1 << 2,
-    KFDatePickerModeMonthAndDay             = 1 << 3,
-    KFDatePickerModeYearAndMonthAndDay      = 1 << 4,
+    KFDatePickerModeMonth                   = 1,
+    KFDatePickerModeDay                     = 2,
+    KFDatePickerModeHour                    = 3,
+    KFDatePickerModeYearAndMonth            = 4,
+    KFDatePickerModeMonthAndDay             = 5,
+    KFDatePickerModeYearAndMonthAndDay      = 6,
+    KFDatePickerModeDayAndHour              = 7,
+    KFDatePickerModeYearAndMonthAndDayAndHour      = 8,
 };
-//模式增加；日期自定义；代理综合
+//模式增加；日期自定义时间；代理综合
 
 @class KFDatePicker;
 @protocol KFDatePickerDelegate <NSObject>

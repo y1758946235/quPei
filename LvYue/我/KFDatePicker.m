@@ -25,9 +25,10 @@
 
 @property (nonatomic, weak) UIPickerView* pickerView; //选择器
 
-//年月
+//数据源：年月日
 @property (nonatomic,strong) NSMutableArray *yearArray;
 @property (nonatomic,strong) NSMutableArray *monthArray;
+@property (nonatomic, strong) NSMutableArray* dayArray;
 
 //当前年月日
 @property (nonatomic,assign) NSInteger currentYear;
@@ -39,6 +40,8 @@
 //选中的年月
 @property (nonatomic,copy) NSString *yearStr;
 @property (nonatomic,copy) NSString *monthStr;
+
+
 
 @end
 
@@ -130,12 +133,15 @@ static int containerViewH = 250; //背景的view高度
             break;
         }
     }
+    
     for (int i = 0; i < self.monthArray.count; i++) {
         if ([self.monthArray[i] integerValue] == self.currentMonth) {
             self.monthRow = i;
             break;
         }
     }
+    
+    
 }
 
 #pragma mark 显示
@@ -295,6 +301,16 @@ static int containerViewH = 250; //背景的view高度
     return _monthArray;
 }
 
+- (NSMutableArray *)dayArray{
+    if (!_dayArray) {
+        _dayArray = [[NSMutableArray alloc] init];
+        for (int i = 1; i <= 31; i++) {
+            [_dayArray addObject:[NSString stringWithFormat:@"%d日",i]];
+        }
+    }
+    return _dayArray;
+}
+
 
 #pragma mark - Setter
 static int titleLabelH = 48; //label的高度
@@ -349,38 +365,155 @@ static int lineViewH   = 2; //分割线
 
 #pragma mark - UIPickerViewDataSource, UIPickerViewDelegate
 - (NSInteger)numberOfComponentsInPickerView:(UIPickerView *)pickerView {
-    if (self.mode == KFDatePickerModeYearAndMonth) {
-        return 2;
+    /**
+     *  @author KF, 16-08-15 11:08:48
+     *
+     *  @brief KFDatePickerModeYear                    = 0,
+     KFDatePickerModeMonth                   = 1,
+     KFDatePickerModeDay                     = 2,
+     KFDatePickerModeHour                    = 3,
+     KFDatePickerModeYearAndMonth            = 4,
+     KFDatePickerModeMonthAndDay             = 5,
+     KFDatePickerModeYearAndMonthAndDay      = 6,
+     KFDatePickerModeDayAndHour              = 7,
+     KFDatePickerModeYearAndMonthAndDayAndHour      = 8,
+     */
+//    if (self.mode == KFDatePickerModeYearAndMonth) {
+//        return 2;
+//    }
+//    else if (self.mode == KFDatePickerModeYear) {
+//        return 1;
+//    }
+//    else if (self.mode == KFDatePickerModeMonth) {
+//        return 1;
+//    }
+//    else {
+//        return 1;
+//    }
+    switch (self.mode) {
+        case KFDatePickerModeYear:
+            return 1;
+            break;
+        case KFDatePickerModeMonth:
+            return 1;
+            break;
+        case KFDatePickerModeDay:
+            return 1;
+            break;
+        case KFDatePickerModeHour:
+            return 1;
+            break;
+        case KFDatePickerModeYearAndMonth:
+            return 2;
+            break;
+        case KFDatePickerModeMonthAndDay:
+            return 2;
+            break;
+        case KFDatePickerModeYearAndMonthAndDay:
+            return 3;
+            break;
+        case KFDatePickerModeDayAndHour:
+            return 2;
+            break;
+        case KFDatePickerModeYearAndMonthAndDayAndHour:
+            return 4;
+            break;
+            
+        default:
+            break;
     }
-    else if (self.mode == KFDatePickerModeYear) {
-        return 1;
-    }
-    else if (self.mode == KFDatePickerModeMonth) {
-        return 1;
-    }
-    else {
-        return 1;
-    }
+    
+    
 }
 
 - (NSInteger)pickerView:(UIPickerView *)pickerView numberOfRowsInComponent:(NSInteger)component {
-    if (self.mode == KFDatePickerModeYearAndMonth) {
-        if (component == 0) {
+//    if (self.mode == KFDatePickerModeYearAndMonth) {
+//        if (component == 0) {
+//            return self.yearArray.count;
+//        }
+//        else {
+//            return self.monthArray.count;
+//        }
+//    }
+//    else if (self.mode == KFDatePickerModeYear) {
+//        return 1;
+//    }
+//    else if (self.mode == KFDatePickerModeMonth) {
+//        return 1;
+//    }
+//    else {
+//        return 1;
+//    }
+    
+    switch (self.mode) {
+        case KFDatePickerModeYear:{
             return self.yearArray.count;
+            break;
         }
-        else {
+        case KFDatePickerModeMonth:{
             return self.monthArray.count;
+            break;
         }
+        case KFDatePickerModeDay:{
+            return self.dayArray.count;
+            break;
+        }
+        case KFDatePickerModeHour:{
+            return 1;
+            break;
+        }
+        case KFDatePickerModeYearAndMonth:{
+            if (component == 0) {
+                return self.yearArray.count;
+            }
+            else {
+                return self.monthArray.count;
+            }
+            break;
+        }
+        case KFDatePickerModeMonthAndDay:{
+            if (component == 0) {
+                return self.monthArray.count;
+            }
+            else {
+                if ((([self.yearStr integerValue]%4==0)&&([self.yearStr integerValue]%100!=0))||([self.yearStr integerValue]%400==0)) {
+                    //闰年
+                    return 29;
+                }
+                else{
+                    return 28;
+                }
+                break;
+                
+                return self.dayArray.count;
+            }
+            break;
+        }
+        case KFDatePickerModeYearAndMonthAndDay:{
+            if (component == 0) {
+                return self.yearArray.count;
+            }
+            else if (component == 1){
+                return self.monthArray.count;
+            }
+            else {
+                return self.dayArray.count;
+            }
+
+            break;
+        }
+        case KFDatePickerModeDayAndHour:{
+            return 2;
+            break;
+        }
+        case KFDatePickerModeYearAndMonthAndDayAndHour:{
+            return 4;
+            break;
+        }
+        default:
+            break;
     }
-    else if (self.mode == KFDatePickerModeYear) {
-        return 1;
-    }
-    else if (self.mode == KFDatePickerModeMonth) {
-        return 1;
-    }
-    else {
-        return 1;
-    }
+
 }
 
 - (NSString *)pickerView:(UIPickerView *)pickerView titleForRow:(NSInteger)row forComponent:(NSInteger)component {
