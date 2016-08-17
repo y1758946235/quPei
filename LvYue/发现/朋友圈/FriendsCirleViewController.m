@@ -57,7 +57,7 @@
     NSMutableArray *_praiseList;    //点赞列表
     NSMutableArray *_noticeList;    //消息列表
     NSMutableArray *_topicList;     //热门话题数量
-    UIButton *tipButton;            //热门
+    //UIButton *tipButton;            //热门
     UILabel *hotLabel;              //热门Label
     CAGradientLayer *gradientLayer; //阴影
 
@@ -636,23 +636,32 @@
                 TopicTitle *topic = [TopicTitle topicTitleWithDict:dict];
                 [_topicList addObject:topic];
             }
-            hotLabel.height    = 35 * (_topicList.count + 1);
-            hotBackView.height = 35 * (_topicList.count + 1) + 3;
+            hotLabel.height    = 25 * (_topicList.count + 1);
+            hotBackView.height = 25 * (_topicList.count + 1) + 3;
             
 
             //hotLabel.height     = hotTipH * (_topicList.count + 1);
             gradientLayer.frame = CGRectMake(0, 0, 5, hotLabel.height);
-            if (tipButton) {
-                [tipButton removeFromSuperview];
-                tipButton = nil;
+
+//            for (int i =0; i<hotBackView.subviews.count; i++) {
+//                if ([hotBackView.subviews[i] isKindOfClass:[UIButton class]]) {
+//                    [hotBackView.subviews[i] removeFromSuperview];
+//                }
+//            }
+            
+            for (UIView* subView in hotBackView.subviews) {
+                if ([subView isKindOfClass:[UIButton class]]) {
+                    [subView removeFromSuperview];
+                }
             }
+            
             for (int i = 0; i < _topicList.count; i++) {
                 //话题内容
-                tipButton        = [UIButton buttonWithType:UIButtonTypeCustom];
-                tipButton.height = 35;
+                UIButton* tipButton = [UIButton buttonWithType:UIButtonTypeCustom];
+                tipButton.height = 25;
                 tipButton.width  = kMainScreenWidth - CGRectGetMaxX(hotLabel.frame) - 3;
                 tipButton.x      = CGRectGetMaxX(hotLabel.frame) + 3;
-                tipButton.y      = hotLabel.y + i * (tipButton.y + 35 + 1) + 10;
+                tipButton.y      = hotLabel.y + i * (tipButton.y + 25 + 1) + 10;
                 //                tipButton.centerY = hotLabel.centerY;
                 
                 //                tipButton.backgroundColor = [UIColor redColor];
@@ -671,9 +680,9 @@
                 
                 if (i<_topicList.count-1) {
                     UIView *lineView = [[UIView alloc] init];
-                    lineView.x       = 0;
+                    lineView.x       = 10;
                     lineView.y       = tipButton.height - 1;
-                    lineView.width   = kMainScreenWidth;
+                    lineView.width   = kMainScreenWidth-60;
                     lineView.height  = 1.0f;
                     lineView.hidden = NO;
                     [UIView drawDashLine:lineView lineLength:3.0f lineSpacing:3.0f lineColor:[UIColor grayColor]];
@@ -1726,8 +1735,6 @@
         [hotBackView addSubview:hotLabel];
     }
     
-        
-        
         
 //        hotLabel.height     = hotTipH * (_topicList.count + 1);
 //        gradientLayer.frame = CGRectMake(0, 0, 5, hotLabel.height);
