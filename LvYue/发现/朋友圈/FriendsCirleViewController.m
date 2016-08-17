@@ -210,7 +210,7 @@
         self.userId = [LYUserService sharedInstance].userID;
         //self.userId = [NSString stringWithFormat:@""];
         self.isFriendsCircle = YES;
-        self.title           = @"朋友圈";
+        self.title           = @"动态";
         self.personName      = [LYUserService sharedInstance].userDetail.userName;
     }
 
@@ -318,7 +318,7 @@
     //获取网络
     //加载数据
     [self postRequest];
-    //[self getHotTopic];
+    [self getHotTopic];
 }
 
 //上拉
@@ -618,7 +618,7 @@
         }];
 }
 
-//获取热门话题
+#pragma mark 获取热门话题
 - (void)getHotTopic {
     //清空数据源
     [_topicList removeAllObjects];
@@ -638,6 +638,48 @@
             }
             hotLabel.height    = 35 * (_topicList.count + 1);
             hotBackView.height = 35 * (_topicList.count + 1) + 3;
+            
+
+            //hotLabel.height     = hotTipH * (_topicList.count + 1);
+            gradientLayer.frame = CGRectMake(0, 0, 5, hotLabel.height);
+            if (tipButton) {
+                [tipButton removeFromSuperview];
+                tipButton = nil;
+            }
+            for (int i = 0; i < _topicList.count; i++) {
+                //话题内容
+                tipButton        = [UIButton buttonWithType:UIButtonTypeCustom];
+                tipButton.height = 35;
+                tipButton.width  = kMainScreenWidth - CGRectGetMaxX(hotLabel.frame) - 3;
+                tipButton.x      = CGRectGetMaxX(hotLabel.frame) + 3;
+                tipButton.y      = hotLabel.y + i * (tipButton.y + 35 + 1) + 10;
+                //                tipButton.centerY = hotLabel.centerY;
+                
+                //                tipButton.backgroundColor = [UIColor redColor];
+                [tipButton setTitleColor:[UIColor blackColor] forState:UIControlStateNormal];
+                TopicTitle *titleModel = _topicList[i];
+                NSString *title        = [NSString stringWithFormat:@"#%@#", titleModel.title];
+                
+                tipButton.tag = 1000 + [titleModel.ID integerValue];
+                
+                [tipButton setTitle:title forState:UIControlStateNormal];
+                tipButton.contentHorizontalAlignment = UIControlContentHorizontalAlignmentLeft;
+                tipButton.titleEdgeInsets            = UIEdgeInsetsMake(0, 15, 0, 0);
+                [tipButton addTarget:self action:@selector(clickTipButton:) forControlEvents:UIControlEventTouchUpInside];
+                [hotBackView addSubview:tipButton];
+                //虚线
+                
+                if (i<_topicList.count-1) {
+                    UIView *lineView = [[UIView alloc] init];
+                    lineView.x       = 0;
+                    lineView.y       = tipButton.height - 1;
+                    lineView.width   = kMainScreenWidth;
+                    lineView.height  = 1.0f;
+                    lineView.hidden = NO;
+                    [UIView drawDashLine:lineView lineLength:3.0f lineSpacing:3.0f lineColor:[UIColor grayColor]];
+                    [tipButton addSubview:lineView];
+                }
+            }
 
             [_tableView.mj_header endRefreshing];
             [_tableView reloadData];
@@ -1658,7 +1700,7 @@
         hotBackView.width           = kMainScreenWidth;
         hotBackView.height          = 60;
         [headerView addSubview:hotBackView];
-
+        
         //热门
         hotLabel                 = [[UILabel alloc] init];
         hotLabel.x               = 10;
@@ -1679,51 +1721,52 @@
         gradientLayer.endPoint   = CGPointMake(1, 0);
         [view.layer addSublayer:gradientLayer];
         [hotBackView addSubview:view];
-
+        
         hotLabel.textAlignment = NSTextAlignmentCenter;
         [hotBackView addSubview:hotLabel];
-
-
-    } else {
-
-        hotLabel.height     = hotTipH * (_topicList.count + 1);
-        gradientLayer.frame = CGRectMake(0, 0, 5, hotLabel.height);
-        if (!tipButton) {
-            for (int i = 0; i < _topicList.count; i++) {
-                //话题内容
-                tipButton        = [UIButton buttonWithType:UIButtonTypeCustom];
-                tipButton.height = hotTipH;
-                tipButton.width  = kMainScreenWidth - CGRectGetMaxX(hotLabel.frame) - 3;
-                tipButton.x      = CGRectGetMaxX(hotLabel.frame) + 3;
-                tipButton.y      = hotLabel.y + i * (tipButton.y + hotTipH + 1) + 10;
-                //                tipButton.centerY = hotLabel.centerY;
-
-                //                tipButton.backgroundColor = [UIColor redColor];
-                [tipButton setTitleColor:[UIColor blackColor] forState:UIControlStateNormal];
-                TopicTitle *titleModel = _topicList[i];
-                NSString *title        = [NSString stringWithFormat:@"#%@#", titleModel.title];
-
-                tipButton.tag = 1000 + [titleModel.ID integerValue];
-
-                [tipButton setTitle:title forState:UIControlStateNormal];
-                tipButton.contentHorizontalAlignment = UIControlContentHorizontalAlignmentLeft;
-                tipButton.titleEdgeInsets            = UIEdgeInsetsMake(0, 15, 0, 0);
-                [tipButton addTarget:self action:@selector(clickTipButton:) forControlEvents:UIControlEventTouchUpInside];
-                [hotBackView addSubview:tipButton];
-                //虚线
-                UIView *lineView = [[UIView alloc] init];
-                lineView.x       = 0;
-                lineView.y       = tipButton.height - 1;
-                lineView.width   = kMainScreenWidth;
-                lineView.height  = 1.0f;
-                [UIView drawDashLine:lineView lineLength:3.0f lineSpacing:3.0f lineColor:[UIColor grayColor]];
-                [tipButton addSubview:lineView];
-                if (_topicList.count - 1 == i) {
-                    lineView.hidden = YES;
-                }
-            }
-        }
     }
+    
+        
+        
+        
+//        hotLabel.height     = hotTipH * (_topicList.count + 1);
+//        gradientLayer.frame = CGRectMake(0, 0, 5, hotLabel.height);
+//        if (!tipButton) {
+//            for (int i = 0; i < _topicList.count; i++) {
+//                //话题内容
+//                tipButton        = [UIButton buttonWithType:UIButtonTypeCustom];
+//                tipButton.height = hotTipH;
+//                tipButton.width  = kMainScreenWidth - CGRectGetMaxX(hotLabel.frame) - 3;
+//                tipButton.x      = CGRectGetMaxX(hotLabel.frame) + 3;
+//                tipButton.y      = hotLabel.y + i * (tipButton.y + hotTipH + 1) + 10;
+//                //                tipButton.centerY = hotLabel.centerY;
+//                
+//                //                tipButton.backgroundColor = [UIColor redColor];
+//                [tipButton setTitleColor:[UIColor blackColor] forState:UIControlStateNormal];
+//                TopicTitle *titleModel = _topicList[i];
+//                NSString *title        = [NSString stringWithFormat:@"#%@#", titleModel.title];
+//                
+//                tipButton.tag = 1000 + [titleModel.ID integerValue];
+//                
+//                [tipButton setTitle:title forState:UIControlStateNormal];
+//                tipButton.contentHorizontalAlignment = UIControlContentHorizontalAlignmentLeft;
+//                tipButton.titleEdgeInsets            = UIEdgeInsetsMake(0, 15, 0, 0);
+//                [tipButton addTarget:self action:@selector(clickTipButton:) forControlEvents:UIControlEventTouchUpInside];
+//                [hotBackView addSubview:tipButton];
+//                //虚线
+//                UIView *lineView = [[UIView alloc] init];
+//                lineView.x       = 0;
+//                lineView.y       = tipButton.height - 1;
+//                lineView.width   = kMainScreenWidth;
+//                lineView.height  = 1.0f;
+//                [UIView drawDashLine:lineView lineLength:3.0f lineSpacing:3.0f lineColor:[UIColor grayColor]];
+//                [tipButton addSubview:lineView];
+//                if (_topicList.count - 1 == i) {
+//                    lineView.hidden = YES;
+//                }
+//            }
+//        }
+    
 
     return headerView;
 }

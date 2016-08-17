@@ -30,8 +30,8 @@
          默认内边距 top:10 left:10 bottom:10 right:10
          */
         self.lineNumber = 2;
-        self.rowSpacing = 10.0f;
-        self.lineSpacing = 10.0f;
+        self.rowSpacing = 0.0f;
+        self.lineSpacing = 0.0f;
         self.sectionInset = UIEdgeInsetsMake(0, 0, 10, 5);
         _dicOfheight = [NSMutableDictionary dictionary];
         _array = [NSMutableArray array];

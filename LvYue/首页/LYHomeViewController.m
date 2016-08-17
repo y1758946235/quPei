@@ -336,7 +336,7 @@ static NSString *notice_index;
         return SCREEN_WIDTH / 2 + 35;
     }];
 
-    _collectionView                      = [[UICollectionView alloc] initWithFrame:CGRectMake(0, 0, SCREEN_WIDTH + 5, SCREEN_HEIGHT - 64.f - 49.f) collectionViewLayout:_waterFlowLayout];
+    _collectionView                      = [[UICollectionView alloc] initWithFrame:CGRectMake(0, 0, SCREEN_WIDTH+5, SCREEN_HEIGHT - 64.f - 49.f) collectionViewLayout:_waterFlowLayout];
     _collectionView.delegate             = self;
     _collectionView.dataSource           = self;
     _collectionView.backgroundColor      = [UIColor whiteColor];

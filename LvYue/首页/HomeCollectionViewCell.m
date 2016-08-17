@@ -224,7 +224,8 @@
     self.noteLabel.frame = CGRectMake(10, model.cellHeight - model.textHeight - 5, (SCREEN_WIDTH - 5) / 2 - 20, model.textHeight);
 
     _userHeadImgView.frame = CGRectMake(5, model.imageHeight - 25, 50, 50);
-    _userShowImgView.frame = CGRectMake(0, 0, (SCREEN_WIDTH - 10) / 2-10, model.imageHeight);
+    
+    _userShowImgView.frame = CGRectMake(0, 0, (SCREEN_WIDTH - 10) / 2-5, model.imageHeight);
 
     _userShowImgView.layer.cornerRadius = 10.0f;
     _userShowImgView.layer.masksToBounds = YES;
