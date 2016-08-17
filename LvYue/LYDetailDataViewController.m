@@ -506,7 +506,7 @@ forRowAtIndexPath:(NSIndexPath *)indexPath {
             break;
         }
         case LYDetailDataAlertViewEnumBecomeVip: {
-            if (buttonIndex == 1) {
+            if (buttonIndex == 0) {
                 BuyVipViewController *vc = [[BuyVipViewController alloc] init];
                 [self.navigationController pushViewController:vc animated:YES];
             }
