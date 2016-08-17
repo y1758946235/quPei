@@ -42,8 +42,6 @@ static NSString *const LYMyAccountTableViewCellIdentity = @"LYMyAccountTableView
     self.view.backgroundColor = RGBCOLOR(247, 247, 247);
     [self setRightButton:[UIImage imageNamed:@"明细"] title:nil target:self action:@selector(p_pushDetail:)];
 
-    self.showGetCoinButton = [[[NSUserDefaults standardUserDefaults] valueForKey:@"ShowGetCoinKey"] boolValue];
-    
     [self p_loadAccountAmount];
 
     [self.tableView reloadData];
@@ -52,7 +50,12 @@ static NSString *const LYMyAccountTableViewCellIdentity = @"LYMyAccountTableView
 #pragma mark TableView DataSource & Delegate
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
-    return 2;
+    // 是否显示提现
+    if ([[[NSUserDefaults standardUserDefaults] valueForKey:@"ShowGetCoinKey"] boolValue]) {
+        return 2;
+    } else {
+        return 1;
+    }
 }
 
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath {
@@ -68,11 +71,11 @@ static NSString *const LYMyAccountTableViewCellIdentity = @"LYMyAccountTableView
             vc.accountAmount            = self.accountAmount;
             [self.navigationController pushViewController:vc animated:YES];
         };
-        [cell configData:LYMyAccountTableViewCellTypeCoin coin:[NSString stringWithFormat:@"%@", @(self.accountAmount)] showGetCoinButton:self.showGetCoinButton];
+        [cell configData:LYMyAccountTableViewCellTypeCoin coin:[NSString stringWithFormat:@"%@", @(self.accountAmount)] showGetCoinButton:NO];
     }
     // 提现
     if (indexPath.row == 1) {
-        [cell configData:LYMyAccountTableViewCellWithDraw coin:@"0" showGetCoinButton:self.showGetCoinButton];
+        [cell configData:LYMyAccountTableViewCellWithDraw coin:@"0" showGetCoinButton:NO];
     }
 
     return cell;

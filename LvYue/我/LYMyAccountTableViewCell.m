@@ -45,13 +45,6 @@
             self.fetchCoinButton.hidden      = NO;
             self.rightArrowImageView.hidden  = YES;
 
-            // 显示是否隐藏充值
-            if (show) {
-                self.fetchCoinButton.hidden = NO;
-            } else {
-                self.fetchCoinButton.hidden = YES;
-            }
-
             break;
         }
         case LYMyAccountTableViewCellWithDraw: {

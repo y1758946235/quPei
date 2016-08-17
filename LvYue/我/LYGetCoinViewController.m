@@ -18,11 +18,12 @@
 #import "WXApi.h"
 #import "WXModel.h"
 #import <AlipaySDK/AlipaySDK.h>
+#import <StoreKit/StoreKit.h>
 
 typedef NS_ENUM(NSUInteger, LYGetCoinPayType) {
-    LYGetCoinPayTypeAlipay = 0,
-    LYGetCoinPayTypeWeixin = 1,
-    LYGetCoinPayTypeApple  = 2
+    LYGetCoinPayTypeApple  = 0,
+    LYGetCoinPayTypeAlipay = 1,
+    LYGetCoinPayTypeWeixin = 2
 };
 
 static NSString *const LYGetCoinTableViewCellIdentity = @"LYGetCoinTableViewCellIdentity";
@@ -32,38 +33,50 @@ static NSArray *LYGetCoinGetTableViewDataArray;
     UITableViewDelegate,
     UITableViewDataSource,
     UIActionSheetDelegate,
-    WXApiDelegate>
+    WXApiDelegate,
+SKPaymentTransactionObserver,
+SKProductsRequestDelegate
+>
 
 @property (nonatomic, strong) UITableView *tableView;
 @property (nonatomic, strong) LYGetCoinHeaderView *tableViewHeaderView;
 @property (nonatomic, strong) UIActionSheet *payActionSheet;
+
+@property (nonatomic, copy) NSString *selectedAppleProductID;
 
 @end
 
 @implementation LYGetCoinViewController
 
 + (void)initialize {
+
     LYGetCoinGetTableViewDataArray = @[
         @{
-            @"coinNum": @1500
+            @"coinNum": @1200,
+            @"applePayID":@"com.51xiexieni.1200"
         },
         @{
-            @"coinNum": @3000
+            @"coinNum": @3000,
+            @"applePayID":@"com.51xiexieni.3000"
         },
         @{
-            @"coinNum": @6000
+            @"coinNum": @6000,
+            @"applePayID":@"com.51xiexieni.6000"
         },
         @{
-            @"coinNum": @10800
+            @"coinNum": @10800,
+            @"applePayID":@"com.51xiexieni.10800_1"
         },
         @{
-            @"coinNum": @21800
+            @"coinNum": @21800,
+            @"applePayID":@"com.51xiexieni.21800"
         }
     ];
 }
 
 - (void)dealloc {
     [[NSNotificationCenter defaultCenter] removeObserver:self name:@"WeXinPayResponse" object:nil];
+    [[SKPaymentQueue defaultQueue] removeTransactionObserver:self];
 }
 
 - (void)viewDidLoad {
@@ -97,8 +110,8 @@ static NSArray *LYGetCoinGetTableViewDataArray;
     [tableView deselectRowAtIndexPath:indexPath animated:YES];
 
     [self.payActionSheet showInView:self.view];
-    // 把选中的金额通过 tag 传过去
-    self.payActionSheet.tag = [LYGetCoinGetTableViewDataArray[indexPath.row][@"coinNum"] integerValue];
+    // 把选中的行数通过 tag 传过去
+    self.payActionSheet.tag = indexPath.row;//[LYGetCoinGetTableViewDataArray[indexPath.row][@"coinNum"] integerValue];
 }
 
 - (void)tableView:(UITableView *)tableView willDisplayCell:(UITableViewCell *)cell forRowAtIndexPath:(NSIndexPath *)indexPath {
@@ -116,20 +129,109 @@ static NSArray *LYGetCoinGetTableViewDataArray;
 #pragma mark - UIActionSheetDelegate
 
 - (void)actionSheet:(UIActionSheet *)actionSheet clickedButtonAtIndex:(NSInteger)buttonIndex {
-    [self.payActionSheet showInView:self.view];
-
-    // 支付宝 微信支付
-    if (buttonIndex == 0 || buttonIndex == 1) {
-        [self buy:buttonIndex coinNum:actionSheet.tag];
+    if ([[[NSUserDefaults standardUserDefaults] valueForKey:@"ShowGetCoinKey"] boolValue]) {
+        if (buttonIndex == 0 || buttonIndex == 1 || buttonIndex == 2) {
+            [self buy:buttonIndex rowIndex:actionSheet.tag];
+        }
+    } else {
+        if (buttonIndex == 0) {
+            [self buy:buttonIndex rowIndex:actionSheet.tag];
+        }
     }
+}
+
+
+#pragma mark -
+
+//收到产品返回信息
+- (void)productsRequest:(SKProductsRequest *)request didReceiveResponse:(SKProductsResponse *)response{
+    
+    NSLog(@"--------------收到产品反馈消息---------------------");
+    NSArray *product = response.products;
+    if([product count] == 0){
+        [MBProgressHUD hideAllHUDsForView:self.view animated:YES];
+        NSLog(@"--------------没有商品------------------");
+        return;
+    }
+    
+    NSLog(@"productID:%@", response.invalidProductIdentifiers);
+    NSLog(@"产品付费数量:%lu",(unsigned long)[product count]);
+    
+    SKProduct *p = nil;
+    for (SKProduct *pro in product) {
+        NSLog(@"%@", [pro description]);
+        NSLog(@"%@", [pro localizedTitle]);
+        NSLog(@"%@", [pro localizedDescription]);
+        NSLog(@"%@", [pro price]);
+        NSLog(@"%@", [pro productIdentifier]);
+        
+        if([pro.productIdentifier isEqualToString:self.selectedAppleProductID]){
+            p = pro;
+        }
+    }
+    
+    SKPayment *payment = [SKPayment paymentWithProduct:p];
+    
+    NSLog(@"发送购买请求");
+    [MBProgressHUD showHUDAddedTo:self.view animated:YES];
+    [[SKPaymentQueue defaultQueue] addPayment:payment];
+}
+
+//请求失败
+- (void)request:(SKRequest *)request didFailWithError:(NSError *)error{
+    [MBProgressHUD hideAllHUDsForView:self.view animated:YES];
+    [MBProgressHUD showError:@"支付失败"];
+    NSLog(@"------------------错误-----------------:%@", error);
+}
+
+- (void)requestDidFinish:(SKRequest *)request{
+    NSLog(@"------------反馈信息结束-----------------");
+}
+
+- (void)paymentQueue:(SKPaymentQueue *)queue updatedTransactions:(NSArray *)transaction{
+    for(SKPaymentTransaction *tran in transaction){
+        [MBProgressHUD hideAllHUDsForView:self.view animated:YES];
+        switch (tran.transactionState) {
+            case SKPaymentTransactionStatePurchased:{
+                NSLog(@"交易完成");
+                [self p_completePay:nil];
+                [[SKPaymentQueue defaultQueue] finishTransaction:tran];
+            }
+                break;
+            case SKPaymentTransactionStatePurchasing:
+                NSLog(@"商品添加进列表");
+                break;
+            case SKPaymentTransactionStateRestored:{
+                NSLog(@"已经购买过商品");
+                [[SKPaymentQueue defaultQueue] finishTransaction:tran];
+            }
+                break;
+            case SKPaymentTransactionStateFailed:{
+                NSLog(@"交易失败");
+                [[SKPaymentQueue defaultQueue] finishTransaction:tran];
+                [MBProgressHUD showError:@"购买失败"];
+            }
+                break;
+            default:
+                break;
+        }
+    }
+}
+
+//交易结束
+- (void)completeTransaction:(SKPaymentTransaction *)transaction{
+    NSLog(@"交易结束");
+    [[SKPaymentQueue defaultQueue] finishTransaction:transaction];
 }
 
 #pragma mark - Pravite
 
-- (void)buy:(LYGetCoinPayType)type coinNum:(NSInteger)coinNum {
+- (void)buy:(LYGetCoinPayType)type rowIndex:(NSInteger)rowIndex {
 
+    NSDictionary *payInfo = LYGetCoinGetTableViewDataArray[rowIndex];
+    
     NSString *channel;
-    NSNumber *payCoinNum = @(coinNum / 100);
+    NSNumber *payCoinNum = @([payInfo[@"coinNum"] integerValue] / 100);
 
     switch (type) {
         case LYGetCoinPayTypeAlipay: {
@@ -141,7 +243,7 @@ static NSArray *LYGetCoinGetTableViewDataArray;
             break;
         }
         case LYGetCoinPayTypeApple: {
-
+            channel = @"2";
             break;
         }
     }
@@ -169,7 +271,8 @@ static NSArray *LYGetCoinGetTableViewDataArray;
                         break;
                     }
                     case LYGetCoinPayTypeApple: {
-
+                        self.selectedAppleProductID = payInfo[@"applePayID"];
+                        [self applePay:self.selectedAppleProductID];
                         break;
                     }
                 }
@@ -270,6 +373,23 @@ static NSArray *LYGetCoinGetTableViewDataArray;
     [WXApi sendReq:request];
 }
 
+- (void)applePay:(NSString *)productID {
+    [[SKPaymentQueue defaultQueue] addTransactionObserver:self];
+    if([SKPaymentQueue canMakePayments]){
+        NSLog(@"-------------请求对应的产品信息----------------");
+        
+        [MBProgressHUD showHUDAddedTo:self.view animated:YES];
+        
+        NSSet *nsset = [NSSet setWithArray:@[productID]];
+        SKProductsRequest *request = [[SKProductsRequest alloc] initWithProductIdentifiers:nsset];
+        request.delegate = self;
+        [request start];
+    }else{
+        NSLog(@"不允许程序内付费");
+    }
+}
+
+
 - (void)p_completePay:(NSNotification *)obj {
 
     if (obj) {
@@ -279,11 +399,13 @@ static NSArray *LYGetCoinGetTableViewDataArray;
         }
     }
 
+    NSDictionary *payInfo = LYGetCoinGetTableViewDataArray[self.payActionSheet.tag];
+    
     [EageProgressHUD eage_circleWaitShown:YES];
     [LYHttpPoster postHttpRequestByPost:[NSString stringWithFormat:@"%@/mobile/user/buyHDFinish", REQUESTHEADER]
         andParameter:@{
             @"user_id": [LYUserService sharedInstance].userID,
-            @"num": @(self.payActionSheet.tag)
+            @"num": payInfo[@"coinNum"]
         }
         success:^(id successResponse) {
             if ([[NSString stringWithFormat:@"%@", successResponse[@"code"]] isEqualToString:@"200"]) {
@@ -334,7 +456,12 @@ static NSArray *LYGetCoinGetTableViewDataArray;
 - (UIActionSheet *)payActionSheet {
     if (!_payActionSheet) {
         _payActionSheet = ({
-            UIActionSheet *actionSheet = [[UIActionSheet alloc] initWithTitle:@"获取金币" delegate:self cancelButtonTitle:@"取消" destructiveButtonTitle:nil otherButtonTitles:@"支付宝", @"微信", nil];
+            UIActionSheet *actionSheet = nil;
+            if ([[[NSUserDefaults standardUserDefaults] valueForKey:@"ShowGetCoinKey"] boolValue]) {
+                actionSheet = [[UIActionSheet alloc] initWithTitle:@"获取金币" delegate:self cancelButtonTitle:@"取消" destructiveButtonTitle:nil otherButtonTitles:@"苹果内购", @"支付宝", @"微信", nil];
+            } else {
+                actionSheet = [[UIActionSheet alloc] initWithTitle:@"获取金币" delegate:self cancelButtonTitle:@"取消" destructiveButtonTitle:nil otherButtonTitles:@"苹果内购", nil];
+            }
             actionSheet;
         });
     }

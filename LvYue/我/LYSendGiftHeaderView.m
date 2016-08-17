@@ -17,7 +17,6 @@
 @property (weak, nonatomic) IBOutlet UILabel *coinLabel;
 @property (weak, nonatomic) IBOutlet UIButton *getCoinLabel;
 
-
 @end
 
 @implementation LYSendGiftHeaderView
@@ -27,10 +26,10 @@
     self.avatarImageView.layer.cornerRadius  = 10.f;
     self.avatarImageView.layer.masksToBounds = YES;
 
-    if (![[[NSUserDefaults standardUserDefaults] valueForKey:@"ShowGetCoinKey"] boolValue]) {
-        self.getCoinLabel.hidden = YES;
-        return;
-    }
+//    if (![[[NSUserDefaults standardUserDefaults] valueForKey:@"ShowGetCoinKey"] boolValue]) {
+//        self.getCoinLabel.hidden = YES;
+//        return;
+//    }
     
     self.getCoinLabel.layer.cornerRadius  = 5.f;
     self.getCoinLabel.layer.masksToBounds = YES;
