@@ -231,7 +231,7 @@
         segmentedControl.selectedSegmentIndex = 0;
         [segmentedControl addTarget:self action:@selector(controlPressed:) forControlEvents:UIControlEventValueChanged];
     } else {
-        self.title                                    = @"Ta的动态";
+        self.title                                    = @"我的动态";
         self.navigationController.navigationBarHidden = NO;
         if ([self.userId isEqualToString:[LYUserService sharedInstance].userID]) {
             [self setRightButton:nil title:@"最近来访" target:self action:@selector(whoCome) rect:CGRectMake(0, 0, 80, 20)];

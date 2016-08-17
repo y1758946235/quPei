@@ -219,7 +219,7 @@
 }
 
 - (UIView *)tableView:(UITableView *)tableView viewForFooterInSection:(NSInteger)section{
-    UIView *view = [[UIView alloc] initWithFrame:CGRectMake(0, 0, kMainScreenWidth, 200)];
+    UIView *view = [[UIView alloc] initWithFrame:CGRectMake(0, 0, kMainScreenWidth, 250)];
     UIButton *btn = [[UIButton alloc] init];
     btn.center = CGPointMake(kMainScreenWidth / 2, 80);
     btn.bounds = CGRectMake(0, 0, kMainScreenWidth - 40, 40);
@@ -243,11 +243,11 @@
     [btn addTarget:self action:@selector(becomeGuide) forControlEvents:UIControlEventTouchUpInside];
 //    [view addSubview:btn];
     
-    UILabel *tipLabel = [[UILabel alloc] initWithFrame:CGRectMake(btn.frame.origin.x, btn.frame.origin.y - 80, btn.frame.size.width, 100)];
+    UILabel *tipLabel = [[UILabel alloc] initWithFrame:CGRectMake(btn.frame.origin.x, 0, btn.frame.size.width, 100)];
     tipLabel.textAlignment = NSTextAlignmentCenter;
     tipLabel.font = [UIFont systemFontOfSize:12.0];
     tipLabel.numberOfLines = 0;
-    tipLabel.text = @"形象视频认证、身份认证、学历认证、车辆认证，每通过一个认证都会给您显示相应的认证标志，让您的形象满满滴！可以同时提交所有认证，我们会尽快给您审核！";
+    tipLabel.text = @"形象视频认证代表您的个人形象，真实社交，其他用户可以看到。（身份认证、学历认证、车辆认证）仅供审核不对外展示，每通过一个认证都会给您显示相应的认证标志，让您的形象满满滴！可以同时提交所有认证，我们会尽快为您审核！";
     tipLabel.textColor = [UIColor grayColor];
     [view addSubview:tipLabel];
     
@@ -427,7 +427,7 @@
 
 - (CGFloat)tableView:(UITableView *)tableView heightForFooterInSection:(NSInteger)section{
     if (section == 1) {
-        return 200;
+        return 250;
     }
     else{
         return 20;

@@ -412,7 +412,7 @@ static NSString *notice_index;
     videoBtn.height    = 25;
     //[videoBtn setBackgroundColor:[UIColor redColor]];
     videoBtn.tag = 103;
-    [videoBtn setTitle:@"认证视频" forState:UIControlStateNormal];
+    [videoBtn setTitle:@"形象视频" forState:UIControlStateNormal];
     videoBtn.titleLabel.font = [UIFont systemFontOfSize:18];
     [videoBtn setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
     [videoBtn addTarget:self action:@selector(changeState:) forControlEvents:UIControlEventTouchUpInside];
