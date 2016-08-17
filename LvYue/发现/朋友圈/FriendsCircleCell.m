@@ -269,7 +269,7 @@
  *  获取第0秒钟的视频截图
  */
 - (void)loadPreviewImageWithURLString:(NSString *)urlString {
-    urlString = [urlString stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
+    //urlString = [urlString stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
     //打开数据库
     [kAppDelegate.dataBaseQueue inDatabase:^(FMDatabase *db) {
 //        NSURL* testUrl = [NSURL URLWithString:@"http://7xlcz5.com2.z0.glb.qiniucdn.com/iosLvYueVideoCircle_VideoByLoader50050_201682224738/形象视频.mp4"];

@@ -1761,42 +1761,39 @@
             return;
         }
     }];
-    //#warning 权限开关
-    //    if ([[LYUserService sharedInstance].userDetail.isVip isEqualToString:@"1"]) {
-    //        NSInteger index = sender.tag - 100;
-    //        VideoDetail *model = self.videoArray[index];
-    //        _currentVideoURL = [NSURL URLWithString:[NSString stringWithFormat:@"%@",model.url]];
-    //        _player = nil;
-    //        [self presentMoviePlayerViewControllerAnimated:self.player];
-    //    }
-    //    else {
-    //        [[[UIAlertView alloc] initWithTitle:nil message:@"您还不是会员，将无法享受播放功能" delegate:self cancelButtonTitle:@"取消" otherButtonTitles:@"成为会员", nil] show];
-    //    }
+
     /**
      *  @author KF, 16-07-20 13:07:18
      *
      *  @brief 权限开关
      */
-
-    if ([[LYUserService sharedInstance] canPlayVideo]) { //如果没有权限约束
-        NSInteger index               = sender.tag - 100;
-        FriendsCircleMessage *message = _messageArray[index];
-        message.videoUrl              = [message.videoUrl stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
-        _currentVideoURL              = [NSURL URLWithString:[NSString stringWithFormat:@"%@", message.videoUrl]];
-        _player                       = nil;
-
-        [self presentMoviePlayerViewControllerAnimated:self.player];
-    } else { //如果有权限约束
-        if ([[LYUserService sharedInstance].userDetail.isVip isEqualToString:@"1"]) {
-            NSInteger index               = sender.tag - 100;
-            FriendsCircleMessage *message = _messageArray[index];
-            _currentVideoURL              = [NSURL URLWithString:[NSString stringWithFormat:@"%@", message.videoUrl]];
-            _player                       = nil;
-            [self presentMoviePlayerViewControllerAnimated:self.player];
-        } else {
-            [[[UIAlertView alloc] initWithTitle:nil message:@"您还不是会员，将无法享受播放功能" delegate:self cancelButtonTitle:@"取消" otherButtonTitles:@"成为会员", nil] show];
-        }
-    }
+//    if ([[LYUserService sharedInstance] canPlayVideo]) { //如果没有权限约束
+//        NSInteger index               = sender.tag - 100;
+//        FriendsCircleMessage *message = _messageArray[index];
+//        message.videoUrl              = [message.videoUrl stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
+//        _currentVideoURL              = [NSURL URLWithString:[NSString stringWithFormat:@"%@", message.videoUrl]];
+//        _player                       = nil;
+//
+//        [self presentMoviePlayerViewControllerAnimated:self.player];
+//    } else { //如果有权限约束
+//        if ([[LYUserService sharedInstance].userDetail.isVip isEqualToString:@"1"]) {
+//            NSInteger index               = sender.tag - 100;
+//            FriendsCircleMessage *message = _messageArray[index];
+//            _currentVideoURL              = [NSURL URLWithString:[NSString stringWithFormat:@"%@", message.videoUrl]];
+//            _player                       = nil;
+//            [self presentMoviePlayerViewControllerAnimated:self.player];
+//        } else {
+//            [[[UIAlertView alloc] initWithTitle:nil message:@"您还不是会员，将无法享受播放功能" delegate:self cancelButtonTitle:@"取消" otherButtonTitles:@"成为会员", nil] show];
+//        }
+//    }
+    
+    NSInteger index               = sender.tag - 100;
+    FriendsCircleMessage *message = _messageArray[index];
+    //message.videoUrl              = [message.videoUrl stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
+    _currentVideoURL              = [NSURL URLWithString:[NSString stringWithFormat:@"%@", message.videoUrl]];
+    _player                       = nil;
+    
+    [self presentMoviePlayerViewControllerAnimated:self.player];
 }
 
 #pragma mark - 通知中心处理

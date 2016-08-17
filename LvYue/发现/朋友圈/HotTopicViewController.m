@@ -98,7 +98,7 @@ static NSString* const str = @"cc";
 #pragma mark - 懒加载
 - (UITableView *)tableView {
     if (_tableView == nil) {
-        UITableView *tableView = [[UITableView alloc] initWithFrame:self.view.bounds style:UITableViewStyleGrouped];
+        UITableView *tableView = [[UITableView alloc] initWithFrame:CGRectMake(0, 0, kMainScreenWidth, kMainScreenHeight-64) style:UITableViewStyleGrouped];
         tableView.dataSource   = self;
         tableView.delegate     = self;
         
