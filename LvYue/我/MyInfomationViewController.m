@@ -269,12 +269,12 @@
                 if ([self.codeString isEqualToString:@""] || [self.codeString isEqualToString:@"00000000000"]) {
                     cell2.detailLabel.text = @"第三方登录";
                 } else {
-                    NSMutableString *mstr = [NSMutableString stringWithFormat:@"%@", self.codeString];
+                    NSMutableString *mstr = [NSMutableString stringWithFormat:@"%ld", (long)self.id];
 
-                    NSRange range = {3, 4};
-                    [mstr deleteCharactersInRange:range];
+//                    NSRange range = {3, 4};
+//                    [mstr deleteCharactersInRange:range];
 
-                    [mstr insertString:@"****" atIndex:3];
+//                    [mstr insertString:@"****" atIndex:3];
                     cell2.detailLabel.text = mstr;
                 }
             }
