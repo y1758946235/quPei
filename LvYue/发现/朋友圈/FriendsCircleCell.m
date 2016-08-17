@@ -240,7 +240,7 @@
             _imgView.x = (_videoBtn.width - _imgView.height)* 0.5;
             _imgView.y = (_videoBtn.height - _imgView.height)* 0.5;
             _imgView.image = [UIImage imageNamed:@"播放-1"];
-            _imgView.userInteractionEnabled = YES;
+//            _imgView.userInteractionEnabled = YES;
             [_videoBtn addSubview:_imgView];
         }
         
