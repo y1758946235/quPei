@@ -240,12 +240,12 @@
      */
     //CGRect rect1 = [self.ageLabel.text boundingRectWithSize:CGSizeMake(self.frame.size.width, 20) options:NSStringDrawingTruncatesLastVisibleLine attributes:@{NSFontAttributeName:self.ageLabel.font} context:nil];
     CGRect rect1 = [self.nameLabel.text boundingRectWithSize:CGSizeMake(self.frame.size.width, 20) options:NSStringDrawingTruncatesLastVisibleLine attributes:@{ NSFontAttributeName: self.nameLabel.font } context:nil];
-    CGFloat nameLabelWidth;
-    if (rect1.size.width > 85) {
-        nameLabelWidth = 85;
-    } else {
-        nameLabelWidth = rect1.size.width;
-    }
+    CGFloat nameLabelWidth = rect1.size.width;
+//    if (rect1.size.width > 100) {
+//        nameLabelWidth = 100;
+//    } else {
+//        nameLabelWidth = rect1.size.width;
+//    }
     //设置昵称
     if (model.imageHeight != 25.0) {
         _nameLabel.frame = CGRectMake(5, _userShowImgView.frame.size.height + 6, nameLabelWidth, 20);

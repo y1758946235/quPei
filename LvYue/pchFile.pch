@@ -85,9 +85,9 @@
 //#define REQUESTHEADER     @"http://182.254.153.99:8080/lvyue-web-1.0.0-RELEASE2"             //gjh测试账号
 
 
-//#define REQUESTHEADER       @"http://114.215.184.120:8080"   //服务器正式地址
+//#define REQUESTHEADER       @"http://114.215.184.120:8088"   //服务器正式地址
 //#define REQUESTHEADER     @"http://192.168.1.110:8080"       //本地测试地址
-#define REQUESTHEADER     @"http://114.215.184.120:8088"  //服务器测试地址
+#define REQUESTHEADER     @"http://114.215.184.120:8080"  //服务器测试地址
 
 
 #define IMAGEHEADER         @"http://7xlcz5.com2.z0.glb.qiniucdn.com/"    //七牛请求头
