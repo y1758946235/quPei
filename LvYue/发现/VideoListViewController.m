@@ -64,7 +64,7 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
     self.view.backgroundColor = GRAYBG_COLOR;
-    self.title                = @"视频圈";
+    self.title                = @"形象视频";
     [self.view addSubview:self.statusBarBGView];
     [self.view addSubview:self.navigationView];
     [self.view addSubview:self.tableView];
