@@ -70,6 +70,12 @@
 
     //统一设置tabBar的背景色
     self.tabBar.barTintColor = [UIColor colorWithPatternImage:[UIImage imageNamed:@"test"]];
+    
+    // 是否显示红点
+    if ([[[NSUserDefaults standardUserDefaults] valueForKey:@"ShowGiftRedBadgeNotification"] boolValue] || [[[NSUserDefaults standardUserDefaults] valueForKey:@"ShowFansRedBadgeNotification"] boolValue]) {
+        [self.tabBar showBadgeOnItemIndex:3];
+    }
+    
 }
 
 - (BOOL)tabBarController:(UITabBarController *)tabBarController shouldSelectViewController:(UIViewController *)viewController {
