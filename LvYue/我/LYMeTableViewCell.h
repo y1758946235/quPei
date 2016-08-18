@@ -12,5 +12,7 @@
 
 @property (weak, nonatomic) IBOutlet UIImageView *iconImageView;
 @property (weak, nonatomic) IBOutlet UILabel *titleLabel;
+@property (nonatomic, assign) BOOL myGift;
+@property (weak, nonatomic) IBOutlet UIView *redBadgeView;
 
 @end

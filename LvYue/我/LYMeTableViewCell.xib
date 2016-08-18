@@ -13,11 +13,11 @@
             <rect key="frame" x="0.0" y="0.0" width="320" height="44"/>
             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
             <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="KGk-i7-Jjw" id="H2p-sc-9uM">
-                <rect key="frame" x="0.0" y="0.0" width="320" height="43.5"/>
+                <rect key="frame" x="0.0" y="0.0" width="320" height="44"/>
                 <autoresizingMask key="autoresizingMask"/>
                 <subviews>
                     <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="FD6-6d-iRl">
-                        <rect key="frame" x="23" y="7" width="30" height="29.5"/>
+                        <rect key="frame" x="23" y="7" width="30" height="30"/>
                         <constraints>
                             <constraint firstAttribute="width" constant="30" id="3Qi-PS-h87"/>
                             <constraint firstAttribute="width" secondItem="FD6-6d-iRl" secondAttribute="height" id="Cpa-C3-d1V"/>
@@ -29,13 +29,29 @@
                         <color key="textColor" red="0.20000000000000001" green="0.20000000000000001" blue="0.20000000000000001" alpha="1" colorSpace="calibratedRGB"/>
                         <nil key="highlightedColor"/>
                     </label>
+                    <view hidden="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="5aP-Ic-11Z">
+                        <rect key="frame" x="287" y="17" width="10" height="10"/>
+                        <color key="backgroundColor" red="1" green="0.064558162072409608" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
+                        <constraints>
+                            <constraint firstAttribute="width" constant="10" id="OYh-iJ-ozH"/>
+                            <constraint firstAttribute="height" constant="10" id="di1-l6-CUq"/>
+                        </constraints>
+                        <userDefinedRuntimeAttributes>
+                            <userDefinedRuntimeAttribute type="number" keyPath="layer.cornerRadius">
+                                <integer key="value" value="5"/>
+                            </userDefinedRuntimeAttribute>
+                            <userDefinedRuntimeAttribute type="boolean" keyPath="layer.masksToBounds" value="YES"/>
+                        </userDefinedRuntimeAttributes>
+                    </view>
                 </subviews>
                 <constraints>
                     <constraint firstItem="8Vk-f8-o4H" firstAttribute="centerY" secondItem="H2p-sc-9uM" secondAttribute="centerY" id="Fbe-d3-MKo"/>
                     <constraint firstAttribute="trailingMargin" secondItem="8Vk-f8-o4H" secondAttribute="trailing" constant="20" id="M3e-li-mjE"/>
                     <constraint firstItem="8Vk-f8-o4H" firstAttribute="leading" secondItem="FD6-6d-iRl" secondAttribute="trailing" constant="20" id="Umd-ZL-5GP"/>
                     <constraint firstItem="FD6-6d-iRl" firstAttribute="leading" secondItem="H2p-sc-9uM" secondAttribute="leadingMargin" constant="15" id="cTF-pg-GeN"/>
+                    <constraint firstItem="5aP-Ic-11Z" firstAttribute="centerY" secondItem="H2p-sc-9uM" secondAttribute="centerY" id="dVZ-sK-XP9"/>
                     <constraint firstItem="FD6-6d-iRl" firstAttribute="centerY" secondItem="H2p-sc-9uM" secondAttribute="centerY" id="hD6-uj-FY7"/>
+                    <constraint firstAttribute="trailingMargin" secondItem="5aP-Ic-11Z" secondAttribute="trailing" constant="15" id="wcd-jm-56j"/>
                 </constraints>
                 <variation key="default">
                     <mask key="constraints">
@@ -45,6 +61,7 @@
             </tableViewCellContentView>
             <connections>
                 <outlet property="iconImageView" destination="FD6-6d-iRl" id="lkt-5f-pqm"/>
+                <outlet property="redBadgeView" destination="5aP-Ic-11Z" id="5G2-1N-Sim"/>
                 <outlet property="titleLabel" destination="8Vk-f8-o4H" id="EXa-eS-AGq"/>
             </connections>
         </tableViewCell>

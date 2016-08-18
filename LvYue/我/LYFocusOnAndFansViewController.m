@@ -38,10 +38,17 @@ static NSString *const LYFocusOnAndFansTableViewCellIdentity = @"LYFocusOnAndFan
         }
         case LYFocusOnAndFansViewControllerFans: {
             self.title = @"我的粉丝";
+            // 处理红点提醒
+            [[NSNotificationCenter defaultCenter] postNotificationName:@"ShowFansRedBadgeNotification" object:@NO];
+            [[NSUserDefaults standardUserDefaults] setValue:@(NO) forKey:@"ShowFansRedBadgeNotification"];
+            if (![[[NSUserDefaults standardUserDefaults] valueForKey:@"ShowFansRedBadgeNotification"] boolValue] && ![[[NSUserDefaults standardUserDefaults] valueForKey:@"ShowGiftRedBadgeNotification"] boolValue]) {
+                UIViewController *vc = kAppDelegate.rootTabC.viewControllers[3];
+                [vc.tabBarController.tabBar hideBadgeOnItemIndex:3];
+            }
             break;
         }
     }
-
+    
     [self p_loadData];
 }
 

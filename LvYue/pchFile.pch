@@ -98,6 +98,7 @@
 #import "AppDelegate.h"
 #import "ConstPriceEnum.h"
 #import "EageProgressHUD.h"
+#import "UITabBar+Badge.h"
 #define kAppDelegate ((AppDelegate *)[[UIApplication sharedApplication] delegate])
 #define kKeyWindow [[UIApplication sharedApplication] keyWindow]
 

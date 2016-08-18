@@ -567,6 +567,7 @@
 		6B6A57C71D48F986001E29D1 /* LYDetailDataPhotoTableViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 6B6A57C51D48F986001E29D1 /* LYDetailDataPhotoTableViewCell.xib */; };
 		6B8088421D509A5B001CD14D /* LYGetCoinHeaderView.m in Sources */ = {isa = PBXBuildFile; fileRef = 6B8088411D509A5B001CD14D /* LYGetCoinHeaderView.m */; };
 		6B8088441D509A75001CD14D /* LYGetCoinHeaderView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 6B8088431D509A75001CD14D /* LYGetCoinHeaderView.xib */; };
+		6B89EC9D1D65607C00F69F71 /* UITabBar+Badge.m in Sources */ = {isa = PBXBuildFile; fileRef = 6B89EC9C1D65607C00F69F71 /* UITabBar+Badge.m */; };
 		6B9094C81D4F36E000037DD0 /* LYMyGiftViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 6B9094C61D4F36E000037DD0 /* LYMyGiftViewController.m */; };
 		6B9094C91D4F36E000037DD0 /* LYMyGiftViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 6B9094C71D4F36E000037DD0 /* LYMyGiftViewController.xib */; };
 		6B9094D01D4F52C300037DD0 /* LYMyGiftTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 6B9094CE1D4F52C300037DD0 /* LYMyGiftTableViewCell.m */; };
@@ -1851,6 +1852,8 @@
 		6B8088401D509A5B001CD14D /* LYGetCoinHeaderView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LYGetCoinHeaderView.h; sourceTree = "<group>"; };
 		6B8088411D509A5B001CD14D /* LYGetCoinHeaderView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LYGetCoinHeaderView.m; sourceTree = "<group>"; };
 		6B8088431D509A75001CD14D /* LYGetCoinHeaderView.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = LYGetCoinHeaderView.xib; sourceTree = "<group>"; };
+		6B89EC9B1D65607C00F69F71 /* UITabBar+Badge.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UITabBar+Badge.h"; sourceTree = "<group>"; };
+		6B89EC9C1D65607C00F69F71 /* UITabBar+Badge.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UITabBar+Badge.m"; sourceTree = "<group>"; };
 		6B9094C51D4F36E000037DD0 /* LYMyGiftViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LYMyGiftViewController.h; sourceTree = "<group>"; };
 		6B9094C61D4F36E000037DD0 /* LYMyGiftViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LYMyGiftViewController.m; sourceTree = "<group>"; };
 		6B9094C71D4F36E000037DD0 /* LYMyGiftViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = LYMyGiftViewController.xib; sourceTree = "<group>"; };
@@ -5799,6 +5802,8 @@
 				A79AA55D1BEAFAB00065684F /* UMessage_Sdk_1.2.0 */,
 				A79AA5601BEAFAB00065684F /* UMSocial_Sdk_4.2.5 */,
 				A79AA5951BEAFAB00065684F /* Util */,
+				6B89EC9B1D65607C00F69F71 /* UITabBar+Badge.h */,
+				6B89EC9C1D65607C00F69F71 /* UITabBar+Badge.m */,
 			);
 			path = Lib;
 			sourceTree = "<group>";
@@ -6997,6 +7002,7 @@
 				A79AA7DF1BEAFAB10065684F /* QNUrlSafeBase64.m in Sources */,
 				A71785621BF45D2800FFAD51 /* PeopleLiveViewController.m in Sources */,
 				980FCEB01CE72F1200956912 /* IQAudioPickerController.m in Sources */,
+				6B89EC9D1D65607C00F69F71 /* UITabBar+Badge.m in Sources */,
 				186698691BCFC474008A3A0C /* AllOrederTableViewCell.m in Sources */,
 				A79AA7E71BEAFAB10065684F /* QNFormUpload.m in Sources */,
 				984B4DAF1CCDF7C0001A063D /* SDWebImagePrefetcher.m in Sources */,

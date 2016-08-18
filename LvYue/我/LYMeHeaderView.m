@@ -21,11 +21,16 @@
 @property (weak, nonatomic) IBOutlet UILabel *focusOnLabel;
 @property (weak, nonatomic) IBOutlet UILabel *fansLabel;
 @property (weak, nonatomic) IBOutlet UIButton *genderAgeButton;
+@property (weak, nonatomic) IBOutlet UIView *redBadgeView;
 
 
 @end
 
 @implementation LYMeHeaderView
+
+- (void)dealloc {
+    [[NSNotificationCenter defaultCenter] removeObserver:self name:@"ShowFansRedBadgeNotification" object:nil];
+}
 
 - (void)awakeFromNib {
     [super awakeFromNib];
@@ -49,6 +54,12 @@
 
     UITapGestureRecognizer *fansLabelTap = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(tapFansLabel:)];
     [self.fansLabel addGestureRecognizer:fansLabelTap];
+    
+    if ([[[NSUserDefaults standardUserDefaults] valueForKey:@"ShowFansRedBadgeNotification"] boolValue]) {
+        self.redBadgeView.hidden = NO;
+    }
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(showFansRedBadge:) name:@"ShowFansRedBadgeNotification" object:nil];
+    
 }
 
 - (void)configHeaderViewDataSource:(MyDetailInfoModel *)detailModel infoModel:(MyInfoModel *)infoModel {
@@ -90,6 +101,14 @@
 - (void)tapFansLabel:(UITapGestureRecognizer *)tap {
     if (self.tapFansLabelBlock) {
         self.tapFansLabelBlock(tap);
+    }
+}
+
+- (void)showFansRedBadge:(NSNotification *)notice {
+    if ([notice.object boolValue]) {
+        self.redBadgeView.hidden = NO;
+    } else {
+        self.redBadgeView.hidden = YES;
     }
 }
 

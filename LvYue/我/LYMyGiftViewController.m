@@ -36,6 +36,14 @@ static NSString *const LYMyGiftTableViewCellIdentity = @"LYMyGiftTableViewCellId
 - (void)viewDidLoad {
     [super viewDidLoad];
 
+    // 处理红点提醒
+    [[NSNotificationCenter defaultCenter] postNotificationName:@"ShowGiftRedBadgeNotification" object:@NO];
+    [[NSUserDefaults standardUserDefaults] setValue:@NO forKey:@"ShowGiftRedBadgeNotification"];
+    if (![[[NSUserDefaults standardUserDefaults] valueForKey:@"ShowFansRedBadgeNotification"] boolValue] && ![[[NSUserDefaults standardUserDefaults] valueForKey:@"ShowGiftRedBadgeNotification"] boolValue]) {
+        UIViewController *vc = kAppDelegate.rootTabC.viewControllers[3];
+        [vc.tabBarController.tabBar hideBadgeOnItemIndex:3];
+    }
+    
     //去navigation分割线
     // bg.png为自己ps出来的想要的背景颜色。
     [self.navigationController.navigationBar setBackgroundImage:[UIImage imageNamed:@"navigationBar"] forBarPosition:UIBarPositionAny barMetrics:UIBarMetricsDefault];

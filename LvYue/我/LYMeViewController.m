@@ -252,6 +252,10 @@ typedef NS_ENUM(NSUInteger, LYMeViewControllerCellTypeEnum) {
     LYMeTableViewCell *cell  = [tableView dequeueReusableCellWithIdentifier:LYMeTableViewCellIdentity forIndexPath:indexPath];
     cell.iconImageView.image = [UIImage imageNamed:kTableViewDataArray[indexPath.section][indexPath.row][@"icon"]];
     cell.titleLabel.text     = kTableViewDataArray[indexPath.section][indexPath.row][@"title"];
+    if ([cell.titleLabel.text isEqualToString:@"我的礼物"]) {
+        cell.myGift = YES;
+    }
+    
     return cell;
 }
 

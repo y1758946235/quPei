@@ -516,6 +516,16 @@
             [user synchronize];
             //显示一级提醒器
             [[NSNotificationCenter defaultCenter] postNotificationName:@"closeOrShowCheckSkillListVcPushPrompt" object:nil];
+        }else if ([string containsString:@"请到我的礼物中查看"]) {  // 收到礼物推送
+            UIViewController *vc = kAppDelegate.rootTabC.viewControllers[3];
+            [vc.tabBarController.tabBar showBadgeOnItemIndex:3];
+            [[NSUserDefaults standardUserDefaults] setValue:@(YES) forKey:@"ShowGiftRedBadgeNotification"];
+            [[NSNotificationCenter defaultCenter] postNotificationName:@"ShowGiftRedBadgeNotification" object:@(YES)];
+        }else if ([string containsString:@"关注了你"]) {  // 关注了你
+            UIViewController *vc = kAppDelegate.rootTabC.viewControllers[3];
+            [vc.tabBarController.tabBar showBadgeOnItemIndex:3];
+            [[NSUserDefaults standardUserDefaults] setValue:@(YES) forKey:@"ShowFansRedBadgeNotification"];
+            [[NSNotificationCenter defaultCenter] postNotificationName:@"ShowFansRedBadgeNotification" object:@(YES)];
         }
         
         UINavigationController *dialogueNav = kAppDelegate.rootTabC.viewControllers[1];

@@ -91,9 +91,25 @@
                             <color key="textColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                             <nil key="highlightedColor"/>
                         </label>
+                        <view hidden="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="fLQ-qk-KPF">
+                            <rect key="frame" x="95" y="21" width="10" height="10"/>
+                            <color key="backgroundColor" red="1" green="0.064558162069999994" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
+                            <constraints>
+                                <constraint firstAttribute="height" constant="10" id="bVA-ut-aT9"/>
+                                <constraint firstAttribute="width" constant="10" id="nPH-m5-d9z"/>
+                            </constraints>
+                            <userDefinedRuntimeAttributes>
+                                <userDefinedRuntimeAttribute type="number" keyPath="layer.cornerRadius">
+                                    <integer key="value" value="5"/>
+                                </userDefinedRuntimeAttribute>
+                                <userDefinedRuntimeAttribute type="boolean" keyPath="layer.masksToBounds" value="YES"/>
+                            </userDefinedRuntimeAttributes>
+                        </view>
                     </subviews>
                     <constraints>
+                        <constraint firstItem="fLQ-qk-KPF" firstAttribute="leading" secondItem="2KI-S7-qGY" secondAttribute="trailing" id="D86-Km-zt1"/>
                         <constraint firstItem="2KI-S7-qGY" firstAttribute="centerX" secondItem="eFD-od-fDZ" secondAttribute="centerX" id="a1L-CU-30e"/>
+                        <constraint firstItem="2KI-S7-qGY" firstAttribute="top" secondItem="fLQ-qk-KPF" secondAttribute="bottom" id="cEL-Rc-TRg"/>
                         <constraint firstAttribute="height" constant="80" id="mCj-gl-4ap"/>
                         <constraint firstItem="2KI-S7-qGY" firstAttribute="centerY" secondItem="eFD-od-fDZ" secondAttribute="centerY" id="smS-dN-Iro"/>
                     </constraints>
@@ -136,6 +152,7 @@
                 <outlet property="fansLabel" destination="2KI-S7-qGY" id="Fbt-0m-gmh"/>
                 <outlet property="focusOnLabel" destination="Zma-7g-2f5" id="enF-js-qwh"/>
                 <outlet property="genderAgeButton" destination="Pjs-GU-P6D" id="NWt-V5-BZ7"/>
+                <outlet property="redBadgeView" destination="fLQ-qk-KPF" id="6Fq-r9-uFc"/>
                 <outlet property="userNameLabel" destination="LiA-lV-7ul" id="84l-mf-mZa"/>
             </connections>
             <point key="canvasLocation" x="129" y="119"/>
