@@ -542,6 +542,7 @@
 		3A334A671D503C38003B8385 /* TopicTitle.m in Sources */ = {isa = PBXBuildFile; fileRef = 3A334A661D503C38003B8385 /* TopicTitle.m */; };
 		3A55D1351D21206600FB591B /* KFAlertView.m in Sources */ = {isa = PBXBuildFile; fileRef = 3A55D1341D21206600FB591B /* KFAlertView.m */; };
 		3A55D13B1D220E8800FB591B /* UIView+KFFrame.m in Sources */ = {isa = PBXBuildFile; fileRef = 3A55D13A1D220E8800FB591B /* UIView+KFFrame.m */; };
+		3AA1FDB81D658AAB00A32EB3 /* UITabBar+Badge.m in Sources */ = {isa = PBXBuildFile; fileRef = 3AA1FDB71D658AAB00A32EB3 /* UITabBar+Badge.m */; };
 		3AA553DD1D52ECB7002CD36C /* DayWallet.m in Sources */ = {isa = PBXBuildFile; fileRef = 3AA553DC1D52ECB7002CD36C /* DayWallet.m */; };
 		3AA798491D23B42F002135E4 /* WalletDetailViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 3AA798481D23B42F002135E4 /* WalletDetailViewController.m */; };
 		3AA7984C1D23C175002135E4 /* BaseViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 3AA7984B1D23C175002135E4 /* BaseViewController.m */; };
@@ -567,7 +568,6 @@
 		6B6A57C71D48F986001E29D1 /* LYDetailDataPhotoTableViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 6B6A57C51D48F986001E29D1 /* LYDetailDataPhotoTableViewCell.xib */; };
 		6B8088421D509A5B001CD14D /* LYGetCoinHeaderView.m in Sources */ = {isa = PBXBuildFile; fileRef = 6B8088411D509A5B001CD14D /* LYGetCoinHeaderView.m */; };
 		6B8088441D509A75001CD14D /* LYGetCoinHeaderView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 6B8088431D509A75001CD14D /* LYGetCoinHeaderView.xib */; };
-		6B89EC9D1D65607C00F69F71 /* UITabBar+Badge.m in Sources */ = {isa = PBXBuildFile; fileRef = 6B89EC9C1D65607C00F69F71 /* UITabBar+Badge.m */; };
 		6B9094C81D4F36E000037DD0 /* LYMyGiftViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 6B9094C61D4F36E000037DD0 /* LYMyGiftViewController.m */; };
 		6B9094C91D4F36E000037DD0 /* LYMyGiftViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 6B9094C71D4F36E000037DD0 /* LYMyGiftViewController.xib */; };
 		6B9094D01D4F52C300037DD0 /* LYMyGiftTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 6B9094CE1D4F52C300037DD0 /* LYMyGiftTableViewCell.m */; };
@@ -1810,6 +1810,8 @@
 		3A55D1341D21206600FB591B /* KFAlertView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = KFAlertView.m; sourceTree = "<group>"; };
 		3A55D1391D220E8800FB591B /* UIView+KFFrame.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIView+KFFrame.h"; sourceTree = "<group>"; };
 		3A55D13A1D220E8800FB591B /* UIView+KFFrame.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIView+KFFrame.m"; sourceTree = "<group>"; };
+		3AA1FDB61D658AAB00A32EB3 /* UITabBar+Badge.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UITabBar+Badge.h"; sourceTree = "<group>"; };
+		3AA1FDB71D658AAB00A32EB3 /* UITabBar+Badge.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UITabBar+Badge.m"; sourceTree = "<group>"; };
 		3AA553DB1D52ECB7002CD36C /* DayWallet.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DayWallet.h; sourceTree = "<group>"; };
 		3AA553DC1D52ECB7002CD36C /* DayWallet.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DayWallet.m; sourceTree = "<group>"; };
 		3AA798471D23B42F002135E4 /* WalletDetailViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WalletDetailViewController.h; sourceTree = "<group>"; };
@@ -1852,8 +1854,6 @@
 		6B8088401D509A5B001CD14D /* LYGetCoinHeaderView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LYGetCoinHeaderView.h; sourceTree = "<group>"; };
 		6B8088411D509A5B001CD14D /* LYGetCoinHeaderView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LYGetCoinHeaderView.m; sourceTree = "<group>"; };
 		6B8088431D509A75001CD14D /* LYGetCoinHeaderView.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = LYGetCoinHeaderView.xib; sourceTree = "<group>"; };
-		6B89EC9B1D65607C00F69F71 /* UITabBar+Badge.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UITabBar+Badge.h"; sourceTree = "<group>"; };
-		6B89EC9C1D65607C00F69F71 /* UITabBar+Badge.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UITabBar+Badge.m"; sourceTree = "<group>"; };
 		6B9094C51D4F36E000037DD0 /* LYMyGiftViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LYMyGiftViewController.h; sourceTree = "<group>"; };
 		6B9094C61D4F36E000037DD0 /* LYMyGiftViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LYMyGiftViewController.m; sourceTree = "<group>"; };
 		6B9094C71D4F36E000037DD0 /* LYMyGiftViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = LYMyGiftViewController.xib; sourceTree = "<group>"; };
@@ -5802,8 +5802,6 @@
 				A79AA55D1BEAFAB00065684F /* UMessage_Sdk_1.2.0 */,
 				A79AA5601BEAFAB00065684F /* UMSocial_Sdk_4.2.5 */,
 				A79AA5951BEAFAB00065684F /* Util */,
-				6B89EC9B1D65607C00F69F71 /* UITabBar+Badge.h */,
-				6B89EC9C1D65607C00F69F71 /* UITabBar+Badge.m */,
 			);
 			path = Lib;
 			sourceTree = "<group>";
@@ -6264,6 +6262,8 @@
 		A79AA5951BEAFAB00065684F /* Util */ = {
 			isa = PBXGroup;
 			children = (
+				3AA1FDB61D658AAB00A32EB3 /* UITabBar+Badge.h */,
+				3AA1FDB71D658AAB00A32EB3 /* UITabBar+Badge.m */,
 				A79AA5961BEAFAB00065684F /* base64.h */,
 				A79AA5971BEAFAB00065684F /* base64.m */,
 				A79AA5981BEAFAB00065684F /* config.h */,
@@ -7002,7 +7002,6 @@
 				A79AA7DF1BEAFAB10065684F /* QNUrlSafeBase64.m in Sources */,
 				A71785621BF45D2800FFAD51 /* PeopleLiveViewController.m in Sources */,
 				980FCEB01CE72F1200956912 /* IQAudioPickerController.m in Sources */,
-				6B89EC9D1D65607C00F69F71 /* UITabBar+Badge.m in Sources */,
 				186698691BCFC474008A3A0C /* AllOrederTableViewCell.m in Sources */,
 				A79AA7E71BEAFAB10065684F /* QNFormUpload.m in Sources */,
 				984B4DAF1CCDF7C0001A063D /* SDWebImagePrefetcher.m in Sources */,
@@ -7112,6 +7111,7 @@
 				A7F3BC461BF72D9B00C6DEDF /* MyLvyueViewController.m in Sources */,
 				09CF96111C23940A00FF755D /* WhoComeViewController.m in Sources */,
 				985968251CCF2A1B005BD96E /* UIImage+fixOrientation.m in Sources */,
+				3AA1FDB81D658AAB00A32EB3 /* UITabBar+Badge.m in Sources */,
 				98D30A871C980C75008EE11F /* UpLoadViewController.m in Sources */,
 				6BF5A90B1D41F6D40079331C /* LYMeViewController.m in Sources */,
 				6BDD2A0A1D489CBE00693ADF /* LYSendGiftViewController.m in Sources */,
@@ -7304,7 +7304,7 @@
 				ARCHS = "$(ARCHS_STANDARD)";
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
-				CODE_SIGN_IDENTITY = "iPhone Developer";
+				CODE_SIGN_IDENTITY = "iPhone Developer: qiao you (9R2QDS8496)";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer: qiao you (9R2QDS8496)";
 				ENABLE_BITCODE = NO;
 				FRAMEWORK_SEARCH_PATHS = (
@@ -7365,7 +7365,7 @@
 				ARCHS = "$(ARCHS_STANDARD)";
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
-				CODE_SIGN_IDENTITY = "iPhone Developer";
+				CODE_SIGN_IDENTITY = "iPhone Developer: qiao you (9R2QDS8496)";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer: qiao you (9R2QDS8496)";
 				ENABLE_BITCODE = NO;
 				FRAMEWORK_SEARCH_PATHS = (

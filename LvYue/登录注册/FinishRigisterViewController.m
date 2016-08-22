@@ -28,7 +28,6 @@
 
 - (void)viewDidLoad {
     [super viewDidLoad];
-    // Do any additional setup after loading the view from its nib.
     
     _finishRigister.layer.cornerRadius = 5.0;
     _finishRigister.clipsToBounds = YES;

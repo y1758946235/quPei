@@ -1534,9 +1534,14 @@
 
         //NSInteger tagInteger  = cell.contentLabel.tag;
         //cell.contentLabel.userInteractionEnabled = YES;
-        UITapGestureRecognizer *hotTap = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(hotTapTitle:)];
-        objc_setAssociatedObject(hotTap, @"hotTapTitleTag", @([message.hot_id integerValue] + 100), OBJC_ASSOCIATION_RETAIN_NONATOMIC);
-        [cell.contentLabel addGestureRecognizer:hotTap];
+        if ([message.hot_id isEqualToString:@"0"]) { //非话题
+           
+        } else {
+            UITapGestureRecognizer *hotTap = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(hotTapTitle:)];
+            objc_setAssociatedObject(hotTap, @"hotTapTitleTag", @([message.hot_id integerValue] + 100), OBJC_ASSOCIATION_RETAIN_NONATOMIC);
+            [cell.contentLabel addGestureRecognizer:hotTap];
+        }
+        
 
         //        hotTap.view.tag = [message.hot_id integerValue] + 100;
 
@@ -2002,8 +2007,12 @@
         }
     } else {
         _placeHolderLabel.text = @"";
-        NSString *content      = textView.text;
-        CGSize contentSize     = [content sizeWithFont:[UIFont systemFontOfSize:15.0] constrainedToSize:CGSizeMake(textView.frame.size.width - 20, 1000) lineBreakMode:NSLineBreakByWordWrapping];
+        //NSString *content      = textView.text;
+//        CGSize contentSize     = [content sizeWithFont:[UIFont systemFontOfSize:15.0] constrainedToSize:CGSizeMake(textView.frame.size.width - 20, 1000) lineBreakMode:NSLineBreakByWordWrapping];
+        NSDictionary* attrs = @{
+                                 NSFontAttributeName:kFont15
+                                 };
+        CGSize contentSize = [textView.text boundingRectWithSize:CGSizeMake(textView.frame.size.width - 20, MAXFLOAT) options:NSStringDrawingUsesLineFragmentOrigin attributes:attrs context:nil].size;
         CGFloat contentHeight  = contentSize.height;
         //如果文本内容超过textView的高度
         if (20 + contentHeight > textView.frame.size.height && contentHeight < 6 * kSingleContentHeight) {

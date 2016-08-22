@@ -44,7 +44,7 @@
     //初始化友盟SDK
     [self addUMengApplication:application didFinishLaunchingWithOptions:launchOptions];
 
-    //数据库操作
+    //数据库操作 
     [self updateLocalDataBase];
 
     //百度MapKit
@@ -68,6 +68,11 @@
     [[NSNotificationCenter defaultCenter] postNotificationName:@"LY_ReloadSystemMessage" object:nil];
     //更新系统消息后的点
     [[NSNotificationCenter defaultCenter] postNotificationName:@"LY_ReloadSystemMessagePoint" object:nil];
+    
+//    //增加关注，送礼的红点通知中心
+//    [[NSNotificationCenter defaultCenter] postNotificationName:@"ShowGiftRedBadgeNotification" object:@(YES)];
+//    [[NSNotificationCenter defaultCenter] postNotificationName:@"ShowFansRedBadgeNotification" object:@(YES)];
+    
 }
 
 

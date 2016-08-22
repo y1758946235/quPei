@@ -46,6 +46,7 @@
         {
             [self didReceiveRemoteNotification:userInfo];
         }
+        
     }
     
     //标记连接状态为已连接
@@ -74,6 +75,7 @@
     [[EaseMob sharedInstance] application:application
             didFinishLaunchingWithOptions:launchOptions];
     
+    // 监听系统生命周期回调，以便将需要的事件传给SDK
     [self setupNotifiers];
     
 }
@@ -135,16 +137,18 @@
     [[EaseMob sharedInstance] applicationDidEnterBackground:notif.object];
 }
 
+#pragma mark 程序从后台进入前台
 - (void)appWillEnterForeground:(NSNotification*)notif
 {
     [[EaseMob sharedInstance] applicationWillEnterForeground:notif.object];
+    
 }
 
 - (void)appDidFinishLaunching:(NSNotification*)notif
 {
     [[EaseMob sharedInstance] applicationDidFinishLaunching:notif.object];
 }
-
+#pragma mark 程序已经变得活跃
 - (void)appDidBecomeActiveNotif:(NSNotification*)notif
 {
     [[EaseMob sharedInstance] applicationDidBecomeActive:notif.object];
@@ -295,6 +299,16 @@
             [user synchronize];
             //显示一级提醒器
             [[NSNotificationCenter defaultCenter] postNotificationName:@"closeOrShowCheckSkillListVcPushPrompt" object:nil];
+        }else if ([string isEqualToString:@"请到我的礼物中查看"]) {  // 收到礼物推送
+            UIViewController *vc = kAppDelegate.rootTabC.viewControllers[3];
+            [vc.tabBarController.tabBar showBadgeOnItemIndex:3];
+            [[NSUserDefaults standardUserDefaults] setValue:@(YES) forKey:@"ShowGiftRedBadgeNotification"];
+            [[NSNotificationCenter defaultCenter] postNotificationName:@"ShowGiftRedBadgeNotification" object:@(YES)];
+        }else if ([string isEqualToString:@"关注了你"]) {  // 关注了你
+            UIViewController *vc = kAppDelegate.rootTabC.viewControllers[3];
+            [vc.tabBarController.tabBar showBadgeOnItemIndex:3];
+            [[NSUserDefaults standardUserDefaults] setValue:@(YES) forKey:@"ShowFansRedBadgeNotification"];
+            [[NSNotificationCenter defaultCenter] postNotificationName:@"ShowFansRedBadgeNotification" object:@(YES)];
         }
 
         UINavigationController *dialogueNav = kAppDelegate.rootTabC.viewControllers[1];
@@ -476,7 +490,6 @@
         }
     }
 }
-
 
 
 //成功收到推送(在前台收到远程推送或者在后台点击推送栏调用，非离线)
