@@ -33,7 +33,11 @@
     _window.backgroundColor = [UIColor whiteColor];
     [self checkAutoLogin];
     [_window makeKeyAndVisible];
-
+    
+    if (launchOptions[UIApplicationLaunchOptionsRemoteNotificationKey]) {
+        [self application:application didReceiveRemoteNotification:launchOptions[UIApplicationLaunchOptionsRemoteNotificationKey]];
+    }
+    
     [UIApplication sharedApplication].statusBarStyle = UIStatusBarStyleLightContent;
 
     // 是否显示充值
