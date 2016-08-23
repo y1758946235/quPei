@@ -104,7 +104,7 @@
         tableView.separatorStyle = UITableViewCellSeparatorStyleNone;
         cell.month.hidden = YES;
         cell.selectBtn.hidden = YES;
-        switch (indexPath.row) { //支付方式文字
+        switch (indexPath.row) { //支付方式
             case 0: { //支付方式文字
                 cell.payMethodLabel.hidden = NO;
                 cell.leftPayButton.hidden = YES;
@@ -113,37 +113,45 @@
             }
             case 1: { //金币支付与苹果内购
                 cell.payMethodLabel.hidden = YES;
+//                //金币支付
+//                cell.leftPayButton.hidden = NO;
+//                cell.leftPayButton.selected = NO;
+//                [cell.leftPayButton setImage:[UIImage imageNamed:@"多边形-1"] forState:UIControlStateNormal];
+//                [cell.leftPayButton setTitle:@"金币支付" forState:UIControlStateNormal];
+//                [cell.leftPayButton setTitleColor:[UIColor lightGrayColor] forState:UIControlStateSelected];
+//                [cell.leftPayButton setImage:[UIImage imageNamed:@"金币（绿）"] forState:UIControlStateSelected];
+//                [cell.leftPayButton setTitle:@"金币支付" forState:UIControlStateSelected];
+//                [cell.leftPayButton setTitleColor:THEME_COLOR forState:UIControlStateSelected];
+//                
+//                //苹果内购
+//                cell.rightPayButton.hidden = NO;
+//                cell.rightPayButton.selected = NO;
+//                [cell.rightPayButton setImage:[UIImage imageNamed:@"苹果"] forState:UIControlStateNormal];
+//                [cell.rightPayButton setTitle:@"苹果内购" forState:UIControlStateNormal];
+//                [cell.rightPayButton setTitleColor:[UIColor lightGrayColor] forState:UIControlStateSelected];
+//                [cell.rightPayButton setImage:[UIImage imageNamed:@"苹果（绿）"] forState:UIControlStateSelected];
+//                [cell.rightPayButton setTitle:@"苹果内购" forState:UIControlStateSelected];
+//                [cell.rightPayButton setTitleColor:THEME_COLOR forState:UIControlStateSelected];
                 
                 //金币支付
-                cell.leftPayButton.hidden = NO;
-                cell.leftPayButton.selected = NO;
-                [cell.leftPayButton setImage:[UIImage imageNamed:@"多边形-1"] forState:UIControlStateNormal];
-                [cell.leftPayButton setTitle:@"金币支付" forState:UIControlStateNormal];
-                [cell.leftPayButton setTitleColor:[UIColor lightGrayColor] forState:UIControlStateSelected];
-                [cell.leftPayButton setImage:[UIImage imageNamed:@"金币（绿）"] forState:UIControlStateSelected];
-                [cell.leftPayButton setTitle:@"金币支付" forState:UIControlStateSelected];
-                [cell.leftPayButton setTitleColor:THEME_COLOR forState:UIControlStateSelected];
-                
-                //苹果内购
                 cell.rightPayButton.hidden = NO;
                 cell.rightPayButton.selected = NO;
-                [cell.rightPayButton setImage:[UIImage imageNamed:@"苹果"] forState:UIControlStateNormal];
-                [cell.rightPayButton setTitle:@"苹果内购" forState:UIControlStateNormal];
+                [cell.rightPayButton setImage:[UIImage imageNamed:@"多边形-1"] forState:UIControlStateNormal];
+                [cell.rightPayButton setTitle:@"金币支付" forState:UIControlStateNormal];
                 [cell.rightPayButton setTitleColor:[UIColor lightGrayColor] forState:UIControlStateSelected];
-                [cell.rightPayButton setImage:[UIImage imageNamed:@"苹果（绿）"] forState:UIControlStateSelected];
-                [cell.rightPayButton setTitle:@"苹果内购" forState:UIControlStateSelected];
+                [cell.rightPayButton setImage:[UIImage imageNamed:@"金币（绿）"] forState:UIControlStateSelected];
+                [cell.rightPayButton setTitle:@"金币支付" forState:UIControlStateSelected];
                 [cell.rightPayButton setTitleColor:THEME_COLOR forState:UIControlStateSelected];
-
                 
-//                //支付宝
-//                cell.rightPayButton.hidden = NO;
-//                cell.rightPayButton.selected = YES;
-//                [cell.rightPayButton setImage:[UIImage imageNamed:@"支付宝"] forState:UIControlStateNormal];
-//                [cell.rightPayButton setTitle:@"支付宝" forState:UIControlStateNormal];
-//                [cell.rightPayButton setTitleColor:[UIColor lightGrayColor] forState:UIControlStateSelected];
-//                [cell.rightPayButton setImage:[UIImage imageNamed:@"支付宝（绿）"] forState:UIControlStateSelected];
-//                [cell.rightPayButton setTitle:@"支付宝" forState:UIControlStateSelected];
-//                [cell.rightPayButton setTitleColor:THEME_COLOR forState:UIControlStateSelected];
+                //苹果内购
+                cell.leftPayButton.hidden = NO;
+                cell.leftPayButton.selected = YES;
+                [cell.leftPayButton setImage:[UIImage imageNamed:@"苹果"] forState:UIControlStateNormal];
+                [cell.leftPayButton setTitle:@"苹果内购" forState:UIControlStateNormal];
+                [cell.leftPayButton setTitleColor:[UIColor lightGrayColor] forState:UIControlStateSelected];
+                [cell.leftPayButton setImage:[UIImage imageNamed:@"苹果（绿）"] forState:UIControlStateSelected];
+                [cell.leftPayButton setTitle:@"苹果内购" forState:UIControlStateSelected];
+                [cell.leftPayButton setTitleColor:THEME_COLOR forState:UIControlStateSelected];
                 break;
             }
             case 2: { //微信支付与支付宝
@@ -170,7 +178,7 @@
 //                [cell.rightPayButton setTitleColor:THEME_COLOR forState:UIControlStateSelected];
                 //支付宝
                 cell.rightPayButton.hidden = NO;
-                cell.rightPayButton.selected = YES;
+                cell.rightPayButton.selected = NO;
                 [cell.rightPayButton setImage:[UIImage imageNamed:@"支付宝"] forState:UIControlStateNormal];
                 [cell.rightPayButton setTitle:@"支付宝" forState:UIControlStateNormal];
                 [cell.rightPayButton setTitleColor:[UIColor lightGrayColor] forState:UIControlStateSelected];

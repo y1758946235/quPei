@@ -46,17 +46,17 @@
     NSTimer *timer;          //定时器轮询
     UIView *_addView;
     UIView *headerView;
-    UIButton *_newMsgBtn;           //新消息提示
-    UIButton *_clearBtn;            //透明按钮
-    UIView *_inputView;             //输入条
-    UITextView *_textView;          //输入框
-    NSDictionary *_dataDict;        //数据源
-    UIButton *_sendBtn;             //发送按钮
-    NSMutableArray *_messageArray;  //模型数组
-    NSMutableArray *_commentList;   //评论列表
-    NSMutableArray *_praiseList;    //点赞列表
-    NSMutableArray *_noticeList;    //消息列表
-    NSMutableArray *_topicList;     //热门话题数量
+    UIButton *_newMsgBtn;          //新消息提示
+    UIButton *_clearBtn;           //透明按钮
+    UIView *_inputView;            //输入条
+    UITextView *_textView;         //输入框
+    NSDictionary *_dataDict;       //数据源
+    UIButton *_sendBtn;            //发送按钮
+    NSMutableArray *_messageArray; //模型数组
+    NSMutableArray *_commentList;  //评论列表
+    NSMutableArray *_praiseList;   //点赞列表
+    NSMutableArray *_noticeList;   //消息列表
+    NSMutableArray *_topicList;    //热门话题数量
     //UIButton *tipButton;            //热门
     UILabel *hotLabel;              //热门Label
     CAGradientLayer *gradientLayer; //阴影
@@ -174,11 +174,11 @@
     isFriendVideo  = NO;
 
     if (_isFriendsCircle) {
-         _tableView                 = [[UITableView alloc] initWithFrame:CGRectMake(0, 0, self.view.frame.size.width, SCREEN_HEIGHT - 64 - 49) style:UITableViewStyleGrouped];
+        _tableView = [[UITableView alloc] initWithFrame:CGRectMake(0, 0, self.view.frame.size.width, SCREEN_HEIGHT - 64 - 49) style:UITableViewStyleGrouped];
     } else {
-         _tableView                 = [[UITableView alloc] initWithFrame:CGRectMake(0, 0, self.view.frame.size.width, SCREEN_HEIGHT - 64) style:UITableViewStyleGrouped];
+        _tableView = [[UITableView alloc] initWithFrame:CGRectMake(0, 0, self.view.frame.size.width, SCREEN_HEIGHT - 64) style:UITableViewStyleGrouped];
     }
-   
+
     _tableView.backgroundColor = [UIColor whiteColor];
     _tableView.delegate        = self;
     _tableView.dataSource      = self;
@@ -238,9 +238,9 @@
     } else {
         self.title                                    = @"我的动态";
         self.navigationController.navigationBarHidden = NO;
-//        if ([self.userId isEqualToString:[LYUserService sharedInstance].userID]) {
-//            [self setRightButton:nil title:@"最近来访" target:self action:@selector(whoCome) rect:CGRectMake(0, 0, 80, 20)];
-//        }
+        //        if ([self.userId isEqualToString:[LYUserService sharedInstance].userID]) {
+        //            [self setRightButton:nil title:@"最近来访" target:self action:@selector(whoCome) rect:CGRectMake(0, 0, 80, 20)];
+        //        }
     }
 
     //获得朋友圈消息列表
@@ -643,53 +643,53 @@
             }
             hotLabel.height    = 25 * (_topicList.count + 1);
             hotBackView.height = 25 * (_topicList.count + 1) + 3;
-            
+
 
             //hotLabel.height     = hotTipH * (_topicList.count + 1);
             gradientLayer.frame = CGRectMake(0, 0, 5, hotLabel.height);
 
-//            for (int i =0; i<hotBackView.subviews.count; i++) {
-//                if ([hotBackView.subviews[i] isKindOfClass:[UIButton class]]) {
-//                    [hotBackView.subviews[i] removeFromSuperview];
-//                }
-//            }
-            
-            for (UIView* subView in hotBackView.subviews) {
+            //            for (int i =0; i<hotBackView.subviews.count; i++) {
+            //                if ([hotBackView.subviews[i] isKindOfClass:[UIButton class]]) {
+            //                    [hotBackView.subviews[i] removeFromSuperview];
+            //                }
+            //            }
+
+            for (UIView *subView in hotBackView.subviews) {
                 if ([subView isKindOfClass:[UIButton class]]) {
                     [subView removeFromSuperview];
                 }
             }
-            
+
             for (int i = 0; i < _topicList.count; i++) {
                 //话题内容
-                UIButton* tipButton = [UIButton buttonWithType:UIButtonTypeCustom];
-                tipButton.height = 25;
-                tipButton.width  = kMainScreenWidth - CGRectGetMaxX(hotLabel.frame) - 3;
-                tipButton.x      = CGRectGetMaxX(hotLabel.frame) + 3;
-                tipButton.y      = hotLabel.y + i * (tipButton.y + 25 + 1) + 10;
+                UIButton *tipButton = [UIButton buttonWithType:UIButtonTypeCustom];
+                tipButton.height    = 25;
+                tipButton.width     = kMainScreenWidth - CGRectGetMaxX(hotLabel.frame) - 3;
+                tipButton.x         = CGRectGetMaxX(hotLabel.frame) + 3;
+                tipButton.y         = hotLabel.y + i * (tipButton.y + 25 + 1) + 10;
                 //                tipButton.centerY = hotLabel.centerY;
-                
+
                 //                tipButton.backgroundColor = [UIColor redColor];
                 [tipButton setTitleColor:[UIColor blackColor] forState:UIControlStateNormal];
                 TopicTitle *titleModel = _topicList[i];
                 NSString *title        = [NSString stringWithFormat:@"#%@#", titleModel.title];
-                
+
                 tipButton.tag = 1000 + [titleModel.ID integerValue];
-                
+
                 [tipButton setTitle:title forState:UIControlStateNormal];
                 tipButton.contentHorizontalAlignment = UIControlContentHorizontalAlignmentLeft;
                 tipButton.titleEdgeInsets            = UIEdgeInsetsMake(0, 15, 0, 0);
                 [tipButton addTarget:self action:@selector(clickTipButton:) forControlEvents:UIControlEventTouchUpInside];
                 [hotBackView addSubview:tipButton];
                 //虚线
-                
-                if (i<_topicList.count-1) {
+
+                if (i < _topicList.count - 1) {
                     UIView *lineView = [[UIView alloc] init];
                     lineView.x       = 10;
                     lineView.y       = tipButton.height - 1;
-                    lineView.width   = kMainScreenWidth-60;
+                    lineView.width   = kMainScreenWidth - 60;
                     lineView.height  = 1.0f;
-                    lineView.hidden = NO;
+                    lineView.hidden  = NO;
                     [UIView drawDashLine:lineView lineLength:3.0f lineSpacing:3.0f lineColor:[UIColor grayColor]];
                     [tipButton addSubview:lineView];
                 }
@@ -1535,13 +1535,13 @@
         //NSInteger tagInteger  = cell.contentLabel.tag;
         //cell.contentLabel.userInteractionEnabled = YES;
         if ([message.hot_id isEqualToString:@"0"]) { //非话题
-           
+
         } else {
             UITapGestureRecognizer *hotTap = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(hotTapTitle:)];
             objc_setAssociatedObject(hotTap, @"hotTapTitleTag", @([message.hot_id integerValue] + 100), OBJC_ASSOCIATION_RETAIN_NONATOMIC);
             [cell.contentLabel addGestureRecognizer:hotTap];
         }
-        
+
 
         //        hotTap.view.tag = [message.hot_id integerValue] + 100;
 
@@ -1721,7 +1721,7 @@
             hotBackView.width           = kMainScreenWidth;
             hotBackView.height          = 60;
             [headerView addSubview:hotBackView];
-            
+
             //热门
             hotLabel                 = [[UILabel alloc] init];
             hotLabel.x               = 10;
@@ -1742,12 +1742,12 @@
             gradientLayer.endPoint   = CGPointMake(1, 0);
             [view.layer addSublayer:gradientLayer];
             [hotBackView addSubview:view];
-            
+
             hotLabel.textAlignment = NSTextAlignmentCenter;
             [hotBackView addSubview:hotLabel];
         }
     }
-    
+
     return headerView;
 }
 
@@ -1790,32 +1790,32 @@
      *
      *  @brief 权限开关
      */
-//    if ([[LYUserService sharedInstance] canPlayVideo]) { //如果没有权限约束
-//        NSInteger index               = sender.tag - 100;
-//        FriendsCircleMessage *message = _messageArray[index];
-//        message.videoUrl              = [message.videoUrl stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
-//        _currentVideoURL              = [NSURL URLWithString:[NSString stringWithFormat:@"%@", message.videoUrl]];
-//        _player                       = nil;
-//
-//        [self presentMoviePlayerViewControllerAnimated:self.player];
-//    } else { //如果有权限约束
-//        if ([[LYUserService sharedInstance].userDetail.isVip isEqualToString:@"1"]) {
-//            NSInteger index               = sender.tag - 100;
-//            FriendsCircleMessage *message = _messageArray[index];
-//            _currentVideoURL              = [NSURL URLWithString:[NSString stringWithFormat:@"%@", message.videoUrl]];
-//            _player                       = nil;
-//            [self presentMoviePlayerViewControllerAnimated:self.player];
-//        } else {
-//            [[[UIAlertView alloc] initWithTitle:nil message:@"您还不是会员，将无法享受播放功能" delegate:self cancelButtonTitle:@"取消" otherButtonTitles:@"成为会员", nil] show];
-//        }
-//    }
-    
+    //    if ([[LYUserService sharedInstance] canPlayVideo]) { //如果没有权限约束
+    //        NSInteger index               = sender.tag - 100;
+    //        FriendsCircleMessage *message = _messageArray[index];
+    //        message.videoUrl              = [message.videoUrl stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
+    //        _currentVideoURL              = [NSURL URLWithString:[NSString stringWithFormat:@"%@", message.videoUrl]];
+    //        _player                       = nil;
+    //
+    //        [self presentMoviePlayerViewControllerAnimated:self.player];
+    //    } else { //如果有权限约束
+    //        if ([[LYUserService sharedInstance].userDetail.isVip isEqualToString:@"1"]) {
+    //            NSInteger index               = sender.tag - 100;
+    //            FriendsCircleMessage *message = _messageArray[index];
+    //            _currentVideoURL              = [NSURL URLWithString:[NSString stringWithFormat:@"%@", message.videoUrl]];
+    //            _player                       = nil;
+    //            [self presentMoviePlayerViewControllerAnimated:self.player];
+    //        } else {
+    //            [[[UIAlertView alloc] initWithTitle:nil message:@"您还不是会员，将无法享受播放功能" delegate:self cancelButtonTitle:@"取消" otherButtonTitles:@"成为会员", nil] show];
+    //        }
+    //    }
+
     NSInteger index               = sender.tag - 100;
     FriendsCircleMessage *message = _messageArray[index];
     //message.videoUrl              = [message.videoUrl stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
-    _currentVideoURL              = [NSURL URLWithString:[NSString stringWithFormat:@"%@", message.videoUrl]];
-    _player                       = nil;
-    
+    _currentVideoURL = [NSURL URLWithString:[NSString stringWithFormat:@"%@", message.videoUrl]];
+    _player          = nil;
+
     [self presentMoviePlayerViewControllerAnimated:self.player];
 }
 
@@ -2008,12 +2008,24 @@
     } else {
         _placeHolderLabel.text = @"";
         //NSString *content      = textView.text;
-//        CGSize contentSize     = [content sizeWithFont:[UIFont systemFontOfSize:15.0] constrainedToSize:CGSizeMake(textView.frame.size.width - 20, 1000) lineBreakMode:NSLineBreakByWordWrapping];
-        NSDictionary* attrs = @{
-                                 NSFontAttributeName:kFont15
-                                 };
-        CGSize contentSize = [textView.text boundingRectWithSize:CGSizeMake(textView.frame.size.width - 20, MAXFLOAT) options:NSStringDrawingUsesLineFragmentOrigin attributes:attrs context:nil].size;
-        CGFloat contentHeight  = contentSize.height;
+        //        CGSize contentSize     = [content sizeWithFont:[UIFont systemFontOfSize:15.0] constrainedToSize:CGSizeMake(textView.frame.size.width - 20, 1000) lineBreakMode:NSLineBreakByWordWrapping];
+        NSDictionary *attrs = @{
+            NSFontAttributeName: kFont15,
+
+        };
+
+        CGSize contentSize = [textView.text boundingRectWithSize:CGSizeMake(textView.frame.size.width - 20, MAXFLOAT) options:NSStringDrawingUsesLineFragmentOrigin | NSStringDrawingUsesFontLeading attributes:attrs context:nil].size;
+
+        NSMutableParagraphStyle *style = [[NSMutableParagraphStyle alloc] init];
+        [style setLineBreakMode:NSLineBreakByCharWrapping];
+        NSMutableAttributedString *str = [[NSMutableAttributedString alloc] initWithString:textView.text attributes:@{
+            NSParagraphStyleAttributeName: [style copy]
+        }];
+
+        textView.attributedText = [str copy];
+
+        
+        CGFloat contentHeight = contentSize.height;
         //如果文本内容超过textView的高度
         if (20 + contentHeight > textView.frame.size.height && contentHeight < 6 * kSingleContentHeight) {
             textView.scrollEnabled = NO;

@@ -71,8 +71,8 @@
     self.selectMonth = @"三个月";
     NSInteger pr = [self.vip_price integerValue];
     self.totalPrice = [NSString stringWithFormat:@"%ld",pr * 3];
-    //默认金币(2)
-    self.payType = @"2";
+    //默认苹果内购(3)
+    self.payType = @"3";
     [[SKPaymentQueue defaultQueue] addTransactionObserver:self];
     _selectProductID = CONSTPRICE_VIP_3;
     
@@ -217,13 +217,23 @@
 //        }
         
         if (indexPath.row == 1) { //在金币（3）与苹果（3）的cell
-            if ([self.payType integerValue] == 2) { //金币
-                cell.leftPayButton.selected = YES;
-                cell.rightPayButton.selected = NO;
+            //judge hide CoinBtn
+            cell.rightPayButton.hidden = YES;//hide //judge hide Coin
+            if ([[[NSUserDefaults standardUserDefaults] valueForKey:@"ShowGetCoinKey"] integerValue]== 0) {
+                cell.rightPayButton.hidden = YES;
             }
-            else if ([self.payType integerValue] == 3) {//苹果
+            else {
+                cell.rightPayButton.hidden = NO;
+            }
+            
+            if ([self.payType integerValue] == 2) { //金币
                 cell.leftPayButton.selected = NO;
                 cell.rightPayButton.selected = YES;
+                
+            }
+            else if ([self.payType integerValue] == 3) {//苹果
+                cell.leftPayButton.selected = YES;
+                cell.rightPayButton.selected = NO;
             }
         }
         else if (indexPath.row == 2) { //在微信（1）与支付宝（0）的cell
