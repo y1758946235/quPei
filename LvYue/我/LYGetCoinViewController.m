@@ -53,23 +53,23 @@ SKProductsRequestDelegate
     LYGetCoinGetTableViewDataArray = @[
         @{
             @"coinNum": @1200,
-            @"applePayID":@"com.51xiexieni.1200_3"
+            @"applePayID":@"com.51xiexieni.1200_4"
         },
         @{
             @"coinNum": @3000,
-            @"applePayID":@"com.51xiexieni.3000_3"
+            @"applePayID":@"com.51xiexieni.3000_4"
         },
         @{
             @"coinNum": @6000,
-            @"applePayID":@"com.51xiexieni.6000_3"
+            @"applePayID":@"com.51xiexieni.6000_4"
         },
         @{
             @"coinNum": @10800,
-            @"applePayID":@"com.51xiexieni.10800_3"
+            @"applePayID":@"com.51xiexieni.10800_4"
         },
         @{
             @"coinNum": @21800,
-            @"applePayID":@"com.51xiexieni.21800_3"
+            @"applePayID":@"com.51xiexieni.21800_4"
         }
     ];
 }
