@@ -11,5 +11,6 @@
 @interface LYGetCoinViewController : BaseViewController
 
 @property (nonatomic, assign) NSInteger accountAmount; // 账户余额
+@property (nonatomic, copy) void(^changeAmount)(NSInteger amount);
 
 @end

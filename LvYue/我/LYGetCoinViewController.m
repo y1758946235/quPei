@@ -411,7 +411,10 @@ SKProductsRequestDelegate
             if ([[NSString stringWithFormat:@"%@", successResponse[@"code"]] isEqualToString:@"200"]) {
                 [EageProgressHUD eage_circleWaitShown:NO];
                 // 更新账户余额
-                self.tableViewHeaderView.accountAmount += self.payActionSheet.tag;
+                self.accountAmount += [LYGetCoinGetTableViewDataArray[self.payActionSheet.tag][@"coinNum"] integerValue];
+                self.tableViewHeaderView.accountAmount = self.accountAmount;
+                // 更新前一个页面的余额
+                self.changeAmount(self.accountAmount);
             } else {
                 [EageProgressHUD eage_circleWaitShown:NO];
                 [[[UIAlertView alloc] initWithTitle:@"错误" message:@"发生了未知的错误,导致您的交易失败,请及时联系客服" delegate:nil cancelButtonTitle:@"好的" otherButtonTitles:nil] show];

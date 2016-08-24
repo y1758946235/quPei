@@ -69,6 +69,10 @@ static NSString *const LYMyAccountTableViewCellIdentity = @"LYMyAccountTableView
         cell.fetchBlock = ^(id sender) {
             LYGetCoinViewController *vc = [LYGetCoinViewController new];
             vc.accountAmount            = self.accountAmount;
+            vc.changeAmount = ^(NSInteger amount) {
+                self.accountAmount = amount;
+                [self.tableView reloadRowsAtIndexPaths:@[[NSIndexPath indexPathForRow:0 inSection:0]] withRowAnimation:UITableViewRowAnimationFade];
+            };
             [self.navigationController pushViewController:vc animated:YES];
         };
         [cell configData:LYMyAccountTableViewCellTypeCoin coin:[NSString stringWithFormat:@"%@", @(self.accountAmount)] showGetCoinButton:NO];
