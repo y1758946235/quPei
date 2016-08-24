@@ -11,10 +11,19 @@
 @interface LYGetCoinHeaderView ()
 
 @property (weak, nonatomic) IBOutlet UILabel *accountAmountLabel;
+@property (weak, nonatomic) IBOutlet UILabel *desLabel;
 
 @end
 
 @implementation LYGetCoinHeaderView
+
+- (void)awakeFromNib {
+    [super awakeFromNib];
+    
+    if ([[[NSUserDefaults standardUserDefaults] valueForKey:@"ShowGetCoinKey"] boolValue]) {
+        self.desLabel.text = @"金币可用于升级VIP、购买礼物、购买服务等";
+    }
+}
 
 - (void)setAccountAmount:(NSInteger)accountAmount {
     _accountAmount = accountAmount;
