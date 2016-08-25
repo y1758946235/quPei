@@ -1205,11 +1205,19 @@
 
 //进入消息列表
 - (void)pushMessageList {
-
+    //清楚弹框之类
     [self hiddenAddView];
     _newMsgNumber = 0;
-
+    
     FriendsMessageViewController *friendsMessageViewController = [[FriendsMessageViewController alloc] init];
+    __weak typeof(self) weakSelf = self;
+    friendsMessageViewController.hideMsgViewBlock = ^(BOOL ishide){
+        if (ishide == YES) {
+            //_newMsgBtn.hidden = YES;
+            
+            [weakSelf headerRereshing];
+        }
+    };
     [self.navigationController pushViewController:friendsMessageViewController animated:YES];
 }
 

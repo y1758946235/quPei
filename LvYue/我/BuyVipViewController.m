@@ -108,81 +108,7 @@
 }
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath{
-    /*
-    static NSString *myId = @"CustomTableViewCell";
-    CustomTableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:myId];
-    if (cell == nil) {
-        cell = [[[NSBundle mainBundle] loadNibNamed:myId owner:nil options:nil] lastObject];
-    }
-    [cell.selectBtn setBackgroundImage:[UIImage imageNamed:@"未选"] forState:UIControlStateNormal];
-    [cell.selectBtn setBackgroundImage:[UIImage imageNamed:@"选中"] forState:UIControlStateSelected];
-    if (indexPath.section == 0) {
-        cell.selectBtn.selected = NO;
-        if (indexPath.row == [self.sale intValue]) {
-            cell.selectBtn.selected = YES;
-        }
-        cell.accessoryType = UITableViewCellAccessoryNone;
-        switch (indexPath.row) {
-            case 0:
-                cell.month.text = @"三个月";
-                break;
-            case 1:
-                cell.month.text = @"六个月";
-                break;
-            case 2:
-            {
-                cell.month.text = @"十二个月";
-                cell.cheap.hidden = NO;
-            }
-                break;
-            default:
-                break;
-        }
-    }
-    else{
-        cell.selectBtn.hidden = YES;
-        cell.month.text = @"支付总计";
-        cell.accessoryType = UITableViewCellAccessoryNone;
-        cell.selectionStyle = UITableViewCellSelectionStyleNone;
-        cell.price.text = [NSString stringWithFormat:@"%@元",self.totalPrice];
-        cell.price.hidden = NO;
-        cell.selectBtn.selected = NO;
-       // if (indexPath.row == [self.payType intValue]) {
-            cell.selectBtn.selected = YES;
-        }
-        switch (indexPath.row) {
-            case 0:
-            {
-                cell.month.text = @"支付宝";
-
-            }
-                break;
-            case 1:
-            {
-                cell.month.text = @"微信支付";
-
-            }
-                break;
-            case 2:
-            {
-                cell.month.text = @"苹果内购";
-
-            }
-                break;
-            case 3:
-            {
-                cell.month.text = @"支付总计";
-                cell.accessoryType = UITableViewCellAccessoryNone;
-                cell.selectionStyle = UITableViewCellSelectionStyleNone;
-                cell.price.text = [NSString stringWithFormat:@"%@元",self.totalPrice];
-                cell.price.hidden = NO;
-                cell.selectBtn.hidden = YES;
-            }
-                break;
-            default:
-                break;
-        //}
-    }*/
+   
     CustomTableViewCell* cell  = [CustomTableViewCell cellWithTableView:tableView indexPath:indexPath];
     cell.delegate = self;
     if (indexPath.section == 0) { //月数
@@ -245,8 +171,14 @@
                 cell.leftPayButton.selected = NO;
                 cell.rightPayButton.selected = YES;
             }
+            //判断隐藏
+            if ([[[NSUserDefaults standardUserDefaults] valueForKey:@"ShowGetCoinKey"] integerValue]== 0) {
+                cell.hidden = YES;
+            }
+            else {
+                cell.hidden = NO;
+            }
             
-            cell.hidden = YES;
         }
         
     }
@@ -356,8 +288,11 @@
         return 44;
     }
     else if (indexPath.section == 1) {
-        if (indexPath.row == 2) {
-            return 0.000001;
+        //判断隐藏
+        if ([[[NSUserDefaults standardUserDefaults] valueForKey:@"ShowGetCoinKey"] integerValue]== 0) {
+            if (indexPath.row == 2) {
+                return 0.000001;
+            }
         }
         return 50;
     }

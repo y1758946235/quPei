@@ -39,11 +39,21 @@
     [self postRequest];
     [self cleanNewMsg];
     
+    
+    [self setLeftButton:[UIImage imageNamed:@"返回"] title:nil target:self action:@selector(popClick:)];
+    
     _tableView = [[UITableView alloc]initWithFrame:CGRectMake(0, 0, self.view.frame.size.width, self.view.frame.size.height) style:UITableViewStyleGrouped];
     _tableView.delegate = self;
     _tableView.dataSource = self;
     [self.view addSubview:_tableView];
 }
+
+- (void)popClick:(UIButton *)sender {
+    
+    self.hideMsgViewBlock(YES);
+    [self.navigationController popViewControllerAnimated:YES];
+}
+
 
 //清空新消息数量
 - (void)cleanNewMsg{
