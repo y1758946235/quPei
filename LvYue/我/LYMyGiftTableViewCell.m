@@ -24,7 +24,7 @@
 - (void)awakeFromNib {
     [super awakeFromNib];
 
-    self.giftIconImageView.layer.cornerRadius  = 35.f;
+    self.giftIconImageView.layer.cornerRadius  = 33.f;
     self.giftIconImageView.layer.masksToBounds = YES;
 
     self.mainView.layer.cornerRadius  = 5.f;
@@ -41,11 +41,15 @@
     NSMutableAttributedString *contentAttrStr;
     switch (self.type) {
         case LYMyGiftViewControllerTypeFetch: {
-            contentAttrStr = [[NSMutableAttributedString alloc] initWithString:[NSString stringWithFormat:@"送给你一%@%@\n增加%@金币", dic[@"word"], dic[@"gift_name"], dic[@"price"]]];
-            // 金币数量颜色
-            NSUInteger location = contentAttrStr.length - 2 - [NSString stringWithFormat:@"%@", dic[@"price"]].length;
-            NSUInteger length   = [NSString stringWithFormat:@"%@", dic[@"price"]].length;
-            [contentAttrStr addAttribute:NSForegroundColorAttributeName value:RGBCOLOR(210, 0, 5) range:NSMakeRange(location, length)];
+            if ([dic[@"status"] integerValue] == 0) { // 邀请视频认证收到的礼物
+                contentAttrStr = [[NSMutableAttributedString alloc] initWithString:[NSString stringWithFormat:@"送给你一%@%@\n邀请你去视频认证", dic[@"word"], dic[@"gift_name"]]];
+            } else {
+                contentAttrStr = [[NSMutableAttributedString alloc] initWithString:[NSString stringWithFormat:@"送给你一%@%@\n增加%@金币", dic[@"word"], dic[@"gift_name"], dic[@"price"]]];
+                // 金币数量颜色
+                NSUInteger location = contentAttrStr.length - 2 - [NSString stringWithFormat:@"%@", dic[@"price"]].length;
+                NSUInteger length   = [NSString stringWithFormat:@"%@", dic[@"price"]].length;
+                [contentAttrStr addAttribute:NSForegroundColorAttributeName value:RGBCOLOR(210, 0, 5) range:NSMakeRange(location, length)];
+            }
             break;
         }
         case LYMyGiftViewControllerTypeSend: {

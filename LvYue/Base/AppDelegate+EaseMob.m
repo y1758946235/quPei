@@ -529,7 +529,7 @@
             [user synchronize];
             //显示一级提醒器
             [[NSNotificationCenter defaultCenter] postNotificationName:@"closeOrShowCheckSkillListVcPushPrompt" object:nil];
-        }else if ([string containsString:@"请到我的礼物中查看"]) {  // 收到礼物推送
+        }else if ([string containsString:@"请到我的礼物中查看"] || [string containsString:@"邀请你去视频认证"]) {  // 收到礼物推送
             UIViewController *vc = kAppDelegate.rootTabC.viewControllers[3];
             [vc.tabBarController.tabBar showBadgeOnItemIndex:3];
             [[NSUserDefaults standardUserDefaults] setValue:@(YES) forKey:@"ShowGiftRedBadgeNotification"];
