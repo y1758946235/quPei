@@ -13,6 +13,7 @@
 #import "UIImageView+WebCache.h"
 #import "LYUserService.h"
 #import "LYHttpPoster.h"
+#import "LYDetailDataViewController.h"
 
 @interface FriendsMessageViewController ()<UITableViewDataSource,UITableViewDelegate>
 {
@@ -161,6 +162,12 @@
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath{
     
     [tableView deselectRowAtIndexPath:indexPath animated:YES];
+    
+    NSString* userId = _msgArray[indexPath.row][@"comment_user_id"];
+    LYDetailDataViewController* vc = [[LYDetailDataViewController alloc] init];
+    vc.userId = userId;
+    [self.navigationController pushViewController:vc animated:YES];
+
 }
 
 @end

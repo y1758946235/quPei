@@ -423,7 +423,7 @@ static NSString *notice_index;
     lineView.backgroundColor = [UIColor whiteColor];
     [centerView addSubview:lineView];
 
-    [self.navigationItem setTitleView:centerView];
+    //[self.navigationItem setTitleView:centerView];
 
     //---------------添加右边的item------------
     UIButton *rightBtn = [UIButton buttonWithType:UIButtonTypeRoundedRect];

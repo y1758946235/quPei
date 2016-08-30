@@ -149,7 +149,7 @@ static NSString *const LYFocusOnAndFansTableViewCellIdentity = @"LYFocusOnAndFan
 
 - (UITableView *)tableView {
     if (!_tableView) {
-        _tableView = [[UITableView alloc] initWithFrame:CGRectMake(0, 0, SCREEN_WIDTH, SCREEN_HEIGHT) style:UITableViewStylePlain];
+        _tableView = [[UITableView alloc] initWithFrame:CGRectMake(0, 0, SCREEN_WIDTH, SCREEN_HEIGHT-64) style:UITableViewStylePlain];
         [_tableView registerNib:[UINib nibWithNibName:@"LYFocusOnAndFansTableViewCell" bundle:nil] forCellReuseIdentifier:LYFocusOnAndFansTableViewCellIdentity];
         _tableView.separatorInset  = UIEdgeInsetsMake(0, 100, 0, 0);
         _tableView.delegate        = self;

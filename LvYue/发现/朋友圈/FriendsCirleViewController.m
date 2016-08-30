@@ -1506,12 +1506,6 @@
 
     //添加分割线
     if (_messageArray.count) {
-#pragma mark - 下拉tableview，增加报错
-        /**
-         *  @author KF, 16-07-15 11:07:18
-         *
-         *  @brief  reason: '*** -[__NSArrayM objectAtIndex:]: index 32 beyond bounds [0 .. 19]'
-         */
         FriendsCircleMessage *message = _messageArray[indexPath.row];
         cell.separatorLine.frame      = CGRectMake(0, [message returnCellHeight] - 1, SCREEN_WIDTH, 1);
 
@@ -2024,13 +2018,13 @@
 
         CGSize contentSize = [textView.text boundingRectWithSize:CGSizeMake(textView.frame.size.width - 20, MAXFLOAT) options:NSStringDrawingUsesLineFragmentOrigin | NSStringDrawingUsesFontLeading attributes:attrs context:nil].size;
 
-        NSMutableParagraphStyle *style = [[NSMutableParagraphStyle alloc] init];
-        [style setLineBreakMode:NSLineBreakByCharWrapping];
-        NSMutableAttributedString *str = [[NSMutableAttributedString alloc] initWithString:textView.text attributes:@{
-            NSParagraphStyleAttributeName: [style copy]
-        }];
-
-        textView.attributedText = [str copy];
+//        NSMutableParagraphStyle *style = [[NSMutableParagraphStyle alloc] init];
+//        [style setLineBreakMode:NSLineBreakByCharWrapping];
+//        NSMutableAttributedString *str = [[NSMutableAttributedString alloc] initWithString:textView.text attributes:@{
+//            NSParagraphStyleAttributeName: [style copy]
+//        }];
+//
+//        textView.attributedText = [str copy];
 
         
         CGFloat contentHeight = contentSize.height;

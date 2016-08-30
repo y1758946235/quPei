@@ -798,6 +798,12 @@ static NSString* const str = @"cc";
     //_newMsgNumber = 0;
 
     FriendsMessageViewController *friendsMessageViewController = [[FriendsMessageViewController alloc] init];
+    __weak typeof(self) weakSelf = self;
+    friendsMessageViewController.hideMsgViewBlock = ^(BOOL ishide) {
+        if (ishide == YES) {
+            [weakSelf headerRereshing];
+        }
+    };
     [self.navigationController pushViewController:friendsMessageViewController animated:YES];
 }
 

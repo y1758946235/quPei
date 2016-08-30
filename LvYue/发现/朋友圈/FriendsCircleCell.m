@@ -51,8 +51,7 @@
         _reportBtn.titleLabel.font = kFont14;
         [_reportBtn setTitle:@"举报" forState:UIControlStateNormal];
         [_reportBtn setTitleColor:[UIColor grayColor] forState:UIControlStateNormal];
-        
-        [self addSubview:_reportBtn];
+        //[self addSubview:_reportBtn];
         
         //内容
         _contentLabel = [[UILabel alloc]initWithFrame:CGRectMake(CGRectGetMaxX(_headImg.frame)+5, CGRectGetMaxY(_nameLabel.frame),SCREEN_WIDTH - CGRectGetMaxX(_headImg.frame) - 5, 20)];

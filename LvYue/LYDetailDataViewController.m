@@ -216,7 +216,7 @@ static NSString *const LYDetailDataPhotoTableViewCellIdentity   = @"LYDetailData
     if (!self.mySelf) {
         [self setRightButton:[UIImage imageNamed:@"more"] title:nil target:self action:@selector(p_clickRightBarButtonItem:)];
     }
-
+    
     [self.tableView reloadData];
 }
 
