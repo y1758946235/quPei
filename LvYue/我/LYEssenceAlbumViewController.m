@@ -170,6 +170,9 @@ static NSString *const LYEssenceAlbumCollectionViewCellIdentity =
         vc.imageData               = self.responseArray; // 响应的字典
         vc.smallImage              = self.imageArray;    // 对应已经加载的 image 对象
         vc.userId                  = [LYUserService sharedInstance].userID;
+        vc.dismissBlock            = ^{
+            [self viewWillAppear:YES];
+        };
         [vc showImageWithIndex:indexPath.row andCount:self.imageArray.count];
         return;
     }

@@ -219,6 +219,9 @@
         self.view.alpha = 0;
     }
         completion:^(BOOL finished) {
+            if (self.dismissBlock) {
+                self.dismissBlock();
+            }
 
             //1）清除根视图
             [self.view removeFromSuperview];
