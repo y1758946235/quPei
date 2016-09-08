@@ -72,7 +72,9 @@
 }
 
 - (void)sendClick {
-
+    //0、执行block
+//    self.isPublish(YES);   //错误写法，还没执行数据上传便回传
+    
     //1. 获得七牛token
     AFHTTPRequestOperationManager *manager = [AFHTTPRequestOperationManager manager];
     [MBProgressHUD showMessage:@"正在上传，请稍后..."];
@@ -144,6 +146,8 @@
                         //                    self.isPublishBlock(@"");
                         [self.navigationController popViewControllerAnimated:YES];
                         [[NSNotificationCenter defaultCenter] postNotificationName:@"ReloadFriendCircleVC" object:nil];
+                        //执行
+                        self.isPublish(YES);
                     } else {
                         [MBProgressHUD hideHUD];
                         [MBProgressHUD showError:[NSString stringWithFormat:@"%@", successResponse[@"msg"]]];

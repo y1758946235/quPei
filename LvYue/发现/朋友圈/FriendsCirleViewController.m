@@ -1229,6 +1229,17 @@
 
         PublishMessageViewController *publishMessageViewController = [[PublishMessageViewController alloc] init];
         publishMessageViewController.hotId                         = @"0";
+        //设置block
+        __weak typeof(self) weakSelf = self;
+        publishMessageViewController.isPublish = ^(BOOL isPublish){
+            if (isPublish == YES) {
+                
+                [weakSelf headerRereshing];
+//                _currentPage = 1;
+//                [weakSelf postRequest];
+            }
+        };
+        
         [self.navigationController pushViewController:publishMessageViewController animated:YES];
     } else {
         if ([[LYUserService sharedInstance].userDetail.isVip isEqualToString:@"0"]) {
@@ -2169,6 +2180,12 @@
         isFriendVideo                    = YES;
         dest.isFriendVideo               = isFriendVideo; //是否朋友圈视频
         dest.videoPath                   = videoPath;
+        
+        __weak typeof(self) weakSelf = self;
+        dest.isPublishVideo = ^(BOOL isPublishVideo){
+            [weakSelf headerRereshing];
+        };
+        
         [self.navigationController pushViewController:dest animated:YES];
         //恢复初始化
         isupdateVideo = NO;

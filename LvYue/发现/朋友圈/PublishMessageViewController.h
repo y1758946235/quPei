@@ -12,12 +12,15 @@
 /**
  *  发布 消息动态 - 朋友圈
  */
-
-//typedef void (^ReturnIsPublish)(NSString *isPublish);
+//定义一个block
+//typedef void(^ReturnIsPublish)(NSString *isPublish);
+typedef void(^ReturnIsPublish)(BOOL isPublish);
 
 @interface PublishMessageViewController : BaseViewController
 
 @property (nonatomic, copy) NSString* hotId;        //话题ID, 是否为热门话题
+
+@property (nonatomic, copy) ReturnIsPublish isPublish;
 
 
 //@property (nonatomic, strong) ReturnIsPublish isPublishBlock;

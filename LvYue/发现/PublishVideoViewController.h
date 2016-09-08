@@ -12,8 +12,14 @@
  *  上传视频
  */
 
+typedef void(^ReturnBlock)(BOOL isPublishVideo);
+
 @interface PublishVideoViewController : BaseViewController
 
 @property (nonatomic, copy) NSString *videoPath;//视频路径
 @property (nonatomic, assign) BOOL isFriendVideo; //是否为朋友圈视频
+
+@property (nonatomic, copy) ReturnBlock isPublishVideo;
+
+
 @end

@@ -613,6 +613,8 @@
                                                                   //                    self.isPublishBlock(@"");
                                                                   [self.navigationController popViewControllerAnimated:YES];
                                                                   [[NSNotificationCenter defaultCenter] postNotificationName:@"ReloadFriendCircleVC" object:nil];
+                                                                  
+                                                                  self.isPublishVideo(YES);
                                                               } else {
                                                                   [MBProgressHUD hideHUD];
                                                                   [MBProgressHUD showError:[NSString stringWithFormat:@"%@", successResponse[@"msg"]]];
