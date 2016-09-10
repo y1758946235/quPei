@@ -14,6 +14,7 @@
 #import "LYDetailDataDefalutTableViewCell.h"
 #import "LYDetailDataHeaderView.h"
 #import "LYDetailDataPhotoTableViewCell.h"
+#import "LYDetailDataReceiveGiftTableViewCell.h"
 #import "LYDetailDataViewController.h"
 #import "LYEssenceAlbumViewController.h"
 #import "LYPopoverView.h"
@@ -56,8 +57,9 @@ static NSString *const LYPlayAuthVideoMessage1 = @"为了公平起见，你需�
 static NSString *const LYPlayAuthVideoMessage2 = @"为了公平起见，你需要上传自己的形象认证视频才能观看更多人的形象视频，否则每天只能观看两人的形象视频。";
 
 static NSArray<NSArray *> *LYDetailDataTableViewDataArray;
-static NSString *const LYDetailDataTableViewDefaultCellIdentity = @"LYDetailDataTableViewDefaultCellIdentity";
-static NSString *const LYDetailDataPhotoTableViewCellIdentity   = @"LYDetailDataPhotoTableViewCellIdentity";
+static NSString *const LYDetailDataTableViewDefaultCellIdentity     = @"LYDetailDataTableViewDefaultCellIdentity";
+static NSString *const LYDetailDataPhotoTableViewCellIdentity       = @"LYDetailDataPhotoTableViewCellIdentity";
+static NSString *const LYDetailDataReceiveGiftTableViewCellIdentity = @"LYDetailDataReceiveGiftTableViewCellIdentity";
 
 @interface LYDetailDataViewController () <
     UITableViewDelegate,
@@ -74,6 +76,8 @@ static NSString *const LYDetailDataPhotoTableViewCellIdentity   = @"LYDetailData
 @property (nonatomic, strong) NSArray *taDeQiZhiImageURLArray;
 // 精华相册数组
 @property (nonatomic, strong) NSArray *jingHuaImageURLArray;
+// 收到的礼物信息
+@property (nonatomic, strong) NSArray *receivedGiftInfoArray;
 // 备注
 @property (nonatomic, strong) NSString *remark;
 // 是否屏蔽
@@ -156,6 +160,13 @@ static NSString *const LYDetailDataPhotoTableViewCellIdentity   = @"LYDetailData
         ],
         @[
            @{
+               @"title": @"TA 收到的礼物",
+               @"value":
+                   infoModel && infoModel.edu.length ? infoModel.edu : @"暂无信息",
+               @"rowHeight": @44,
+               @"actionVC": @""
+           },
+           @{
                @"title": @"学历",
                @"value":
                    infoModel && infoModel.edu.length ? infoModel.edu : @"暂无信息",
@@ -211,12 +222,12 @@ static NSString *const LYDetailDataPhotoTableViewCellIdentity   = @"LYDetailData
     self.title = @"详细资料";
 
     [self p_loadData];
-
+    [self p_loadRecevicedGift];
     // 用户自己则不显示加好友发消息、右上角的汉堡按钮
     if (!self.mySelf) {
         [self setRightButton:[UIImage imageNamed:@"more"] title:nil target:self action:@selector(p_clickRightBarButtonItem:)];
     }
-    
+
     [self.tableView reloadData];
 }
 
@@ -277,13 +288,20 @@ static NSString *const LYDetailDataPhotoTableViewCellIdentity   = @"LYDetailData
         }
     }
 
+    // TA 收到的礼物
+    if (indexPath.section == 1 && indexPath.row == 0) {
+        LYDetailDataReceiveGiftTableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:LYDetailDataReceiveGiftTableViewCellIdentity forIndexPath:indexPath];
+        [cell configData:self.receivedGiftInfoArray];
+        return cell;
+    }
+
     LYDetailDataDefalutTableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:LYDetailDataTableViewDefaultCellIdentity forIndexPath:indexPath];
 
     NSDictionary *info = LYDetailDataTableViewDataArray[indexPath.section][indexPath.row];
     [cell configTitle:info[@"title"] content:info[@"value"]];
 
     // 联系方式
-    if (indexPath.section == 1 && indexPath.row == 2) {
+    if (indexPath.section == 1 && indexPath.row == 3) {
         [cell showWatchButton:^(UIButton *button) {
 
             if ([[LYUserService sharedInstance].userDetail.isVip integerValue]) {
@@ -541,7 +559,6 @@ forRowAtIndexPath:(NSIndexPath *)indexPath {
 #pragma mark - Pravite
 
 - (void)p_loadData {
-    // 以下嵌套调用 实属无奈，网络封装缺少 complete 已经接口设计问题
     __weak typeof(self) weakSelf = self;
     [MBProgressHUD showMessage:nil];
     [LYHttpPoster postHttpRequestByPost:
@@ -683,6 +700,26 @@ forRowAtIndexPath:(NSIndexPath *)indexPath {
             [MBProgressHUD showError:@"服务器繁忙,请重试"];
         }];
 }
+
+- (void)p_loadRecevicedGift {
+    [LYHttpPoster postHttpRequestByPost:[NSString stringWithFormat:@"%@/mobile/gift/giftReceive", REQUESTHEADER]
+        andParameter:@{
+            @"userId": self.userId
+        }
+        success:^(id successResponse) {
+            if ([successResponse[@"code"] integerValue] == 200) {
+                self.receivedGiftInfoArray = successResponse[@"data"][@"giftRecords"];
+                [self.tableView reloadRowsAtIndexPaths:@[[NSIndexPath indexPathForRow:0 inSection:1]] withRowAnimation:UITableViewRowAnimationFade];
+            } else {
+                [MBProgressHUD showError:[NSString stringWithFormat:@"%@", successResponse[@"msg"]]];
+            }
+        }
+        andFailure:^(id failureResponse) {
+            [MBProgressHUD hideHUDForView:self.view animated:YES];
+            [MBProgressHUD showError:@"加载失败，请重试"];
+        }];
+}
+
 
 /**
  *  发送消息
@@ -1050,6 +1087,7 @@ forRowAtIndexPath:(NSIndexPath *)indexPath {
             [tableView registerNib:[UINib nibWithNibName:@"LYDetailDataDefalutTableViewCell" bundle:nil] forCellReuseIdentifier:LYDetailDataTableViewDefaultCellIdentity];
             [tableView registerNib:[UINib nibWithNibName:@"LYDetailDataPhotoTableViewCell" bundle:nil]
                 forCellReuseIdentifier:LYDetailDataPhotoTableViewCellIdentity];
+            [tableView registerClass:[LYDetailDataReceiveGiftTableViewCell class] forCellReuseIdentifier:LYDetailDataReceiveGiftTableViewCellIdentity];
             tableView.tableHeaderView = [[UIView alloc] initWithFrame:CGRectMake(CGFLOAT_MIN, CGFLOAT_MIN, CGFLOAT_MIN, CGFLOAT_MIN)];
             tableView.tableFooterView = [[UIView alloc] initWithFrame:CGRectMake(CGFLOAT_MIN, CGFLOAT_MIN, CGFLOAT_MIN, CGFLOAT_MIN)];
             tableView.delegate        = self;

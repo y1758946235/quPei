@@ -70,7 +70,7 @@
     self.dateLabel.text     = dic[@"create_time"];
     self.userNameLabel.text = dic[@"userName"];
 
-    [self.giftIconImageView sd_setImageWithURL:[NSURL URLWithString:[NSString stringWithFormat:@"%@%@", IMAGEHEADER, dic[@"icon"]]] placeholderImage:[UIImage imageNamed:@"logo108"]];
+    [self.giftIconImageView sd_setImageWithURL:[NSURL URLWithString:[NSString stringWithFormat:@"%@%@", IMAGEHEADER, dic[@"userHead"]]] placeholderImage:[UIImage imageNamed:@"logo108"]];
 }
 
 @end
