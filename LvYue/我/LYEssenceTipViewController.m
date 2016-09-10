@@ -80,9 +80,9 @@
     }
 
     // 判断是否显示充值界面
-//    if (![[[NSUserDefaults standardUserDefaults] valueForKey:@"ShowGetCoinKey"] boolValue]) {
-//        return;
-//    }
+    //    if (![[[NSUserDefaults standardUserDefaults] valueForKey:@"ShowGetCoinKey"] boolValue]) {
+    //        return;
+    //    }
     // 跳转充值界面
     if (buttonIndex == 1) {
         LYGetCoinViewController *vc = [[LYGetCoinViewController alloc] init];
@@ -210,7 +210,7 @@
                 imageView.image = blurImage;
             } else {
                 [[SDWebImageManager sharedManager] downloadImageWithURL:[NSURL URLWithString:URLStr] options:SDWebImageRetryFailed progress:nil completed:^(UIImage *image, NSError *error, SDImageCacheType cacheType, BOOL finished, NSURL *imageURL) {
-                    imageView.image = [image blurredImageWithRadius:100 iterations:3 tintColor:RGBACOLOR(0, 0, 0, 0.5)];
+                    imageView.image = [image blurredImageWithRadius:100 iterations:20 tintColor:RGBACOLOR(0, 0, 0, 0.5)];
                 }];
             }
 
