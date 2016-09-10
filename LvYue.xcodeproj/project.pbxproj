@@ -554,6 +554,7 @@
 		3AC849D11D24C905002735E0 /* KFDatePicker.m in Sources */ = {isa = PBXBuildFile; fileRef = 3AC849D01D24C905002735E0 /* KFDatePicker.m */; };
 		3AC849D61D2522DC002735E0 /* BuyCoinViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 3AC849D41D2522DC002735E0 /* BuyCoinViewController.m */; };
 		3AC849D71D2522DC002735E0 /* BuyCoinViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 3AC849D51D2522DC002735E0 /* BuyCoinViewController.xib */; };
+		3AD0758B1D82C38400A6747E /* UIButton+Name.m in Sources */ = {isa = PBXBuildFile; fileRef = 3AD0758A1D82C38400A6747E /* UIButton+Name.m */; };
 		3AE063771D2F76F9002338B4 /* VideoCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 3AE063751D2F76F9002338B4 /* VideoCell.m */; };
 		3AE063781D2F76F9002338B4 /* VideoCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 3AE063761D2F76F9002338B4 /* VideoCell.xib */; };
 		3AE5ED161D4F4EA7006884D5 /* DXPopover.m in Sources */ = {isa = PBXBuildFile; fileRef = 3AE5ED151D4F4EA7006884D5 /* DXPopover.m */; };
@@ -1830,6 +1831,8 @@
 		3AC849D31D2522DC002735E0 /* BuyCoinViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BuyCoinViewController.h; sourceTree = "<group>"; };
 		3AC849D41D2522DC002735E0 /* BuyCoinViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = BuyCoinViewController.m; sourceTree = "<group>"; };
 		3AC849D51D2522DC002735E0 /* BuyCoinViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = BuyCoinViewController.xib; sourceTree = "<group>"; };
+		3AD075891D82C38400A6747E /* UIButton+Name.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIButton+Name.h"; sourceTree = "<group>"; };
+		3AD0758A1D82C38400A6747E /* UIButton+Name.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIButton+Name.m"; sourceTree = "<group>"; };
 		3AE063741D2F76F9002338B4 /* VideoCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = VideoCell.h; sourceTree = "<group>"; };
 		3AE063751D2F76F9002338B4 /* VideoCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = VideoCell.m; sourceTree = "<group>"; };
 		3AE063761D2F76F9002338B4 /* VideoCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = VideoCell.xib; sourceTree = "<group>"; };
@@ -5082,6 +5085,15 @@
 			name = "购买金币";
 			sourceTree = "<group>";
 		};
+		3AD075881D82C25200A6747E /* UIButton+Name */ = {
+			isa = PBXGroup;
+			children = (
+				3AD075891D82C38400A6747E /* UIButton+Name.h */,
+				3AD0758A1D82C38400A6747E /* UIButton+Name.m */,
+			);
+			name = "UIButton+Name";
+			sourceTree = "<group>";
+		};
 		3AE5ED131D4F4EA7006884D5 /* DXPopover */ = {
 			isa = PBXGroup;
 			children = (
@@ -5310,6 +5322,7 @@
 				91D825491BD9C8AF0019764F /* FriendsCircleMessage.m */,
 				91D8254A1BD9C8AF0019764F /* FriendsCirleViewController.h */,
 				91D8254B1BD9C8AF0019764F /* FriendsCirleViewController.m */,
+				3AD075881D82C25200A6747E /* UIButton+Name */,
 				3A331A941D4B5C5200838B14 /* 热门话题 */,
 				91D8254C1BD9C8AF0019764F /* FriendsMessageCell.h */,
 				91D8254D1BD9C8AF0019764F /* FriendsMessageCell.m */,
@@ -7131,6 +7144,7 @@
 				91D8255A1BD9C8AF0019764F /* FriendsMessageCell.m in Sources */,
 				09DECFB21BC515F100EAD419 /* NearByPeopleModel.m in Sources */,
 				98D31C7B1C9BAC870068154A /* LYWaterFlowLayout.m in Sources */,
+				3AD0758B1D82C38400A6747E /* UIButton+Name.m in Sources */,
 				984B4DAD1CCDF7C0001A063D /* SDWebImageDownloaderOperation.m in Sources */,
 				984B4DB51CCDF7C0001A063D /* UIImageView+WebCache.m in Sources */,
 				09837B101BC7515A00C026CA /* MyCollectionModel.m in Sources */,

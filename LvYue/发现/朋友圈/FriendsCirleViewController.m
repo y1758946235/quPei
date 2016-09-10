@@ -59,6 +59,7 @@
     NSMutableArray *_topicList;    //热门话题数量
     //UIButton *tipButton;            //热门
     UILabel *hotLabel;              //热门Label
+    UIImageView* hotImageView;      //背景图片
     CAGradientLayer *gradientLayer; //阴影
 
     UIButton *_newMsg;       //新消息条数提示
@@ -82,7 +83,7 @@
     UILabel *myName;
     UIImageView *bgImageView; //背景图片
 
-    UIView *hotBackView; //热门话题
+    UIScrollView *hotBackView; //热门话题
 
     /*****************封面图片Url*****************/
     NSURL *_coverImageUrl;     //网络封面图片URL
@@ -641,71 +642,119 @@
                 TopicTitle *topic = [TopicTitle topicTitleWithDict:dict];
                 [_topicList addObject:topic];
             }
-            hotLabel.height    = 25 * (_topicList.count + 1);
-            hotBackView.height = 25 * (_topicList.count + 1) + 3;
+//            hotLabel.height    = 25 * (_topicList.count + 1);
+//            hotBackView.height = 25 * (_topicList.count + 1) + 3;
+//
+//
+//            //hotLabel.height     = hotTipH * (_topicList.count + 1);
+//            gradientLayer.frame = CGRectMake(0, 0, 5, hotLabel.height);
+//
+//            //            for (int i =0; i<hotBackView.subviews.count; i++) {
+//            //                if ([hotBackView.subviews[i] isKindOfClass:[UIButton class]]) {
+//            //                    [hotBackView.subviews[i] removeFromSuperview];
+//            //                }
+//            //            }
+//
+//            for (UIView *subView in hotBackView.subviews) {
+//                if ([subView isKindOfClass:[UIButton class]]) {
+//                    [subView removeFromSuperview];
+//                }
+//            }
+//
+//            for (int i = 0; i < _topicList.count; i++) {
+//                //话题内容
+//                UIButton *tipButton = [UIButton buttonWithType:UIButtonTypeCustom];
+//                tipButton.height    = 25;
+//                tipButton.width     = kMainScreenWidth - CGRectGetMaxX(hotLabel.frame) - 3;
+//                tipButton.x         = CGRectGetMaxX(hotLabel.frame) + 3;
+//                tipButton.y         = hotLabel.y + i * (tipButton.y + 25 + 1) + 10;
+//                //                tipButton.centerY = hotLabel.centerY;
+//
+//                //                tipButton.backgroundColor = [UIColor redColor];
+//                [tipButton setTitleColor:[UIColor blackColor] forState:UIControlStateNormal];
+//                TopicTitle *titleModel = _topicList[i];
+//                NSString *title        = [NSString stringWithFormat:@"#%@#", titleModel.title];
+//
+//                tipButton.tag = 1000 + [titleModel.ID integerValue];
+//
+//                [tipButton setTitle:title forState:UIControlStateNormal];
+//                tipButton.contentHorizontalAlignment = UIControlContentHorizontalAlignmentLeft;
+//                tipButton.titleEdgeInsets            = UIEdgeInsetsMake(0, 15, 0, 0);
+//                [tipButton addTarget:self action:@selector(clickTipButton:) forControlEvents:UIControlEventTouchUpInside];
+//                [hotBackView addSubview:tipButton];
+//                //虚线
+//
+//                if (i < _topicList.count - 1) {
+//                    UIView *lineView = [[UIView alloc] init];
+//                    lineView.x       = 10;
+//                    lineView.y       = tipButton.height - 1;
+//                    lineView.width   = kMainScreenWidth - 60;
+//                    lineView.height  = 1.0f;
+//                    lineView.hidden  = NO;
+//                    [UIView drawDashLine:lineView lineLength:3.0f lineSpacing:3.0f lineColor:[UIColor grayColor]];
+//                    [tipButton addSubview:lineView];
+//                }
+//            }
+            
 
-
-            //hotLabel.height     = hotTipH * (_topicList.count + 1);
-            gradientLayer.frame = CGRectMake(0, 0, 5, hotLabel.height);
-
-            //            for (int i =0; i<hotBackView.subviews.count; i++) {
-            //                if ([hotBackView.subviews[i] isKindOfClass:[UIButton class]]) {
-            //                    [hotBackView.subviews[i] removeFromSuperview];
-            //                }
-            //            }
+            if (_topicList.count) {
+                hotBackView.height = 85;
+                //hotBackView.y = CGRectGetMaxY(hotLabel.frame);
+            }
+            else {
+                hotBackView.height = 0;
+            }
 
             for (UIView *subView in hotBackView.subviews) {
                 if ([subView isKindOfClass:[UIButton class]]) {
                     [subView removeFromSuperview];
                 }
             }
-
+            
             for (int i = 0; i < _topicList.count; i++) {
-                //话题内容
-                UIButton *tipButton = [UIButton buttonWithType:UIButtonTypeCustom];
-                tipButton.height    = 25;
-                tipButton.width     = kMainScreenWidth - CGRectGetMaxX(hotLabel.frame) - 3;
-                tipButton.x         = CGRectGetMaxX(hotLabel.frame) + 3;
-                tipButton.y         = hotLabel.y + i * (tipButton.y + 25 + 1) + 10;
-                //                tipButton.centerY = hotLabel.centerY;
-
-                //                tipButton.backgroundColor = [UIColor redColor];
-                [tipButton setTitleColor:[UIColor blackColor] forState:UIControlStateNormal];
                 TopicTitle *titleModel = _topicList[i];
-                NSString *title        = [NSString stringWithFormat:@"#%@#", titleModel.title];
-
-                tipButton.tag = 1000 + [titleModel.ID integerValue];
-
-                [tipButton setTitle:title forState:UIControlStateNormal];
-                tipButton.contentHorizontalAlignment = UIControlContentHorizontalAlignmentLeft;
-                tipButton.titleEdgeInsets            = UIEdgeInsetsMake(0, 15, 0, 0);
-                [tipButton addTarget:self action:@selector(clickTipButton:) forControlEvents:UIControlEventTouchUpInside];
-                [hotBackView addSubview:tipButton];
-                //虚线
-
-                if (i < _topicList.count - 1) {
-                    UIView *lineView = [[UIView alloc] init];
-                    lineView.x       = 10;
-                    lineView.y       = tipButton.height - 1;
-                    lineView.width   = kMainScreenWidth - 60;
-                    lineView.height  = 1.0f;
-                    lineView.hidden  = NO;
-                    [UIView drawDashLine:lineView lineLength:3.0f lineSpacing:3.0f lineColor:[UIColor grayColor]];
-                    [tipButton addSubview:lineView];
+                //话题内容
+                UIButton *topButton = [UIButton buttonWithType:UIButtonTypeCustom];
+                topButton.height    = 75;
+                topButton.width     = 65;
+                topButton.x         = hotLabel.x + i*(topButton.width+5);
+                topButton.y         = 2;
+                topButton.tag = 1000 + [titleModel.ID integerValue];
+                [topButton addTarget:self action:@selector(clickTipButton:) forControlEvents:UIControlEventTouchUpInside];
+                topButton.backgroundColor = [UIColor whiteColor];
+                
+                //图片
+                UIImageView* topicImageView = [[UIImageView alloc] initWithFrame:CGRectMake(0, 0, topButton.width, topButton.height-10)];
+                NSString* urlStr = [NSString stringWithFormat:@"%@%@",IMAGEHEADER,titleModel.back_img];
+                NSURL* url = [NSURL URLWithString:urlStr];
+                [topicImageView sd_setImageWithURL:url placeholderImage:[UIImage imageNamed:@"朋友圈背景"] options:SDWebImageRetryFailed];
+                [topButton addSubview:topicImageView];
+                
+                //标题
+                UILabel* titleLable = [[UILabel alloc] init];
+                titleLable.frame = CGRectMake(0, topicImageView.height, topButton.width, 20);
+                titleLable.text  = [NSString stringWithFormat:@"#%@#", titleModel.title];
+                titleLable.font = kFont10;
+                [topButton addSubview:titleLable];
+                
+                //最后一个
+                if (i == _topicList.count - 1){
+                    hotBackView.contentSize = CGSizeMake(CGRectGetMaxX(topButton.frame)+10, hotBackView.height);
                 }
+ 
+                [hotBackView addSubview:topButton];
             }
 
             [_tableView.mj_header endRefreshing];
             [_tableView reloadData];
+            //自动刷新问题：新消息没有frame
+            hotBackView.y = CGRectGetMaxY(hotLabel.frame);
         } else {
 
-            //            [MBProgressHUD hideAllHUDsForView:self.view animated:YES];
             [MBProgressHUD showError:successResponse[@"msg"]];
         }
     }
         andFailure:^(id failureResponse) {
-            NSLog(@"获取热门话题%@", failureResponse);
-            //            [MBProgressHUD hideAllHUDsForView:self.view animated:YES];
             [MBProgressHUD showError:@"请检查您的网络"];
         }];
 }
@@ -1611,16 +1660,16 @@
 
     if (_newMsgNumber > 0) {
         _newMsgBtn.hidden = NO;
-        hotBackView.y     = CGRectGetMaxY(_newMsgBtn.frame) + 5;
+        hotLabel.y     = CGRectGetMaxY(_newMsgBtn.frame) + 5;
         headerView.frame  = CGRectMake(0, 0, SCREEN_WIDTH, SCREEN_WIDTH * 0.5 + 70 + hotBackView.height);
-        return SCREEN_WIDTH * 0.5 + 70 + hotBackView.height;
+        return SCREEN_WIDTH * 0.5 + 70 + hotBackView.height + hotLabel.height;
     } else {
         //设置热门的frame
-        hotBackView.y    = CGRectGetMaxY(myIcon.frame) + 5;
+        hotLabel.y    = CGRectGetMaxY(myIcon.frame) + 5;
         headerView.frame = CGRectMake(0, 0, SCREEN_WIDTH, SCREEN_WIDTH * 0.5 + 30 + hotBackView.height);
 
         _newMsgBtn.hidden = YES;
-        return SCREEN_WIDTH * 0.5 + 30 + hotBackView.height;
+        return SCREEN_WIDTH * 0.5 + 30 + hotBackView.height + hotLabel.height;
     }
 }
 
@@ -1720,44 +1769,72 @@
     }
 
     //一个热门话题的高度
-    static CGFloat hotTipH = 25;
+   // static CGFloat hotTipH = 25;
 
     // 朋友圈才显示 个人动态不显示
     if (_isFriendsCircle) {
         //设置热门话题
         if (!hotBackView) {
-            //背景
-            hotBackView                 = [[UIView alloc] init];
-            hotBackView.backgroundColor = [UIColor clearColor];
-            hotBackView.x               = 0;
-            hotBackView.y               = CGRectGetMaxY(_newMsgBtn.frame);
-            hotBackView.width           = kMainScreenWidth;
-            hotBackView.height          = 60;
-            [headerView addSubview:hotBackView];
-
-            //热门
+//            //背景
+//            hotBackView                 = [[UIView alloc] init];
+//            hotBackView.backgroundColor = [UIColor clearColor];
+//            hotBackView.x               = 0;
+//            hotBackView.y               = CGRectGetMaxY(_newMsgBtn.frame);
+//            hotBackView.width           = kMainScreenWidth;
+//            hotBackView.height          = 80;
+//            hotBackView.backgroundColor = [UIColor redColor];
+//            [headerView addSubview:hotBackView];
+//
+//            //热门
+//            hotLabel                 = [[UILabel alloc] init];
+//            hotLabel.x               = 10;
+//            hotLabel.y               = 0;
+//            hotLabel.width           = hotTipH;
+//            hotLabel.height          = 60;
+//            hotLabel.backgroundColor = [UIColor whiteColor];
+//            hotLabel.numberOfLines   = 0;
+//            hotLabel.text            = @"热话";
+//            hotLabel.font            = kFont20;
+//            hotLabel.textColor       = THEME_COLOR;
+//            //阴影
+//            UIView *view             = [[UIView alloc] initWithFrame:CGRectMake(hotLabel.x + hotLabel.width, 0, 5, hotLabel.height)];
+//            gradientLayer            = [CAGradientLayer layer];
+//            gradientLayer.colors     = @[(__bridge id) RGBCOLOR(225, 226, 228).CGColor, (__bridge id)[UIColor whiteColor].CGColor];
+//            gradientLayer.frame      = CGRectMake(0, 0, 5, hotLabel.height);
+//            gradientLayer.startPoint = CGPointMake(0, 0);
+//            gradientLayer.endPoint   = CGPointMake(1, 0);
+//            [view.layer addSublayer:gradientLayer];
+//            [hotBackView addSubview:view];
+//
+//            hotLabel.textAlignment = NSTextAlignmentCenter;
+//            [hotBackView addSubview:hotLabel];
+            
+            //热门标题
             hotLabel                 = [[UILabel alloc] init];
             hotLabel.x               = 10;
-            hotLabel.y               = 0;
-            hotLabel.width           = hotTipH;
-            hotLabel.height          = 60;
-            hotLabel.backgroundColor = [UIColor whiteColor];
+            hotLabel.y               = CGRectGetMaxY(_newMsgBtn.frame);
+            hotLabel.width           = kMainScreenWidth - 2*hotLabel.x;
+            hotLabel.height          = 25;
+            hotLabel.backgroundColor = GRAYBG_COLOR;
             hotLabel.numberOfLines   = 0;
             hotLabel.text            = @"热话";
-            hotLabel.font            = kFont20;
+            hotLabel.font            = kFont18;
             hotLabel.textColor       = THEME_COLOR;
-            //阴影
-            UIView *view             = [[UIView alloc] initWithFrame:CGRectMake(hotLabel.x + hotLabel.width, 0, 5, hotLabel.height)];
-            gradientLayer            = [CAGradientLayer layer];
-            gradientLayer.colors     = @[(__bridge id) RGBCOLOR(225, 226, 228).CGColor, (__bridge id)[UIColor whiteColor].CGColor];
-            gradientLayer.frame      = CGRectMake(0, 0, 5, hotLabel.height);
-            gradientLayer.startPoint = CGPointMake(0, 0);
-            gradientLayer.endPoint   = CGPointMake(1, 0);
-            [view.layer addSublayer:gradientLayer];
-            [hotBackView addSubview:view];
-
-            hotLabel.textAlignment = NSTextAlignmentCenter;
-            [hotBackView addSubview:hotLabel];
+            hotLabel.textAlignment = NSTextAlignmentLeft;
+            [headerView addSubview:hotLabel];
+            
+            //背景
+            hotBackView                 = [[UIScrollView alloc] init];
+            //hotBackView.backgroundColor = [UIColor clearColor];
+            hotBackView.x               = 0;
+            hotBackView.y               = CGRectGetMaxY(hotLabel.frame);
+            hotBackView.width           = kMainScreenWidth;
+            hotBackView.height          = 75;
+            hotBackView.backgroundColor = [UIColor whiteColor];
+            hotBackView.showsHorizontalScrollIndicator = NO;
+            //hotBackView.contentSize = CGSizeMake(kMainScreenWidth, hotBackView.height);
+            [headerView addSubview:hotBackView];
+    
         }
     }
 
