@@ -120,7 +120,7 @@ static NSString *const LYEssenceAlbumCollectionViewCellIdentity =
                 // 自己看自己不需要模糊  已经打赏过也不需要模糊
                 if (!self.mySelf && [self.responseArray[idx][@"isBo"] integerValue] != 1) {
                     // 图片模糊
-                    returnImage = [returnImage blurredImageWithRadius:100 iterations:3 tintColor:RGBACOLOR(0, 0, 0, 0.5)];
+                    returnImage = [returnImage blurredImageWithRadius:100 iterations:20 tintColor:RGBACOLOR(0, 0, 0, 0.5)];
 
                     // 缓存模糊图片到内存
                     [[LYBlurImageCache shareCache] setObject:returnImage forKey:imageURL.absoluteString];

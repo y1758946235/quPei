@@ -79,7 +79,7 @@
                 if (!blurImage) {
                     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
 
-                        blurImage = [image blurredImageWithRadius:100 iterations:3 tintColor:RGBACOLOR(0, 0, 0, 0.5)];
+                        blurImage = [image blurredImageWithRadius:100 iterations:20 tintColor:RGBACOLOR(0, 0, 0, 0.5)];
 
                         [[LYBlurImageCache shareCache] setObject:blurImage forKey:imageURL.absoluteString];
 
