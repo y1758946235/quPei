@@ -405,7 +405,7 @@
                             @"bounty": textField.text
                         }
                         success:^(id successResponse) {
-                            MLOG(@"发送气质图:%@", successResponse);
+                            MLOG(@"发送精华相册图:%@", successResponse);
                             if ([[NSString stringWithFormat:@"%@", successResponse[@"code"]] isEqualToString:@"200"]) {
                                 [MBProgressHUD hideHUD];
                                 [MBProgressHUD showSuccess:@"提交成功"];

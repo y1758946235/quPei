@@ -38,11 +38,18 @@ static NSString *const LYEssenceAlbumCollectionViewCellIdentity =
 
 @implementation LYEssenceAlbumViewController
 
+- (void)dealloc {
+    [[NSNotificationCenter defaultCenter] removeObserver:self name:@"reloadDisposition" object:nil];
+}
+
 - (void)viewDidLoad {
     [super viewDidLoad];
 
     self.navigationItem.title = @"精华相册";
     self.view.backgroundColor = [UIColor whiteColor];
+
+    // 监听是否需要刷新数据
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(p_loadData) name:@"reloadDisposition" object:nil];
 
     if (self.mySelf) {
         [self setRightButton:[UIImage imageNamed:@"上传照片"] title:nil target:self action:@selector(uploadPhoto)];
