@@ -75,13 +75,13 @@
     }
     cell.iconImage.image = [UIImage imageNamed:[NSString stringWithFormat:@"%@",self.noIconArray[indexPath.row]]];
     if (indexPath.row == 0) {
-        if (![self.alipay_id isEqualToString:@""]) {
+        if (![self.alipay_id isEqualToString:@""] && ![self.alipay_id isEqualToString:@"<null>"]) {
             cell.iconImage.image = [UIImage imageNamed:@"alipay2"];
             cell.bundingLabel.text = @"已填写";
         }
     }
     else if (indexPath.row == 1){
-        if (![self.weixin_id isEqualToString:@""]) {
+        if (![self.weixin_id isEqualToString:@""] && ![self.weixin_id isEqualToString:@"<null>"]) {
             cell.iconImage.image = [UIImage imageNamed:@"weixin-2"];
             cell.bundingLabel.text = @"已填写";
         }
@@ -100,7 +100,7 @@
     switch (indexPath.row) {
         case 0:
         {
-            if (self.alipay_id.length > 0) {
+            if (self.alipay_id.length > 0 &&![self.alipay_id isEqualToString:@"<null>"]) {
                 UIAlertView *alert = [[UIAlertView alloc] initWithTitle:nil message:@"您已填写，是否确定要修改?" delegate:self cancelButtonTitle:@"取消" otherButtonTitles:@"确定", nil];
                 alert.tag = 501;
                 [alert show];
@@ -117,7 +117,7 @@
             break;
         case 1:
         {
-            if (self.weixin_id.length > 0) {
+            if (self.weixin_id.length > 0 && ![self.weixin_id isEqualToString:@"<null>"]) {
                 UIAlertView *alert = [[UIAlertView alloc] initWithTitle:nil message:@"您已填写，是否确定要修改?" delegate:self cancelButtonTitle:@"取消" otherButtonTitles:@"确定", nil];
                 alert.tag = 502;
                 [alert show];

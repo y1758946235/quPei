@@ -723,7 +723,7 @@
                 topButton.height    = 85;
                 topButton.width     = 75;
                 topButton.x         = hotLabel.x + i*(topButton.width+5);
-                topButton.y         = 5;
+                topButton.y         = 3;
                 topButton.tag = 1000 + [titleModel.ID integerValue];
                 [topButton addTarget:self action:@selector(clickTipButton:) forControlEvents:UIControlEventTouchUpInside];
                 topButton.backgroundColor = [UIColor whiteColor];
@@ -757,7 +757,7 @@
             [_tableView.mj_header endRefreshing];
             [_tableView reloadData];
             //自动刷新问题：新消息没有frame
-            hotBackView.y = CGRectGetMaxY(hotLabel.frame);
+            //hotBackView.y = CGRectGetMaxY(hotLabel.frame); 在tableview代理
         } else {
 
             [MBProgressHUD showError:successResponse[@"msg"]];
@@ -1670,12 +1670,14 @@
     if (_newMsgNumber > 0) {
         _newMsgBtn.hidden = NO;
         hotLabel.y     = CGRectGetMaxY(_newMsgBtn.frame) + 5;
-        headerView.frame  = CGRectMake(0, 0, SCREEN_WIDTH, SCREEN_WIDTH * 0.5 + 70 + hotBackView.height);
+        hotBackView.y = CGRectGetMaxY(hotLabel.frame);
+        headerView.frame  = CGRectMake(0, 0, SCREEN_WIDTH, SCREEN_WIDTH * 0.5 + 80 + hotBackView.height);
         return SCREEN_WIDTH * 0.5 + 80 + hotBackView.height + hotLabel.height;
     } else {
         //设置热门的frame
         hotLabel.y    = CGRectGetMaxY(myIcon.frame) + 5;
-        headerView.frame = CGRectMake(0, 0, SCREEN_WIDTH, SCREEN_WIDTH * 0.5 + 30 + hotBackView.height);
+        hotBackView.y = CGRectGetMaxY(hotLabel.frame);
+        headerView.frame = CGRectMake(0, 0, SCREEN_WIDTH, SCREEN_WIDTH * 0.5 + 40 + hotBackView.height);
 
         _newMsgBtn.hidden = YES;
         return SCREEN_WIDTH * 0.5 + 40 + hotBackView.height + hotLabel.height;

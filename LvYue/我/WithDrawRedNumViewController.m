@@ -10,8 +10,9 @@
 #import "MBProgressHUD+NJ.h"
 #import "LYUserService.h"
 #import "LYHttpPoster.h"
+#import "BundingDetailViewController.h"
 
-@interface WithDrawRedNumViewController ()<UITableViewDataSource,UITableViewDelegate>
+@interface WithDrawRedNumViewController ()<UITableViewDataSource,UITableViewDelegate, UIAlertViewDelegate>
 {
     UITextField *moneyTextField;
 }
@@ -84,7 +85,7 @@
     }
     
     if ([moneyTextField.text integerValue] > [self.hongdou integerValue]) {
-        [MBProgressHUD showError:@"红豆余额不足"];
+        [MBProgressHUD showError:@"金币余额不足"];
         return;
     }
     
@@ -105,7 +106,8 @@
 }
 
 - (void)sendRequest{
-    [LYHttpPoster postHttpRequestByPost:[NSString stringWithFormat:@"%@/mobile/user/cash",REQUESTHEADER] andParameter:@{@"user_id":[NSString stringWithFormat:@"%@",[LYUserService sharedInstance].userID],@"num":moneyTextField.text} success:^(id successResponse) {
+    //提现方式：1为支付宝，2为微信
+    [LYHttpPoster postHttpRequestByPost:[NSString stringWithFormat:@"%@/mobile/user/cash",REQUESTHEADER] andParameter:@{@"user_id":[NSString stringWithFormat:@"%@",[LYUserService sharedInstance].userID],@"num":moneyTextField.text,@"type":self.payType} success:^(id successResponse) {
         MLOG(@"结果:%@",successResponse);
         [MBProgressHUD hideAllHUDsForView:self.view animated:YES];
         if ([[NSString stringWithFormat:@"%@",successResponse[@"code"]] isEqualToString:@"200"]) {
@@ -121,6 +123,10 @@
         [MBProgressHUD hideAllHUDsForView:self.view animated:YES];
         [MBProgressHUD showError:@"服务器繁忙,请重试"];
     }];
+
+
 }
+
+
 
 @end
