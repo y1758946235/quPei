@@ -7,7 +7,6 @@
 //
 
 #import "BuyVipViewController.h"
-#import "BuyVipViewController.h"
 #import "ChatViewController.h"
 #import "DXPopover.h"
 #import "FriendsCirleViewController.h"
@@ -513,6 +512,10 @@ forRowAtIndexPath:(NSIndexPath *)indexPath {
         case LYDetailDataAlertViewEnumWatchContact: {
             if (buttonIndex == 1) {
                 BuyVipViewController *vc = [[BuyVipViewController alloc] init];
+                vc.coinNum        = @"0";
+                vc.vip_price      = @"20";
+                vc.vip_year_price = @"168";
+                vc.isShow         = NO;
                 [self.navigationController pushViewController:vc animated:YES];
             }
             break;
@@ -526,6 +529,10 @@ forRowAtIndexPath:(NSIndexPath *)indexPath {
         case LYDetailDataAlertViewEnumBecomeVip: {
             if (buttonIndex == 0) {
                 BuyVipViewController *vc = [[BuyVipViewController alloc] init];
+                vc.coinNum        = @"0";
+                vc.vip_price      = @"20";
+                vc.vip_year_price = @"168";
+                vc.isShow         = NO;
                 [self.navigationController pushViewController:vc animated:YES];
             }
             break;
