@@ -560,6 +560,7 @@
 		3AE5ED161D4F4EA7006884D5 /* DXPopover.m in Sources */ = {isa = PBXBuildFile; fileRef = 3AE5ED151D4F4EA7006884D5 /* DXPopover.m */; };
 		4DF675701BDA3594004B2854 /* SearchNearbyModel.m in Sources */ = {isa = PBXBuildFile; fileRef = 4DF6756F1BDA3594004B2854 /* SearchNearbyModel.m */; };
 		6B3336111D45E18A0034C620 /* FXBlurView.m in Sources */ = {isa = PBXBuildFile; fileRef = 6B3336101D45E18A0034C620 /* FXBlurView.m */; };
+		6B38A7781D9A51AF00041E67 /* UMMobClick.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6B38A7771D9A51AF00041E67 /* UMMobClick.framework */; };
 		6B5099EB1D4CEF4F009B7DDF /* LYEssenceImageUploadViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 6B5099EA1D4CEF4F009B7DDF /* LYEssenceImageUploadViewController.m */; };
 		6B55B07A1D4B50B900EBD172 /* LYBlurImageCache.m in Sources */ = {isa = PBXBuildFile; fileRef = 6B55B0791D4B50B900EBD172 /* LYBlurImageCache.m */; };
 		6B55B0811D4B62A100EBD172 /* LYPopoverView.m in Sources */ = {isa = PBXBuildFile; fileRef = 6B55B0801D4B62A100EBD172 /* LYPopoverView.m */; };
@@ -1843,6 +1844,7 @@
 		4DF6756F1BDA3594004B2854 /* SearchNearbyModel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SearchNearbyModel.m; sourceTree = "<group>"; };
 		6B33360F1D45E18A0034C620 /* FXBlurView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FXBlurView.h; sourceTree = "<group>"; };
 		6B3336101D45E18A0034C620 /* FXBlurView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FXBlurView.m; sourceTree = "<group>"; };
+		6B38A7771D9A51AF00041E67 /* UMMobClick.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = UMMobClick.framework; sourceTree = "<group>"; };
 		6B5099E91D4CEF4F009B7DDF /* LYEssenceImageUploadViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LYEssenceImageUploadViewController.h; sourceTree = "<group>"; };
 		6B5099EA1D4CEF4F009B7DDF /* LYEssenceImageUploadViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LYEssenceImageUploadViewController.m; sourceTree = "<group>"; };
 		6B55B0781D4B50B900EBD172 /* LYBlurImageCache.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LYBlurImageCache.h; sourceTree = "<group>"; };
@@ -2448,6 +2450,7 @@
 				1836A7191BDE6ABE0056D8A3 /* Security.framework in Frameworks */,
 				18A1CEC51BCE260500CA3993 /* libxml2.dylib in Frameworks */,
 				18A1CEC31BCE25FD00CA3993 /* libresolv.dylib in Frameworks */,
+				6B38A7781D9A51AF00041E67 /* UMMobClick.framework in Frameworks */,
 				09549CFF1D153AF3008A721C /* libopencore-amrnb.a in Frameworks */,
 				18A1CEC11BCE25F400CA3993 /* libiconv.dylib in Frameworks */,
 				854B60101C0D263C00738752 /* libbaidumapapi.a in Frameworks */,
@@ -5157,6 +5160,14 @@
 			name = "退款成功";
 			sourceTree = "<group>";
 		};
+		6B38A7761D9A51A600041E67 /* UMAnalytics_Sdk */ = {
+			isa = PBXGroup;
+			children = (
+				6B38A7771D9A51AF00041E67 /* UMMobClick.framework */,
+			);
+			name = UMAnalytics_Sdk;
+			sourceTree = "<group>";
+		};
 		6B5F25441D5058E800778C21 /* 个人账户 */ = {
 			isa = PBXGroup;
 			children = (
@@ -5773,6 +5784,7 @@
 		A79AA3741BEAFAB00065684F /* Lib */ = {
 			isa = PBXGroup;
 			children = (
+				6B38A7761D9A51A600041E67 /* UMAnalytics_Sdk */,
 				3AE5ED131D4F4EA7006884D5 /* DXPopover */,
 				09549B5B1D153AF3008A721C /* Ease */,
 				8538D2211C61C9F40025495B /* EageProgressHUD */,
@@ -7327,6 +7339,10 @@
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
 				CODE_SIGN_IDENTITY = "iPhone Developer: qiao you (9R2QDS8496)";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+<<<<<<< HEAD
+=======
+				DEVELOPMENT_TEAM = "";
+>>>>>>> 0981fbda8eabf6b1db6e4794e4bbdb6c98ba792e
 				ENABLE_BITCODE = NO;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
@@ -7377,6 +7393,7 @@
 				PRODUCT_BUNDLE_IDENTIFIER = com.51xiexieni;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE = "";
+				PROVISIONING_PROFILE_SPECIFIER = "";
 			};
 			name = Debug;
 		};

@@ -13,7 +13,6 @@
 #import "KnowViewController.h"
 #import "SettingViewController.h"
 #import "FinishKnowViewController.h"
-#import "BuyVipViewController.h"
 #import "VipInfoViewController.h"
 #import "CollectViewController.h"
 #import "LYUserService.h"
