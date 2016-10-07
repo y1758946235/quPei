@@ -14,6 +14,7 @@
 #import "UMSocialWechatHandler.h"
 #import "UMessage.h"
 #import <AlipaySDK/AlipaySDK.h>
+#import "MobClick.h"
 
 @implementation AppDelegate (UMeng)
 
@@ -33,6 +34,9 @@
     /****————————————————友盟推送————————————————****/
     //set AppKey and AppSecret
     [UMessage startWithAppkey:@"55f3983c67e58e502a00167d" launchOptions:launchOptions];
+    
+    // Umeng 分析
+    [MobClick startWithAppkey:@"55f3983c67e58e502a00167d" reportPolicy:BATCH channelId:nil];
 
 #if __IPHONE_OS_VERSION_MAX_ALLOWED >= _IPHONE80_
     if (kSystemVersion >= 8.0) {
