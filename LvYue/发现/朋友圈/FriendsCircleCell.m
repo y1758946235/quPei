@@ -363,7 +363,8 @@
             finalStr = [NSString stringWithFormat:@"%@回复%@:%@",model.commentUserName,model.replyUserName,commentStr];
         }
         
-        CGSize contentSize = [finalStr sizeWithFont:[UIFont systemFontOfSize:13] constrainedToSize:CGSizeMake(SCREEN_WIDTH - 50 - 5 - 20 - 30, 1000) lineBreakMode:UILineBreakModeCharacterWrap];
+        //CGSize contentSize = [finalStr sizeWithFont:[UIFont systemFontOfSize:14] constrainedToSize:CGSizeMake(SCREEN_WIDTH - 50 - 5 - 20 - 30, 1000) lineBreakMode:UILineBreakModeCharacterWrap];
+        CGSize contentSize = [finalStr boundingRectWithSize:CGSizeMake(_commentTableView.frame.size.width-30, MAXFLOAT) options:NSStringDrawingUsesLineFragmentOrigin attributes:@{NSFontAttributeName:kFont14} context:nil].size;
         commentHeight += contentSize.height + 10;
     }
     
@@ -442,7 +443,7 @@
         commentLabel.tag = 999;
         [cell addSubview:commentLabel];
     }
-    
+    //评论
     UILabel *commentLabel = (UILabel *)[cell viewWithTag:999];
     cell.backgroundColor = UIColorWithRGBA(245, 245, 245, 1);
     if ([_commentArray[indexPath.row][@"reply_user"] isKindOfClass:[NSNull class]] || [_commentArray[indexPath.row][@"reply_user"] isEqualToString:@""]) {
@@ -465,8 +466,9 @@
     }
     
     //计算高度，并修改label高度
-    CGSize contentSize = [commentLabel.text sizeWithFont:[UIFont systemFontOfSize:13] constrainedToSize:CGSizeMake(SCREEN_WIDTH - 50 - 5 - 20 - 30, 1000) lineBreakMode:UILineBreakModeCharacterWrap];
-//    //加上上下的范围
+//    CGSize contentSize = [commentLabel.text sizeWithFont:[UIFont systemFontOfSize:13] constrainedToSize:CGSizeMake(SCREEN_WIDTH - 50 - 5 - 20 - 30, 1000) lineBreakMode:UILineBreakModeCharacterWrap];
+    CGSize contentSize = [commentLabel.text boundingRectWithSize:CGSizeMake(_commentTableView.frame.size.width-30, MAXFLOAT) options:NSStringDrawingUsesLineFragmentOrigin attributes:@{NSFontAttributeName:kFont14} context:nil].size;
+    //加上上下的范围
     contentSize.height += 10;
     commentLabel.frame = CGRectMake(15, 0, _commentTableView.frame.size.width-30, contentSize.height);
     
@@ -488,8 +490,8 @@
         finalStr = [NSString stringWithFormat:@"%@回复%@: %@",_commentArray[indexPath.row][@"comment_user"],_commentArray[indexPath.row][@"reply_user"],_commentArray[indexPath.row][@"detail"]];
     }
 
-    CGSize contentSize = [finalStr sizeWithFont:[UIFont systemFontOfSize:13] constrainedToSize:CGSizeMake(SCREEN_WIDTH - 50 - 5 - 20 - 30, 1000) lineBreakMode:UILineBreakModeCharacterWrap];
-    
+    //CGSize contentSize = [finalStr sizeWithFont:[UIFont systemFontOfSize:13] constrainedToSize:CGSizeMake(SCREEN_WIDTH - 50 - 5 - 20 - 30, 1000) lineBreakMode:UILineBreakModeCharacterWrap];
+    CGSize contentSize = [finalStr boundingRectWithSize:CGSizeMake(tableView.width - 30, MAXFLOAT) options:NSStringDrawingUsesLineFragmentOrigin attributes:@{NSFontAttributeName:kFont14} context:nil].size;
     //加上上下的范围
     contentSize.height += 10;
     return contentSize.height;

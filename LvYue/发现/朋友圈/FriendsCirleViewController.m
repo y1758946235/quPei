@@ -900,6 +900,7 @@
 
         //输入框
         _textView                    = [[UITextView alloc] initWithFrame:CGRectMake(Kinterval, Kinterval / 2, SCREEN_WIDTH - Kinterval - 60, 20 + kSingleContentHeight)];
+        _textView.returnKeyType = UIReturnKeyDone;
         _textView.backgroundColor    = [UIColor clearColor];
         _textView.layer.cornerRadius = 5.0;
         _textView.font               = [UIFont systemFontOfSize:15];
@@ -941,6 +942,7 @@
 
     //获得第一响应者
     [_textView becomeFirstResponder];
+    _textView.returnKeyType = UIReturnKeyDone;
     _placeHolderLabel.text = [NSString stringWithFormat:@"回复%@:", _replyName];
     _clearBtn.hidden       = NO;
 }
@@ -2167,6 +2169,15 @@
         }
     }
 }
+-(BOOL)textView:(UITextView *)textView shouldChangeTextInRange:(NSRange)range replacementText:(NSString *)text
+{
+    if([text isEqualToString:@"\n"]){
+        //[textView resignFirstResponder];
+        return NO;
+    }
+    return YES;
+}
+
 
 
 #pragma mark - UIImagePickerControllerDelegate

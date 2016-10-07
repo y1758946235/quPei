@@ -38,5 +38,6 @@
 - (void)setPraiseList:(NSMutableArray *)praiseArray;
 
 - (NSString *)getTime;       //获取转化时间
-- (CGFloat)returnCellHeight; //返回cell的高度
+///返回主要UITableView的cell的高度
+- (CGFloat)returnCellHeight;
 @end

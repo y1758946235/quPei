@@ -98,8 +98,9 @@
             finalStr = [NSString stringWithFormat:@"%@回复%@:%@",_commentUserName,_replyUserName,commentStr];
         }
         
-        CGSize contentSize = [finalStr sizeWithFont:[UIFont systemFontOfSize:13] constrainedToSize:CGSizeMake(SCREEN_WIDTH - 50 - 5 - 20 - 30, 1000) lineBreakMode:UILineBreakModeCharacterWrap];
-        commentHeight += contentSize.height + 10;
+        //CGSize replySize = [finalStr sizeWithFont:[UIFont systemFontOfSize:13] constrainedToSize:CGSizeMake(SCREEN_WIDTH - 50 - 5 - 20 - 30, MAXFLOAT) lineBreakMode:UILineBreakModeWordWrap];
+        CGSize replySize = [finalStr boundingRectWithSize:CGSizeMake(SCREEN_WIDTH - 50 - 5 - 20 - 30, MAXFLOAT) options:NSStringDrawingUsesLineFragmentOrigin attributes:@{NSFontAttributeName:kFont14} context:nil].size;
+        commentHeight += replySize.height + 10;
     }
     
     if (commentHeight != 0) {
@@ -108,8 +109,9 @@
     }
     
     //获取文本所需的高度
-    CGSize contentSize = [_content sizeWithFont:[UIFont systemFontOfSize:13] constrainedToSize:CGSizeMake(SCREEN_WIDTH - 50 - 5, 1000) lineBreakMode:UILineBreakModeCharacterWrap];
-    
+    //CGSize contentSize = [_content sizeWithFont:[UIFont systemFontOfSize:13] constrainedToSize:CGSizeMake(SCREEN_WIDTH - 50 - 5 - 20 - 30, MAXFLOAT) lineBreakMode:UILineBreakModeWordWrap];
+    CGSize contentSize = [_content boundingRectWithSize:CGSizeMake(SCREEN_WIDTH - 50 - 5 - 20 - 30, MAXFLOAT) options:NSStringDrawingUsesLineFragmentOrigin attributes:@{NSFontAttributeName:kFont14} context:nil].size;
+    //图片的高度+动态内容的高度+评论语的高度
     return imageHeight + contentSize.height + commentHeight + 95 - 10;
 }
 

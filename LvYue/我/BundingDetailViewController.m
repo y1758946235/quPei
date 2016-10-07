@@ -45,13 +45,13 @@
     self.numText.layer.borderColor = RGBACOLOR(238, 238, 238, 1).CGColor;
     if ([self.titleString isEqualToString:@"支付宝填写"]) {
         self.numText.placeholder = @"请输入您的支付宝账号";
-        if (![self.alipay_id  isEqual: @""]) {
+        if (![self.alipay_id  isEqual: @""]&& ![self.weixin_id isEqualToString:@"<null>"]) {
             self.numText.placeholder = [NSString stringWithFormat:@"已填写账号%@",self.alipay_id];
         }
     }
     else{
         self.numText.placeholder = @"请输入您的微信账号";
-        if (![self.weixin_id  isEqual: @""]) {
+        if (![self.weixin_id  isEqual: @""]&& ![self.weixin_id isEqualToString:@"<null>"]) {
             self.numText.placeholder = [NSString stringWithFormat:@"已填写账号%@",self.weixin_id];
         }
     }
