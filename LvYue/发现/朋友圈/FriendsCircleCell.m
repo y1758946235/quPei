@@ -445,16 +445,52 @@
     }
     //评论
     UILabel *commentLabel = (UILabel *)[cell viewWithTag:999];
+    commentLabel.userInteractionEnabled = YES;
+    //回答的人
+    UIButton *replyButton = [UIButton buttonWithType:UIButtonTypeCustom];
+    replyButton.height = 25;
+    replyButton.x = 0;
+    replyButton.y = 0;
+    [replyButton setBackgroundColor:[UIColor clearColor]];
+    [commentLabel addSubview:replyButton];
+    
+    //得到回答的人
+    UIButton *getAnswerButton = [UIButton buttonWithType:UIButtonTypeCustom];
+    getAnswerButton.y = replyButton.y;
+    getAnswerButton.height = 25;
+    getAnswerButton.backgroundColor = [UIColor clearColor];
+    [commentLabel addSubview:getAnswerButton];
+    
     cell.backgroundColor = UIColorWithRGBA(245, 245, 245, 1);
     if ([_commentArray[indexPath.row][@"reply_user"] isKindOfClass:[NSNull class]] || [_commentArray[indexPath.row][@"reply_user"] isEqualToString:@""]) {
         commentLabel.textColor = [UIColor blackColor];
         NSMutableAttributedString *noteStr = [[NSMutableAttributedString alloc] initWithString:[NSString stringWithFormat:@"%@: %@",_commentArray[indexPath.row][@"comment_user"],_commentArray[indexPath.row][@"detail"]]];
+        //计算回答的人宽度
+        NSString *replyStr = [NSString stringWithFormat:@"%@",_commentArray[indexPath.row][@"comment_user"]];
+        CGFloat replyStrWidth = [replyStr boundingRectWithSize:CGSizeMake(MAXFLOAT, 15) options:NSStringDrawingUsesLineFragmentOrigin attributes:@{NSFontAttributeName:kFont14} context:nil].size.width;
+        replyButton.width = replyStrWidth;
+        [replyButton addTarget:self action:@selector(p_replyButtonClick:) forControlEvents:UIControlEventTouchUpInside];
+        replyButton.tag = 1000 + indexPath.row;
+        
         NSRange redRange = NSMakeRange(0, [NSString stringWithFormat:@"%@",_commentArray[indexPath.row][@"comment_user"]].length);
         [noteStr addAttribute:NSForegroundColorAttributeName value:UIColorWithRGBA(70,80,140, 1) range:redRange];
         [commentLabel setAttributedText:noteStr];
     }else{
         commentLabel.textColor = UIColorWithRGBA(70,80,140, 1);
         NSMutableAttributedString *noteStr = [[NSMutableAttributedString alloc] initWithString:[NSString stringWithFormat:@"%@回复%@: %@",_commentArray[indexPath.row][@"comment_user"],_commentArray[indexPath.row][@"reply_user"],_commentArray[indexPath.row][@"detail"]]];
+        //计算回答的人宽度
+        NSString *replyStr = [NSString stringWithFormat:@"%@",_commentArray[indexPath.row][@"comment_user"]];
+        CGFloat replyStrWidth = [replyStr boundingRectWithSize:CGSizeMake(MAXFLOAT, 15) options:NSStringDrawingUsesLineFragmentOrigin attributes:@{NSFontAttributeName:kFont14} context:nil].size.width;
+        replyButton.width = replyStrWidth;
+        replyButton.tag = 1000 + indexPath.row;
+        [replyButton addTarget:self action:@selector(p_replyButtonClick:) forControlEvents:UIControlEventTouchUpInside];
+        //得到回答的人
+        NSString *getAnswer = [NSString stringWithFormat:@"%@",_commentArray[indexPath.row][@"reply_user"]];
+        CGFloat getAnswerWidth = [getAnswer boundingRectWithSize:CGSizeMake(MAXFLOAT, 15) options:NSStringDrawingUsesLineFragmentOrigin attributes:@{NSFontAttributeName:kFont14} context:nil].size.width;
+        getAnswerButton.width = getAnswerWidth;
+        getAnswerButton.x = replyButton.width + 20;
+        getAnswerButton.tag = 1001 + indexPath.row;
+        [getAnswerButton addTarget:self action:@selector(p_getAnswerButtonClick:) forControlEvents:UIControlEventTouchUpInside];
         
         NSRange redRange = NSMakeRange([NSString stringWithFormat:@"%@",_commentArray[indexPath.row][@"comment_user"]].length, 2);
         [noteStr addAttribute:NSForegroundColorAttributeName value:[UIColor blackColor] range:redRange];
@@ -529,4 +565,22 @@
     }
 }
 
+- (void)p_replyButtonClick:(UIButton *)sender {
+    NSInteger conmentIndex = sender.tag - 1000;
+    NSString *replyId = [NSString stringWithFormat:@"%@",_commentArray[conmentIndex][@"comment_user_id"]];
+    if ([self.delegate respondsToSelector:@selector(friendsCircleCell:didClickedUserId:)]) {
+        [self.delegate friendsCircleCell:self didClickedUserId:[replyId integerValue]];
+        NSLog(@"p_getAnswerButtonClick");
+    }
+}
+ 
+- (void)p_getAnswerButtonClick:(UIButton *)sender {
+    NSInteger conmentIndex = sender.tag - 1001;
+    NSString *replyId = [NSString stringWithFormat:@"%@",_commentArray[conmentIndex][@"reply_user_id"]];
+    if ([self.delegate respondsToSelector:@selector(friendsCircleCell:didClickedUserId:)]) {
+        [self.delegate friendsCircleCell:self didClickedUserId:[replyId integerValue]];
+        NSLog(@"p_getAnswerButtonClick");
+    }
+}
+    
 @end

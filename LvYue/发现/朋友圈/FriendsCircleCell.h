@@ -7,13 +7,23 @@
 //
 
 #import <UIKit/UIKit.h>
-@class FriendsCircleMessage;
+@class FriendsCircleMessage,FriendsCircleCell;
+
+@protocol FriendsCircleCellDelegate <NSObject>
+
+@optional
+- (void)friendsCircleCell:(FriendsCircleCell *)cell didClickedUserId:(NSInteger )userId;
+
+@end
+
+
 /**
  *  朋友圈 状态cell
  */
 @interface FriendsCircleCell : UITableViewCell<UITableViewDataSource,UITableViewDelegate>
 
-
+@property (nonatomic, weak) id<FriendsCircleCellDelegate>  delegate;
+    
 @property (nonatomic,strong) UIImageView *headImg;//头像
 @property (nonatomic,strong) UILabel *nameLabel;//昵称
 @property (nonatomic, strong) UIButton* reportBtn;//举报

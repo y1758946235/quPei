@@ -34,10 +34,11 @@
 #import "VideoCommitViewController.h"
 #import <MediaPlayer/MediaPlayer.h>
 #import <objc/runtime.h>
+#import "FriendsCircleCell.h"
 
 #define kSingleContentHeight 17.895f
 
-@interface FriendsCirleViewController () <UITableViewDataSource, UITableViewDelegate, UIActionSheetDelegate, UIAlertViewDelegate, UITextViewDelegate, UINavigationControllerDelegate, UIImagePickerControllerDelegate> {
+@interface FriendsCirleViewController () <UITableViewDataSource, UITableViewDelegate, UIActionSheetDelegate, UIAlertViewDelegate, UITextViewDelegate, UINavigationControllerDelegate, UIImagePickerControllerDelegate, FriendsCircleCellDelegate> {
     BOOL isAttention; //是否关注，默认未选中
 
     NSURL *_currentVideoURL; //当前准备要播放的视频的URL
@@ -1558,6 +1559,7 @@
 
     static NSString *cellID = @"myCell";
     FriendsCircleCell *cell = [tableView dequeueReusableCellWithIdentifier:cellID];
+    cell.delegate = self;
     if (!cell) {
         cell = [[FriendsCircleCell alloc] initWithStyle:UITableViewCellStyleSubtitle reuseIdentifier:cellID];
     }
@@ -1857,6 +1859,14 @@
 
     return headerView;
 }
+
+#pragma mark - FriendsCircleCellDelegate
+- (void)friendsCircleCell:(FriendsCircleCell *)cell didClickedUserId:(NSInteger)userId {
+    LYDetailDataViewController* vc = [[LYDetailDataViewController alloc] init];
+    vc.userId = [NSString stringWithFormat:@"%ld",(long)userId];
+    [self.navigationController pushViewController:vc animated:YES];
+}
+
 
 #pragma mark - clickTopButton:
 - (void)clickTipButton:(UIButton *)sender {
