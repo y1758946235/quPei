@@ -1812,6 +1812,7 @@
 		3A55D1341D21206600FB591B /* KFAlertView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = KFAlertView.m; sourceTree = "<group>"; };
 		3A55D1391D220E8800FB591B /* UIView+KFFrame.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIView+KFFrame.h"; sourceTree = "<group>"; };
 		3A55D13A1D220E8800FB591B /* UIView+KFFrame.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIView+KFFrame.m"; sourceTree = "<group>"; };
+		3AA199351DA808BA00137903 /* LvYue.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = LvYue.entitlements; sourceTree = "<group>"; };
 		3AA1FDB61D658AAB00A32EB3 /* UITabBar+Badge.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UITabBar+Badge.h"; sourceTree = "<group>"; };
 		3AA1FDB71D658AAB00A32EB3 /* UITabBar+Badge.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UITabBar+Badge.m"; sourceTree = "<group>"; };
 		3AA553DB1D52ECB7002CD36C /* DayWallet.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DayWallet.h; sourceTree = "<group>"; };
@@ -4710,6 +4711,7 @@
 		1873086D1BB8CE4400B071CE /* LvYue */ = {
 			isa = PBXGroup;
 			children = (
+				3AA199351DA808BA00137903 /* LvYue.entitlements */,
 				A79AA3741BEAFAB00065684F /* Lib */,
 				099BAC671C3B4E8A00C1FA3E /* 隐私条款 */,
 				09A50BB51C3A46C20052E52E /* 举报 */,
@@ -6367,6 +6369,9 @@
 							com.apple.BackgroundModes = {
 								enabled = 1;
 							};
+							com.apple.Push = {
+								enabled = 1;
+							};
 						};
 					};
 					187308831BB8CE4400B071CE = {
@@ -7325,7 +7330,8 @@
 				ARCHS = "$(ARCHS_STANDARD)";
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
-				CODE_SIGN_IDENTITY = "iPhone Developer: qiao you (9R2QDS8496)";
+				CODE_SIGN_ENTITLEMENTS = LvYue/LvYue.entitlements;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				DEVELOPMENT_TEAM = "";
 				ENABLE_BITCODE = NO;
@@ -7388,8 +7394,10 @@
 				ARCHS = "$(ARCHS_STANDARD)";
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
-				CODE_SIGN_IDENTITY = "iPhone Developer: qiao you (9R2QDS8496)";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				CODE_SIGN_ENTITLEMENTS = LvYue/LvYue.entitlements;
+				CODE_SIGN_IDENTITY = "iPhone Distribution: qiao you (7Y2S56W4VL)";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution";
+				DEVELOPMENT_TEAM = "";
 				ENABLE_BITCODE = NO;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
@@ -7433,6 +7441,7 @@
 				PRODUCT_BUNDLE_IDENTIFIER = com.51xiexieni;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE = "";
+				PROVISIONING_PROFILE_SPECIFIER = "";
 			};
 			name = Release;
 		};

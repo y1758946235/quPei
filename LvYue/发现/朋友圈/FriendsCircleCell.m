@@ -503,7 +503,7 @@
     
     //计算高度，并修改label高度
 //    CGSize contentSize = [commentLabel.text sizeWithFont:[UIFont systemFontOfSize:13] constrainedToSize:CGSizeMake(SCREEN_WIDTH - 50 - 5 - 20 - 30, 1000) lineBreakMode:UILineBreakModeCharacterWrap];
-    CGSize contentSize = [commentLabel.text boundingRectWithSize:CGSizeMake(_commentTableView.frame.size.width-30, MAXFLOAT) options:NSStringDrawingUsesLineFragmentOrigin attributes:@{NSFontAttributeName:kFont14} context:nil].size;
+    CGSize contentSize = [commentLabel.text boundingRectWithSize:CGSizeMake(_commentTableView.frame.size.width-30-10, MAXFLOAT) options:NSStringDrawingUsesLineFragmentOrigin attributes:@{NSFontAttributeName:kFont14} context:nil].size;
     //加上上下的范围
     contentSize.height += 10;
     commentLabel.frame = CGRectMake(15, 0, _commentTableView.frame.size.width-30, contentSize.height);
@@ -527,7 +527,7 @@
     }
 
     //CGSize contentSize = [finalStr sizeWithFont:[UIFont systemFontOfSize:13] constrainedToSize:CGSizeMake(SCREEN_WIDTH - 50 - 5 - 20 - 30, 1000) lineBreakMode:UILineBreakModeCharacterWrap];
-    CGSize contentSize = [finalStr boundingRectWithSize:CGSizeMake(tableView.width - 30, MAXFLOAT) options:NSStringDrawingUsesLineFragmentOrigin attributes:@{NSFontAttributeName:kFont14} context:nil].size;
+    CGSize contentSize = [finalStr boundingRectWithSize:CGSizeMake(tableView.width - 30-10, MAXFLOAT) options:NSStringDrawingUsesLineFragmentOrigin attributes:@{NSFontAttributeName:kFont14} context:nil].size;
     //加上上下的范围
     contentSize.height += 10;
     return contentSize.height;

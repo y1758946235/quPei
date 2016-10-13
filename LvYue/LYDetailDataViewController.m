@@ -855,16 +855,16 @@ forRowAtIndexPath:(NSIndexPath *)indexPath {
                     isEqualToString:@"200"]) {
                 [MBProgressHUD hideHUD];
                 NSLog(@"视频播放：%@", successResponse);
+                NSString *str = [NSString stringWithFormat:@"%@%@", IMAGEHEADER,weakSelf.detailInfoModel.authVideoPath];
+                NSString *UrlStr = [str stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
                 MPMoviePlayerViewController *player = [
                     [MPMoviePlayerViewController alloc]
                     initWithContentURL:
                         [NSURL
-                            URLWithString:[NSString
-                                              stringWithFormat:@"%@%@", IMAGEHEADER,
-                                                               weakSelf.detailInfoModel
-                                                                   .authVideoPath]]];
+                            URLWithString:UrlStr]];
                 player.moviePlayer.shouldAutoplay = YES;
                 [weakSelf presentMoviePlayerViewControllerAnimated:player];
+                
             } else if ([[NSString stringWithFormat:@"%@", successResponse[@"code"]]
                            isEqualToString:@"199"]) {
                 [MBProgressHUD hideHUD];
