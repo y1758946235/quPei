@@ -6364,7 +6364,7 @@
 					1873086A1BB8CE4400B071CE = {
 						CreatedOnToolsVersion = 6.4;
 						DevelopmentTeam = 7Y2S56W4VL;
-						ProvisioningStyle = Automatic;
+						ProvisioningStyle = Manual;
 						SystemCapabilities = {
 							com.apple.BackgroundModes = {
 								enabled = 1;
@@ -7332,8 +7332,8 @@
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
 				CODE_SIGN_ENTITLEMENTS = LvYue/LvYue.entitlements;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
-				DEVELOPMENT_TEAM = "";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution";
+				DEVELOPMENT_TEAM = 7Y2S56W4VL;
 				ENABLE_BITCODE = NO;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
@@ -7383,8 +7383,8 @@
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = com.51xiexieni;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE = "";
-				PROVISIONING_PROFILE_SPECIFIER = "";
+				PROVISIONING_PROFILE = "eaaef5be-e1db-4e3b-b321-66ca917794c0";
+				PROVISIONING_PROFILE_SPECIFIER = profileiOSDistributionfallenk;
 			};
 			name = Debug;
 		};
@@ -7397,7 +7397,7 @@
 				CODE_SIGN_ENTITLEMENTS = LvYue/LvYue.entitlements;
 				CODE_SIGN_IDENTITY = "iPhone Distribution: qiao you (7Y2S56W4VL)";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution";
-				DEVELOPMENT_TEAM = "";
+				DEVELOPMENT_TEAM = 7Y2S56W4VL;
 				ENABLE_BITCODE = NO;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
@@ -7440,8 +7440,8 @@
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = com.51xiexieni;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE = "";
-				PROVISIONING_PROFILE_SPECIFIER = "";
+				PROVISIONING_PROFILE = "eaaef5be-e1db-4e3b-b321-66ca917794c0";
+				PROVISIONING_PROFILE_SPECIFIER = profileiOSDistributionfallenk;
 			};
 			name = Release;
 		};

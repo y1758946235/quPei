@@ -28,7 +28,7 @@
 
 #define kSingleContentHeight 17.895f
 static NSString* const str = @"cc";
-@interface HotTopicViewController () <UITableViewDelegate, UITableViewDataSource, UITextViewDelegate, UIActionSheetDelegate> {
+@interface HotTopicViewController () <UITableViewDelegate, UITableViewDataSource, UITextViewDelegate, UIActionSheetDelegate, FriendsCircleCellDelegate> {
     
     UILabel *shortLabel;        //内容Label
     UIImageView *backImageView; //话题背景图
@@ -327,6 +327,7 @@ static NSString* const str = @"cc";
     if (indexPath.section == 0) { //热门动态
         static NSString *cellID = @"myCell";
         FriendsCircleCell *cell = [tableView dequeueReusableCellWithIdentifier:cellID];
+        cell.delegate = self;
         if (!cell) {
             cell = [[FriendsCircleCell alloc] initWithStyle:UITableViewCellStyleSubtitle reuseIdentifier:cellID];
         }
@@ -587,6 +588,14 @@ static NSString* const str = @"cc";
 - (CGFloat)tableView:(UITableView *)tableView heightForFooterInSection:(NSInteger)section {
     return 0.01f;
 }
+
+#pragma mark - FriendsCircleCellDelegate
+- (void)friendsCircleCell:(FriendsCircleCell *)cell didClickedUserId:(NSInteger)userId {
+    LYDetailDataViewController* vc = [[LYDetailDataViewController alloc] init];
+    vc.userId = [NSString stringWithFormat:@"%ld",(long)userId];
+    [self.navigationController pushViewController:vc animated:YES];
+}
+
 
 
 //点击头像
