@@ -12,10 +12,11 @@
 
 - (instancetype)initWithDict:(NSDictionary *)dict {
     if (self = [super init]) {
-        self.buddyID = [NSString stringWithFormat:@"%@",dict[@"id"]];
+        self.buddyID = [NSString stringWithFormat:@"qp%@",dict[@"userId"]];
+       // self.buddyID = [NSString stringWithFormat:@"%@",dict[@"id"]];
         self.remark = [NSString stringWithFormat:@"%@",dict[@"remark"]];
-        self.icon = [NSString stringWithFormat:@"%@%@",IMAGEHEADER,dict[@"icon"]];
-        self.name = [NSString stringWithFormat:@"%@",dict[@"name"]];
+        self.icon = [NSString stringWithFormat:@"%@%@",IMAGEHEADER,dict[@"userIcon"]];
+        self.name = [NSString stringWithFormat:@"%@",dict[@"userNickname"]];
     }
     return self;
 }

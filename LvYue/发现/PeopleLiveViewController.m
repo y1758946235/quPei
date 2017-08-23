@@ -155,7 +155,9 @@
     BMKReverseGeoCodeOption *reverseGeoCodeSearchOption = [[BMKReverseGeoCodeOption alloc] init];
     reverseGeoCodeSearchOption.reverseGeoPoint = pt;
     [self.searcher reverseGeoCode:reverseGeoCodeSearchOption];
+    
     BOOL flag = [self.searcher reverseGeoCode:reverseGeoCodeSearchOption];
+    
 }
 
 - (void)locationManager:(CLLocationManager *)manager didChangeAuthorizationStatus:(CLAuthorizationStatus)status {
@@ -284,7 +286,7 @@
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath{
     if (indexPath.section == 0) {
         LocalCountryViewController *local = [[LocalCountryViewController alloc] init];
-        local.preView = @"live";
+        //local.preView = @"live";
         [self.navigationController pushViewController:local animated:YES];
     }
     else{

@@ -164,8 +164,13 @@
 //    [backBtn addSubview:scroll];
     
     for (int i = 0; i < msgNameArray.count; i++) {
-        UIImageView *imgV = [[UIImageView alloc] init];
-        imgV = (UIImageView *)self.msgArray[i];
+         UIImageView *imgV = (UIImageView *)self.msgArray[i];
+        
+//        UIImageView *imgV = [[UIImageView alloc] init];
+//        imgV = (UIImageView *)self.msgArray[i];
+        
+        //  DLK 内存泄漏
+        
         UIImage *img = imgV.image;
         CGFloat scale = img.size.height / img.size.width;
         imgView = [[UIImageView alloc] init];

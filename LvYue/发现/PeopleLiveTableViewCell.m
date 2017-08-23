@@ -119,9 +119,14 @@
     scroll.pagingEnabled = YES;
     [backBtn addSubview:scroll];
     
-    for (int i = 0; i < self.array.count; i++) {
-        UIImageView *imgV = [[UIImageView alloc] init];
-        imgV = (UIImageView *)imgArray[i];
+    for (int i = 0; i < self.array.count; i++)
+    {
+        
+        UIImageView *imgV = (UIImageView *)imgArray[i];
+        
+//        UIImageView *imgV = [[UIImageView alloc] init];
+//        imgV = (UIImageView *)imgArray[i];
+        // DLk  内存泄漏修改
         UIImage *img = imgV.image;
         CGFloat scale = img.size.height / img.size.width;
         imgView = [[UIImageView alloc] init];

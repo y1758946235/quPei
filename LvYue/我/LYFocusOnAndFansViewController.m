@@ -14,7 +14,6 @@
 #import "LYUserService.h"
 #import "MBProgressHUD+NJ.h"
 
-
 static NSString *const LYFocusOnAndFansTableViewCellIdentity = @"LYFocusOnAndFansTableViewCellIdentity";
 
 @interface LYFocusOnAndFansViewController () <
@@ -23,14 +22,15 @@ static NSString *const LYFocusOnAndFansTableViewCellIdentity = @"LYFocusOnAndFan
 
 @property (nonatomic, strong) UITableView *tableView;
 @property (nonatomic, strong) NSArray<NSDictionary *> *tableViewArray;
-
+@property(nonatomic,strong)UIButton *currentButton;
 @end
 
 @implementation LYFocusOnAndFansViewController
 
 - (void)viewDidLoad {
     [super viewDidLoad];
-
+  
+  
     switch (self.type) {
         case LYFocusOnAndFansViewControllerTypeFocusOn: {
             self.title = @"我的关注";
@@ -149,7 +149,7 @@ static NSString *const LYFocusOnAndFansTableViewCellIdentity = @"LYFocusOnAndFan
 
 - (UITableView *)tableView {
     if (!_tableView) {
-        _tableView = [[UITableView alloc] initWithFrame:CGRectMake(0, 0, SCREEN_WIDTH, SCREEN_HEIGHT-64) style:UITableViewStylePlain];
+        _tableView = [[UITableView alloc] initWithFrame:CGRectMake(0, 55, SCREEN_WIDTH, SCREEN_HEIGHT-64-55) style:UITableViewStylePlain];
         [_tableView registerNib:[UINib nibWithNibName:@"LYFocusOnAndFansTableViewCell" bundle:nil] forCellReuseIdentifier:LYFocusOnAndFansTableViewCellIdentity];
         _tableView.separatorInset  = UIEdgeInsetsMake(0, 100, 0, 0);
         _tableView.delegate        = self;
@@ -160,5 +160,13 @@ static NSString *const LYFocusOnAndFansTableViewCellIdentity = @"LYFocusOnAndFan
     }
     return _tableView;
 }
+
+
+
+
+
+
+
+
 
 @end

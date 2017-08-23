@@ -10,11 +10,12 @@
 
 @interface XWLocationViewController : BaseViewController
 
-@property(nonatomic,strong)NSString *preLoc;
+@property(nonatomic,copy)NSString *preLoc;
 @property(nonatomic,assign)BOOL isProvince;
-@property (nonatomic,strong) NSString *countryId;
-@property (nonatomic,strong) NSString *preName;
-@property (nonatomic,strong) NSString *preView;
-@property (nonatomic,strong) NSString *countryName;
-
+@property (nonatomic,copy) NSString *countryId;
+@property (nonatomic,copy) NSString *preName;
+@property (nonatomic,copy) NSString *preView;
+@property (nonatomic,copy) NSString *countryName;
+@property(nonatomic,copy)NSString *place;  //选择的地方
+@property(nonatomic,copy)NSString *placeId;   //选择地方的id
 @end

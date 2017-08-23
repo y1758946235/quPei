@@ -142,7 +142,14 @@
         return cell;
     }
     else{
-        return nil;
+        static NSString *CellID=@"Cell";
+        UITableViewCell *Cell=[tableView dequeueReusableCellWithIdentifier:CellID];
+        if (!Cell) {
+            Cell=[[UITableViewCell alloc]initWithStyle:UITableViewCellStyleSubtitle reuseIdentifier:CellID];
+            
+        }
+        return Cell;
+
     }
 }
 

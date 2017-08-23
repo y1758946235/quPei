@@ -4,35 +4,43 @@
 <array>
 	<dict>
 		<key>title</key>
-		<string>首页</string>
+		<string>视频</string>
 		<key>selectedImage</key>
-		<string>首页2</string>
+		<string>红色-视频聊icon</string>
 		<key>image</key>
-		<string>首页1</string>
+		<string>灰色-视频聊icon</string>
 	</dict>
 	<dict>
 		<key>title</key>
-		<string>对话</string>
+		<string>在线</string>
 		<key>selectedImage</key>
-		<string>对话2</string>
+		<string>tabbar_photos-active</string>
 		<key>image</key>
-		<string>对话1</string>
+		<string>tabbar_photos</string>
 	</dict>
 	<dict>
 		<key>title</key>
-		<string>动态</string>
+		<string>约会吧</string>
 		<key>selectedImage</key>
-		<string>发现2</string>
+		<string>tabbar_dates-active</string>
 		<key>image</key>
-		<string>发现1</string>
+		<string>tabbar_dates</string>
+	</dict>
+	<dict>
+		<key>title</key>
+		<string>消息</string>
+		<key>selectedImage</key>
+		<string>tabbar_message-active</string>
+		<key>image</key>
+		<string>tabbar_message</string>
 	</dict>
 	<dict>
 		<key>title</key>
 		<string>我</string>
 		<key>selectedImage</key>
-		<string>我2</string>
+		<string>tabbar_me-active</string>
 		<key>image</key>
-		<string>我1</string>
+		<string>tabbar_me</string>
 	</dict>
 </array>
 </plist>

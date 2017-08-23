@@ -427,7 +427,7 @@ forRowAtIndexPath:(NSIndexPath *)indexPath {
                     andParameter:@{
                         @"user_id": [LYUserService sharedInstance].userID,
                         @"friend_user_id": weakSelf.userId
-                    }
+                    } 
                     success:^(id successResponse) {
                         if ([[NSString stringWithFormat:@"%@", successResponse[@"code"]]
                                 isEqualToString:@"200"]) {

@@ -6,18 +6,25 @@
 //  Copyright © 2015年 Xia Wei. All rights reserved.
 //
 
+
+//城市
 #import "XWLocationViewController.h"
-#import "LocationModel.h"
+#import "CityModel.h"
 #import "MBProgressHUD+NJ.h"
 #import "LYHttpPoster.h"
 #import "LYUserService.h"
 #import "EndLocationViewController.h"
-
-@interface XWLocationViewController ()<UITableViewDataSource,UITableViewDelegate>
+#import "changeInfoVC.h"
+#import "pchFile.pch"
+@interface XWLocationViewController ()<UITableViewDataSource,UITableViewDelegate>{
+    changeInfoVC *revise;
+    SearchNearbyViewController *searVC;
+    perfactInfoVC *perinfoVC;
+}
 
 @property(nonatomic,strong)NSMutableArray *dataArr;
 @property (nonatomic,strong) NSMutableArray *locationArray;
-@property (nonatomic,strong) LocationModel *model;
+@property (nonatomic,strong) CityModel *model;
 @property (nonatomic,strong) UITableView *tableV;
 @property (nonatomic,strong) NSString *countryNum;
 
@@ -36,52 +43,62 @@
     _dataArr = [[NSMutableArray alloc]init];
     self.locationArray = [[NSMutableArray alloc] init];
     
-    //如果是选择省份的话
-    if (_isProvince == YES) {
-        //添加测试数据
-        for (int i = 0; i < 100; i ++) {
-            NSString *str = [NSString stringWithFormat:@"%d省",i];
-            [_dataArr addObject:str];
-        }
-    }
-    //选择城市
-    else{
-        for (int i = 0; i < 100; i ++) {
-            NSString *str = [NSString stringWithFormat:@"%d市",i];
-            [_dataArr addObject:str];
-        }
-    }
-    self.title = @"定位";
-    
+    self.title = @"选择城市";
+    [self setNav];
     [self getDataFromWeb];
+}
+
+
+- (void)setNav{
+ 
+    UIButton *button = [[UIButton alloc]initWithFrame:CGRectMake(16, 38, 28, 14)];
+    [button setTitleColor:[UIColor colorWithHexString:@"#424242"] forState:UIControlStateNormal];
+    [button setTitle:@"返回" forState:UIControlStateNormal];
+    button.titleLabel.font = [UIFont fontWithName:@"PingFangSC-Regular" size:14];
+    [button addTarget:self action:@selector(goBack) forControlEvents:UIControlEventTouchUpInside];
+    UIBarButtonItem *back = [[UIBarButtonItem alloc]initWithCustomView:button];
+    self.navigationItem.leftBarButtonItem = back;
+    
+}
+- (void)goBack{
+    
+    [self.navigationController popViewControllerAnimated:YES];
+    
+    
 }
 
 - (void)getDataFromWeb{
     [MBProgressHUD showMessage:nil toView:self.view];
-    
-    [LYHttpPoster postHttpRequestByPost:[NSString stringWithFormat:@"%@/mobile/area/list",REQUESTHEADER] andParameter:@{@"id":self.countryId} success:^(id successResponse) {
-        MLOG(@"结果:%@",successResponse);
-        [MBProgressHUD hideAllHUDsForView:self.view animated:YES];
+    __block XWLocationViewController *weakSelf = self;
+    [LYHttpPoster postHttpRequestByPost:[NSString stringWithFormat:@"%@/mobile/cache/getCity",REQUESTHEADER] andParameter:@{} success:^(id successResponse) {
+
+        [MBProgressHUD hideAllHUDsForView:weakSelf.view animated:YES];
         if ([[NSString stringWithFormat:@"%@",successResponse[@"code"]] isEqualToString:@"200"]) {
-            [self.locationArray removeAllObjects];
-            for (NSDictionary *dict in successResponse[@"data"][@"list"]) {
-                self.model = [[LocationModel alloc] initWithDict:dict];
-                [self.locationArray addObject:self.model];
+              [_locationArray removeAllObjects];
+            for (NSDictionary *dic in successResponse[@"data"]) {
+                
+                CityModel *model = [[CityModel alloc]initWithDict:dic];
+              
+                if ([model.parent_id integerValue]==[_countryId integerValue]) {
+                   [_locationArray addObject:model];
+                }
+
+                
             }
-            [self.tableV reloadData];
-        } else {
-            [MBProgressHUD hideAllHUDsForView:self.view animated:YES];
-            [MBProgressHUD showError:[NSString stringWithFormat:@"%@",successResponse[@"msg"]]];
+            dispatch_async(dispatch_get_main_queue(), ^{
+                [_tableV reloadData];
+            });
+            
         }
-    } andFailure:^(id failureResponse) {
-        [MBProgressHUD hideAllHUDsForView:self.view animated:YES];
+        }andFailure:^(id failureResponse) {
+        [MBProgressHUD hideAllHUDsForView:weakSelf.view animated:YES];
         [MBProgressHUD showError:@"服务器繁忙,请重试"];
     }];
 }
 
 //创建tableView
 - (void) tableViewCreated{
-    self.tableV = [[UITableView alloc] initWithFrame:CGRectMake(0, 0, kMainScreenWidth, kMainScreenHeight)];
+    self.tableV = [[UITableView alloc] initWithFrame:CGRectMake(0, 0, kMainScreenWidth, kMainScreenHeight-48)];
     self.tableV.delegate = self;
     self.tableV.dataSource = self;
     self.tableV.separatorStyle = UITableViewCellSeparatorStyleNone;
@@ -94,7 +111,7 @@
         return 30;
     }
     else if(indexPath.row == 2){
-        return 12;
+        return 20;
     }
     return 48;
 }
@@ -108,69 +125,97 @@
     
     [tableView deselectRowAtIndexPath:indexPath animated:YES];
     
-    if (_isProvince == YES) {
-        if (indexPath.row > 2) {
-            EndLocationViewController *next = [[EndLocationViewController alloc]init];
-            self.model = self.locationArray[indexPath.row - 3];
-            if ([self.model.status integerValue]) {
-                next.preLoc = self.model.name;
-                next.proId = self.model.id;
-                next.countryId = self.countryId;
-                next.preView = self.preView;
-                next.proName = self.model.name;
-                next.countryName = self.countryName;
-                [self.navigationController pushViewController:next animated:YES];
+   
+      
+    if ([self.model.parent_id integerValue] == 20 || [self.model.parent_id integerValue] == 3 || [self.model.parent_id integerValue] == 793 ||[self.model.parent_id integerValue] == 2242||[self.model.parent_id integerValue] == 3250||[self.model.parent_id integerValue] == 3269||[self.model.parent_id integerValue] == 3226) {
+        if (indexPath.row>2) {
+        self.model = self.locationArray[indexPath.row-3];
+        for (UIViewController *controller in self.navigationController.viewControllers) {
+            if ([controller isKindOfClass:[changeInfoVC class]]) {
+                revise =(changeInfoVC *)controller;
+                revise.placee = [NSString stringWithFormat:@"%@%@",self.preLoc,self.model.name];
+                revise.placeId = [NSString stringWithFormat:@"%@,%@",self.countryId,self.model.level];
+                [self postRequest:@"changeInfoVC"];
+                //[self.navigationController popToViewController:revise animated:YES];
             }
-            else{
-                if ([self.preView isEqualToString:@"search"]) {
-                    NSDictionary *dict = @{@"searchCountry":self.countryId,@"countryName":self.countryName,@"searchPro":self.model.id,@"proName":self.model.name};
-                    [[NSNotificationCenter defaultCenter] postNotificationName:@"searchPro" object:nil userInfo:dict];
-                    NSArray *array = [self.navigationController viewControllers];
-                    [self.navigationController popToViewController:array[1] animated:YES];
-                }
-                else if ([self.preView isEqualToString:@"live"]){
-                    NSDictionary *dict = @{@"searchCountry":self.countryId,@"countryName":self.countryName,@"searchPro":self.model.id,@"proName":self.model.name};
-                    [[NSNotificationCenter defaultCenter] postNotificationName:@"liveSelect" object:nil userInfo:dict];
-                    NSArray *array = [self.navigationController viewControllers];
-                    [self.navigationController popToViewController:array[1] animated:YES];
-                }
-                else if ([self.preView isEqualToString:@"addLive"]){
-                    NSDictionary *dict = @{@"searchCountry":self.countryId,@"countryName":self.countryName,@"searchPro":self.model.id,@"proName":self.model.name};
-                    [[NSNotificationCenter defaultCenter] postNotificationName:@"addLive" object:nil userInfo:dict];
-                    NSArray *array = [self.navigationController viewControllers];
-                    [self.navigationController popToViewController:array[2] animated:YES];
-                }
-                else{
-                    [MBProgressHUD showMessage:nil toView:self.view];
-                    [LYHttpPoster postHttpRequestByPost:[NSString stringWithFormat:@"%@/mobile/user/update",REQUESTHEADER] andParameter:@{@"id":[NSString stringWithFormat:@"%@",[LYUserService sharedInstance].userID],@"country":self.countryId,@"province":self.model.id,@"city":self.model.id} success:^(id successResponse) {
-                        MLOG(@"结果:%@",successResponse);
-                        [MBProgressHUD hideAllHUDsForView:self.view animated:YES];
-                        if ([[NSString stringWithFormat:@"%@",successResponse[@"code"]] isEqualToString:@"200"]) {
-                            NSDictionary *dict = @{@"countryName":self.countryName,@"proName":self.model.name};
-                            [[NSNotificationCenter defaultCenter] postNotificationName:@"changeLocation" object:nil userInfo:dict];
-                            NSArray *array = [self.navigationController viewControllers];
-                            [self.navigationController popToViewController:array[1] animated:YES];
-                            
-                        } else {
-                            [MBProgressHUD hideAllHUDsForView:self.view animated:YES];
-                            [MBProgressHUD showError:[NSString stringWithFormat:@"%@",successResponse[@"msg"]]];
-                        }
-                    } andFailure:^(id failureResponse) {
-                        [MBProgressHUD hideAllHUDsForView:self.view animated:YES];
-                        [MBProgressHUD showError:@"服务器繁忙,请重试"];
-                    }];
-                }
+            if ([controller isKindOfClass:[SearchNearbyViewController class]]) {
+                searVC =(SearchNearbyViewController *)controller;
+                searVC.placee = [NSString stringWithFormat:@"%@%@",self.preLoc,self.model.name];
+                searVC.placeId = [NSString stringWithFormat:@"%@,%@",self.countryId,self.model.level];
+                [[NSNotificationCenter defaultCenter]postNotificationName:@"currentSearchNearbyViewControllerplace" object:nil userInfo:nil];
+                [self.navigationController popToViewController:searVC animated:YES];
+            }
+            if ([controller isKindOfClass:[perfactInfoVC class]]) {
+                perinfoVC =(perfactInfoVC *)controller;
+                perinfoVC.placee = [NSString stringWithFormat:@"%@%@",self.preLoc,self.model.name];
+                perinfoVC.placeId = [NSString stringWithFormat:@"%@,%@",self.countryId,self.model.level];
+           [[NSNotificationCenter defaultCenter]postNotificationName:@"currentPerfactInfoVCplace" object:nil userInfo:nil];
+                [self.navigationController popToViewController:perinfoVC animated:YES];
+            }
+            
             }
         }
+       
+    }else{
+        if (indexPath.row>2) {
+            
+      
+        EndLocationViewController *next = [[EndLocationViewController alloc]init];
+        self.model = self.locationArray[indexPath.row - 3];
         
+        next.preLoc = self.model.name;
+        
+        next.countryId = self.model.level;
+        next.placeId = [NSString stringWithFormat:@"%@",self.countryId];
+        next.place = [NSString stringWithFormat:@"%@ %@",self.preLoc,self.model.name];
+        [self.navigationController pushViewController:next animated:YES];
+            
+        }
     }
-    else{
-        //设置通知返回选中的城市给首页
-        [[NSNotificationCenter defaultCenter] postNotificationName:@"reloadLocation_XW" object:nil userInfo:@{@"city":_dataArr[indexPath.row - 3]}];
-        [self.navigationController popToRootViewControllerAnimated:YES];
-    }
+    
 }
 
+#pragma mark  ----发送修改地址的请求
+- (void)postRequest:(NSString *)VCName{
+    NSString *userId = [[NSUserDefaults standardUserDefaults]objectForKey:@"userId"];
+    [LYHttpPoster postHttpRequestByPost:[NSString stringWithFormat:@"%@/mobile/user/updatePersonalInfo",REQUESTHEADER] andParameter:@{@"userId":userId,@"userProvince":self.countryId,@"userCity":self.model.level,@"userDistrict":@"0"} success:^(id successResponse) {
+       // MLOG(@"结果:%@",successResponse);
+        [MBProgressHUD hideHUD];
+        if ([[NSString stringWithFormat:@"%@",successResponse[@"code"]] isEqualToString:@"200"]) {
+            
+            [MBProgressHUD showSuccess:@"地址修改成功"];
+            if ([VCName isEqualToString:@"changeInfoVC"]) {
+                [self performSelector:@selector(popToVRevise) withObject:self afterDelay:1];
+
+            }
+//            else  if ([VCName isEqualToString:@"SearchNearbyViewController"]){
+//                 [self performSelector:@selector(popTosSearVC) withObject:self afterDelay:1];
+//            }else{
+//                 [self performSelector:@selector(popToPerinfoVC) withObject:self afterDelay:1];
+//            }
+                   } else {
+            [MBProgressHUD hideHUD];
+            [MBProgressHUD showError:[NSString stringWithFormat:@"%@",successResponse[@"errorMsg"]]];
+        }
+    } andFailure:^(id failureResponse) {
+        [MBProgressHUD hideHUD];
+        [MBProgressHUD showError:@"服务器繁忙,请重试"];
+    }];
+    
+    
+    
+}
+
+- (void)popToVRevise{
+    [self.navigationController popToViewController:revise animated:YES];
+}
+
+- (void)popTosSearVC{
+    [self.navigationController popToViewController:searVC animated:YES];
+}
+- (void)popToPerinfoVC{
+    [self.navigationController popToViewController:perinfoVC animated:YES];
+}
 //创建每个cell
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath{
     static NSString *identifier = @"cellIdentifier";
@@ -178,10 +223,10 @@
     if (indexPath.row == 0) {
         UITableViewCell *cell = [[UITableViewCell alloc] init];
         [cell setBackgroundColor:UIColorWithRGBA(234, 234, 234, 1)];
-        cell.textLabel.text = @"全部地区";
-        cell.textLabel.font = [UIFont boldSystemFontOfSize:14];
-        int temp = 158;
-        cell.textLabel.textColor = UIColorWithRGBA(temp, temp, temp, 1);
+        cell.textLabel.text = @"当前省/市";
+        cell.textLabel.font = [UIFont fontWithName:@"PingFangSC-Regular" size:14];
+        cell.textLabel.textColor = [UIColor colorWithHexString:@"#424242"];
+       
         cell.selectionStyle = UITableViewCellSelectionStyleNone;
         cell.userInteractionEnabled = NO;
         return cell;
@@ -189,10 +234,14 @@
     //已选中的地区
     else if(indexPath.row == 1) {
         UITableViewCell *cell = [[UITableViewCell alloc] init];
-        cell.textLabel.text = _preLoc;
+        cell.textLabel.text = self.preLoc;
+        cell.textLabel.textColor = [UIColor colorWithHexString:@"#757575"];
+        cell.textLabel.font = [UIFont fontWithName:@"PingFangSC-Light" size:14];
+       
         //设置已选地区label
-        UILabel *selectedLabel = [[UILabel alloc]initWithFrame:CGRectMake(kMainScreenWidth - 100, 0, 100, 48)];
+        UILabel *selectedLabel = [[UILabel alloc]initWithFrame:CGRectMake(kMainScreenWidth - 100, 0, 80, 48)];
         selectedLabel.textColor = UIColorWithRGBA(158, 158, 158, 1);
+        selectedLabel.textAlignment = NSTextAlignmentRight;
         selectedLabel.text = @"已选地区";
         
         selectedLabel.font = [UIFont systemFontOfSize:15];
@@ -203,6 +252,9 @@
     else if (indexPath.row == 2){
         UITableViewCell *cell = [[UITableViewCell alloc] init];
         [cell setBackgroundColor:UIColorWithRGBA(234, 234, 234, 1)];
+        cell.textLabel.text = @"所有地区";
+        cell.textLabel.font = [UIFont fontWithName:@"PingFangSC-Regular" size:12];
+        cell.textLabel.textColor = [UIColor colorWithHexString:@"#424242"];
         cell.selectionStyle = UITableViewCellSelectionStyleNone;
         return cell;
     }
@@ -219,6 +271,8 @@
             [cell addSubview:lineView];
             self.model = self.locationArray[indexPath.row - 3];
             cell.textLabel.text = self.model.name;
+            cell.textLabel.textColor = [UIColor colorWithHexString:@"#757575"];
+            cell.textLabel.font = [UIFont fontWithName:@"PingFangSC-Light" size:14];
         }
         
         return cell;

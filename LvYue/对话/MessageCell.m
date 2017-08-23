@@ -15,7 +15,7 @@
 
 - (void)awakeFromNib {
     
-    self.iconView.layer.cornerRadius = 3.0;
+    self.iconView.layer.cornerRadius = 25;
     self.iconView.clipsToBounds = YES;
     self.unReadCountBtn.layer.cornerRadius = 10.0;
     self.unReadCountBtn.clipsToBounds = YES;
@@ -41,6 +41,24 @@
     //如果是单聊类型
     if (conversation.conversationType == eConversationTypeChat) {
         [self getUserDetailWithUserID:conversation.chatter];
+//       NSString *NewId = [conversation.chatter substringFromIndex:2];
+//        [LYHttpPoster postHttpRequestByPost:[NSString stringWithFormat:@"%@/mobile/user/getPersonalInfo",REQUESTHEADER] andParameter:@{@"userId":NewId} success:^(id successResponse) {
+//            if ([[NSString stringWithFormat:@"%@",successResponse[@"code"]] isEqualToString:@"200"]) {
+//                //                        NSDictionary *user = successResponse[@"data"][@"user"];
+//                //                        NSString *userID = [NSString stringWithFormat:@"%@",user[@"id"]];
+//                //                        NSString *name = [NSString stringWithFormat:@"%@",user[@"name"]];
+//                //                        NSString *remark = [NSString stringWithFormat:@"%@",user[@"remark"]];
+//                //                        NSString *icon = [NSString stringWithFormat:@"%@%@",IMAGEHEADER,user[@"icon"]];
+//                NSDictionary *user = successResponse[@"data"];
+////                NSString *userID = [NSString stringWithFormat:@"%@",user[@"userId"]];
+////                NSString *name = [NSString stringWithFormat:@"%@",user[@"userNickname"]];
+////                NSString *remark = [NSString stringWithFormat:@"%@",user[@"remark"]];
+//                NSString *icon = [NSString stringWithFormat:@"%@%@",IMAGEHEADER,user[@"userIcon"]];
+//             
+//                [self.iconView sd_setImageWithURL:[NSURL URLWithString:icon]];}
+//            } andFailure:^(id failureResponse) {
+//            }];
+
     }
     
     //如果是群聊类型
@@ -52,6 +70,20 @@
 
 - (void)getUserDetailWithUserID:(NSString *)userID {
     
+//    NSString *NewId = [userID substringFromIndex:2];
+//    [LYHttpPoster postHttpRequestByPost:[NSString stringWithFormat:@"%@/mobile/user/getPersonalInfo",REQUESTHEADER] andParameter:@{@"userId":NewId} success:^(id successResponse) {
+//        if ([[NSString stringWithFormat:@"%@",successResponse[@"code"]] isEqualToString:@"200"]) {
+//            NSDictionary *user = successResponse[@"data"];
+//          
+//            NSString *name = [NSString stringWithFormat:@"%@",user[@"userNickname"]];
+//            NSString *icon = [NSString stringWithFormat:@"%@%@",IMAGEHEADER,user[@"userIcon"]];
+//         
+//            self.nameLabel.text = name;
+//           
+//            [self.iconView sd_setImageWithURL:[NSURL URLWithString:icon]];
+//        } } andFailure:^(id failureResponse) {
+//        }];
+      //      存入数据库
     [kAppDelegate.dataBaseQueue inDatabase:^(FMDatabase *db) {
         __block NSDictionary *resultDict;
         //打开数据库
@@ -79,14 +111,21 @@
             } else {
                 [kAppDelegate.dataBase close];
                 //不存在,请求
-                [LYHttpPoster postHttpRequestByPost:[NSString stringWithFormat:@"%@/mobile/userFriend/getInfo",REQUESTHEADER] andParameter:@{@"user_id":[LYUserService sharedInstance].userID,@"friend_user_id":userID} success:^(id successResponse) {
+//                [LYHttpPoster postHttpRequestByPost:[NSString stringWithFormat:@"%@/mobile/userFriend/getInfo",REQUESTHEADER] andParameter:@{@"user_id":[LYUserService sharedInstance].userID,@"friend_user_id":userID} success:^(id successResponse) {
+                NSString *NewId = [userID substringFromIndex:2];
+                 [LYHttpPoster postHttpRequestByPost:[NSString stringWithFormat:@"%@/mobile/user/getPersonalInfo",REQUESTHEADER] andParameter:@{@"userId":NewId} success:^(id successResponse) {
                     if ([[NSString stringWithFormat:@"%@",successResponse[@"code"]] isEqualToString:@"200"]) {
-                        NSDictionary *user = successResponse[@"data"][@"user"];
-                        NSString *userID = [NSString stringWithFormat:@"%@",user[@"id"]];
-                        NSString *name = [NSString stringWithFormat:@"%@",user[@"name"]];
+//                        NSDictionary *user = successResponse[@"data"][@"user"];
+//                        NSString *userID = [NSString stringWithFormat:@"%@",user[@"id"]];
+//                        NSString *name = [NSString stringWithFormat:@"%@",user[@"name"]];
+//                        NSString *remark = [NSString stringWithFormat:@"%@",user[@"remark"]];
+//                        NSString *icon = [NSString stringWithFormat:@"%@%@",IMAGEHEADER,user[@"icon"]];
+                        NSDictionary *user = successResponse[@"data"];
+                        NSString *userId = [NSString stringWithFormat:@"%@",user[@"userId"]];
+                        NSString *name = [NSString stringWithFormat:@"%@",user[@"userNickname"]];
                         NSString *remark = [NSString stringWithFormat:@"%@",user[@"remark"]];
-                        NSString *icon = [NSString stringWithFormat:@"%@%@",IMAGEHEADER,user[@"icon"]];
-                        resultDict = @{@"userID":userID,@"name":name,@"remark":remark,@"icon":icon};
+                        NSString *icon = [NSString stringWithFormat:@"%@%@",IMAGEHEADER,user[@"userIcon"]];
+                        resultDict = @{@"userID":userId,@"name":name,@"remark":remark,@"icon":icon};
                         if (resultDict[@"remark"] && !([[NSString stringWithFormat:@"%@",resultDict[@"remark"]] isEqualToString:@""]) && !([[NSString stringWithFormat:@"%@",resultDict[@"remark"]] isEqualToString:@"(null)"])) {
                             self.nameLabel.text = remark;
                         } else {
@@ -96,7 +135,7 @@
                         //存入数据库
                         [kAppDelegate.dataBaseQueue inDatabase:^(FMDatabase *db) {
                             if ([kAppDelegate.dataBase open]) {
-                                NSString *insertSql = [NSString stringWithFormat:@"INSERT INTO '%@'('%@','%@','%@','%@') VALUES('%@','%@','%@','%@')",@"User",@"userID",@"name",@"remark",@"icon",userID,name,remark,icon];
+                                NSString *insertSql = [NSString stringWithFormat:@"INSERT INTO '%@'('%@','%@','%@','%@') VALUES('%@','%@','%@','%@')",@"User",@"userID",@"name",@"remark",@"icon",[NSString stringWithFormat:@"qp%@",userId],name,remark,icon];
                                 BOOL isSuccess = [kAppDelegate.dataBase executeUpdate:insertSql];
                                 if (isSuccess) {
                                     MLOG(@"插入数据成功!");

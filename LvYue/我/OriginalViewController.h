@@ -15,6 +15,7 @@
 @property (nonatomic, strong) NSArray *imageData;
 @property (nonatomic, strong) NSArray *smallImage;
 @property (nonatomic, strong) NSString *userId;
+@property(nonatomic,assign) BOOL isBuyed;
 @property (nonatomic, copy) void (^dismissBlock)(void);
 
 - (void)showImageWithIndex:(NSInteger)index andCount:(NSInteger)count;

@@ -39,8 +39,23 @@
     [self.navigationController setNavigationBarHidden:NO];
     
     self.title = @"意见反馈";
+    [self setNav];
     
     [self createView];
+}
+
+- (void)setNav{
+    UIButton *button = [[UIButton alloc]initWithFrame:CGRectMake(16, 38, 28, 14)];
+    [button setTitleColor:[UIColor colorWithHexString:@"#424242"] forState:UIControlStateNormal];
+    [button setTitle:@"返回" forState:UIControlStateNormal];
+    button.titleLabel.font = [UIFont fontWithName:@"PingFangSC-Regular" size:14];
+    [button addTarget:self action:@selector(goBack) forControlEvents:UIControlEventTouchUpInside];
+    UIBarButtonItem *back = [[UIBarButtonItem alloc]initWithCustomView:button];
+    self.navigationItem.leftBarButtonItem = back;
+}
+
+- (void)goBack{
+    [self.navigationController popViewControllerAnimated:YES];
 }
 
 - (void)createView{
@@ -82,7 +97,7 @@
     [applyBtn setCenter:CGPointMake(kMainScreenWidth / 2, detailView.frame.origin.y + 250)];
     [applyBtn setBounds:CGRectMake(0, 0, kMainScreenWidth - 40, 40)];
     [applyBtn setTitle:@"提交" forState:UIControlStateNormal];
-    [applyBtn setBackgroundColor:[UIColor colorWithRed:29/255.0 green:189/255.0 blue:159/255.0 alpha:1]];
+    [applyBtn setBackgroundColor:[UIColor colorWithHexString:@"#ff5252"]];
     [applyBtn addTarget:self action:@selector(applyFeedBack) forControlEvents:UIControlEventTouchUpInside];
     [applyBtn setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
     [applyBtn.layer setCornerRadius:4];
@@ -97,7 +112,7 @@
     }
     
     [MBProgressHUD showMessage:@"正在提交，请稍后..." toView:self.view];
-    [LYHttpPoster postHttpRequestByPost:[NSString stringWithFormat:@"%@/mobile/getQiniuToken",REQUESTHEADER] andParameter:@{} success:^(id successResponse) {
+    [LYHttpPoster postHttpRequestByPost:[NSString stringWithFormat:@"%@/mobile/config/getQiniuToken",REQUESTHEADER] andParameter:@{} success:^(id successResponse) {
         MLOG(@"结果:%@",successResponse);
         if ([[NSString stringWithFormat:@"%@",successResponse[@"code"]] isEqualToString:@"200"]) {
             
@@ -107,7 +122,7 @@
                 UIImage *image = self.imageArray[0];
                 NSData *photoData = UIImageJPEGRepresentation(image, 0.3);
                 
-                NSString *token = successResponse[@"data"][@"qiniuToken"];
+                NSString *token = successResponse[@"data"];
                 
                 //获取当前时间
                 NSDate *now = [NSDate date];
@@ -125,7 +140,7 @@
                 NSString *locationString = [NSString stringWithFormat:@"iosLvYueFeedBack%d%d%d%d%d%d",year,month,day,hour,minute,second];
                 
                 NSLog(@"时间:%@",locationString);
-                
+            
                 QNUploadManager *upManager = [[QNUploadManager alloc] init];
                 [upManager putData:photoData key:locationString token:token
                           complete: ^(QNResponseInfo *info, NSString *key, NSDictionary *resp) {
@@ -136,9 +151,10 @@
                                   [MBProgressHUD showError:@"上传失败"];
                               }
                               else{
+                                  NSString *userId = [[NSUserDefaults standardUserDefaults]objectForKey:@"userId"];
                                   //服务器获取图片
-                                  [LYHttpPoster postHttpRequestByPost:[NSString stringWithFormat:@"%@/mobile/feedback/add",REQUESTHEADER] andParameter:@{@"user_id":[LYUserService sharedInstance].userID,@"photo":locationString,@"content":self.feedText.text} success:^(id successResponse) {
-                                      MLOG(@"结果:%@",successResponse);
+                                  [LYHttpPoster postHttpRequestByPost:[NSString stringWithFormat:@"%@/mobile/user/addUserFeedback",REQUESTHEADER] andParameter:@{@"userId":userId,@"feedbackPhoto":locationString,@"feedbackContent":self.feedText.text} success:^(id successResponse) {
+                                      MLOG(@"提交意见反馈结果:%@",successResponse);
                                       if ([[NSString stringWithFormat:@"%@",successResponse[@"code"]] isEqualToString:@"200"]) {
                                           [MBProgressHUD hideAllHUDsForView:self.view animated:YES];
                                           [[[UIAlertView alloc] initWithTitle:@"" message:@"已经提交反馈，我们将尽快为您处理" delegate:self cancelButtonTitle:@"好的" otherButtonTitles: nil] show];
@@ -146,7 +162,7 @@
                                           
                                       } else {
                                           [MBProgressHUD hideAllHUDsForView:self.view animated:YES];
-                                          [MBProgressHUD showError:[NSString stringWithFormat:@"%@",successResponse[@"msg"]]];
+                                          [MBProgressHUD showError:[NSString stringWithFormat:@"%@",successResponse[@"errorMsg"]]];
                                       }
                                   } andFailure:^(id failureResponse) {
                                       [MBProgressHUD hideAllHUDsForView:self.view animated:YES];
@@ -156,7 +172,8 @@
                           } option: nil];
             }
             else if (!self.imageArray.count){
-                [LYHttpPoster postHttpRequestByPost:[NSString stringWithFormat:@"%@/mobile/feedback/add",REQUESTHEADER] andParameter:@{@"user_id":[LYUserService sharedInstance].userID,@"photo":@"",@"content":self.feedText.text} success:^(id successResponse) {
+                 NSString *userId = [[NSUserDefaults standardUserDefaults]objectForKey:@"userId"];
+                [LYHttpPoster postHttpRequestByPost:[NSString stringWithFormat:@"%@/mobile/user/addUserFeedback",REQUESTHEADER] andParameter:@{@"userId":userId,@"feedbackPhoto":@"",@"feedbackContent":self.feedText.text} success:^(id successResponse) {
                     MLOG(@"结果:%@",successResponse);
                     if ([[NSString stringWithFormat:@"%@",successResponse[@"code"]] isEqualToString:@"200"]) {
                         [MBProgressHUD hideAllHUDsForView:self.view animated:YES];
@@ -165,7 +182,7 @@
                         
                     } else {
                         [MBProgressHUD hideAllHUDsForView:self.view animated:YES];
-                        [MBProgressHUD showError:[NSString stringWithFormat:@"%@",successResponse[@"msg"]]];
+                        [MBProgressHUD showError:[NSString stringWithFormat:@"%@",successResponse[@"errorMsg"]]];
                     }
                 } andFailure:^(id failureResponse) {
                     [MBProgressHUD hideAllHUDsForView:self.view animated:YES];
@@ -175,7 +192,7 @@
             
         } else {
             [MBProgressHUD hideAllHUDsForView:self.view animated:YES];
-            [MBProgressHUD showError:[NSString stringWithFormat:@"%@",successResponse[@"msg"]]];
+            [MBProgressHUD showError:[NSString stringWithFormat:@"%@",successResponse[@"errorMsg"]]];
         }
     } andFailure:^(id failureResponse) {
         [MBProgressHUD hideAllHUDsForView:self.view animated:YES];

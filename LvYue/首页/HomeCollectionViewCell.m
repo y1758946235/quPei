@@ -13,7 +13,8 @@
 
 @implementation HomeCollectionViewCell
 
-- (void)awakeFromNib {
+- (void)awakeFromNib
+{
     // Initialization code
 }
 
@@ -32,7 +33,8 @@
 }
 
 
-- (instancetype)initWithFrame:(CGRect)frame {
+- (instancetype)initWithFrame:(CGRect)frame
+{
     
 //    CGRect collectionRect = frame;
 //    CGFloat rectX = collectionRect.origin.x + 5;
@@ -318,7 +320,10 @@
                                  @"userId": [NSString stringWithFormat:@"%@", dict[@"id"]] };
         [self.comeArray addObject:visit];
     }
-    NSInteger count = self.comeArray.count >= self.comeImageArray.count ? self.comeImageArray.count : self.comeArray.count;
+//    NSInteger count = self.comeArray.count >= self.comeImageArray.count ? self.comeImageArray.count : self.comeArray.count;
+    
+    //DLK   内存泄露修改删除上面代码
+    
     //    for (int i = 0; i < count; i ++) {
     //        [self.comeImageArray[i] sd_setImageWithURL:[NSURL URLWithString:[NSString stringWithFormat:@"%@%@",IMAGEHEADER,self.comeArray[i][@"icon"]]] placeholderImage:[UIImage imageNamed:@"头像"] options:SDWebImageRetryFailed];
     //        [self.comeImageArray[i] setUserInteractionEnabled:YES];

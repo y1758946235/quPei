@@ -9,5 +9,7 @@
 #import "BaseViewController.h"
 
 @interface LYHomeViewController : BaseViewController
-
+@property(nonatomic,copy)NSString *placeId;
+@property(nonatomic,copy)NSString *arrayType;
+@property(nonatomic,copy)NSString *userSex;
 @end

@@ -2,13 +2,13 @@
   "images" : [
     {
       "idiom" : "universal",
-      "scale" : "1x",
-      "filename" : "alipaly-j.png"
+      "filename" : "alipaly-j.png",
+      "scale" : "1x"
     },
     {
       "idiom" : "universal",
-      "scale" : "2x",
-      "filename" : "alipaly-j@2x.png"
+      "filename" : "alipaly-j@2x.png",
+      "scale" : "2x"
     },
     {
       "idiom" : "universal",

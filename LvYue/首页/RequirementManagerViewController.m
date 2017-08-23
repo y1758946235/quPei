@@ -23,8 +23,10 @@
 
 @implementation RequirementManagerViewController
 
-- (void)viewWillAppear:(BOOL)animated {
+- (void)viewWillAppear:(BOOL)animated
+{
     self.navigationController.navigationBarHidden = NO;
+    [super viewWillAppear:animated];
 }
 
 - (void)viewDidLoad {

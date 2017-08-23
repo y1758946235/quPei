@@ -15,10 +15,18 @@
 #import <CoreLocation/CoreLocation.h>
 #import "BMapKit.h"
 
+
+//省份
 @interface LocalCountryViewController ()<UITableViewDataSource,UITableViewDelegate,CLLocationManagerDelegate,BMKGeoCodeSearchDelegate>
 {
+    
+    //保存当前选择的省份
+    NSString *currentProvince;
     //保存当前选择的城市
+    
     NSString *currentCity;
+    //保存当前选择的区县
+    NSString *currentDistrict;
 }
 
 @property(nonatomic,strong)NSMutableArray *dataArr;
@@ -70,7 +78,7 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
     [self tableViewCreated];
-    
+    [self setNav];
     currentCity = @"定位中";
     
     self.clManager.delegate = self;
@@ -87,15 +95,58 @@
     
     self.locationArray = [[NSMutableArray alloc] init];
     _dataArr = [[NSMutableArray alloc]init];
-    //添加测试数据
-    for (int i = 0; i < 100; i ++) {
-        NSString *str = [NSString stringWithFormat:@"%d国",i];
-        [_dataArr addObject:str];
-    }
-    self.title = @"定位";
-    
-    [self getDataFromWeb];
+     [self getDataFromWeb];
 }
+#pragma mark   -------配置导航栏
+- (void)setNav{
+    self.title = @"选择省份";
+    //导航栏title的颜色
+    [self.navigationController.navigationBar setTitleTextAttributes:[NSDictionary dictionaryWithObjectsAndKeys:[UIColor colorWithHexString:@"#424242"],UITextAttributeTextColor, [UIFont fontWithName:@"PingFangSC-Medium" size:18],UITextAttributeFont, nil]];
+    
+    //导航栏返回按钮
+    UIButton *button = [[UIButton alloc]initWithFrame:CGRectMake(16, 38, 28, 14)];
+    [button setTitleColor:[UIColor colorWithHexString:@"#424242"] forState:UIControlStateNormal];
+    [button setTitle:@"返回" forState:UIControlStateNormal];
+    button.titleLabel.font = [UIFont fontWithName:@"PingFangSC-Regular" size:14];
+    [button addTarget:self action:@selector(goBack) forControlEvents:UIControlEventTouchUpInside];
+    UIBarButtonItem *back = [[UIBarButtonItem alloc]initWithCustomView:button];
+    self.navigationItem.leftBarButtonItem = back;
+    
+ 
+    
+    if (self.xiugaiZiliao == YES) {
+       
+    }else{
+        //导航栏保存按钮
+        UIButton *edit = [[UIButton alloc]initWithFrame:CGRectMake(SCREEN_WIDTH-16-60, 38, 60, 14)];
+        [edit setTitleColor:[UIColor colorWithHexString:@"#ff5252"] forState:UIControlStateNormal];
+        [edit setTitle:@"当前位置" forState:UIControlStateNormal];
+        edit.titleLabel.font = [UIFont fontWithName:@"PingFangSC-Regular" size:14];
+        [edit addTarget:self action:@selector(currentlocat) forControlEvents:UIControlEventTouchUpInside];
+        UIBarButtonItem *edited = [[UIBarButtonItem alloc]initWithCustomView:edit];
+        self.navigationItem.rightBarButtonItem = edited;
+    }
+    
+}
+
+-(void)currentlocat{
+    if (self.currnentLocationBlock != nil) {
+        if ([CommonTool dx_isNullOrNilWithObject:currentProvince] ||[CommonTool dx_isNullOrNilWithObject:currentCity]) {
+            [MBProgressHUD showError:@"定位失败,请手动选择地址"];
+        }else{
+            self.currnentLocationBlock(currentProvince,currentCity,currentDistrict);
+            
+            [self.navigationController popViewControllerAnimated:YES];
+            
+        }
+        
+    }
+}
+- (void)goBack{
+    [self.navigationController popViewControllerAnimated:YES];
+}
+
+
 
 #pragma mark - CLLocationManagerDelegate
 - (void)locationManager:(CLLocationManager *)manager didUpdateLocations:(NSArray *)locations {
@@ -149,6 +200,8 @@
 - (void)onGetReverseGeoCodeResult:(BMKGeoCodeSearch *)searcher result:(BMKReverseGeoCodeResult *)result errorCode:(BMKSearchErrorCode)error{
     if (result) {
         currentCity = [NSString stringWithFormat:@"%@", result.addressDetail.city];
+        currentProvince = [NSString stringWithFormat:@"%@", result.addressDetail.province];
+        currentDistrict = [NSString stringWithFormat:@"%@", result.addressDetail.district];
         NSLog(@"%@ - %@", result.address, result.addressDetail.streetNumber);
     }else{
         currentCity = @"定位失败";
@@ -159,13 +212,15 @@
 - (void)getDataFromWeb{
     [MBProgressHUD showMessage:nil toView:self.view];
     
-    [LYHttpPoster postHttpRequestByPost:[NSString stringWithFormat:@"%@/mobile/area/list",REQUESTHEADER] andParameter:@{} success:^(id successResponse) {
-        MLOG(@"结果:%@",successResponse);
+    [LYHttpPoster postHttpRequestByPost:[NSString stringWithFormat:@"%@/mobile/cache/getProvince",REQUESTHEADER] andParameter:@{} success:^(id successResponse) {
+       // MLOG(@"省份结果:%@",successResponse);
         [MBProgressHUD hideAllHUDsForView:self.view animated:YES];
         if ([[NSString stringWithFormat:@"%@",successResponse[@"code"]] isEqualToString:@"200"]) {
             [self.locationArray removeAllObjects];
-            for (NSDictionary *dict in successResponse[@"data"][@"list"]) {
+            for (NSDictionary *dict in successResponse[@"data"]) {
                 self.model = [[LocationModel alloc] initWithDict:dict];
+               
+             
                 [self.locationArray addObject:self.model];
             }
             [self.tableV reloadData];
@@ -181,7 +236,7 @@
 
 //创建tableView
 - (void) tableViewCreated{
-    self.tableV = [[UITableView alloc] initWithFrame:CGRectMake(0, 0, kMainScreenWidth, kMainScreenHeight)];
+    self.tableV = [[UITableView alloc] initWithFrame:CGRectMake(0, 0, kMainScreenWidth, kMainScreenHeight-48)];
     self.tableV.delegate = self;
     self.tableV.dataSource = self;
     self.tableV.separatorStyle = UITableViewCellSeparatorStyleNone;
@@ -208,56 +263,17 @@
     
     [tableView deselectRowAtIndexPath:indexPath animated:YES];
     
-    //点击选择下一层地区并把当前选择的地区传送过去
-    if (indexPath.row > 2) {
-        self.model = self.locationArray[indexPath.row - 3];
-        if ([self.model.status integerValue]) {
-            XWLocationViewController *next = [[XWLocationViewController alloc]init];
-            next.preLoc = self.model.name;
-            next.isProvince = YES;
-            next.countryId = self.model.id;
-            next.preView = self.preView;
-            next.countryName = self.model.name;
-            [self.navigationController pushViewController:next animated:YES];
-        }
-        else{
-            if ([self.preView isEqualToString:@"search"]) {
-                NSDictionary *dict = @{@"searchCountry":self.model.id,@"countryName":self.model.name};
-                [[NSNotificationCenter defaultCenter] postNotificationName:@"searchCountry" object:nil userInfo:dict];
-                [self.navigationController popViewControllerAnimated:YES];
-            }
-            else if ([self.preView isEqualToString:@"live"]){
-                NSDictionary *dict = @{@"searchCountry":self.model.id,@"countryName":self.model.name};
-                [[NSNotificationCenter defaultCenter] postNotificationName:@"liveSelect" object:nil userInfo:dict];
-                [self.navigationController popViewControllerAnimated:YES];
-            }
-            else if ([self.preView isEqualToString:@"addLive"]){
-                NSDictionary *dict = @{@"searchCountry":self.model.id,@"countryName":self.model.name};
-                [[NSNotificationCenter defaultCenter] postNotificationName:@"addLive" object:nil userInfo:dict];
-                [self.navigationController popViewControllerAnimated:YES];
-            }
-            else{
-                [MBProgressHUD showMessage:nil toView:self.view];
-                [LYHttpPoster postHttpRequestByPost:[NSString stringWithFormat:@"%@/mobile/user/update",REQUESTHEADER] andParameter:@{@"id":[NSString stringWithFormat:@"%@",[LYUserService sharedInstance].userID],@"country":self.model.id,@"province":self.model.id,@"city":self.model.id} success:^(id successResponse) {
-                    MLOG(@"结果:%@",successResponse);
-                    [MBProgressHUD hideAllHUDsForView:self.view animated:YES];
-                    if ([[NSString stringWithFormat:@"%@",successResponse[@"code"]] isEqualToString:@"200"]) {
-                        NSDictionary *dict = @{@"countryName":self.model.name};
-                        [[NSNotificationCenter defaultCenter] postNotificationName:@"changeLocation" object:nil userInfo:dict];
-                        [self.navigationController popViewControllerAnimated:YES];
-                        
-                    } else {
-                        [MBProgressHUD hideAllHUDsForView:self.view animated:YES];
-                        [MBProgressHUD showError:[NSString stringWithFormat:@"%@",successResponse[@"msg"]]];
-                    }
-                } andFailure:^(id failureResponse) {
-                    [MBProgressHUD hideAllHUDsForView:self.view animated:YES];
-                    [MBProgressHUD showError:@"服务器繁忙,请重试"];
-                }];
-            }
-        }
+    if (indexPath.row>2) {
+        self.model = self.locationArray[indexPath.row-3];
+        XWLocationViewController *next = [[XWLocationViewController alloc]init];
+            next.preLoc = self.model.name; //选中城市的名字
+            next.countryId = self.model.level;//选中城市的id
+       
+        [self.navigationController pushViewController:next animated:YES];
     }
-}
+    
+    }
+
 
 //创建每个cell
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath{
@@ -266,13 +282,14 @@
     if (indexPath.row == 0) {
         UITableViewCell *cell = [[UITableViewCell alloc] init];
         [cell setBackgroundColor:UIColorWithRGBA(234, 234, 234, 1)];
-        cell.textLabel.text = @"当前位置";
-        cell.textLabel.font = [UIFont boldSystemFontOfSize:14];
-        int temp = 158;
-        cell.textLabel.textColor = UIColorWithRGBA(temp, temp, temp, 1);
+        cell.textLabel.text = @"当前定位";
+        cell.textLabel.font = [UIFont fontWithName:@"PingFangSC-Regular" size:14];
+      
+        cell.textLabel.textColor = [UIColor colorWithHexString:@"#424242"];
         cell.selectionStyle = UITableViewCellSelectionStyleNone;
         cell.userInteractionEnabled = NO;
         return cell;
+
     }
     //已选中的地区
     else if(indexPath.row == 1) {
@@ -286,17 +303,10 @@
         
         //设置国家label
         UILabel *countryLabel = [[UILabel alloc] initWithFrame:CGRectMake(imageV.frame.origin.x + imageV.frame.size.width + 10, imageV.frame.origin.y - 5, 200, 30)];
-        countryLabel.text = currentCity;
+        countryLabel.textColor = [UIColor colorWithHexString:@"#757575"];
+        countryLabel.font = [UIFont fontWithName:@"PingFangSC-Light" size:14];
+        countryLabel.text = @"中国";
         [cell addSubview:countryLabel];
-        
-//        //设置地区label
-//        UILabel *placeLabel = [[UILabel alloc] init];
-//        //使每个label自适应宽度
-//        CGSize labelSizePlace = [_locPlace boundingRectWithSize:size options:NSStringDrawingTruncatesLastVisibleLine|NSStringDrawingUsesLineFragmentOrigin|NSStringDrawingUsesFontLeading attributes:attribute context:nil].size;
-//        [placeLabel setFrame:CGRectMake(CGRectGetMaxX(countryLabel.frame) + 10, 0, labelSizePlace.width, 48)];
-//        placeLabel.text = _locPlace;
-//        [cell addSubview:placeLabel];
-//        cell.selectionStyle = UITableViewCellSelectionStyleNone;
         
         return cell;
     }
@@ -305,8 +315,7 @@
         [cell setBackgroundColor:UIColorWithRGBA(234, 234, 234, 1)];
         cell.textLabel.text = @"全部地区";
         cell.textLabel.font = [UIFont boldSystemFontOfSize:12];
-        int temp = 158;
-        cell.textLabel.textColor = UIColorWithRGBA(temp, temp, temp, 1);
+        cell.textLabel.textColor = [UIColor colorWithHexString:@"#424242"];
         cell.selectionStyle = UITableViewCellSelectionStyleNone;
         return cell;
     }
@@ -323,9 +332,13 @@
             lineView.backgroundColor = UIColorWithRGBA(234, 234, 234, 1);
             [cell addSubview:lineView];
             cell.textLabel.text = self.model.name;
+            cell.textLabel.textColor = [UIColor colorWithHexString:@"#757575"];
+            cell.textLabel.font = [UIFont fontWithName:@"PingFangSC-Light" size:14];
         }
         return cell;
     }
 }
-
+- (void)currnentLocationBlock:(CurrnentLocationBlock)block{
+    self.currnentLocationBlock = block;
+}
 @end

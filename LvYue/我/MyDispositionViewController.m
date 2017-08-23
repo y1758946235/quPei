@@ -19,6 +19,7 @@
 @interface MyDispositionViewController () <UICollectionViewDataSource, UICollectionViewDelegate> {
     NSMutableArray *dataArr;
     NSMutableArray *smallArr;
+   
 }
 
 @property (nonatomic, strong) UICollectionView *collectionView;
@@ -111,6 +112,7 @@
     oVC.imageData               = dataArr;
     oVC.smallImage              = smallArr;
     oVC.userId                  = self.userId;
+    
     [oVC showImageWithIndex:indexPath.row andCount:dataArr.count];
 }
 

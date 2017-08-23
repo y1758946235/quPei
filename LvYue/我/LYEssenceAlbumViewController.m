@@ -17,6 +17,8 @@
 #import "MyDispositionCollectionViewCell.h"
 #import "OriginalViewController.h"
 #import "SDWebImageManager.h"
+#import "AFNetworking.h"
+#import "UIImageView+WebCache.h"
 
 static NSString *const LYEssenceAlbumCollectionViewCellIdentity =
     @"photoCell";
@@ -45,15 +47,44 @@ static NSString *const LYEssenceAlbumCollectionViewCellIdentity =
 - (void)viewDidLoad {
     [super viewDidLoad];
 
-    self.navigationItem.title = @"精华相册";
+    [self setNav];
     self.view.backgroundColor = [UIColor whiteColor];
 
     // 监听是否需要刷新数据
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(p_loadData) name:@"reloadDisposition" object:nil];
+ [self p_loadData];
+}
 
-    if (self.mySelf) {
-        [self setRightButton:[UIImage imageNamed:@"上传照片"] title:nil target:self action:@selector(uploadPhoto)];
+- (void)setNav{
+    self.title = @"我的相册";
+    [self.navigationController.navigationBar setTitleTextAttributes:[NSDictionary dictionaryWithObjectsAndKeys:[UIColor colorWithHexString:@"#424242"],UITextAttributeTextColor, [UIFont fontWithName:@"PingFangSC-Medium" size:18],UITextAttributeFont, nil]];
+    self.navigationController.navigationBar.barTintColor = [UIColor colorWithHexString:@"#ffffff"];
+    //导航栏返回按钮
+    UIButton *button = [[UIButton alloc]initWithFrame:CGRectMake(16, 38, 28, 14)];
+    [button setTitleColor:[UIColor colorWithHexString:@"#424242"] forState:UIControlStateNormal];
+    [button setTitle:@"返回" forState:UIControlStateNormal];
+    button.titleLabel.font = [UIFont fontWithName:@"PingFangSC-Regular" size:14];
+    [button addTarget:self action:@selector(goBack) forControlEvents:UIControlEventTouchUpInside];
+    UIBarButtonItem *back = [[UIBarButtonItem alloc]initWithCustomView:button];
+    self.navigationItem.leftBarButtonItem = back;
+    
+    //导航栏充值记录按钮
+    UIButton *edit = [[UIButton alloc]initWithFrame:CGRectMake(SCREEN_WIDTH-16-28, 38, 56, 14)];
+    [edit setTitleColor:[UIColor colorWithHexString:@"#ff5252"] forState:UIControlStateNormal];
+    if (_userId.length==0) {
+        [edit setTitle:@"上传照片" forState:UIControlStateNormal];
     }
+    
+    edit.titleLabel.font = [UIFont fontWithName:@"PingFangSC-Regular" size:14];
+    [edit addTarget:self action:@selector(uploadPhoto) forControlEvents:UIControlEventTouchUpInside];
+    UIBarButtonItem *edited = [[UIBarButtonItem alloc]initWithCustomView:edit];
+    self.navigationItem.rightBarButtonItem = edited;
+    
+    
+}
+
+- (void)goBack{
+    [self.navigationController popViewControllerAnimated:YES];
 }
 
 - (void)viewWillAppear:(BOOL)animated {
@@ -63,34 +94,33 @@ static NSString *const LYEssenceAlbumCollectionViewCellIdentity =
     self.imageURLArray = nil;
     self.imageArray    = nil;
 
-    [self p_loadData];
+   
 }
 
 
 #pragma mark - Pravite
-
 - (void)p_loadData {
 
-    NSString *userId = [LYUserService sharedInstance].userID;
-
-    [LYHttpPoster postHttpRequestByPost:[NSString stringWithFormat:@"%@/mobile/user/getEssenceImgList", REQUESTHEADER]
+   // NSString *userId = [LYUserService sharedInstance].userID;
+//     _userId = @"1000006";
+    [LYHttpPoster postHttpRequestByPost:[NSString stringWithFormat:@"%@/mobile/user/getMyIndex", REQUESTHEADER]
         andParameter:
             @{
-                @"user_id": [LYUserService sharedInstance].userID,
-                @"other_id": self.mySelf ? userId : self.userId
+                @"userId": _userId
+               
             }
         success:^(id successResponse) {
 
             if ([[NSString stringWithFormat:@"%@", successResponse[@"code"]] isEqualToString:@"200"]) {
 
-                self.responseArray = successResponse[@"data"][@"list"];
+                self.responseArray = successResponse[@"data"][@"userPhoto"];
                 [self.collectionView reloadData];
 
                 // 下载图片
-                [self p_downloadImage];
+                 [self p_downloadImage];
 
             } else {
-                [MBProgressHUD showError:[NSString stringWithFormat:@"%@", successResponse[@"msg"]]];
+                [MBProgressHUD showError:[NSString stringWithFormat:@"%@", successResponse[@"errorMsg"]]];
             }
         }
         andFailure:^(id failureResponse) {
@@ -98,13 +128,16 @@ static NSString *const LYEssenceAlbumCollectionViewCellIdentity =
         }];
 }
 
+
+
+#pragma mark   ----把模胡、照片下载下来
 - (void)p_downloadImage {
     [self.imageURLArray enumerateObjectsUsingBlock:^(NSString *_Nonnull obj, NSUInteger idx, BOOL *_Nonnull stop) {
 
         NSURL *URL = [NSURL URLWithString:obj];
 
         // 自己看自己不需要模糊   已经打赏过也不需要模糊 1：打赏过  2：未打赏
-        if (!self.mySelf && [self.responseArray[idx][@"isBo"] integerValue] != 1) {
+       // if (!self.mySelf && [self.responseArray[idx][@"isBo"] integerValue] != 1) {
             // 读取缓存中的模糊相片
             UIImage *blurImage = [[LYBlurImageCache shareCache] objectForKey:URL.absoluteString];
             if (blurImage) {
@@ -112,7 +145,7 @@ static NSString *const LYEssenceAlbumCollectionViewCellIdentity =
                 [self.collectionView reloadItemsAtIndexPaths:@[[NSIndexPath indexPathForRow:idx inSection:0]]];
                 return;
             }
-        }
+        //}
 
         // 没缓存就下载
         [[SDWebImageManager sharedManager] downloadImageWithURL:URL options:SDWebImageRetryFailed progress:nil completed:^(UIImage *image, NSError *error, SDImageCacheType cacheType, BOOL finished, NSURL *imageURL) {
@@ -125,13 +158,13 @@ static NSString *const LYEssenceAlbumCollectionViewCellIdentity =
 
             dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
                 // 自己看自己不需要模糊  已经打赏过也不需要模糊
-                if (!self.mySelf && [self.responseArray[idx][@"isBo"] integerValue] != 1) {
+                //if (!self.mySelf && [self.responseArray[idx][@"isBo"] integerValue] != 1) {
                     // 图片模糊
                     returnImage = [returnImage blurredImageWithRadius:100 iterations:20 tintColor:RGBACOLOR(0, 0, 0, 0.5)];
 
                     // 缓存模糊图片到内存
                     [[LYBlurImageCache shareCache] setObject:returnImage forKey:imageURL.absoluteString];
-                }
+                //}
 
                 dispatch_async(dispatch_get_main_queue(), ^{
 
@@ -146,6 +179,7 @@ static NSString *const LYEssenceAlbumCollectionViewCellIdentity =
     }];
 }
 
+#pragma mark   ----上传相册
 - (void)uploadPhoto {
     LYEssenceImageUploadViewController *vc = [LYEssenceImageUploadViewController new];
     [self.navigationController pushViewController:vc animated:YES];
@@ -164,43 +198,49 @@ static NSString *const LYEssenceAlbumCollectionViewCellIdentity =
         [collectionView dequeueReusableCellWithReuseIdentifier:
                             LYEssenceAlbumCollectionViewCellIdentity
                                                   forIndexPath:indexPath];
-    cell.imageViewM.image = self.imageArray[indexPath.row];
+    //cell.imageViewM.image = self.imageArray[indexPath.row];
+    [cell.imageViewM sd_setImageWithURL:[NSURL URLWithString:[NSString stringWithFormat:@"%@",self.imageURLArray[indexPath.row]]]];
     return cell;
 }
+
+
+
+#pragma mark   ----自己查看自己的相册
 
 - (void)collectionView:(UICollectionView *)collectionView
     didSelectItemAtIndexPath:(NSIndexPath *)indexPath {
 
     // 自己看自己则直接查看
-    if (self.mySelf) {
+//    if (self.mySelf) {
         OriginalViewController *vc = [[OriginalViewController alloc] init];
         vc.imageData               = self.responseArray; // 响应的字典
         vc.smallImage              = self.imageArray;    // 对应已经加载的 image 对象
-        vc.userId                  = [LYUserService sharedInstance].userID;
+       // vc.userId                  = [LYUserService sharedInstance].userID;
+        vc.userId = @"1000006";
         vc.dismissBlock            = ^{
             [self viewWillAppear:YES];
         };
         [vc showImageWithIndex:indexPath.row andCount:self.imageArray.count];
-        return;
-    }
+       // return;
+//    }
 
     // 已经打赏过，则直接查看这个照片
-    if ([self.responseArray[indexPath.row][@"isBo"] integerValue] == 1) {
-        OriginalViewController *vc = [[OriginalViewController alloc] init];
-        vc.imageData               = @[self.responseArray[indexPath.row]]; // 响应的字典
-        vc.smallImage              = @[self.imageArray[indexPath.row]];    // 对应已经加载的 image 对象
-        vc.userId                  = [LYUserService sharedInstance].userID;
-        [vc showImageWithIndex:0 andCount:1]; // 永远是单张查看
-        return;
-    }
+//    if ([self.responseArray[indexPath.row][@"isBo"] integerValue] == 1) {
+//        OriginalViewController *vc = [[OriginalViewController alloc] init];
+//        vc.imageData               = @[self.responseArray[indexPath.row]]; // 响应的字典
+//        vc.smallImage              = @[self.imageArray[indexPath.row]];    // 对应已经加载的 image 对象
+//        vc.userId                  = [LYUserService sharedInstance].userID;
+//        [vc showImageWithIndex:0 andCount:1]; // 永远是单张查看
+//        return;
+//    }
 
-    LYEssenceTipViewController *vc = [[LYEssenceTipViewController alloc] init];
-    vc.userID                      = self.userId;
-    vc.bulrImageID                 = self.responseArray[indexPath.row][@"id"];
-    vc.bulrImageURL                = self.responseArray[indexPath.row][@"img_name"];
-    vc.tipAmount                   = [self.responseArray[indexPath.row][@"bounty"] integerValue];
-    vc.isReviewed                  = [self.responseArray[indexPath.row][@"isReview"] boolValue];
-    [self.navigationController pushViewController:vc animated:YES];
+//    LYEssenceTipViewController *vc = [[LYEssenceTipViewController alloc] init];
+//    vc.userID                      = self.userId;
+//    vc.bulrImageID                 = self.responseArray[indexPath.row][@"id"];
+//    vc.bulrImageURL                = self.responseArray[indexPath.row][@"img_name"];
+//    vc.tipAmount                   = [self.responseArray[indexPath.row][@"bounty"] integerValue];
+//    vc.isReviewed                  = [self.responseArray[indexPath.row][@"isReview"] boolValue];
+//    [self.navigationController pushViewController:vc animated:YES];
 }
 
 #pragma mark Getter
@@ -258,7 +298,8 @@ static NSString *const LYEssenceAlbumCollectionViewCellIdentity =
         NSLog(@"count:%@", @(self.imageURLArray.count));
         for (NSInteger flag = 0; flag < self.imageURLArray.count; flag++) {
             NSLog(@"flag:%@", @(flag));
-            [_imageArray addObject:[UIImage imageNamed:@"PlaceImage"]];
+           
+          // [_imageArray addObject:[UIImage imageNamed:@"PlaceImage"]];
         }
     }
     return _imageArray;

@@ -13,8 +13,9 @@
 
 @property (nonatomic, strong) RootNavigationController *homeNav;
 @property (nonatomic, strong) RootNavigationController *dialogueNav;
-@property (nonatomic, strong) RootNavigationController *searchNav;
+@property (nonatomic, strong) RootNavigationController *searchNav;   //照片墙
 @property (nonatomic, strong) RootNavigationController *meNav;
+@property(nonatomic,strong)RootNavigationController *sendNav;
 
 - (BOOL)tabBarController:(UITabBarController *)tabBarController shouldSelectViewController:(UIViewController *)viewController;
 

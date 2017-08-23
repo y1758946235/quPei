@@ -11,8 +11,6 @@
 @class MyInfoModel;
 
 typedef void (^LYMeHeaderViewChangeAvatarImageBlock)(id sender);
-typedef void (^LYMeHeaderViewTapFocusLabel)(id sender);
-typedef void (^LYMeHeaderViewTapFansLabel)(id sender);
 
 @interface LYMeHeaderView : UIView
 
@@ -22,8 +20,7 @@ typedef void (^LYMeHeaderViewTapFansLabel)(id sender);
 @property (nonatomic, strong, readonly) MyInfoModel *infoModel;
 
 @property (nonatomic, copy) LYMeHeaderViewChangeAvatarImageBlock changeAvatarImageBlock;
-@property (nonatomic, copy) LYMeHeaderViewTapFocusLabel tapFocusLabelBlock;
-@property (nonatomic, copy) LYMeHeaderViewTapFansLabel tapFansLabelBlock;
+
 
 - (void)configHeaderViewDataSource:(MyDetailInfoModel *)detailModel infoModel:(MyInfoModel *)infoModel;
 

@@ -1347,7 +1347,7 @@ static NSString* const str = @"cc";
         cell = (FriendsCircleCell *) [[sender superview] superview];
     }
     NSIndexPath *indexPath          = [self.tableView indexPathForCell:cell];
-    NSMutableArray *tempNoticeListM = [NSMutableArray array];
+    NSMutableArray *tempNoticeListM = [[NSMutableArray alloc]init];
     NSMutableArray *tempPraiseListM = [NSMutableArray array];
     if (indexPath.section == 0) { //热门动态
         tempNoticeListM = _hotNoticeList;

@@ -178,12 +178,12 @@
             } else if (type == UserLoginStateTypeAlreadyLogin) {
                 switch (indexPath.row) {
                     case 0: {
-                        FriendsCirleViewController *friendsCirleViewController = [[FriendsCirleViewController alloc] init];
-                        [friendsCirleViewController setHidesBottomBarWhenPushed:YES];
-                        friendsCirleViewController.userId          = [LYUserService sharedInstance].userID;
-                        friendsCirleViewController.isFriendsCircle = YES;
-                        friendsCirleViewController.title           = @"朋友圈";
-                        [self.navigationController pushViewController:friendsCirleViewController animated:YES];
+//                        FriendsCirleViewController *friendsCirleViewController = [[FriendsCirleViewController alloc] init];
+//                        [friendsCirleViewController setHidesBottomBarWhenPushed:YES];
+//                        friendsCirleViewController.userId          = [LYUserService sharedInstance].userID;
+//                        friendsCirleViewController.isFriendsCircle = YES;
+//                        friendsCirleViewController.title           = @"朋友圈";
+//                        [self.navigationController pushViewController:friendsCirleViewController animated:YES];
                     } break;
                     //                    case 2:
                     //                    {

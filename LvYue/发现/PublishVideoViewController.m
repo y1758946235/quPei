@@ -54,13 +54,13 @@
 //    [self.view addSubview:self.pickerCover];
 //    [self.view addSubview:self.assistentView];
 //    [self.view addSubview:self.pickerView];
-    //请求预览视频截图
-    [self thumbnailImageRequest:0.0f withURL:[NSURL fileURLWithPath:self.videoPath]];
+//    //请求预览视频截图
+//    [self thumbnailImageRequest:0.0f withURL:[NSURL fileURLWithPath:self.videoPath]];
     //add notifications
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(resizeKeyboard:) name:UIKeyboardWillShowNotification object:nil];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(hideKeyboard:) name:UIKeyboardWillHideNotification object:nil];
-    //加载选择器的内容
-    [self loadPickerViewContents];
+//    //加载选择器的内容
+//    [self loadPickerViewContents];
 }
 
 

@@ -2,13 +2,13 @@
   "images" : [
     {
       "idiom" : "universal",
-      "scale" : "1x",
-      "filename" : "cir-f.png"
+      "filename" : "cir-f.png",
+      "scale" : "1x"
     },
     {
       "idiom" : "universal",
-      "scale" : "2x",
-      "filename" : "cir-f@2x.png"
+      "filename" : "cir-f@2x.png",
+      "scale" : "2x"
     },
     {
       "idiom" : "universal",

@@ -2,13 +2,13 @@
   "images" : [
     {
       "idiom" : "universal",
-      "scale" : "1x",
-      "filename" : "Book-r.png"
+      "filename" : "Book-r.png",
+      "scale" : "1x"
     },
     {
       "idiom" : "universal",
-      "scale" : "2x",
-      "filename" : "Book-r@2x.png"
+      "filename" : "Book-r@2x.png",
+      "scale" : "2x"
     },
     {
       "idiom" : "universal",

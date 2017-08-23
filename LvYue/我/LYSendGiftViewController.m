@@ -50,8 +50,17 @@ static NSString *const LYSendGiftCollectionViewCellIdentity = @"LYSendGiftCollec
 
     [self p_loadAccountAmount];
     [self p_loadGift];
+    
+     [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(updaGoldsAnduserKeyNum:) name:@"addAccount" object:nil];
+}
+//push通知
+- (void)updaGoldsAnduserKeyNum:(NSNotification *)noti {
+    [self p_loadAccountAmount];
 }
 
+-(void)dealloc{
+     [[NSNotificationCenter defaultCenter]removeObserver:self name:@"addAccount" object:nil];
+}
 #pragma mark - UICollectionView
 
 - (NSInteger)collectionView:(UICollectionView *)collectionView numberOfItemsInSection:(NSInteger)section {
@@ -68,8 +77,14 @@ static NSString *const LYSendGiftCollectionViewCellIdentity = @"LYSendGiftCollec
     self.headerView                = [collectionView dequeueReusableSupplementaryViewOfKind:UICollectionElementKindSectionHeader withReuseIdentifier:LYSendGiftHeaderViewIdentity forIndexPath:indexPath];
     __weak typeof(self) weakSelf   = self;
     self.headerView.fetchCoinBlock = ^(id sender) {
-        LYGetCoinViewController *vc = [LYGetCoinViewController new];
-        vc.accountAmount            = [weakSelf.accountAmount integerValue];
+//        LYGetCoinViewController *vc = [LYGetCoinViewController new];
+        MyMoneyVC *vc = [[MyMoneyVC alloc]init];
+//        vc.accountAmount            = [weakSelf.accountAmount integerValue];
+//        vc.changeAmount = ^(NSInteger amount) {
+//            weakSelf.accountAmount = [NSString stringWithFormat:@"%ld",(long)amount];
+//             [weakSelf.headerView configData:weakSelf.userName avatarImageURL:weakSelf.avatarImageURL accountAmount:weakSelf.accountAmount];
+//          
+//        };
         [weakSelf.navigationController pushViewController:vc animated:YES];
     };
     [self.headerView configData:self.userName avatarImageURL:self.avatarImageURL accountAmount:self.accountAmount];
@@ -137,8 +152,10 @@ static NSString *const LYSendGiftCollectionViewCellIdentity = @"LYSendGiftCollec
 //            }
             // 跳转充值页面
             if (buttonIndex == 1) {
-                LYGetCoinViewController *vc = [LYGetCoinViewController new];
-                vc.accountAmount            = [self.accountAmount integerValue];
+                
+                MyMoneyVC *vc = [[MyMoneyVC alloc]init];
+//                LYGetCoinViewController *vc = [LYGetCoinViewController new];
+//                vc.accountAmount            = [self.accountAmount integerValue];
                 [self.navigationController pushViewController:vc animated:YES];
             }
             break;
@@ -160,14 +177,14 @@ static NSString *const LYSendGiftCollectionViewCellIdentity = @"LYSendGiftCollec
 #pragma mark - Pravite
 
 - (void)p_loadAccountAmount {
-    [LYHttpPoster postHttpRequestByPost:[NSString stringWithFormat:@"%@/mobile/need/hongdou", REQUESTHEADER]
+    [LYHttpPoster postHttpRequestByPost:[NSString stringWithFormat:@"%@/mobile/user/getUserPower", REQUESTHEADER]
         andParameter:@{
-            @"user_id": [LYUserService sharedInstance].userID
+                       @"userId": [CommonTool getUserID]
         }
         success:^(id successResponse) {
             MLOG(@"结果:%@", successResponse);
             if ([[NSString stringWithFormat:@"%@", successResponse[@"code"]] isEqualToString:@"200"]) {
-                self.accountAmount = [NSString stringWithFormat:@"%@", successResponse[@"data"][@"data"][@"hongdou"]];
+                self.accountAmount = [NSString stringWithFormat:@"%@", successResponse[@"data"][@"userGold"]];
                 [self.headerView configData:self.userName avatarImageURL:self.avatarImageURL accountAmount:self.accountAmount];
             } else {
                 [MBProgressHUD showError:[NSString stringWithFormat:@"%@", successResponse[@"msg"]]];
@@ -181,13 +198,13 @@ static NSString *const LYSendGiftCollectionViewCellIdentity = @"LYSendGiftCollec
 - (void)p_loadGift {
     [MBProgressHUD showHUDAddedTo:self.view animated:YES];
 
-    [LYHttpPoster postHttpRequestByPost:[NSString stringWithFormat:@"%@/mobile/gift/giftlist", REQUESTHEADER] andParameter:nil
+    [LYHttpPoster postHttpRequestByPost:[NSString stringWithFormat:@"%@/mobile/cache/getGift", REQUESTHEADER] andParameter:nil
         success:^(id successResponse) {
             [MBProgressHUD hideHUDForView:self.view animated:YES];
             if ([successResponse[@"code"] integerValue] == 200) {
 
                 self.giftInfoList = [[NSMutableArray alloc] init];
-                [successResponse[@"data"][@"giftlist"] enumerateObjectsUsingBlock:^(id _Nonnull obj, NSUInteger idx, BOOL *_Nonnull stop) {
+                [successResponse[@"data"] enumerateObjectsUsingBlock:^(id _Nonnull obj, NSUInteger idx, BOOL *_Nonnull stop) {
                     [self.giftInfoList addObject:[LYSendGiftModel initWithDic:obj]];
                 }];
                 [self.collectionView reloadData];
@@ -216,21 +233,28 @@ static NSString *const LYSendGiftCollectionViewCellIdentity = @"LYSendGiftCollec
             break;
         }
     }
-
-    [LYHttpPoster postHttpRequestByPost:[NSString stringWithFormat:@"%@/mobile/gift/present", REQUESTHEADER]
-        andParameter:@{
-            @"userId": [LYUserService sharedInstance].userID,
-            @"otherId": self.friendID,
-            @"giftId": @(self.giftInfoList[index].giftId),
-            @"type": @(type)
-        }
+    NSDictionary *dic= @{
+                          @"userId": [CommonTool getUserID],
+                          @"otherUserId": self.friendID,
+                          @"giftId": @(self.giftInfoList[index].giftId),
+                          @"usedType": @"gift",
+                          @"goldPrice":@(self.giftInfoList[index].giftPrice),
+                          @"userCaptcha":[CommonTool getUserCaptcha]
+                          } ;
+    [LYHttpPoster postHttpRequestByPost:[NSString stringWithFormat:@"%@/mobile/order/updateOrderGold", REQUESTHEADER]
+        andParameter:dic
         success:^(id successResponse) {
             [MBProgressHUD hideHUDForView:self.view animated:YES];
             if ([successResponse[@"code"] integerValue] == 200) {
                 [MBProgressHUD showSuccess:@"赠送成功"];
                 [self.navigationController popViewControllerAnimated:YES];
             } else {
-                [MBProgressHUD showError:[NSString stringWithFormat:@"%@", successResponse[@"msg"]]];
+                MBProgressHUD *hud = [MBProgressHUD showHUDAddedTo:self.view animated:YES];
+                hud.mode =MBProgressHUDModeText;//显示的模式
+                hud.labelText =[NSString stringWithFormat:@"%@", successResponse[@"errorMsg"]];
+                hud.removeFromSuperViewOnHide =YES;
+                [hud hide:YES afterDelay:1];
+              
             }
         }
         andFailure:^(id failureResponse) {

@@ -231,7 +231,7 @@
 
 - (void)selectCity{
     LocalCountryViewController *local = [[LocalCountryViewController alloc] init];
-    local.preView = @"addLive";
+    //local.preView = @"addLive";
     [self.navigationController pushViewController:local animated:YES];
 }
 

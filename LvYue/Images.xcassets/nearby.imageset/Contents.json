@@ -2,13 +2,13 @@
   "images" : [
     {
       "idiom" : "universal",
-      "scale" : "1x",
-      "filename" : "nearby.png"
+      "filename" : "nearby.png",
+      "scale" : "1x"
     },
     {
       "idiom" : "universal",
-      "scale" : "2x",
-      "filename" : "nearby@2x.png"
+      "filename" : "nearby@2x.png",
+      "scale" : "2x"
     },
     {
       "idiom" : "universal",

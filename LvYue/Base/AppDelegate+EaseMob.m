@@ -19,8 +19,14 @@
 #import "LYHttpPoster.h"
 #import "DialogueViewController.h"
 #import <AudioToolbox/AudioToolbox.h>
+#import "CallViewController.h"
+#import "UIView+ViewController.h"
+#import "UIView+ViewController.h"
+#import "EMCDDeviceManager.h"
 
-@interface AppDelegate ()<EMChatManagerDelegate,UIAlertViewDelegate,IChatManagerDelegate,EMChatManagerDelegate>
+
+//#import <Hyphenate/Hyphenate.h>
+@interface AppDelegate ()<UITableViewDataSource, UITableViewDelegate, UINavigationControllerDelegate, UIImagePickerControllerDelegate, UIAlertViewDelegate, UIScrollViewDelegate, IChatManagerDelegate, EMCDDeviceManagerDelegate, EMCallManagerDelegate>
 
 @end
 
@@ -65,11 +71,27 @@
                                         otherConfig:@{kSDKConfigEnableConsoleLogger:@YES}];
     MLOG(@"错误:%@",error);
     
+    
+    
+    
+//    //AppKey:注册的AppKey，详细见下面注释。
+//    //apnsCertName:推送证书名（不需要加后缀），详细见下面注释。
+//    EMOptions *options = [EMOptions optionsWithAppkey:@"rw2015#lvyuedemo"];
+//    options.apnsCertName = @"ReleasePushBook";
+//    [[EMClient sharedClient] initializeSDKWithOptions:options];
+    
+    // 需要在注册sdk后写上该方法
+    [[EaseMob sharedInstance] application:application didFinishLaunchingWithOptions:launchOptions];
     // 登录成功后，自动去取好友列表
     // SDK获取结束后，会回调
     // - (void)didFetchedBuddyList:(NSArray *)buddyList error:(EMError *)error方法。
     [[EaseMob sharedInstance].chatManager setIsAutoFetchBuddyList:NO];
+    //自动登录
+    [[EaseMob sharedInstance].chatManager enableAutoLogin];
+  
     
+    
+
     // 注册环信监听
     [self registerEaseMobNotification];
     [[EaseMob sharedInstance] application:application
@@ -130,6 +152,11 @@
                                              selector:@selector(appProtectedDataDidBecomeAvailableNotif:)
                                                  name:UIApplicationProtectedDataDidBecomeAvailable
                                                object:nil];
+    
+    
+    
+    
+//     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(callControllerClose:) name:@"callControllerClose" object:nil];
 }
 
 #pragma mark - notifiers
@@ -188,6 +215,7 @@
     NSString *deviceTokenString = [NSString deviceTokenStringWithDeviceTokenData:deviceToken];
     NSUserDefaults *user = [NSUserDefaults standardUserDefaults];
     [user setObject:deviceTokenString forKey:@"deviceToken"];
+    
     kAppDelegate.deviceToken = deviceTokenString;
     if (!kAppDelegate.deviceToken) {
         kAppDelegate.deviceToken = @"bb63b19106f3108798b7a271447e40df8a75c0b7cec8d99f54b43728713edc37";
@@ -200,12 +228,12 @@
 - (void)application:(UIApplication *)application didFailToRegisterForRemoteNotificationsWithError:(NSError *)error{
     [[EaseMob sharedInstance] application:application didFailToRegisterForRemoteNotificationsWithError:error];
     MLOG(@"推送注册失败");
-//    UIAlertView *alert = [[UIAlertView alloc] initWithTitle:NSLocalizedString(@"apns.failToRegisterApns", Fail to register apns)
-//                                                    message:error.description
-//                                                   delegate:nil
-//                                          cancelButtonTitle:NSLocalizedString(@"ok", @"OK")
-//                                          otherButtonTitles:nil];
-//    [alert show];
+    UIAlertView *alert = [[UIAlertView alloc] initWithTitle:NSLocalizedString(@"apns.failToRegisterApns", Fail to register apns)
+                                                    message:error.description
+                                                   delegate:nil
+                                          cancelButtonTitle:NSLocalizedString(@"ok", @"OK")
+                                          otherButtonTitles:nil];
+    [alert show];
 }
 
 // 注册推送
@@ -236,16 +264,38 @@
 
 #pragma mark - registerEaseMobNotification
 - (void)registerEaseMobNotification{
-    [self unRegisterEaseMobNotification];
-    // 将self 添加到SDK回调中，以便本类可以收到SDK回调
-    [[EaseMob sharedInstance].chatManager addDelegate:self delegateQueue:nil];
-}
-
-- (void)unRegisterEaseMobNotification{
+#warning 以下三行代码必须写，注册为SDK的ChatManager的delegate
+    [EMCDDeviceManager sharedInstance].delegate = self;
     [[EaseMob sharedInstance].chatManager removeDelegate:self];
+    //注册为SDK的ChatManager的delegate
+    [[EaseMob sharedInstance].chatManager addDelegate:self delegateQueue:nil];//这是会话管理者,获取该对象后, 可以做登录、聊天、加好友等操作
+    
+    // 当离开这个页面的时候,要讲代理取消掉,不然会造成别的页面接收不了消息.
+    [[EaseMob sharedInstance].callManager removeDelegate:self];
+    [[EaseMob sharedInstance].callManager addDelegate:self delegateQueue:nil];//最后一个为即时通讯的代理,(即时视频,即时语音)
 }
 
+//- (void)unRegisterEaseMobNotification{
+// 
+//}
 
+
+
+#pragma mark - private
+
+- (BOOL)canRecord {
+    __block BOOL bCanRecord = YES;
+    if ([[[UIDevice currentDevice] systemVersion] compare:@"7.0"] != NSOrderedAscending) {
+        AVAudioSession *audioSession = [AVAudioSession sharedInstance];
+        if ([audioSession respondsToSelector:@selector(requestRecordPermission:)]) {
+            [audioSession performSelector:@selector(requestRecordPermission:) withObject:^(BOOL granted) {
+                bCanRecord = granted;
+            }];
+        }
+    }
+
+    return bCanRecord;
+}
 
 // 绑定deviceToken回调(绑定失败)
 - (void)didBindDeviceWithError:(EMError *)error
@@ -265,6 +315,8 @@
     NSDictionary *stateDict = @{@"connectionState":[NSString stringWithFormat:@"%lu",(unsigned long)connectionState]};
     //发送网络状态变化的通知
     [[NSNotificationCenter defaultCenter] postNotificationName:@"LY_NetworkConnectionStateDidChange" object:nil userInfo:stateDict];
+    
+   
 }
 
 // 程序离线时点击推送栏调用(因为didFinishLaunchingWithOptions方法里调用到) 接收相应的apns信息
@@ -438,20 +490,26 @@
                         }
                         ChatViewController *chatVc = [[ChatViewController alloc] initWithChatter:chatter isGroup:isGroupChat];
                         chatVc.title = userName;
-                        kAppDelegate.rootTabC.selectedIndex = 1;
-                        [kAppDelegate.rootTabC.viewControllers[1] popToRootViewControllerAnimated:NO];
-                        [kAppDelegate.rootTabC.viewControllers[1] pushViewController:chatVc animated:YES];
+                        kAppDelegate.rootTabC.selectedIndex = 3;
+                        [kAppDelegate.rootTabC.viewControllers[3] popToRootViewControllerAnimated:NO];
+                        [kAppDelegate.rootTabC.viewControllers[3] pushViewController:chatVc animated:YES];
                         [kAppDelegate.dataBase close];
                     } else { //没有数据就去请求用户昵称并插入表中
                         [kAppDelegate.dataBase close];
-                        [LYHttpPoster postHttpRequestByPost:[NSString stringWithFormat:@"%@/mobile/userFriend/getInfo",REQUESTHEADER] andParameter:@{@"user_id":[LYUserService sharedInstance].userID,@"friend_user_id":chatter} success:^(id successResponse) {
+                         NSString *NewId = [chatter substringFromIndex:2];
+                        [LYHttpPoster postHttpRequestByPost:[NSString stringWithFormat:@"%@/mobile/user/getPersonalInfo",REQUESTHEADER] andParameter:@{@"userId":NewId} success:^(id successResponse) {
                             if ([[NSString stringWithFormat:@"%@",successResponse[@"code"]] isEqualToString:@"200"]) {
-                                NSDictionary *user = successResponse[@"data"][@"user"];
-                                NSString *userID = [NSString stringWithFormat:@"%@",user[@"id"]];
-                                NSString *name = [NSString stringWithFormat:@"%@",user[@"name"]];
+//                                NSDictionary *user = successResponse[@"data"][@"user"];
+//                                NSString *userID = [NSString stringWithFormat:@"%@",user[@"id"]];
+//                                NSString *name = [NSString stringWithFormat:@"%@",user[@"name"]];
+//                                NSString *remark = [NSString stringWithFormat:@"%@",user[@"remark"]];
+//                                NSString *icon = [NSString stringWithFormat:@"%@%@",IMAGEHEADER,user[@"icon"]];
+                                NSDictionary *user = successResponse[@"data"];
+                                NSString *userId = [NSString stringWithFormat:@"%@",user[@"userId"]];
+                                NSString *name = [NSString stringWithFormat:@"%@",user[@"userNickname"]];
                                 NSString *remark = [NSString stringWithFormat:@"%@",user[@"remark"]];
-                                NSString *icon = [NSString stringWithFormat:@"%@%@",IMAGEHEADER,user[@"icon"]];
-                                resultDict = @{@"userID":userID,@"name":name,@"remark":remark,@"icon":icon};
+                                NSString *icon = [NSString stringWithFormat:@"%@%@",IMAGEHEADER,user[@"userIcon"]];
+                                resultDict = @{@"userID":userId,@"name":name,@"remark":remark,@"icon":icon};
                                 if (resultDict[@"remark"] && !([[NSString stringWithFormat:@"%@",resultDict[@"remark"]] isEqualToString:@""]) && !([[NSString stringWithFormat:@"%@",resultDict[@"remark"]] isEqualToString:@"(null)"])) {
                                     userName = remark;
                                 } else {
@@ -459,13 +517,13 @@
                                 }
                                 ChatViewController *chatVc = [[ChatViewController alloc] initWithChatter:chatter isGroup:isGroupChat];
                                 chatVc.title = userName;
-                                kAppDelegate.rootTabC.selectedIndex = 1;
-                                [kAppDelegate.rootTabC.viewControllers[1] popToRootViewControllerAnimated:NO];
-                                [kAppDelegate.rootTabC.viewControllers[1] pushViewController:chatVc animated:YES];
+                                kAppDelegate.rootTabC.selectedIndex = 3;
+                                [kAppDelegate.rootTabC.viewControllers[3] popToRootViewControllerAnimated:NO];
+                                [kAppDelegate.rootTabC.viewControllers[3] pushViewController:chatVc animated:YES];
                                 //存入数据库
                                 [kAppDelegate.dataBaseQueue inDatabase:^(FMDatabase *db) {
                                     if ([kAppDelegate.dataBase open]) {
-                                        NSString *insertSql = [NSString stringWithFormat:@"INSERT INTO '%@'('%@','%@','%@','%@') VALUES('%@','%@','%@','%@')",@"User",@"userID",@"name",@"remark",@"icon",userID,name,remark,icon];
+                                        NSString *insertSql = [NSString stringWithFormat:@"INSERT INTO '%@'('%@','%@','%@','%@') VALUES('%@','%@','%@','%@')",@"User",@"userID",@"name",@"remark",@"icon", [NSString stringWithFormat:@"qp%@",userId],name,remark,icon];
                                         BOOL isSuccess = [kAppDelegate.dataBase executeUpdate:insertSql];
                                         if (isSuccess) {
                                             MLOG(@"插入数据成功!");
@@ -482,9 +540,9 @@
                 } else {
                     ChatViewController *chatVc = [[ChatViewController alloc] initWithChatter:chatter isGroup:isGroupChat];
                     chatVc.title = chatter;
-                    kAppDelegate.rootTabC.selectedIndex = 1;
-                    [kAppDelegate.rootTabC.viewControllers[1] popToRootViewControllerAnimated:NO];
-                    [kAppDelegate.rootTabC.viewControllers[1] pushViewController:chatVc animated:YES];
+                    kAppDelegate.rootTabC.selectedIndex = 3;
+                    [kAppDelegate.rootTabC.viewControllers[3] popToRootViewControllerAnimated:NO];
+                    [kAppDelegate.rootTabC.viewControllers[3] pushViewController:chatVc animated:YES];
                 }
             }];
         }
@@ -639,13 +697,37 @@
                 }
             }];
         } else {
+            
+//            if ([[NSString stringWithFormat:@"%@",userInfo[@"isIncomingCallController"]] isEqualToString:@"isIncomingCallController"]) {
+//                
+//                BOOL isNoShowCallViewAgain = [[[NSUserDefaults standardUserDefaults] objectForKey:@"isNoShowCallViewAgain"] boolValue];
+//                if (  isNoShowCallViewAgain == NO){
+//                    [[EaseMob sharedInstance].callManager removeDelegate:self];
+//                    EMCallSession *callSession  = [[EMCallSession alloc]initWithSessionId:userInfo[@"sessionChatter"]];
+//                    callSession.sessionChatter = userInfo[@"sessionChatter"];
+//                    CallViewController *callController = [[CallViewController alloc] initWithSession:callSession isIncoming:YES];
+//                    callController.chatter =userInfo[@"sessionChatter"];
+//                    callController.modalPresentationStyle = UIModalPresentationOverFullScreen;
+//                    
+//                    callController.receivId = [CommonTool getUserID];
+//                    NSString *NewId = [userInfo[@"sessionChatter"] substringFromIndex:2];// 由于是环信的id 所以改成用户ID
+//                    callController.senderId = NewId;
+//                    
+//                    kAppDelegate.rootTabC.selectedIndex = 1;
+//                    [kAppDelegate.rootTabC.viewControllers[1] popToRootViewControllerAnimated:NO];
+//                    [kAppDelegate.rootTabC.viewControllers[1] presentViewController:callController animated:YES completion:nil];
+//                }
+//
+//            }else{
+           
             isGroup = NO;
             chatTitle = userInfo[@"senderName"];
             ChatViewController *chatVc = [[ChatViewController alloc] initWithChatter:userInfo[@"chatter"] isGroup:isGroup];
             chatVc.title = chatTitle;
             kAppDelegate.rootTabC.selectedIndex = 1;
             [kAppDelegate.rootTabC.viewControllers[1] popToRootViewControllerAnimated:NO];
-            [kAppDelegate.rootTabC.viewControllers[1] pushViewController:chatVc animated:YES];
+                [kAppDelegate.rootTabC.viewControllers[1] pushViewController:chatVc animated:YES];
+//            }
         }
     }
 }
@@ -656,7 +738,7 @@
 #pragma mark - IChatManagerDelegate
 //监听未读消息数变化的回调
 - (void)didUnreadMessagesCountChanged {
-    UINavigationController *dialogueNav = kAppDelegate.rootTabC.viewControllers[1];
+    UINavigationController *dialogueNav = kAppDelegate.rootTabC.viewControllers[3];
     NSUserDefaults *user = [NSUserDefaults standardUserDefaults];
     NSString *str = [user objectForKey:kHavePrompt];
     NSString *skillStr = [user objectForKey:kHaveInvite];
@@ -745,14 +827,15 @@
                 [kAppDelegate.dataBase close];
             } else { //没有数据就去请求用户昵称并插入表中
                 [kAppDelegate.dataBase close];
-                [LYHttpPoster postHttpRequestByPost:[NSString stringWithFormat:@"%@/mobile/userFriend/getInfo",REQUESTHEADER] andParameter:@{@"user_id":[LYUserService sharedInstance].userID,@"friend_user_id":chatter} success:^(id successResponse) {
+                NSString *NewId = [chatter substringFromIndex:2];
+                [LYHttpPoster postHttpRequestByPost:[NSString stringWithFormat:@"%@/mobile/user/getPersonalInfo",REQUESTHEADER] andParameter:@{@"userId":NewId} success:^(id successResponse) {
                     if ([[NSString stringWithFormat:@"%@",successResponse[@"code"]] isEqualToString:@"200"]) {
-                        NSDictionary *user = successResponse[@"data"][@"user"];
-                        NSString *userID = [NSString stringWithFormat:@"%@",user[@"id"]];
-                        NSString *name = [NSString stringWithFormat:@"%@",user[@"name"]];
+                        NSDictionary *user = successResponse[@"data"];
+                        NSString *userId = [NSString stringWithFormat:@"%@",user[@"userId"]];
+                        NSString *name = [NSString stringWithFormat:@"%@",user[@"userNickname"]];
                         NSString *remark = [NSString stringWithFormat:@"%@",user[@"remark"]];
-                        NSString *icon = [NSString stringWithFormat:@"%@%@",IMAGEHEADER,user[@"icon"]];
-                        resultDict = @{@"userID":userID,@"name":name,@"remark":remark,@"icon":icon};
+                        NSString *icon = [NSString stringWithFormat:@"%@%@",IMAGEHEADER,user[@"userIcon"]];
+                        resultDict = @{@"userID":userId,@"name":name,@"remark":remark,@"icon":icon};
                         if (resultDict[@"remark"] && !([[NSString stringWithFormat:@"%@",resultDict[@"remark"]] isEqualToString:@""]) && !([[NSString stringWithFormat:@"%@",resultDict[@"remark"]] isEqualToString:@"(null)"])) {
                             senderName = remark;
                         } else {
@@ -763,7 +846,7 @@
                         //存入数据库
                         [kAppDelegate.dataBaseQueue inDatabase:^(FMDatabase *db) {
                             if ([kAppDelegate.dataBase open]) {
-                                NSString *insertSql = [NSString stringWithFormat:@"INSERT INTO '%@'('%@','%@','%@','%@') VALUES('%@','%@','%@','%@')",@"User",@"userID",@"name",@"remark",@"icon",userID,name,remark,icon];
+                                NSString *insertSql = [NSString stringWithFormat:@"INSERT INTO '%@'('%@','%@','%@','%@') VALUES('%@','%@','%@','%@')",@"User",@"userID",@"name",@"remark",@"icon",[NSString stringWithFormat:@"qp%@",userId],name,remark,icon];
                                 BOOL isSuccess = [kAppDelegate.dataBase executeUpdate:insertSql];
                                 if (isSuccess) {
                                     MLOG(@"插入数据成功!");
@@ -881,6 +964,7 @@
         [[NSNotificationCenter defaultCenter] postNotificationName:@"refreshMyBuddyList" object:nil];
     });
 }
+
 
 
 #pragma mark - EMChatManagerDeleagte

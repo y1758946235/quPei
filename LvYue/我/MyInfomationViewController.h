@@ -13,7 +13,7 @@
 @property (nonatomic,strong) UIImage *headImage;
 
 @property (nonatomic,strong) NSString *userSex;//用户性别，0为男，1为女
-@property (nonatomic,strong) NSString *introduceString;//个人介绍string
+@property (nonatomic,strong) NSString *introduceString;//个性签名
 @property (nonatomic,strong) NSString *userName;//用户姓名
 @property (nonatomic,strong) NSString *userAge;//用户年龄
 @property (nonatomic,strong) NSMutableArray *serviceArray;//服务项目数组

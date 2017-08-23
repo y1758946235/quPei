@@ -19,7 +19,7 @@
     // Initialization code
     
     self.cheap.hidden = YES;            //隐藏优惠文字
-    self.price.hidden = YES;            //价格
+    //self.price.hidden = NO;            //价格
     self.payMethodLabel.hidden = YES;   //支付方式
     self.leftPayButton.hidden = YES;    //左边支付方式的按钮
     [self.leftPayButton addTarget:self action:@selector(chosePayMenthod:) forControlEvents:UIControlEventTouchUpInside];
@@ -60,6 +60,8 @@
 
 
 + (instancetype)cellWithTableView:(UITableView *)tableView indexPath:(NSIndexPath *)indexPath {
+    
+    
     static NSString *myId = @"CustomTableViewCell";
     CustomTableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:myId];
     if (cell == nil) {
@@ -68,6 +70,7 @@
     cell.cheap.hidden = YES;
     if (indexPath.section == 0) {  //支付月数
         cell.accessoryType = UITableViewCellAccessoryNone;
+        cell.price.hidden = NO;
         cell.selectBtn.hidden = NO;
         cell.month.hidden = NO;
         [cell.selectBtn setBackgroundImage:[UIImage imageNamed:@"未选"] forState:UIControlStateNormal];
@@ -78,6 +81,9 @@
 //        if (indexPath.row == [self.sale intValue]) {
 //            cell.selectBtn.selected = YES;
 //        }
+        
+        cell.month.textColor = [UIColor colorWithHexString:@"#424242"];
+        cell.month.font = [UIFont fontWithName:@"PingFangSC-Regular" size:14];
         
         switch (indexPath.row) {
             case 0:
@@ -102,6 +108,7 @@
         cell.accessoryType = UITableViewCellAccessoryNone;
         //去掉分割线
         tableView.separatorStyle = UITableViewCellSeparatorStyleNone;
+        cell.price.hidden = YES;
         cell.month.hidden = YES;
         cell.selectBtn.hidden = YES;
         switch (indexPath.row) { //支付方式

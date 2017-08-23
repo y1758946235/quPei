@@ -10,11 +10,11 @@
 
 @interface EndLocationViewController : BaseViewController
 
-@property (nonatomic,strong) NSString *proId;
-@property (nonatomic,strong) NSString *preLoc;
-@property (nonatomic,strong) NSString *preView;
+
+@property (nonatomic,strong) NSString *preLoc;//城市名称
+
 @property (nonatomic,strong) NSString *countryId;
-@property (nonatomic,strong) NSString *proName;
-@property (nonatomic,strong) NSString *countryName;
+@property(nonatomic,strong)NSString *place;
+@property(nonatomic,strong)NSString *placeId;
 
 @end

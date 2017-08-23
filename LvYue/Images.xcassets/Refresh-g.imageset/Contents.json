@@ -2,13 +2,13 @@
   "images" : [
     {
       "idiom" : "universal",
-      "scale" : "1x",
-      "filename" : "Refresh-g.png"
+      "filename" : "Refresh-g.png",
+      "scale" : "1x"
     },
     {
       "idiom" : "universal",
-      "scale" : "2x",
-      "filename" : "Refresh-g@2x.png"
+      "filename" : "Refresh-g@2x.png",
+      "scale" : "2x"
     },
     {
       "idiom" : "universal",

@@ -37,15 +37,25 @@
         _timeLabel.textColor = [UIColor whiteColor];
         _timeLabel.textAlignment = NSTextAlignmentCenter;
         _timeLabel.backgroundColor = [UIColor blackColor];
-        [self addSubview:_timeLabel];
+//        [self addSubview:_timeLabel];
 
         
         _markLabel = [[UILabel alloc] initWithFrame:CGRectMake(0, SCREEN_HEIGHT - 40, SCREEN_WIDTH, 40)];
-        _markLabel.font = [UIFont systemFontOfSize:18];
+        _markLabel.font = [UIFont systemFontOfSize:16];
         _markLabel.textColor = [UIColor whiteColor];
         _markLabel.textAlignment = NSTextAlignmentLeft;
         _markLabel.backgroundColor = [UIColor blackColor];
         [self addSubview:_markLabel];
+        
+        
+        //高斯模糊
+        UIBlurEffect *effect = [UIBlurEffect effectWithStyle:UIBlurEffectStyleLight];
+        _effectView = [[UIVisualEffectView alloc] initWithEffect:effect];
+        //            effectView.alpha = 0.9;
+        _effectView.alpha = 0.95f;
+        _effectView.hidden= YES;
+        _effectView.frame = CGRectMake(0, 0, SCREEN_WIDTH, SCREEN_HEIGHT);
+        [self addSubview:_effectView];
     }
     return self;
 }

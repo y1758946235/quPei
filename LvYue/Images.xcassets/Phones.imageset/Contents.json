@@ -2,13 +2,13 @@
   "images" : [
     {
       "idiom" : "universal",
-      "scale" : "1x",
-      "filename" : "Phones.png"
+      "filename" : "Phones.png",
+      "scale" : "1x"
     },
     {
       "idiom" : "universal",
-      "scale" : "2x",
-      "filename" : "Phones@2x.png"
+      "filename" : "Phones@2x.png",
+      "scale" : "2x"
     },
     {
       "idiom" : "universal",

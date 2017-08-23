@@ -17,6 +17,7 @@
 #import "LYUserService.h"
 #import "QiniuSDK.h"
 #import "UIImagePickerController+CheckCanTakePicture.h"
+#import "perfactInfoVC.h"
 
 #define kMaxRequiredCount 1
 
@@ -27,7 +28,7 @@
 @property (nonatomic,strong) NSMutableArray *imageArray;
 @property (nonatomic,strong) NSData *photoData;
 @property (nonatomic,strong) NSString *token;
-@property (nonatomic,strong) NSString *locationString;
+//@property (nonatomic,strong) NSString *locationString;
 
 @property (nonatomic,strong) NSOperationQueue *queue;
 
@@ -40,7 +41,7 @@
 
 - (void)viewWillAppear:(BOOL)animated{
     [super viewWillAppear:animated];
-    [self.navigationController setNavigationBarHidden:YES animated:YES];
+   [self.navigationController setNavigationBarHidden:YES animated:YES];
 }
 
 - (void)viewDidLoad {
@@ -62,7 +63,7 @@
     self.headImg = [[UIImageView alloc] initWithFrame:CGRectMake(0, -20, kMainScreenWidth, kMainScreenHeight / 2 + 50)];
     self.headImg.image = self.headImage;
     self.headImg.userInteractionEnabled = YES;
-    UITapGestureRecognizer *tap = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(changeImage)];
+    UITapGestureRecognizer *tap = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(changeImagee)];
     [self.headImg addGestureRecognizer:tap];
     [self.rootScroll addSubview:self.headImg];
     
@@ -74,7 +75,7 @@
     nameLabel.text = self.name;
     [self.rootScroll addSubview:nameLabel];
     
-    //更换头像btn
+    //更换头像
     UIButton *changeBtn = [UIButton buttonWithType:UIButtonTypeCustom];
     changeBtn.center = CGPointMake(kMainScreenWidth / 2, nameLabel.frame.origin.y + nameLabel.frame.size.height + 50);
     changeBtn.bounds = CGRectMake(0, 0, 220, 40);
@@ -84,11 +85,11 @@
     [changeBtn setTitle:@"保存" forState:UIControlStateNormal];
     [self.rootScroll addSubview:changeBtn];
     
-    //保存按钮
+    //取消
     UIButton *saveBtn = [UIButton buttonWithType:UIButtonTypeCustom];
     saveBtn.center = CGPointMake(kMainScreenWidth / 2, changeBtn.frame.origin.y + changeBtn.frame.size.height + 25);
     saveBtn.bounds = CGRectMake(0, 0, 220, 40);
-    [saveBtn addTarget:self action:@selector(saveChange) forControlEvents:UIControlEventTouchUpInside];
+    [saveBtn addTarget:self action:@selector(cancel) forControlEvents:UIControlEventTouchUpInside];
     [saveBtn setTitleColor:[UIColor blackColor] forState:UIControlStateNormal];
     saveBtn.layer.borderWidth = 1;
     saveBtn.layer.borderColor = RGBACOLOR(238, 238, 238, 1).CGColor;
@@ -98,27 +99,38 @@
     
 }
 
-- (void)changeImage{
+- (void)changeImagee{
     UIActionSheet *action = [[UIActionSheet alloc] initWithTitle:nil delegate:self cancelButtonTitle:@"取消" destructiveButtonTitle:nil otherButtonTitles:@"拍照",@"从相册选取", nil];
     [action showInView:self.view];
 }
 
+
+
+- (void)returnText:(ReturnTextBlock)block {
+    self.returnTextBlock = block;
+}
+
+
 //保存头像
 - (void)changeHead{
+    
+ 
     if (self.imageArray.count == 0) {
-        [self.navigationController popToRootViewControllerAnimated:YES];
+//        [self.navigationController popViewControllerAnimated:YES];
+        
+        [MBProgressHUD showError:@"请选择头像"];
         return;
     }
     
     [MBProgressHUD showMessage:@"正在上传，请稍后..." toView:self.view];
-    [LYHttpPoster postHttpRequestByPost:[NSString stringWithFormat:@"%@/mobile/getQiniuToken",REQUESTHEADER] andParameter:@{} success:^(id successResponse) {
-        MLOG(@"结果:%@",successResponse);
-        if ([[NSString stringWithFormat:@"%@",successResponse[@"code"]] isEqualToString:@"200"]) {
+    [LYHttpPoster postHttpRequestByPost:[NSString stringWithFormat:@"%@/mobile/config/getQiniuToken",REQUESTHEADER] andParameter:@{} success:^(id successResponse) {
+        
+            if ([[NSString stringWithFormat:@"%@",successResponse[@"code"]] isEqualToString:@"200"]) {
             
             UIImage *image = self.imageArray[0];
             self.photoData = UIImageJPEGRepresentation(image, 0.3);
             
-            self.token = successResponse[@"data"][@"qiniuToken"];
+            self.token = successResponse[@"data"];
             
             //获取当前时间
             NSDate *now = [NSDate date];
@@ -137,7 +149,8 @@
             CGSize size = CGSizeFromString(NSStringFromCGSize(dataImage.size));
             CGFloat percent = size.width / size.height;
             
-            self.locationString = [NSString stringWithFormat:@"iosLvYueIcon%d%d%d%d%d%d%.2f",year,month,day,hour,minute,second,percent];
+            self.locationString = [NSString stringWithFormat:@"iosLvYueIcon%ld%ld%ld%ld%ld%ld%.2f",(long)year,(long)month,(long)day,(long)hour,(long)minute,(long)second,percent];
+          
             
             //七牛上传图片
             QNUploadManager *upManager = [[QNUploadManager alloc] init];
@@ -151,17 +164,24 @@
                           }
                           else{
                               
+                                NSString *userId = [[NSUserDefaults standardUserDefaults]objectForKey:@"userId"];
                               if (![self.locationString isEqualToString:@""]) {
-                                  //服务器获取图片
-                                  [LYHttpPoster postHttpRequestByPost:[NSString stringWithFormat:@"%@/mobile/user/update",REQUESTHEADER] andParameter:@{@"id":[NSString stringWithFormat:@"%@",[LYUserService sharedInstance].userID],@"icon":self.locationString} success:^(id successResponse) {
-                                      MLOG(@"结果:%@",successResponse);
+                                 //服务器获取图片
+                                  [LYHttpPoster postHttpRequestByPost:[NSString stringWithFormat:@"%@/mobile/user/updatePersonalInfo",REQUESTHEADER] andParameter:@{@"userId":userId,@"userIcon":self.locationString} success:^(id successResponse) {
+                                      MLOG(@"结果:%@",successResponse[@"errorMsg"]);
                                       [MBProgressHUD hideHUD];
                                       if ([[NSString stringWithFormat:@"%@",successResponse[@"code"]] isEqualToString:@"200"]) {
-                                          [self.navigationController popToRootViewControllerAnimated:YES];
-                                          [MBProgressHUD showSuccess:@"上传成功"];
-                                      } else {
+                                         [MBProgressHUD showSuccess:@"上传成功"];
+                                          
+                                          NSUserDefaults *user = [NSUserDefaults standardUserDefaults];
+                                         
+                                           [user setObject:[NSString stringWithFormat:@"%@%@",IMAGEHEADER,self.locationString] forKey:@"userIcon"];
+                                          
+                                        [self.navigationController popViewControllerAnimated:YES];
+                                    
+                                    } else {
                                           [MBProgressHUD hideHUD];
-                                          [MBProgressHUD showError:[NSString stringWithFormat:@"%@",successResponse[@"msg"]]];
+                                          [MBProgressHUD showError:[NSString stringWithFormat:@"%@",successResponse[@"errorMsg"]]];
                                       }
                                   } andFailure:^(id failureResponse) {
                                       [MBProgressHUD hideHUD];
@@ -173,7 +193,7 @@
             
         } else {
             [MBProgressHUD hideHUD];
-            [MBProgressHUD showError:[NSString stringWithFormat:@"%@",successResponse[@"msg"]]];
+            [MBProgressHUD showError:[NSString stringWithFormat:@"%@",successResponse[@"errorMsg"]]];
         }
     } andFailure:^(id failureResponse) {
         [MBProgressHUD hideHUD];
@@ -182,8 +202,9 @@
     
 }
 
-//保存头像
-- (void)saveChange{
+//取消保存头像
+- (void)cancel{
+    
     [self.navigationController popViewControllerAnimated:YES];
 }
 

@@ -1,4 +1,4 @@
-//
+  //
 //  LYHomeViewController.m
 //  LvYue
 //
@@ -6,145 +6,268 @@
 //  Copyright © 2016年 OLFT. All rights reserved.
 //
 
-#import "CollectWebViewController.h"
-#import "DetailDataViewController.h"
-#import "HomeCollectionViewCell.h"
-#import "HomeModel.h"
-#import "HotMessageCollectionViewCell.h"
-#import "HotModel.h"
-#import "JumpAnimationView.h"
-#import "KDCycleBannerView.h"
-#import "LYDetailDataViewController.h"
 #import "LYHomeViewController.h"
 #import "LYHttpPoster.h"
 #import "LYUserService.h"
-#import "LYWaterFlowLayout.h"
 #import "MBProgressHUD+NJ.h"
 #import "MJRefresh.h"
-#import "MyDispositionViewController.h"
-#import "PublishRequirementViewController.h"
-#import "RequirementDetailViewController.h"
-#import "ScrollView.h"
 #import "SearchNearbyViewController.h"
-#import "SkillDetailViewController.h"
 #import "UIImageView+WebCache.h"
 #import "UIView+KFFrame.h"
-#import "VideoListViewController.h"
+
 #import <CoreLocation/CoreLocation.h>
+
+#import "appointModel.h"      //约会吧 下方model
+#import "AppointTableCell.h"   //约会吧 下方cell
+#import "AFNetworking.h"
+#import "bigImageController.h"
+#import "otherZhuYeVC.h"  //别人的主页
+#import "NewLoginViewController.h"  //登录
+#import "travalTableView.h"
+#import "eatTableView.h"
+#import "movieTableView.h"
+#import "ktvTableView.h"
+#import "exerciseTableView.h"
+#import "marryTableView.h"
+#import "shopTableView.h"
+#import "otherTableView.h"
+#import "newTableView.h"
+#import "pchFile.pch"
+#import "ZHCellHeightCalculator.h"
+#import "newMyInfoModel.h"
+#import "MyBuddyModel.h"
+#import "EMChatViewBaseCell.h"
+#import "AlterGivingView.h"
+
+#import "CallViewController.h"
+#import "LGJAutoRunLabel.h"
 
 #define kNavigationHiddenAnimationDuration 0.25f
 
-@interface LYHomeViewController () <CLLocationManagerDelegate, BMKGeoCodeSearchDelegate, KDCycleBannerViewDelegate, KDCycleBannerViewDataSource, UICollectionViewDataSource, UICollectionViewDelegate, HomeCollectionViewCellDelegate> {
-    UICollectionView *_collectionView;
-    UICollectionView *_hotCollectionView;
-    UIView *lineView;
-    UIView *headView;
-    UIView *headView2;
-    UILabel *locLabel; //显示当前城市名的label
-
-    ScrollView *_scrollView;
-    NSMutableArray *rssArray;
-    NSMutableArray *needIdArr;
-    BOOL isNew;
-    BOOL isFirst;
-
+@interface LYHomeViewController () <CLLocationManagerDelegate, BMKGeoCodeSearchDelegate,UITableViewDataSource,UITableViewDelegate,LGJAutoRunLabelDelegate> {
+    UIButton *localeBtn;
+   UILabel *locLabel; //显示当前城市名的label
+    UIView *currentView;
     NSString *longitude; //经纬度
     NSString *latitude;
     NSString *currentCity; //当前城市名
-    //    NSString *refreshType;//find为按条件搜索,near为附近的人
-    NSMutableArray *scrollImageArray;          //轮播图图片数组
-    NSMutableArray *scrollImageActionURLArray; //轮播图点击响应的URL
-    NSInteger currentPage;                     //当前页数
-    NSInteger currentPage2;
+    NSString *currentProvince; //当前省名
+    NSString *currentDistrict; //当前地区名
 
-    HomeModel *homeModel; //用户模型
-    HotModel *hotModel;
-    KDCycleBannerView *cycleBannerViewBottom;  //轮播图
-    KDCycleBannerView *cycleBannerViewBottom2; //轮播图
-
-    UIButton *topBtn;
-    CGFloat _startY; //记录本次拖拽开始滑动的焦点的Y值
-    CGFloat _endY;   //记录本次拖拽结束滑动的焦点的Y值
-    UIView *_shadowView;
-    NSTimer *_timer;
-    BOOL isAutoLogin;
+    UIScrollView *topScroll;   //最上方的scroll
+ 
+    
+    UIButton *_lastBtn;
+    UILabel *_lastLabel;
+    UIButton *button; //scroll上的按钮
+    //UITableView *appointTable;  //下方的约内容
+    
+    NSString *typeId;//约会类型
+    
+    
+    NSInteger currentPage2;                    //当前页数
+    NSString *currentTime;//当前时间
+    
+    ZHCellHeightCalculator *heightCalculator;
+    
+    NSString *provinceId ;
+    NSString *cityId;
+    NSString *distriId;
+    
+//    NSString *alterViewtypeUser;
+//   int _time;
 }
-//上拉刷新用的搜索条件属性
-@property (nonatomic, strong) NSString *guideSex;            //性别
-@property (nonatomic, strong) NSString *guideCity;           //城市
-@property (nonatomic, strong) NSString *guideProvince;       //省
-@property (nonatomic, strong) NSString *guideCountry;        //国家
-@property (nonatomic, strong) NSString *guideAge;            //年龄
-@property (nonatomic, strong) NSString *guideServiceContent; //服务项目
-@property (nonatomic, strong) NSString *guideName;           //关键词
-@property (nonatomic, strong) NSString *guideLongitude;      //经纬度
-@property (nonatomic, strong) NSString *guideLatitude;
+
+
+@property(nonatomic,strong)travalTableView *travel;
+@property(nonatomic,strong)eatTableView *eat;
+@property(nonatomic,strong)movieTableView *movie;
+@property(nonatomic,strong)ktvTableView *ktv;
+@property(nonatomic,strong)exerciseTableView *exercise;
+@property(nonatomic,strong)marryTableView *marry;
+@property(nonatomic,strong)shopTableView *shop;
+@property(nonatomic,strong)otherTableView *other;
+@property(nonatomic,strong)newTableView *bestNewTable;
+
+
+@property(nonatomic,retain)NSMutableArray *selelcImageArr; //按钮选中图片数组
+@property(nonatomic,retain)NSMutableArray *labelNameArr ;  //sroll上的label的名字
+@property(nonatomic,retain)NSMutableArray *scrollImageArr; //scroll上图片的名字
+@property(nonatomic,retain)NSMutableArray *labelIdArr;  //scroll上label的id名字
 
 @property (nonatomic, strong) BMKGeoCodeSearch *searcher;
-
-@property (nonatomic, strong) JumpAnimationView *animationView; //动画容器View
-@property (nonatomic, strong) UIButton *publishBtn;             //发布按钮
 
 //地理编码对象
 @property (nonatomic, strong) CLGeocoder *geocoder;
 
 //定位信息管理者
 @property (nonatomic, strong) CLLocationManager *clManager;
+//我
+@property(nonatomic,copy)NSString *createTime;  //发布约会的时间
+@property(nonatomic,copy)NSString *ctivityTime; //约会的时间
+@property(nonatomic,copy)NSString *dateCity; //约会的城市
+@property(nonatomic,copy)NSString *dateDistict; //约会的区域
 
-@property (strong, nonatomic) NSMutableArray *heightArr;
-@property (strong, nonatomic) NSMutableArray *heightHotArr;
+@property(nonatomic,strong)NSString *dateProvince;  //约会的省
 
-@property (strong, nonatomic) NSMutableArray *guideArray; //主页用户数组
-@property (strong, nonatomic) NSMutableArray *hotArray;
+@property (nonatomic, strong) UITableView *myTableView;
+@property (nonatomic,retain) NSMutableArray  *dateTypeArr;
 
-@property (strong, nonatomic) LYWaterFlowLayout *waterFlowLayout;
+@property (nonatomic,strong) NSString  *yuehuibaTypeId;
+
+
+@property (nonatomic, strong) AppointTableCell *appointTableCell ;
+
+//@property (nonatomic, strong) AlterGivingView *alterView ;
+
+
 @end
 
 @implementation LYHomeViewController
-
 static int countInt = 0;
-static NSString *notice_index;
+
+-(UITableView *)myTableView {
+    if (!_myTableView) {
+        _myTableView = [[UITableView alloc]initWithFrame:CGRectMake(0, 56*AutoSizeScaleX, SCREEN_WIDTH, SCREEN_HEIGHT-56*AutoSizeScaleX-64-49) style:UITableViewStyleGrouped];
+       // [_myTableView registerNib:[UINib nibWithNibName:@"AppointTableCell" bundle:[NSBundle mainBundle]] forCellReuseIdentifier:@"AppointTableCell"];
+        [_myTableView registerClass:[AppointTableCell class] forCellReuseIdentifier:@"AppointTableCell"];
+        _myTableView.delegate = self;
+        _myTableView.dataSource = self;
+        _myTableView.backgroundColor = RGBA(246, 246, 247, 1);
+//        _myTableView.decelerationRate = 0.1f;
+//        self.appointTableCell = [_myTableView dequeueReusableCellWithIdentifier:@"AppointTableCell"];
+        
+    }
+//    _myTableView.rowHeight = 607;
+   // _myTableView.estimatedRowHeight = 500;
+   
+    // _myTableView.separatorStyle = UITableViewCellSeparatorStyleNone;
+   // [_myTableView   setSeparatorColor:[sezhiClass colorWithHexString:@"#d9d9d9"]];  //设置分割线
+  
+    return _myTableView;
+}
+//-(AlterGivingView *)alterView {
+//    if (!_alterView) {
+//        _alterView  = [[AlterGivingView alloc]init];
+//        _alterView.frame = CGRectMake(0, 0, SCREEN_WIDTH, SCREEN_HEIGHT);
+//        _alterView.backgroundColor = RGBA(1, 1, 1, 0.1);
+//    }
+//   return _alterView;
+//}
+
+- (NSMutableArray *)dateTypeArr {
+    if (!_dateTypeArr) {
+        _dateTypeArr = [[NSMutableArray alloc] init];
+    }
+    return _dateTypeArr;
+}
+
+- (NSMutableArray *)selelcImageArr{
+    if (!_selelcImageArr) {
+        _selelcImageArr = [[NSMutableArray alloc]init];
+    }
+    return _selelcImageArr;
+}
+
+
+- (NSMutableArray *)labelIdArr{
+    if (!_labelIdArr) {
+        _labelIdArr = [[NSMutableArray alloc]init];
+    }
+    
+    return _labelIdArr;
+}
+
+
+//scroll上方label
+- (NSMutableArray *)labelNameArr{
+    if (!_labelNameArr) {
+        _labelNameArr = [[NSMutableArray alloc]init];
+    }
+    return _labelNameArr;
+}
+
+//scroll上方图片
+- (NSMutableArray *)scrollImageArr{
+    if (!_scrollImageArr) {
+        _scrollImageArr = [[NSMutableArray alloc]init];
+    }
+    return _scrollImageArr;
+}
+
+
 
 #pragma mark - 定位管理者
 - (CLLocationManager *)clManager {
-
+    
     if (!_clManager) {
         _clManager = [[CLLocationManager alloc] init];
         //设置定位硬件的精准度
         _clManager.desiredAccuracy = kCLLocationAccuracyBest;
         //设置定位硬件的刷新频率
         _clManager.distanceFilter = kCLLocationAccuracyKilometer;
+        
+        if ([[[UIDevice currentDevice] systemVersion] floatValue] >= 9) {
+            _clManager.allowsBackgroundLocationUpdates = NO;
+        }
     }
     return _clManager;
 }
+
+//#pragma mark - 获取城市位置
+//
+//- (void)locationManager:(CLLocationManager *)manager
+//     didUpdateLocations:(NSArray *)locations{
+//    
+//}
+
+- (void)locationManager:(CLLocationManager *)manager didChangeAuthorizationStatus:(CLAuthorizationStatus)status {
+    
+    if (status == kCLAuthorizationStatusAuthorizedWhenInUse) {
+        //用户允许授权,开启定位
+        [_clManager startUpdatingLocation];
+    } else {
+        //        [MBProgressHUD showError:@"您拒绝了定位授权,若需要请在设置中开启"];
+        longitude = @"120.027860";
+        latitude = @"30.245586";
+    }
+}
+
+-(void)locationManager:(CLLocationManager *)manager didFailWithError:(NSError *)error{
+    [MBProgressHUD hideAllHUDsForView:self.view animated:YES];
+        [MBProgressHUD showError:@"定位失败,请重试"];
+}
+
+//在视图即将出现的时候把状态栏字体设为黑色
+- (void)viewWillAppear:(BOOL)animated{
+    [super viewWillAppear: animated];
+   //设置状态栏的颜色
+    [[UIApplication sharedApplication] setStatusBarStyle:UIStatusBarStyleDefault];
+    
+    if (self.scrollImageArr.count == 0) {
+        [self getData];
+    }
+     currentPage2 = 1;
+    
+    
+    
+  
+}
+
+
+
+
 
 #pragma mark - 地理编码对象
 - (CLGeocoder *)geocoder {
 
     if (_geocoder == nil) {
+        
         _geocoder = [[CLGeocoder alloc] init];
     }
     return _geocoder;
 }
 
-- (void)viewWillAppear:(BOOL)animated {
-    [super viewWillAppear:animated];
-
-    //    refreshType = @"near";
-    currentPage  = 1;
-    currentPage2 = 1;
-    if (!topBtn) {
-        topBtn                 = [[UIButton alloc] initWithFrame:CGRectMake(0, 0, SCREEN_WIDTH / 4, 49)];
-        topBtn.backgroundColor = [UIColor clearColor];
-        [topBtn addTarget:self action:@selector(bringToTop) forControlEvents:UIControlEventTouchUpInside];
-        [self.tabBarController.tabBar addSubview:topBtn];
-    }
-    topBtn.hidden = NO;
-}
-
-- (void)viewWillDisappear:(BOOL)animated {
-    topBtn.hidden = YES;
-}
 
 - (BOOL)prefersStatusBarHidden {
     return NO;
@@ -152,28 +275,36 @@ static NSString *notice_index;
 
 - (void)viewDidLoad {
     [super viewDidLoad];
+    [MBProgressHUD hideAllHUDsForView:self.view animated:YES];
+    [MBProgressHUD hideHUD];
+    latitude= [[NSString alloc]init];
+    longitude = [[NSString alloc]init];
+     currentPage2 = 1;
+    typeId = @"";
+    self.userSex = @"";
+    self.arrayType = @"";
+    distriId= @"";
+    cityId= @"";
+    distriId= @"";
+    currentCity = @"";
+    currentProvince = @"";
+    currentDistrict = @"";
+//    _time = 0;//定时器执行次数
+    NSLog(@"width---%2f,hheight%2f",[[UIScreen mainScreen] bounds].size.width-320,[[UIScreen mainScreen] bounds].size.height);
 
-    self.title = @"豆客";
+  
+  
+    
 
-    _guideArray   = [[NSMutableArray alloc] init];
-    _hotArray     = [[NSMutableArray alloc] init];
-    _heightArr    = [[NSMutableArray alloc] init];
-    _heightHotArr = [[NSMutableArray alloc] init];
-
-    isNew       = YES;
-    isFirst     = YES;
-    isAutoLogin = NO;
-
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(autoLogin:) name:@"autoLogin" object:nil];
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(pushDetail:) name:@"pushDetail" object:nil];
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(showNote) name:@"showNote" object:nil];
-
-    [self createCollectionView];
+    
+    //上方导航栏
     [self createNavigationView];
-
-    [self createScrollView]; //创建轮播图
-    [self createScrollView2];
-
+    
+    [self registNotification];
+    [self creatUI];
+    
+    
+    
     self.clManager.delegate        = self;
     self.clManager.desiredAccuracy = kCLLocationAccuracyBest;
     if ([[[UIDevice currentDevice] systemVersion] floatValue] >= 9) {
@@ -188,1274 +319,987 @@ static NSString *notice_index;
         //如果是IOS8.0以下的版本，则可直接开启定位
         [_clManager startUpdatingLocation];
     }
-
-    [self.view addSubview:self.animationView];
+    
+    
+//    [self cacheLogin];
+     [self addRefresh];
+    //获取上方约会数据
+    [self getData];
+    [self  getAppointDataIsupdData];
+   
+    
+   
+    
+   
+    
+   
+}
+-(void)creatUI{
+    
+    [self.view addSubview:self.myTableView];
+    
+    UIButton * plusButton = [[UIButton alloc]init];
+    plusButton.frame = CGRectMake(SCREEN_WIDTH-80, SCREEN_HEIGHT-64-49-100, 70, 70);
+    plusButton.layer.cornerRadius = 35;
+    plusButton.clipsToBounds = YES;
+    [plusButton setImage:[UIImage imageNamed:@"home_+"] forState:UIControlStateNormal];
+    [plusButton  addTarget:self action:@selector(gotoSendApointVC) forControlEvents:UIControlEventTouchUpInside];
+    [self.view addSubview:plusButton];
+    [self.view bringSubviewToFront:plusButton];
+    
 }
 
-#pragma mark - 通知中心
-
-- (void)autoLogin:(NSNotification *)aNotification {
-
-    isAutoLogin = YES;
-    if (!kAppDelegate.deviceToken) {
-        kAppDelegate.deviceToken = @"bb63b19106f3108798b7a271447e40df8a75c0b7cec8d99f54b43728713edc37";
-    }
-    if (longitude) {
-        [[LYUserService sharedInstance] autoLoginWithController:self mobile:[[LYUserService sharedInstance] mobile] password:[[LYUserService sharedInstance] password] deviceType:@"1" deviceToken:kAppDelegate.deviceToken umengID:[LYUserService sharedInstance].userDetail.umengID longitude:longitude latitude:latitude];
-        isAutoLogin = NO;
-    }
+-(void)gotoSendApointVC{
+    SendAppointViewController *VC = [[SendAppointViewController alloc]init];
+    [self.navigationController pushViewController:VC animated:YES];
 }
 
-- (void)pushDetail:(NSNotification *)aNotification {
-    LYDetailDataViewController *detail = [[LYDetailDataViewController alloc] init];
-    //    detail.friendId                    = [aNotification.userInfo[@"userId"] integerValue];
-    [self.navigationController pushViewController:detail animated:YES];
-}
-
-- (void)showNote {
-    UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:@"温馨提示" message:@"请注意防范酒托、饭托等。虽然是开放的时代，但大家一起旅行、唱歌、健身等线下活动时不要强迫对方做不愿意做的事情。尊重第一！" delegate:nil cancelButtonTitle:@"知道了" otherButtonTitles:nil, nil];
-
-    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(3.0 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
-        [alertView show];
-    });
-}
-
-- (void)dealloc {
-    [[NSNotificationCenter defaultCenter] removeObserver:self];
-}
-
-#pragma mark 创建界面
-
-- (JumpAnimationView *)animationView {
-    if (!_animationView) {
-        _animationView = [[JumpAnimationView alloc] init];
-        [_animationView setCenter:CGPointMake(kMainScreenWidth / 2, kMainScreenHeight - 50 - 44)];
-        [_animationView setBounds:CGRectMake(0, 0, 70, 70)];
-        _animationView.layer.masksToBounds = YES;
-        _animationView.backgroundColor     = [UIColor clearColor];
-#warning 隐藏发布按钮
-        //[_animationView addSubview:self.publishBtn];
-    }
-    return _animationView;
-}
-
-
-- (UIButton *)publishBtn {
-    if (!_publishBtn) {
-        _publishBtn = [UIButton buttonWithType:UIButtonTypeCustom];
-        [_publishBtn setBackgroundImage:[UIImage imageNamed:@"拍"] forState:UIControlStateNormal];
-        _publishBtn.frame                         = CGRectMake(0, 0, _animationView.bounds.size.width, _animationView.bounds.size.height);
-        _publishBtn.imageView.contentMode         = UIViewContentModeScaleAspectFit;
-        _publishBtn.imageView.layer.masksToBounds = YES;
-        _publishBtn.alpha                         = 0.90;
-        [_publishBtn addTarget:self action:@selector(showChooseView) forControlEvents:UIControlEventTouchUpInside];
-    }
-    return _publishBtn;
-}
-
-- (void)showChooseView {
-    _shadowView                 = [[UIView alloc] initWithFrame:CGRectMake(0, 0, SCREEN_WIDTH, SCREEN_HEIGHT + 64 + 49)];
-    _shadowView.backgroundColor = [UIColor colorWithWhite:0 alpha:0.7];
-    [[UIApplication sharedApplication].keyWindow addSubview:_shadowView];
-    UITapGestureRecognizer *tapGR = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(hidden)];
-    [_shadowView addGestureRecognizer:tapGR];
-
-    UIButton *pubRequirementBtn = [[UIButton alloc] initWithFrame:CGRectMake(SCREEN_WIDTH / 2 - 110, SCREEN_HEIGHT, 80, 80)];
-    [pubRequirementBtn setImage:[UIImage imageNamed:@"需求"] forState:UIControlStateNormal];
-    [pubRequirementBtn setImageEdgeInsets:UIEdgeInsetsMake(-30, 4, 0, 0)];
-    [pubRequirementBtn setTitle:@"发布需求" forState:UIControlStateNormal];
-    [pubRequirementBtn setTitleEdgeInsets:UIEdgeInsetsMake(60, -65, 0, 0)];
-    pubRequirementBtn.titleLabel.font = [UIFont systemFontOfSize:14];
-    [pubRequirementBtn addTarget:self action:@selector(publishRequirement) forControlEvents:UIControlEventTouchUpInside];
-    [_shadowView addSubview:pubRequirementBtn];
-
-    UIButton *pubSkillBtn = [[UIButton alloc] initWithFrame:CGRectMake(SCREEN_WIDTH / 2 + 45, SCREEN_HEIGHT, 80, 80)];
-    [pubSkillBtn setImage:[UIImage imageNamed:@"技能"] forState:UIControlStateNormal];
-    [pubSkillBtn setImageEdgeInsets:UIEdgeInsetsMake(-30, 4, 0, 0)];
-    [pubSkillBtn setTitle:@"发布技能" forState:UIControlStateNormal];
-    [pubSkillBtn setTitleEdgeInsets:UIEdgeInsetsMake(60, -70, 0, 0)];
-    pubSkillBtn.titleLabel.font = [UIFont systemFontOfSize:14];
-    [pubSkillBtn addTarget:self action:@selector(publishSkill) forControlEvents:UIControlEventTouchUpInside];
-    [_shadowView addSubview:pubSkillBtn];
-
-    [UIView animateWithDuration:kNavigationHiddenAnimationDuration * 3 delay:0.0 usingSpringWithDamping:0.4 initialSpringVelocity:30 options:UIViewAnimationOptionAllowAnimatedContent animations:^{
-        //BOTTOM
-        self.publishBtn.alpha    = 0.35;
-        self.animationView.frame = CGRectMake(kMainScreenWidth / 2 - 18, kMainScreenHeight - 20 - 47, 36, 36);
-        self.publishBtn.frame    = CGRectMake(0, 0, 36, 36);
-        pubRequirementBtn.frame  = CGRectMake(SCREEN_WIDTH / 2 - 110, SCREEN_HEIGHT - 180, 80, 80);
-        pubSkillBtn.frame        = CGRectMake(SCREEN_WIDTH / 2 + 45, SCREEN_HEIGHT - 180, 80, 80);
-    }
-                     completion:nil];
-}
-
-- (void)publishRequirement {
-    [_shadowView removeFromSuperview];
-
-    PublishRequirementViewController *vc = [[PublishRequirementViewController alloc] init];
-    vc.isPushSkill                       = NO;
-    vc.isFromDetail                      = NO;
-    [self.navigationController pushViewController:vc animated:YES];
-}
-
-- (void)publishSkill {
-    [_shadowView removeFromSuperview];
-
-    PublishRequirementViewController *vc = [[PublishRequirementViewController alloc] init];
-    vc.isPushSkill                       = YES;
-    vc.isFromDetail                      = NO;
-    [self.navigationController pushViewController:vc animated:YES];
-}
-
-
-- (void)hidden {
-    [_shadowView removeFromSuperview];
-
-    [UIView animateWithDuration:kNavigationHiddenAnimationDuration * 3 delay:0.0 usingSpringWithDamping:0.35 initialSpringVelocity:50 options:UIViewAnimationOptionAllowAnimatedContent animations:^{
-        //BOTTOM
-        self.publishBtn.alpha    = 0.90;
-        self.animationView.frame = CGRectMake(kMainScreenWidth / 2 - 36, kMainScreenHeight - 88 - 44, 70, 70);
-        self.publishBtn.frame    = CGRectMake(0, 0, 70, 70);
-    }
-                     completion:nil];
-}
-
-- (void)createCollectionView {
-    UICollectionViewFlowLayout *flowLayout = [[UICollectionViewFlowLayout alloc] init];
-    flowLayout.sectionInset                = UIEdgeInsetsMake(10, 0, 10, 0);
-    flowLayout.minimumInteritemSpacing     = 10;
-    flowLayout.minimumLineSpacing          = 10;
-    flowLayout.headerReferenceSize         = CGSizeMake(SCREEN_WIDTH, SCREEN_WIDTH / 2 + 35);
-
-    _waterFlowLayout = [[LYWaterFlowLayout alloc] init];
-
-    //计算每个item高度方法
-    [_waterFlowLayout computeIndexCellHeightWithWidthBlock:^CGFloat(NSIndexPath *indexPath, CGFloat width) {
-        if (indexPath.row > 1 && indexPath.row < _heightArr.count + 2) {
-            //            NSLog(@"%d",indexPath.row);
-            return [_heightArr[indexPath.row - 2] floatValue];
-        }
-        return SCREEN_WIDTH / 2 + 35;
-    }];
-
-    _collectionView                      = [[UICollectionView alloc] initWithFrame:CGRectMake(0, 0, SCREEN_WIDTH + 5, SCREEN_HEIGHT - 64.f - 49.f) collectionViewLayout:_waterFlowLayout];
-    _collectionView.delegate             = self;
-    _collectionView.dataSource           = self;
-    _collectionView.backgroundColor      = [UIColor whiteColor];
-    _collectionView.alwaysBounceVertical = YES;
-
-    _hotCollectionView                      = [[UICollectionView alloc] initWithFrame:CGRectMake(0, 64, SCREEN_WIDTH + 5, SCREEN_HEIGHT - 64 - 49) collectionViewLayout:flowLayout];
-    _hotCollectionView.delegate             = self;
-    _hotCollectionView.dataSource           = self;
-    _hotCollectionView.backgroundColor      = [UIColor whiteColor];
-    _hotCollectionView.hidden               = YES;
-    _hotCollectionView.alwaysBounceVertical = YES;
-
-    [_collectionView registerClass:[HomeCollectionViewCell class] forCellWithReuseIdentifier:@"newCell"];
-    [_hotCollectionView registerClass:[HotMessageCollectionViewCell class] forCellWithReuseIdentifier:@"hotCell"];
-    [_collectionView registerClass:[UICollectionViewCell class] forCellWithReuseIdentifier:@"cell"];
-    [_hotCollectionView registerClass:[UICollectionReusableView class] forSupplementaryViewOfKind:UICollectionElementKindSectionHeader withReuseIdentifier:@"headCell"];
-
-    [self addRefresh];
-
-    [self.view addSubview:_collectionView];
-    //    [self.view addSubview:_hotCollectionView];
-}
-
-- (void)createNavigationView {
-
-    //创建左边的view
-    UIView *leftView = [[UIView alloc] initWithFrame:CGRectMake(-100, 0, 50, 17)];
-
-    //添加地图定位的图片
-    UIImageView *locImage = [[UIImageView alloc] initWithFrame:CGRectMake(0, 0, 10.5, leftView.frame.size.height)];
-    locImage.image        = [UIImage imageNamed:@"定位"];
-    locImage.contentMode  = UIViewContentModeScaleAspectFit;
-    [leftView addSubview:locImage];
-
-    //添加当前城市名
-    locLabel               = [[UILabel alloc] initWithFrame:CGRectMake(CGRectGetMaxX(locImage.frame) + 2, 0, leftView.frame.size.width, locImage.frame.size.height)];
-    locLabel.font          = [UIFont systemFontOfSize:16];
-    locLabel.textAlignment = NSTextAlignmentCenter;
-    locLabel.textColor     = [UIColor whiteColor];
-    locLabel.text          = @"定位中";
-    [leftView addSubview:locLabel];
-
-    UIBarButtonItem *left = [[UIBarButtonItem alloc] initWithCustomView:leftView];
-    [self.navigationItem setLeftBarButtonItem:left];
-
-
-    //创建中间的view
-    UIView *centerView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, 200, 25)];
-
-    //最新
-    UIButton *newBtn = [[UIButton alloc] initWithFrame:CGRectMake(centerView.frame.size.width / 2 - 50, 0, 40, 25)];
-    [newBtn setTitle:@"最新" forState:UIControlStateNormal];
-    [newBtn setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
-    newBtn.titleLabel.font = [UIFont systemFontOfSize:18];
-    newBtn.tag             = 101;
-    [newBtn addTarget:self action:@selector(changeState:) forControlEvents:UIControlEventTouchUpInside];
-    [centerView addSubview:newBtn];
-
-    //热门
-    UIButton *hotBtn = [[UIButton alloc] initWithFrame:CGRectMake(centerView.frame.size.width / 2 + 20, 0, 40, 25)];
-    [hotBtn setTitle:@"热门" forState:UIControlStateNormal];
-    [hotBtn setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
-    hotBtn.titleLabel.font = [UIFont systemFontOfSize:18];
-    hotBtn.tag             = 102;
-    [hotBtn addTarget:self action:@selector(changeState:) forControlEvents:UIControlEventTouchUpInside];
-    //[centerView addSubview:hotBtn];
-
-    //视频圈
-    UIButton *videoBtn = [UIButton buttonWithType:UIButtonTypeCustom];
-    videoBtn.x         = CGRectGetMaxX(newBtn.frame) + 10;
-    videoBtn.y         = 0;
-    videoBtn.width     = 100;
-    videoBtn.height    = 25;
-    //[videoBtn setBackgroundColor:[UIColor redColor]];
-    videoBtn.tag = 103;
-    [videoBtn setTitle:@"形象视频" forState:UIControlStateNormal];
-    videoBtn.titleLabel.font = [UIFont systemFontOfSize:18];
-    [videoBtn setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
-    [videoBtn addTarget:self action:@selector(changeState:) forControlEvents:UIControlEventTouchUpInside];
-    [centerView addSubview:videoBtn];
-
-
-    lineView                 = [[UIView alloc] initWithFrame:CGRectMake(centerView.frame.size.width / 2 - 50, 32, 52, 3)];
-    lineView.backgroundColor = [UIColor whiteColor];
-    [centerView addSubview:lineView];
-
-    //[self.navigationItem setTitleView:centerView];
-
-    //---------------添加右边的item------------
-    UIButton *rightBtn = [UIButton buttonWithType:UIButtonTypeRoundedRect];
-    [rightBtn setFrame:CGRectMake(0, 0, 30, 17)];
-
-    //添加扩展功能的图片
-    UIImageView *searchImg = [[UIImageView alloc] initWithFrame:CGRectMake(0, 0, 30, rightBtn.frame.size.height)];
-    searchImg.image        = [UIImage imageNamed:@"搜索"];
-    searchImg.contentMode  = UIViewContentModeScaleAspectFit;
-    [rightBtn addSubview:searchImg];
-    [rightBtn addTarget:self action:@selector(turnToSearch) forControlEvents:UIControlEventTouchUpInside];
-
-    UIBarButtonItem *right = [[UIBarButtonItem alloc] initWithCustomView:rightBtn];
-    [self.navigationItem setRightBarButtonItem:right];
-}
-
-- (void)createScrollView {
-
-    headView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, kMainScreenWidth, kMainScreenWidth / 2 - 35)];
-    [_collectionView addSubview:headView];
-
-    UIImageView *stateImg = [[UIImageView alloc] initWithFrame:CGRectMake(10, kMainScreenWidth / 2 + 10, 20, 20)];
-    stateImg.image        = [UIImage imageNamed:@"动态"];
-    [headView addSubview:stateImg];
-
-    UILabel *stateLabel      = [[UILabel alloc] initWithFrame:CGRectMake(37, kMainScreenWidth / 2 + 5, 100, 30)];
-    stateLabel.text          = @"最新动态";
-    stateLabel.textColor     = [UIColor colorWithRed:29 / 255.0 green:189 / 255.0 blue:159 / 255.0 alpha:1];
-    stateLabel.font          = [UIFont systemFontOfSize:16];
-    stateLabel.textAlignment = NSTextAlignmentLeft;
-    [headView addSubview:stateLabel];
-
-    cycleBannerViewBottom                      = [KDCycleBannerView new];
-    cycleBannerViewBottom.frame                = CGRectMake(0, 0, kMainScreenWidth, kMainScreenWidth / 2); //位置及宽高
-    cycleBannerViewBottom.datasource           = self;
-    cycleBannerViewBottom.delegate             = self;
-    cycleBannerViewBottom.continuous           = YES; //是否连续显示
-    cycleBannerViewBottom.autoPlayTimeInterval = 4;   //时间间隔
-    [headView addSubview:cycleBannerViewBottom];
-
-    cycleBannerViewBottom2                      = [KDCycleBannerView new];
-    cycleBannerViewBottom2.frame                = CGRectMake(0, 0, kMainScreenWidth, kMainScreenWidth / 2); //位置及宽高
-    cycleBannerViewBottom2.datasource           = self;
-    cycleBannerViewBottom2.delegate             = self;
-    cycleBannerViewBottom2.continuous           = YES; //是否连续显示
-    cycleBannerViewBottom2.autoPlayTimeInterval = 4;   //时间间隔
-
-    scrollImageArray          = [[NSMutableArray alloc] init];
-    scrollImageActionURLArray = [[NSMutableArray alloc] init];
-    [LYHttpPoster postHttpRequestByPost:[NSString stringWithFormat:@"%@/assets/homeImg", REQUESTHEADER] andParameter:@{} success:^(id successResponse) {
-        MLOG(@"轮播图结果:%@", successResponse);
-        if ([[NSString stringWithFormat:@"%@", successResponse[@"code"]] isEqualToString:@"200"]) {
-
-            NSArray *array = successResponse[@"data"][@"imgs"];
-            for (NSDictionary *dict in array) {
-                NSString *imgStr  = dict[@"img"];
-                NSString *imgName = [NSString stringWithFormat:@"%@%@", IMAGEHEADER, imgStr];
-                [scrollImageArray addObject:imgName];
-                [scrollImageActionURLArray addObject:dict[@"actionUrl"]];
-            }
-            [cycleBannerViewBottom reloadDataWithCompleteBlock:nil];
-            // cycleBannerViewBottom2 应该已经无效
-            //            [cycleBannerViewBottom2 reloadDataWithCompleteBlock:nil];
-        } else {
+#pragma mark - UIAlertViewDelegate
+- (void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex {
+    if (alertView.tag == 1002) {
+        if (1 == buttonIndex) {
+            
+            [[UIApplication sharedApplication] openURL:[NSURL URLWithString:@"http://114.215.184.120:8088/mobile/shareApp.html"]];
         }
     }
-        andFailure:^(id failureResponse){
-
-        }];
-
-    UIView *noteView         = [[UIView alloc] initWithFrame:CGRectMake(0, 64, SCREEN_WIDTH, 30)];
-    noteView.backgroundColor = [UIColor colorWithWhite:0.5 alpha:0.5];
-#warning 隐藏发布按钮
-    //[self.view addSubview:noteView];
-
-    _scrollView = [[ScrollView alloc] initWithFrame:CGRectMake(40, 5, SCREEN_WIDTH - 50, 20)];
-    [noteView addSubview:_scrollView];
-
-    rssArray  = [NSMutableArray arrayWithObjects:@"", nil];
-    needIdArr = [NSMutableArray arrayWithObjects:@"", nil];
-    [_scrollView.newsButton addTarget:self action:@selector(topInfoClicked:) forControlEvents:UIControlEventTouchUpInside];
-    [UIView animateWithDuration:0.7 delay:0 options:0 animations:^() {
-        _scrollView.alpha = 0.2;
-        [_scrollView exchangeSubviewAtIndex:1 withSubviewAtIndex:0];
-        _scrollView.alpha = 1;
-    }
-        completion:^(BOOL finished){
-//设置定时器
-#warning 不在请求小喇叭数据
-            //[NSTimer scheduledTimerWithTimeInterval:3 target:self selector:@selector(displayNews) userInfo:nil repeats:YES];
-            //[NSTimer scheduledTimerWithTimeInterval:30 target:self selector:@selector(getScrollData) userInfo:nil repeats:YES];
-        }];
-
-    UIImageView *noteImg = [[UIImageView alloc] initWithFrame:CGRectMake(10, 5, 20, 20)];
-    noteImg.image        = [UIImage imageNamed:@"小喇叭"];
-
-    [noteView addSubview:noteImg];
+    
+}
+-(void)registNotification{
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(reloadUIData) name:@"reloadUIData" object:nil];
+    
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(gotoCallViewController:) name:@"gotoCallViewController" object:nil];
 }
 
-
-- (void)topInfoClicked:(UIButton *)btn {
-
-    if (countInt <= rssArray.count) {
-        NSString *str  = rssArray[countInt];
-        NSArray *array = [str componentsSeparatedByString:@" "];
-
-        if (array.count > 1) {
-            if ([needIdArr[countInt][@"horn"][@"type"] integerValue] == 0) {
-                RequirementDetailViewController *rlVC = [[RequirementDetailViewController alloc] init];
-                rlVC.needId                           = needIdArr[countInt][@"horn"][@"need_id"];
-                rlVC.isMyself                         = NO;
-                rlVC.needName                         = array[2];
-                [self.navigationController pushViewController:rlVC animated:YES];
-            } else if ([needIdArr[countInt][@"horn"][@"type"] integerValue] == 1) {
-                SkillDetailViewController *rlVC = [[SkillDetailViewController alloc] init];
-                rlVC.skillId                    = needIdArr[countInt][@"horn"][@"skill_id"];
-                rlVC.skillUserId                = needIdArr[countInt][@"horn"][@"user_id"];
-                [self.navigationController pushViewController:rlVC animated:YES];
-            }
-        }
-    }
+-(void)reloadUIData{
+    [self getAppointDataIsupdData];
 }
-
-- (void)getScrollData {
-    [LYHttpPoster postHttpRequestByPost:[NSString stringWithFormat:@"%@/mobile/need/horns", REQUESTHEADER] andParameter:@{} success:^(id successResponse) {
-        MLOG(@"结果:%@", successResponse);
-        if ([[NSString stringWithFormat:@"%@", successResponse[@"code"]] isEqualToString:@"200"]) {
-            [rssArray removeAllObjects];
-            [needIdArr removeAllObjects];
-            for (int i = 0; i < 10; i++) {
-                NSDictionary *dic = [successResponse[@"data"][@"data"] objectForKey:[NSString stringWithFormat:@"horns_%d", i]];
-                NSString *str     = @"";
-                if ([dic[@"horn"][@"type"] integerValue] == 0) {
-                    str = [NSString stringWithFormat:@"%@ 发布了 %@ 的需求", dic[@"userName"], dic[@"smallName"]];
-                } else if ([dic[@"horn"][@"type"] integerValue] == 1) {
-                    str = [NSString stringWithFormat:@"%@ 发布了 %@ 的技能", dic[@"userName"], dic[@"smallName"]];
-                } else {
-                    str = [NSString stringWithFormat:@"%@ 给 %@ 付款 %@ 元", dic[@"fName"], dic[@"userName"], dic[@"horn"][@"amount"]];
-                }
-                if (dic) {
-                    [rssArray addObject:str];
-                    [needIdArr addObject:dic];
-                }
-            }
-        } else {
-        }
-    }
-        andFailure:^(id failureResponse){
-
-        }];
+-(void)gotoCallViewController:(NSNotification *)noti{
+                    CallViewController *callController = [[CallViewController alloc] initWithSession:noti.object isIncoming:YES];
+                    callController.modalPresentationStyle = UIModalPresentationOverFullScreen;
+//    callController.receivId = [CommonTool getUserID];
+//    EMCallSession * session =noti.object;
+//    NSString *NewId = [session.sessionChatter substringFromIndex:2];// 由于是环信的id 所以改成用户ID
+//    callController.senderId = NewId;
+   [self presentViewController:callController animated:YES completion:nil];
 }
+//
 
-- (void)displayNews {
-    countInt++;
-    //    long num = [rssArray count] >= 3 ? 3:[rssArray count];
-    if (countInt >= [rssArray count])
-        countInt                  = 0;
-    CATransition *animation       = [CATransition animation];
-    animation.delegate            = self;
-    animation.duration            = 0.5f;
-    animation.timingFunction      = UIViewAnimationCurveEaseInOut;
-    animation.fillMode            = kCAFillModeForwards;
-    animation.removedOnCompletion = YES;
-    animation.type                = @"cube";
 
-    [_scrollView.layer addAnimation:animation forKey:@"animationID"];
-    if (rssArray.count != 0) {
-        [_scrollView setViewWithTitle:rssArray[countInt]];
-    }
-}
+//
+//-(void)timerAction:(NSTimer *)timer{
+//    _time++;
+//   [self addWhoSeeMe];
+//    if (_time >=3) {
+//        [timer invalidate];
+//        timer = nil;
+//
+//    }
+//    NSLog(@"_time--%d",_time);
+//}
+////push通知
+//- (void)cacheLogin {
+//    NSLog(@"userId--%@--",[CommonTool getUserID]);
+//    NSLog(@"getUserCaptcha--%@--",[CommonTool getUserCaptcha]);
+//    NSLog(@"kAppDelegate.deviceToken--%@--",kAppDelegate.deviceToken);
+// WS(weakSelf)
+//    NSDictionary *dic = @{@"userId":[CommonTool getUserID],@"userCaptcha":[CommonTool getUserCaptcha],@"deviceType":@"1",@"deviceToken":[CommonTool getDeviceToken]};
+//
+//    [LYHttpPoster postHttpRequestByPost:[NSString stringWithFormat:@"%@/mobile/login/cacheLogin",REQUESTHEADER] andParameter:dic success:^(id successResponse) {
+//#pragma mark  ---获取个人信息
+//        [weakSelf getPersonalInfo];
+//        } andFailure:^(id failureResponse) {
+//#pragma mark  ---获取个人信息
+//            [weakSelf getPersonalInfo];
+//    }];
+//
+//}
+//-(void)addWhoSeeMe{
+//    [LYHttpPoster requestAddSeeMeDataWithParameters:@{@"userId":[CommonTool getUserID],@"userSex":[CommonTool getUserSex]} Block:^(NSArray *arr) {
+//        
+//    }];
+//}
+//-(void)creatAlterView{
+//    
+//    
+//    [self.alterView removeFromSuperview];
+//
+//   [[UIApplication sharedApplication].keyWindow addSubview:self.alterView];
+//
+//    [self.alterView creatTypeUser:alterViewtypeUser] ;
+//   
+//}
+////获取数据
+//-(void)isGetFuli:(NSString *)userSex{
+//    WS(weakSelf)
+//    [LYHttpPoster postHttpRequestByPost:[NSString stringWithFormat:@"%@/mobile/login/loginReward",REQUESTHEADER] andParameter:@{@"userId":[CommonTool getUserID]} success:^(id successResponse) {
+//    
+//       
+//        if ([[NSString stringWithFormat:@"%@",successResponse[@"code"]] isEqualToString:@"200"]) {
+//            
+//            if ([[NSString stringWithFormat:@"%@",successResponse[@"data"]] isEqualToString:@"0"]) {
+//                  alterViewtypeUser = @"0";
+//                [weakSelf creatAlterView];
+//              
+//                #pragma mark 新用户标志符存入本地
+//                NSUserDefaults *user = [NSUserDefaults standardUserDefaults];
+//                [user setObject:alterViewtypeUser forKey:@"alterViewtypeUser"];
+//#pragma mark 如果是新用户
+//                NSTimer *timer = [NSTimer scheduledTimerWithTimeInterval:300 target:self selector:@selector(timerAction:) userInfo:nil repeats:YES];
+//                [[NSRunLoop  currentRunLoop] addTimer:timer forMode:NSDefaultRunLoopMode];
+//            }else if ([[NSString stringWithFormat:@"%@",successResponse[@"data"]] isEqualToString:@"1"]) {
+//                alterViewtypeUser = @"1";
+//                [weakSelf creatAlterView];
+//                NSUserDefaults *user = [NSUserDefaults standardUserDefaults];
+//                [user setObject:alterViewtypeUser forKey:@"alterViewtypeUser"];
+//
+//               
+//            }else{
+//                NSUserDefaults *user = [NSUserDefaults standardUserDefaults];
+//                [user setObject:@"" forKey:@"alterViewtypeUser"];
+//            }
+//           
+//        }else{
+//            [MBProgressHUD showSuccess:[NSString stringWithFormat:@"%@",successResponse[@"errorMsg"]]];
+//            NSUserDefaults *user = [NSUserDefaults standardUserDefaults];
+//            [user setObject:@"" forKey:@"alterViewtypeUser"];
+//        }
+//        
+//    } andFailure:^(id failureResponse) {
+//        [MBProgressHUD showError:@"服务器繁忙,请重试"];
+//        NSLog(@"失败:%@",failureResponse);
+//        NSUserDefaults *user = [NSUserDefaults standardUserDefaults];
+//        [user setObject:@"" forKey:@"alterViewtypeUser"];
+//    }];
+//    
+//}
+//
 
-- (void)createScrollView2 {
-    headView2 = [[UIView alloc] initWithFrame:CGRectMake(0, 0, kMainScreenWidth, kMainScreenWidth / 2 + 35)];
-
-    UIImageView *stateImg = [[UIImageView alloc] initWithFrame:CGRectMake(10, kMainScreenWidth / 2 + 10, 20, 20)];
-    stateImg.image        = [UIImage imageNamed:@"内容"];
-    [headView2 addSubview:stateImg];
-
-    UILabel *stateLabel      = [[UILabel alloc] initWithFrame:CGRectMake(37, kMainScreenWidth / 2 + 5, 100, 30)];
-    stateLabel.text          = @"热门内容";
-    stateLabel.textColor     = [UIColor colorWithRed:29 / 255.0 green:189 / 255.0 blue:159 / 255.0 alpha:1];
-    stateLabel.font          = [UIFont systemFontOfSize:16];
-    stateLabel.textAlignment = NSTextAlignmentLeft;
-    [headView2 addSubview:stateLabel];
-
-    [headView2 addSubview:cycleBannerViewBottom2];
-}
-
-- (void)turnToSearch {
-
-    SearchNearbyViewController *nextV = [[SearchNearbyViewController alloc] init];
-    nextV.latitude                    = latitude;
-    nextV.longitude                   = longitude;
-    [self.navigationController pushViewController:nextV animated:YES];
-}
-
-- (void)changeState:(UIButton *)btn {
-    if (btn.tag == 101) { //最新
-        [UIView animateWithDuration:0.3 animations:^{
-            lineView.frame = CGRectMake(self.navigationItem.titleView.frame.size.width / 2 - 60, 32, 52, 3);
-        }];
-        _hotCollectionView.hidden = YES;
-        _collectionView.hidden    = NO;
-        isNew                     = YES;
-    } else if (btn.tag == 102) { //热门
-        [UIView animateWithDuration:0.3 animations:^{
-            lineView.frame = CGRectMake(self.navigationItem.titleView.frame.size.width / 2 + 8, 32, 52, 3);
-        }];
-        _hotCollectionView.hidden = NO;
-        _collectionView.hidden    = YES;
-        isNew                     = NO;
-        if (isFirst) {
-            [self headerRefreshing];
-            isFirst = NO;
-        }
-    } else if (btn.tag == 103) { //视频圈
-                                 //        [UIView animateWithDuration:0.3 animations:^{
-                                 //            lineView.frame = CGRectMake(self.navigationItem.titleView.frame.size.width / 2 + 8, 32, 52, 3);
-                                 //        }];
-        [[LYUserService sharedInstance] fetchLoginStateWithCompeletionBlock:^(UserLoginStateType type) {
-            if (type == UserLoginStateTypeWaitToLogin) {
-                [[LYUserService sharedInstance] jumpToLoginWithController:self.tabBarController];
-            } else {
-                isNew                          = NO;
-                VideoListViewController *video = [[VideoListViewController alloc] init];
-                [self.navigationController pushViewController:video animated:YES];
-            }
-        }];
-
-    } else {
-    }
-}
-
-#pragma mark - 下拉刷新/网络请求
-//添加刷新
-- (void)addRefresh {
+- (void)addRefresh{
+    currentPage2 = 1;
     // 1.下拉刷新(进入刷新状态就会调用self的headerRereshing)
-    _collectionView.mj_header = [MJRefreshNormalHeader headerWithRefreshingTarget:self refreshingAction:@selector(headerRefreshing)];
-
+    _myTableView.mj_header = [MJRefreshNormalHeader headerWithRefreshingTarget:self refreshingAction:@selector(headerRefreshing)];
+    
     // 2.上拉加载更多(进入刷新状态就会调用self的footerRereshing)
-    _collectionView.mj_footer = [MJRefreshBackNormalFooter footerWithRefreshingTarget:self refreshingAction:@selector(footerRefreshing)];
-
-    // 1.下拉刷新(进入刷新状态就会调用self的headerRereshing)
-    _hotCollectionView.mj_header = [MJRefreshNormalHeader headerWithRefreshingTarget:self refreshingAction:@selector(headerRefreshing)];
-
-    // 2.上拉加载更多(进入刷新状态就会调用self的footerRereshing)
-    _hotCollectionView.mj_footer = [MJRefreshBackNormalFooter footerWithRefreshingTarget:self refreshingAction:@selector(footerRefreshing)];
+    _myTableView.mj_footer = [MJRefreshBackNormalFooter footerWithRefreshingTarget:self refreshingAction:@selector(footerRefreshing)];
+    
 }
 
-#pragma mark 上拉下拉刷新
-
-- (void)headerRefreshing {
-
-    //    refreshType = @"near";
-    if (isNew) {
-        currentPage = 1;
-    } else {
-        currentPage2 = 1;
-    }
-
-    if ([[[UIDevice currentDevice] systemVersion] doubleValue] >= 8.0) {
-        //前台和后台都允许请求用户是否允许开启定位 IOS8.0以上版本需要设置环境参数
-        [_clManager requestAlwaysAuthorization];
-        [_clManager startUpdatingLocation];
-    } else {
-        //如果是IOS8.0以下的版本，则可直接开启定位
-        [_clManager startUpdatingLocation];
-    }
-
-    MJRefreshStateHeader *header = (MJRefreshStateHeader *) _collectionView.mj_header;
+#pragma mark   --下拉刷新
+- (void)headerRefreshing{
+    
+    
+    currentPage2 = 1;
+    MJRefreshStateHeader *header = (MJRefreshStateHeader *) _myTableView.mj_header;
     [header setTitle:@"下拉可以刷新" forState:MJRefreshStateIdle];
     [header setTitle:@"松开马上刷新" forState:MJRefreshStatePulling];
     [header setTitle:@"刷新中" forState:MJRefreshStateRefreshing];
+    if (self.scrollImageArr.count == 0) {
+        [self getData];
+    }
+    [self  getAppointDataIsupdData];
+   [_myTableView.mj_header endRefreshing];
 }
+#pragma mark  -----下方约的数据
+- (void)getAppointDataIsupdData{
+    
+    
+    NSDictionary *dic = @{@"userId":[CommonTool getUserID],@"pageNum":[NSString stringWithFormat:@"%ld",(long)currentPage2],@"dateTypeId":typeId,@"arrayType":self.arrayType,@"userSex":self.userSex,@"provinceId":distriId,@"cityId":cityId,@"districtId":distriId,@"dateLongitude":longitude,@"dateLatitude":latitude};
+//        NSDictionary *dic = @{@"userId":[CommonTool getUserID],@"pageNum":[NSString stringWithFormat:@"%ld",(long)currentPage2],@"dateTypeId":typeId};
 
-- (void)footerRefreshing {
-    [MBProgressHUD showMessage:@"加载中" toView:self.view];
-    [[LYUserService sharedInstance] fetchLoginStateWithCompeletionBlock:^(UserLoginStateType type) {
-        if (type == UserLoginStateTypeWaitToLogin) {
-            NSInteger page = 1;
-            if (isNew) {
-                currentPage++;
-                page = currentPage;
-            } else {
-                currentPage2++;
-                page = currentPage2;
-            }
 
-            [LYHttpPoster postHttpRequestByPost:[NSString stringWithFormat:@"%@/mobile/user/guide2", REQUESTHEADER] andParameter:@{ @"isToristEnter": @"1",
-                                                                                                                                    @"longitude": longitude,
-                                                                                                                                    @"latitude": latitude,
-                                                                                                                                    @"pageNum": [NSString stringWithFormat:@"%ld", (long) page] }
-                success:^(id successResponse) {
-                    MLOG(@"结果:%@", successResponse);
-                    if ([[NSString stringWithFormat:@"%@", successResponse[@"code"]] isEqualToString:@"200"]) {
-
-                        if (isNew) {
-                            NSArray *array = successResponse[@"data"][@"list"];
-                            if (!array.count) {
-                                currentPage--;
-                                [MBProgressHUD showError:@"已经到底咯~"];
-                                [MBProgressHUD hideAllHUDsForView:self.view animated:YES];
-                            } else {
-                                NSMutableArray *arr = [[NSMutableArray alloc] init];
-                                for (NSDictionary *dict in successResponse[@"data"][@"list"]) {
-                                    homeModel              = [[HomeModel alloc] initWithDict:dict];
-                                    homeModel.isShowAction = YES;
-                                    [_guideArray addObject:homeModel];
-                                    [arr addObject:homeModel];
-                                }
-                                for (HomeModel *model in arr) {
-                                    CGRect rect = CGRectZero;
-                                    //                                if (model.skillDetail.length != 0) {
-                                    //                                    rect = [model.skillDetail boundingRectWithSize:CGSizeMake((SCREEN_WIDTH - 5)/ 2 - 20, 55) options:(NSStringDrawingUsesLineFragmentOrigin|NSStringDrawingUsesFontLeading) attributes:@{NSFontAttributeName:[UIFont systemFontOfSize:12]} context:nil];
-                                    //                                }else if (model.signature.length != 0 && model.skillDetail.length == 0) {
-                                    //                                    rect = [model.signature boundingRectWithSize:CGSizeMake((SCREEN_WIDTH - 5)/ 2 - 20, 55) options:(NSStringDrawingUsesLineFragmentOrigin|NSStringDrawingUsesFontLeading) attributes:@{NSFontAttributeName:[UIFont systemFontOfSize:12]} context:nil];
-                                    //                                }else {
-                                    //                                    rect = CGRectZero;
-                                    //                                }
-                                    //                                model.textHeight = rect.size.height;
-
-                                    if (model.signature.length != 0) {
-                                        rect = [model.signature boundingRectWithSize:CGSizeMake((SCREEN_WIDTH - 5) / 2 - 20, 1000) options:(NSStringDrawingUsesLineFragmentOrigin | NSStringDrawingUsesFontLeading) attributes:@{ NSFontAttributeName: [UIFont systemFontOfSize:12] } context:nil];
-                                    } else {
-                                        rect = CGRectZero;
-                                    }
-
-                                    model.textHeight = rect.size.height;
-
-                                    CGFloat height = 0;
-                                    if (model.imageHeight != 25.0) {
-                                        height = model.imageHeight + 55 + rect.size.height;
-                                    } else {
-                                        height = model.imageHeight + 42 + rect.size.height;
-                                    }
-                                    model.cellHeight = height;
-
-                                    [_heightArr addObject:[NSString stringWithFormat:@"%f", height]];
-                                }
-
-                                [_collectionView reloadData];
-                            }
-                        } else {
-                            NSArray *array = successResponse[@"data"][@"imgs"];
-                            if (!array.count) {
-                                currentPage2--;
-                                [MBProgressHUD showError:@"已经到底咯~"];
-                                [MBProgressHUD hideAllHUDsForView:self.view animated:YES];
-                            } else {
-                                NSMutableArray *arr = [[NSMutableArray alloc] init];
-                                for (NSDictionary *dict in successResponse[@"data"][@"imgs"]) {
-                                    hotModel = [[HotModel alloc] initWithDict:dict];
-                                    [_hotArray addObject:hotModel];
-                                    [arr addObject:hotModel];
-                                }
-                                for (HotModel *model in arr) {
-                                    NSData *data = [NSData dataWithContentsOfURL:[NSURL URLWithString:[NSString stringWithFormat:@"%@%@", IMAGEHEADER, model.imgName]]];
-
-                                    UIImage *image = [UIImage imageWithData:data];
-                                    CGSize size    = CGSizeFromString(NSStringFromCGSize(image.size));
-                                    model.image    = image;
-
-                                    model.imageHeight = (SCREEN_WIDTH - 20) / size.width * size.height;
-
-                                    CGRect rect      = [model.intro boundingRectWithSize:CGSizeMake(SCREEN_WIDTH - 20, 70) options:(NSStringDrawingUsesLineFragmentOrigin | NSStringDrawingUsesFontLeading) attributes:@{ NSFontAttributeName: [UIFont systemFontOfSize:16] } context:nil];
-                                    model.textHeight = rect.size.height;
-
-                                    CGFloat height   = ((SCREEN_WIDTH - 20) / size.width * size.height + 35 + rect.size.height);
-                                    model.cellHeight = height;
-
-                                    [_heightHotArr addObject:[NSString stringWithFormat:@"%f", height]];
-                                }
-                                [_hotCollectionView reloadData];
-                            }
-                        }
-                    } else {
-                        if (isNew) {
-                            currentPage--;
-                        } else {
-                            currentPage2--;
-                        }
-                        [MBProgressHUD hideAllHUDsForView:self.view animated:YES];
-                        [MBProgressHUD showError:[NSString stringWithFormat:@"%@", successResponse[@"msg"]]];
-                    }
-                }
-                andFailure:^(id failureResponse) {
-                    if (isNew) {
-                        currentPage--;
-                    } else {
-                        currentPage2--;
-                    }
-                    [MBProgressHUD hideAllHUDsForView:self.view animated:YES];
-                    [MBProgressHUD showError:@"服务器繁忙,请重试"];
-                }];
-            [_collectionView.mj_footer endRefreshing];
-            [_hotCollectionView.mj_footer endRefreshing];
-        } else if (type == UserLoginStateTypeAlreadyLogin) {
-            NSInteger page = 1;
-            if (isNew) {
-                currentPage++;
-                page = currentPage;
-            } else {
-                currentPage2++;
-                page = currentPage2;
-            }
-
-            [LYHttpPoster postHttpRequestByPost:[NSString stringWithFormat:@"%@/mobile/user/guide2", REQUESTHEADER] andParameter:@{ @"user_id": [LYUserService sharedInstance].userID,
-                                                                                                                                    @"longitude": longitude,
-                                                                                                                                    @"latitude": latitude,
-                                                                                                                                    @"pageNum": [NSString stringWithFormat:@"%ld", (long) page] }
-                success:^(id successResponse) {
-                    MLOG(@"结果:%@", successResponse);
-                    if ([[NSString stringWithFormat:@"%@", successResponse[@"code"]] isEqualToString:@"200"]) {
-
-                        if (isNew) {
-                            NSArray *array = successResponse[@"data"][@"list"];
-                            if (!array.count) {
-                                currentPage--;
-                                [MBProgressHUD showError:@"已经到底咯~"];
-                                [MBProgressHUD hideAllHUDsForView:self.view animated:YES];
-                            } else {
-                                NSMutableArray *arr = [[NSMutableArray alloc] init];
-                                for (NSDictionary *dict in successResponse[@"data"][@"list"]) {
-                                    homeModel              = [[HomeModel alloc] initWithDict:dict];
-                                    homeModel.isShowAction = YES;
-                                    [_guideArray addObject:homeModel];
-                                    [arr addObject:homeModel];
-                                }
-                                for (HomeModel *model in arr) {
-
-                                    //                                CGRect rect = CGRectZero;
-                                    //                                if (model.skillDetail.length != 0) {
-                                    //                                    rect = [model.skillDetail boundingRectWithSize:CGSizeMake((SCREEN_WIDTH - 5)/ 2 - 20, 55) options:(NSStringDrawingUsesLineFragmentOrigin|NSStringDrawingUsesFontLeading) attributes:@{NSFontAttributeName:[UIFont systemFontOfSize:12]} context:nil];
-                                    //                                }else if (model.signature.length != 0 && model.skillDetail.length == 0) {
-                                    //                                    rect = [model.signature boundingRectWithSize:CGSizeMake((SCREEN_WIDTH - 5)/ 2 - 20, 55) options:(NSStringDrawingUsesLineFragmentOrigin|NSStringDrawingUsesFontLeading) attributes:@{NSFontAttributeName:[UIFont systemFontOfSize:12]} context:nil];
-                                    //                                }else {
-                                    //                                    rect = CGRectZero;
-                                    //                                }
-                                    //                                model.textHeight = rect.size.height;
-                                    CGRect rect = CGRectZero;
-                                    if (model.signature.length != 0) {
-                                        rect = [model.signature boundingRectWithSize:CGSizeMake((SCREEN_WIDTH - 5) / 2 - 20, 1000) options:(NSStringDrawingUsesLineFragmentOrigin | NSStringDrawingUsesFontLeading) attributes:@{ NSFontAttributeName: [UIFont systemFontOfSize:12] } context:nil];
-                                    } else {
-                                        rect = CGRectZero;
-                                    }
-
-                                    model.textHeight = rect.size.height;
-
-                                    CGFloat height = 0;
-                                    if (model.imageHeight != 25.0) {
-                                        height = model.imageHeight + 55 + rect.size.height;
-                                    } else {
-                                        height = model.imageHeight + 42 + rect.size.height;
-                                    }
-                                    model.cellHeight = height;
-
-                                    [_heightArr addObject:[NSString stringWithFormat:@"%f", height]];
-                                }
-
-                                [_collectionView reloadData];
-                            }
-                        } else {
-                            NSArray *array = successResponse[@"data"][@"imgs"];
-                            if (!array.count) {
-                                currentPage--;
-                                [MBProgressHUD showError:@"已经到底咯~"];
-                                [MBProgressHUD hideAllHUDsForView:self.view animated:YES];
-                            } else {
-                                NSMutableArray *arr = [[NSMutableArray alloc] init];
-                                for (NSDictionary *dict in successResponse[@"data"][@"imgs"]) {
-                                    hotModel = [[HotModel alloc] initWithDict:dict];
-                                    [_hotArray addObject:hotModel];
-                                    [arr addObject:hotModel];
-                                }
-                                for (HotModel *model in arr) {
-                                    NSData *data = [NSData dataWithContentsOfURL:[NSURL URLWithString:[NSString stringWithFormat:@"%@%@", IMAGEHEADER, model.imgName]]];
-
-                                    UIImage *image = [UIImage imageWithData:data];
-                                    CGSize size    = CGSizeFromString(NSStringFromCGSize(image.size));
-                                    model.image    = image;
-
-                                    model.imageHeight = (SCREEN_WIDTH - 20) / size.width * size.height;
-
-                                    CGRect rect      = [model.intro boundingRectWithSize:CGSizeMake(SCREEN_WIDTH - 20, 70) options:(NSStringDrawingUsesLineFragmentOrigin | NSStringDrawingUsesFontLeading) attributes:@{ NSFontAttributeName: [UIFont systemFontOfSize:16] } context:nil];
-                                    model.textHeight = rect.size.height;
-
-                                    CGFloat height   = ((SCREEN_WIDTH - 20) / size.width * size.height + 35 + rect.size.height);
-                                    model.cellHeight = height;
-
-                                    [_heightHotArr addObject:[NSString stringWithFormat:@"%f", height]];
-                                }
-                                [_hotCollectionView reloadData];
-                            }
-                        }
-                    } else {
-                        if (isNew) {
-                            currentPage--;
-                        } else {
-                            currentPage2--;
-                        }
-                        [MBProgressHUD hideAllHUDsForView:self.view animated:YES];
-                        [MBProgressHUD showError:[NSString stringWithFormat:@"%@", successResponse[@"msg"]]];
-                    }
-                }
-                andFailure:^(id failureResponse) {
-                    if (isNew) {
-                        currentPage--;
-                    } else {
-                        currentPage2--;
-                    }
-                    [MBProgressHUD hideAllHUDsForView:self.view animated:YES];
-                    [MBProgressHUD showError:@"服务器繁忙,请重试"];
-                }];
-            [_collectionView.mj_footer endRefreshing];
-            [_hotCollectionView.mj_footer endRefreshing];
-        }
+      [ LYHttpPoster requestAppointContentDataWithParameters:dic Block:^(NSArray *arr) {
+          if (arr == nil) {
+             
+              return ;
+          }else{
+        [self.dateTypeArr removeAllObjects];
+        [self.dateTypeArr addObjectsFromArray:arr];
+        //        [self appointContent];
+          NSLog(@"arr---%@",arr);
+      
+        [_myTableView reloadData];
+   
+          }
     }];
+   
+    
 }
 
-#pragma mark 网络请求
-
-- (void)getDataFromWeb {
-    [MBProgressHUD showMessage:@"加载中" toView:self.view];
-    [[LYUserService sharedInstance] fetchLoginStateWithCompeletionBlock:^(UserLoginStateType type) {
-        if (type == 1) {
-#warning 经纬度
-            [LYHttpPoster postHttpRequestByPost:[NSString stringWithFormat:@"%@/mobile/user/guide2", REQUESTHEADER] andParameter:@{ @"user_id": [LYUserService sharedInstance].userID,
-                                                                                                                                    @"longitude": longitude,
-                                                                                                                                    @"latitude": latitude }
-                success:^(id successResponse) {
-                    MLOG(@"结果:%@", successResponse);
-                    if ([[NSString stringWithFormat:@"%@", successResponse[@"code"]] isEqualToString:@"200"]) {
-
-                        if (isNew) {
-                            [_guideArray removeAllObjects];
-                            [_heightArr removeAllObjects];
-                            for (NSDictionary *dict in successResponse[@"data"][@"list"]) {
-                                homeModel              = [[HomeModel alloc] initWithDict:dict];
-                                homeModel.isShowAction = YES;
-                                [_guideArray addObject:homeModel];
-                            }
-                            for (HomeModel *model in _guideArray) {
-
-                                CGRect rect = CGRectZero;
-                                /**
-                             *  @author KF, 16-07-14 18:07:13
-                             *
-                             *  @brief 去掉签名
-                             */
-                                //                            if (model.skillDetail.length != 0) {
-                                //                                rect = [model.skillDetail boundingRectWithSize:CGSizeMake((SCREEN_WIDTH - 5)/ 2 - 20, 55) options:(NSStringDrawingUsesLineFragmentOrigin|NSStringDrawingUsesFontLeading) attributes:@{NSFontAttributeName:[UIFont systemFontOfSize:12]} context:nil];
-                                //                            }else if (model.signature.length != 0 && model.skillDetail.length == 0) {
-                                //                                rect = [model.signature boundingRectWithSize:CGSizeMake((SCREEN_WIDTH - 5)/ 2 - 20, 55) options:(NSStringDrawingUsesLineFragmentOrigin|NSStringDrawingUsesFontLeading) attributes:@{NSFontAttributeName:[UIFont systemFontOfSize:12]} context:nil];
-                                //                            }else {
-                                //                                rect = CGRectZero;
-                                //                            }
-                                if (model.signature.length != 0) {
-                                    rect = [model.signature boundingRectWithSize:CGSizeMake((SCREEN_WIDTH - 5) / 2 - 20, 1000) options:(NSStringDrawingUsesLineFragmentOrigin | NSStringDrawingUsesFontLeading) attributes:@{ NSFontAttributeName: [UIFont systemFontOfSize:12] } context:nil];
-                                } else {
-                                    rect = CGRectZero;
-                                }
-
-                                model.textHeight = rect.size.height;
-
-                                CGFloat height = 0;
-                                if (model.imageHeight != 25.0) {
-                                    height = model.imageHeight + 55 + rect.size.height;
-                                } else {
-                                    height = model.imageHeight + 42 + rect.size.height;
-                                }
-                                model.cellHeight = height;
-
-                                [_heightArr addObject:[NSString stringWithFormat:@"%f", height]];
-                            }
-
-                            [_collectionView reloadData];
-                        } else {
-                            [_hotArray removeAllObjects];
-                            [_heightHotArr removeAllObjects];
-                            for (NSDictionary *dict in successResponse[@"data"][@"imgs"]) {
-                                hotModel = [[HotModel alloc] initWithDict:dict];
-                                [_hotArray addObject:hotModel];
-                            }
-                            for (HotModel *model in _hotArray) {
-                                NSData *data = [NSData dataWithContentsOfURL:[NSURL URLWithString:[NSString stringWithFormat:@"%@%@", IMAGEHEADER, model.imgName]]];
-
-                                UIImage *image = [UIImage imageWithData:data];
-                                CGSize size    = CGSizeFromString(NSStringFromCGSize(image.size));
-                                model.image    = image;
-
-                                model.imageHeight = (SCREEN_WIDTH - 20) / size.width * size.height;
-                                if (!image) {
-                                    model.imageHeight = 0;
-                                }
-
-                                CGRect rect      = [model.intro boundingRectWithSize:CGSizeMake(SCREEN_WIDTH - 20, 60) options:(NSStringDrawingUsesLineFragmentOrigin | NSStringDrawingUsesFontLeading) attributes:@{ NSFontAttributeName: [UIFont systemFontOfSize:16] } context:nil];
-                                model.textHeight = rect.size.height;
-
-                                CGFloat height   = (model.imageHeight + 35 + rect.size.height);
-                                model.cellHeight = height;
-
-                                [_heightHotArr addObject:[NSString stringWithFormat:@"%f", height]];
-                            }
-                            [_hotCollectionView reloadData];
-                            [MBProgressHUD hideAllHUDsForView:self.view animated:YES];
-                        }
-                    } else {
-                        [MBProgressHUD hideAllHUDsForView:self.view animated:YES];
-                        [MBProgressHUD showError:[NSString stringWithFormat:@"%@", successResponse[@"msg"]]];
-                    }
-                }
-                andFailure:^(id failureResponse) {
-                    [MBProgressHUD hideAllHUDsForView:self.view animated:YES];
-                    [MBProgressHUD showError:@"服务器繁忙,请重试"];
-                }];
-
-            [_collectionView.mj_header endRefreshing];
-            [_hotCollectionView.mj_header endRefreshing];
-        } else if (type == 0) {
-#warning 经纬度
-            [LYHttpPoster postHttpRequestByPost:[NSString stringWithFormat:@"%@/mobile/user/guide2", REQUESTHEADER] andParameter:@{ @"longitude": longitude,
-                                                                                                                                    @"latitude": latitude,
-                                                                                                                                    @"isToristEnter": @"1" }
-                success:^(id successResponse) {
-                    MLOG(@"结果:%@", successResponse);
-                    if ([[NSString stringWithFormat:@"%@", successResponse[@"code"]] isEqualToString:@"200"]) {
-
-                        if (isNew) {
-                            [_guideArray removeAllObjects];
-                            [_heightArr removeAllObjects];
-                            for (NSDictionary *dict in successResponse[@"data"][@"list"]) {
-                                homeModel              = [[HomeModel alloc] initWithDict:dict];
-                                homeModel.isShowAction = YES;
-                                [_guideArray addObject:homeModel];
-                            }
-                            for (HomeModel *model in _guideArray) {
-
-                                CGRect rect = CGRectZero;
-                                //                            if (model.skillDetail.length != 0) {
-                                //                                rect = [model.skillDetail boundingRectWithSize:CGSizeMake((SCREEN_WIDTH - 5)/ 2 - 20, 55) options:(NSStringDrawingUsesLineFragmentOrigin|NSStringDrawingUsesFontLeading) attributes:@{NSFontAttributeName:[UIFont systemFontOfSize:12]} context:nil];
-                                //                            }else if (model.signature.length != 0 && model.skillDetail.length == 0) {
-                                //                                rect = [model.signature boundingRectWithSize:CGSizeMake((SCREEN_WIDTH - 5)/ 2 - 20, 55) options:(NSStringDrawingUsesLineFragmentOrigin|NSStringDrawingUsesFontLeading) attributes:@{NSFontAttributeName:[UIFont systemFontOfSize:12]} context:nil];
-                                //                            }else {
-                                //                                rect = CGRectZero;
-                                //                            }
-                                //                            model.textHeight = rect.size.height;
-
-                                if (model.signature.length != 0) {
-                                    rect = [model.signature boundingRectWithSize:CGSizeMake((SCREEN_WIDTH - 5) / 2 - 20, 1000) options:(NSStringDrawingUsesLineFragmentOrigin | NSStringDrawingUsesFontLeading) attributes:@{ NSFontAttributeName: [UIFont systemFontOfSize:12] } context:nil];
-                                } else {
-                                    rect = CGRectZero;
-                                }
-
-                                model.textHeight = rect.size.height;
 
 
-                                CGFloat height = 0;
-                                if (model.imageHeight != 25.0) {
-                                    height = model.imageHeight + 55 + rect.size.height;
-                                } else {
-                                    height = model.imageHeight + 42 + rect.size.height;
-                                }
-                                model.cellHeight = height;
 
-                                [_heightArr addObject:[NSString stringWithFormat:@"%f", height]];
-                            }
-
-                            [_collectionView reloadData];
-                        } else {
-                            [_hotArray removeAllObjects];
-                            [_heightHotArr removeAllObjects];
-                            for (NSDictionary *dict in successResponse[@"data"][@"imgs"]) {
-                                hotModel = [[HotModel alloc] initWithDict:dict];
-                                [_hotArray addObject:hotModel];
-                            }
-                            for (HotModel *model in _hotArray) {
-                                NSData *data = [NSData dataWithContentsOfURL:[NSURL URLWithString:[NSString stringWithFormat:@"%@%@", IMAGEHEADER, model.imgName]]];
-
-                                UIImage *image = [UIImage imageWithData:data];
-                                CGSize size    = CGSizeFromString(NSStringFromCGSize(image.size));
-                                model.image    = image;
-
-                                model.imageHeight = (SCREEN_WIDTH - 20) / size.width * size.height;
-                                if (!image) {
-                                    model.imageHeight = 0;
-                                }
-
-                                CGRect rect      = [model.intro boundingRectWithSize:CGSizeMake(SCREEN_WIDTH - 20, 70) options:(NSStringDrawingUsesLineFragmentOrigin | NSStringDrawingUsesFontLeading) attributes:@{ NSFontAttributeName: [UIFont systemFontOfSize:16] } context:nil];
-                                model.textHeight = rect.size.height;
-
-                                CGFloat height   = (model.imageHeight + 35 + rect.size.height);
-                                model.cellHeight = height;
-
-                                [_heightHotArr addObject:[NSString stringWithFormat:@"%f", height]];
-                            }
-                            [_hotCollectionView reloadData];
-                            [MBProgressHUD hideAllHUDsForView:self.view animated:YES];
-                        }
-                    } else {
-                        [MBProgressHUD hideAllHUDsForView:self.view animated:YES];
-                        [MBProgressHUD showError:[NSString stringWithFormat:@"%@", successResponse[@"msg"]]];
-                    }
-                }
-                andFailure:^(id failureResponse) {
-                    [MBProgressHUD hideAllHUDsForView:self.view animated:YES];
-                    [MBProgressHUD showError:@"服务器繁忙,请重试"];
-                }];
-
-            [_collectionView.mj_header endRefreshing];
-            [_hotCollectionView.mj_header endRefreshing];
+#pragma mark   ---上拉刷新
+- (void)footerRefreshing{
+    
+    //[MBProgressHUD showMessage:@"加载中" toView:self];
+    
+    //    NSInteger page = 1;
+    currentPage2++;
+    //    page = currentPage2;
+    
+    //    NSInteger page=currentPage2++;
+    //DLK 内存泄漏修改
+//    NSString *time;
+    if (self.dateTypeArr.count != 0) {
+        appointModel *model = self.dateTypeArr[0];
+        if (model) {
+            currentTime = model.createTimestamp;
+            
         }
+    }
+    
+  
+//    NSDictionary *dic = @{@"userId":[CommonTool getUserID],@"pageNum":[NSString stringWithFormat:@"%ld",(long)currentPage2],@"dateTypeId":typeId,@"arrayType":self.arrayType,@"userSex":self.userSex,@"provinceId":distriId,@"cityId":cityId,@"districtId":distriId};
+    NSDictionary *dic = @{@"userId":[CommonTool getUserID],@"pageNum":[NSString stringWithFormat:@"%ld",(long)currentPage2],@"dateTypeId":typeId,@"createTime": currentTime,@"arrayType":self.arrayType,@"userSex":self.userSex,@"provinceId":distriId,@"cityId":cityId,@"districtId":distriId,@"dateLongitude":longitude,@"dateLatitude":latitude};
+    [ LYHttpPoster requestAppointContentDataWithParameters:dic Block:^(NSArray *arr) {
+        if (arr == nil) {
+            currentPage2 --;
+            return ;
+        }else{
+        [self.dateTypeArr addObjectsFromArray:arr];
+        
+        [_myTableView reloadData];
+        
+       
+        
+        if (arr.count == 0) {
+               currentPage2 --;
+             [MBProgressHUD showSuccess:@"已经到底啦"];
+        }
+        
+                    
+        }
+               
     }];
+
+//    [LYHttpPoster postHttpRequestByPost:[NSString stringWithFormat:@"%@/mobile/date/getDate",REQUESTHEADER] andParameter:@{@"userId":[CommonTool getUserID],@"pageNum":[NSString stringWithFormat:@"%d",(int)currentPage2],@"createTime":time} success:^(id successResponse) {
+//        NSLog(@"上拉刷新%@",successResponse);
+//        NSLog(@"上拉刷新%@",successResponse[@"errorMsg"]);
+//        if ([[NSString stringWithFormat:@"%@",successResponse[@"code"]] isEqualToString:@"200"]) {
+//            
+//            
+//            
+//            [MBProgressHUD hideHUD];
+//            [_myTableView reloadData];
+//            [MBProgressHUD showSuccess:@"已经到底啦"];
+//            
+//            
+//        }
+//        
+//    } andFailure:^(id failureResponse) {
+//        
+//        [MBProgressHUD hideHUD];
+//        [MBProgressHUD showError:@"请检查您的网络"];
+//    }];
+    
+     [_myTableView.mj_footer endRefreshing];
 }
 
-#pragma mark - UICollectionDelegate,UICollevtiondataSource
-- (NSInteger)collectionView:(UICollectionView *)collectionView numberOfItemsInSection:(NSInteger)section {
-    if (collectionView == _collectionView) {
-        return _guideArray.count + 2;
-    } else {
-        return _hotArray.count;
+#pragma mark   ----push通知
+- (void)pushNotification:(NSNotification *)noti{
+    
+    if ([[noti.userInfo objectForKey:@"push"] isEqualToString:@"otherZhuYeVC"]) {
+        otherZhuYeVC *other = [[otherZhuYeVC alloc]init];
+        other.userNickName = [noti.userInfo objectForKey:@"nickName"];
+        other.userId = [noti.userInfo objectForKey:@"otherId"];    //别人ID
+        [self.navigationController pushViewController:other animated:YES];
+    }
+    
+
+    
+}
+
+- (void)dealloc{
+    [[NSNotificationCenter defaultCenter]removeObserver:self name:@"push" object:nil];
+    [[NSNotificationCenter defaultCenter]removeObserver:self name:@"reloadUIData" object:nil];
+}
+
+
+#pragma mark   -----------获取上方约会类型的图片  文字
+- (void)getData
+{
+  
+    [LYHttpPoster postHttpRequestByPost:[NSString stringWithFormat:@"%@/mobile/cache/getDateType",REQUESTHEADER] andParameter:nil success:^(id successResponse) {
+        if ([[NSString stringWithFormat:@"%@",successResponse[@"code"]] isEqualToString:@"200"]) {
+            [self.scrollImageArr removeAllObjects];
+            [self.labelNameArr removeAllObjects];
+            [self.labelIdArr removeAllObjects];
+            [self.selelcImageArr removeAllObjects];
+       //  NSLog(@"约会类型00000000000000000000%@",successResponse);
+            NSArray *dataArr = successResponse[@"data"];
+            for (NSDictionary *dic in dataArr) {
+                NSString *imageStr = dic[@"dateTypeIcon"];
+                //用七牛请求头把图片名字转换成图片的url
+                NSURL *imageUrl = [NSURL URLWithString:[NSString stringWithFormat:@"%@%@",IMAGEHEADER,imageStr]];
+                //图片Url数组
+                [self.scrollImageArr addObject:imageUrl];
+                NSString *nameStr = dic[@"dateTypeName"];
+               NSString *tyId = dic[@"dateTypeId"];
+              
+                [self.labelNameArr addObject:nameStr];
+                [self.labelIdArr addObject:tyId];
+                
+                
+                //选中后的图片
+               NSString *str = @"_unselected";
+                
+                NSString *afterStr = [imageStr stringByReplacingOccurrencesOfString:str withString:@""];
+                NSURL *seleUrl = [NSURL URLWithString:[NSString stringWithFormat:@"%@%@",IMAGEHEADER,afterStr]];
+               
+                [self.selelcImageArr addObject:seleUrl];
+            }
+            
+            [self createScroll];
+            
+        }
+    } andFailure:^(id failureResponse) {
+        }];
+}
+
+
+#pragma mark  ---------最上方的轮播图 ------
+- (void)removeAllSubViews
+{
+    for (UIScrollView *subView in self.view.subviews)
+    {
+        [subView removeFromSuperview];
+    }
+}
+- (void)createScroll{
+    [topScroll removeFromSuperview];
+    topScroll = [[UIScrollView alloc]initWithFrame:CGRectMake(0, 0, SCREEN_WIDTH, 56*AutoSizeScaleX)];
+    topScroll.showsHorizontalScrollIndicator = NO;
+    [self.view addSubview:topScroll];
+    
+    UILabel *lineLabel = [[UILabel alloc]init];
+    lineLabel.frame = CGRectMake(0, 56*AutoSizeScaleX-1, SCREEN_WIDTH, 1);
+    lineLabel.backgroundColor = [UIColor colorWithHexString:@"#f5f5f5"];
+    [topScroll addSubview:lineLabel];
+    
+    topScroll.contentSize = CGSizeMake(64*AutoSizeScaleX*(self.scrollImageArr.count+1), 0);
+    
+    for (NSInteger i =0 ; i<self.scrollImageArr.count; i++)
+    {
+        UIButton *btn = [[UIButton alloc]initWithFrame:CGRectMake(28*AutoSizeScaleX+(68*AutoSizeScaleX)*i,10*AutoSizeScaleX, 30*AutoSizeScaleX, 56*AutoSizeScaleX)];
+//        UIButton *btn = [[UIButton alloc]initWithFrame:CGRectMake(10+64*i,10, 64, 56)];
+//       [btn setBackgroundImage:[UIImage imageWithData:[NSData dataWithContentsOfURL:self.scrollImageArr[i]]] forState:UIControlStateNormal];
+//       [btn setBackgroundImage:[UIImage imageWithData:[NSData dataWithContentsOfURL:self.selelcImageArr[i]]]  forState:UIControlStateSelected];
+        btn.tag = 1000+i;
+        [btn addTarget:self action:@selector(changeType:) forControlEvents:UIControlEventTouchUpInside];
+        [topScroll addSubview:btn];
+        
+        UIImageView *ImageView=[[UIImageView alloc]initWithFrame:CGRectMake(0, 0, 30*AutoSizeScaleX, 30*AutoSizeScaleX)];
+        ImageView.image=[[UIImage alloc]initWithData:[NSData dataWithContentsOfURL:self.scrollImageArr[i]]];
+        ImageView.tag=5000+i;
+        
+        [btn addSubview:ImageView];
+        
+        
+        
+        if (i==0)
+        {
+             ImageView.image=[[UIImage alloc]initWithData:[NSData dataWithContentsOfURL:self.selelcImageArr[i]]];
+            btn.selected = YES;
+            _lastBtn = btn;
+//           _bestNewTable  = [[newTableView alloc]initWithFrame:CGRectMake(0, 56, SCREEN_WIDTH, SCREEN_HEIGHT-56)];
+//            [self.view addSubview:_bestNewTable];
+//            _bestNewTable.yueHuiID = self.labelIdArr[0];
+//            currentView = _bestNewTable;
+            typeId = self.labelIdArr[0];
+            
+            if ([CommonTool dx_isNullOrNilWithObject:self.placeId] ) {
+                self.placeId = @",,";
+            }
+            
+            NSArray *plaIdArr = [self.placeId componentsSeparatedByString:@","];
+            if (plaIdArr.count==3) {
+                provinceId = plaIdArr[0];
+                cityId = plaIdArr[1];
+                distriId = plaIdArr[2];
+            }else{
+                provinceId = plaIdArr[0];
+                cityId = plaIdArr[1];
+                distriId = @"0";
+            }
+            
+//            [self getAppointDataIsupdData];
+        }
+        
+        
+        
+        UILabel *label = [[UILabel alloc]initWithFrame:CGRectMake(0, 33*AutoSizeScaleX, 30*AutoSizeScaleX, 10*AutoSizeScaleX)];
+       
+        label.text = [NSString stringWithFormat:@"%@",self.labelNameArr[i]];
+        label.textColor = [UIColor colorWithHexString:@"#757575"];
+        label.font =[UIFont fontWithName:@"PingFangSC-Light" size:12*AutoSizeScaleX];
+        label.tag = 2000+i;
+        [topScroll addSubview:label];
+        if (label.tag == 2000)
+        {
+            label.textColor = [UIColor colorWithHexString:@"#ff5252"];
+            _lastLabel = label;
+        }
+        
+//        label.center = CGPointMake(btn.frame.origin.x+btn.frame.size.width/2.0,50);
+//        label.bounds = CGRectMake(0, 0, btn.frame.size.width, 10);
+        label.textAlignment = NSTextAlignmentCenter;
+        [btn addSubview:label];
+       
     }
 }
 
-- (UICollectionViewCell *)collectionView:(UICollectionView *)collectionView cellForItemAtIndexPath:(NSIndexPath *)indexPath {
-    if (collectionView == _collectionView) {
 
-        if (indexPath.row > 1) {
-            HomeCollectionViewCell *cell = [collectionView dequeueReusableCellWithReuseIdentifier:@"newCell" forIndexPath:indexPath];
-            cell.delegate                = self;
-            homeModel                    = _guideArray[indexPath.row - 2];
-            [cell fillData:homeModel];
-            return cell;
-        } else {
-            UICollectionViewCell *cell = [collectionView dequeueReusableCellWithReuseIdentifier:@"cell" forIndexPath:indexPath];
-            cell.backgroundColor       = [UIColor clearColor];
-            return cell;
-        }
-    } else {
-        HotMessageCollectionViewCell *cell = [collectionView dequeueReusableCellWithReuseIdentifier:@"hotCell" forIndexPath:indexPath];
-        cell.backgroundColor               = [UIColor clearColor];
-        hotModel                           = _hotArray[indexPath.row];
-        [cell fillData:hotModel];
-        return cell;
-    }
-}
 
-- (UICollectionReusableView *)collectionView:(UICollectionView *)collectionView viewForSupplementaryElementOfKind:(NSString *)kind atIndexPath:(NSIndexPath *)indexPath {
-    UICollectionReusableView *headerView = [collectionView dequeueReusableSupplementaryViewOfKind:UICollectionElementKindSectionHeader withReuseIdentifier:@"headCell" forIndexPath:indexPath];
-    [headerView addSubview:headView2];
-    return headerView;
-}
-
-- (void)collectionView:(UICollectionView *)collectionView didSelectItemAtIndexPath:(NSIndexPath *)indexPath {
-
-    if (!indexPath.row) {
+- (void)changeType:(UIButton *)sender{
+    
+    if (sender == _lastBtn)
+    {
         return;
     }
+    
+    UIImageView *LastImageView=[self.view viewWithTag:_lastBtn.tag+4000];
+    LastImageView.image=[[UIImage alloc]initWithData:[NSData dataWithContentsOfURL:self.scrollImageArr[_lastBtn.tag-1000]]];
+    
+    
+    sender.selected = YES;
+    _lastBtn.selected = NO;
+    _lastBtn = sender;
+    
+    UILabel *label = [topScroll viewWithTag:sender.tag+1000];
+    label.textColor = [UIColor colorWithHexString:@"#ff5252"];
+    _lastLabel.textColor = [UIColor colorWithHexString:@"#757575"];
+    _lastLabel = label;
+    
+    UIImageView *ImageView=[self.view viewWithTag:sender.tag+4000];
+    ImageView.image=[[UIImage alloc]initWithData:[NSData dataWithContentsOfURL:self.selelcImageArr[sender.tag-1000]]];
+    
+    typeId = [NSString  stringWithFormat:@"%@",self.labelIdArr[sender.tag - 1000]];
+    currentPage2 = 1;
+    [self  getAppointDataIsupdData];
+////    if (sender.tag ==1000) {
+////        if (!_bestNewTable) {
+//   [currentView removeFromSuperview];
+//            _bestNewTable =[[newTableView alloc]initWithFrame:CGRectMake(0, 56, SCREEN_WIDTH, SCREEN_HEIGHT-56)];
+////        }
+//     _bestNewTable.yueHuiID = [NSString  stringWithFormat:@"%@",self.labelIdArr[sender.tag - 1000]];
+//    
+//        [self.view addSubview:_bestNewTable];
+//        currentView = _bestNewTable;
+//    }
+    
+//    if (sender.tag ==1000) {
+//        if (!_bestNewTable) {
+//          _bestNewTable =[[newTableView alloc]initWithFrame:CGRectMake(0, 56, SCREEN_WIDTH, SCREEN_HEIGHT-56)];
+//        }
+//        [currentView removeFromSuperview];
+//        [self.view addSubview:_bestNewTable];
+//         currentView = _bestNewTable;
+//    }
+//    
+//    if (sender.tag == 1001) {
+//        if (!_travel) {
+//        _travel =[[travalTableView alloc]initWithFrame:CGRectMake(0, 56, SCREEN_WIDTH, SCREEN_HEIGHT-56)];
+//                    }
+//          [currentView removeFromSuperview];
+//            [self.view addSubview:_travel];
+//            currentView = _travel;
+//        
+//        }
+//    
+//    if (sender.tag == 1002) {
+//        if (!_eat) {
+//            _eat =[[eatTableView alloc]initWithFrame:CGRectMake(0, 56, SCREEN_WIDTH, SCREEN_HEIGHT-56)];
+//                    }
+//             [currentView removeFromSuperview];
+//            [self.view addSubview:_eat];
+//            currentView = _eat;
+//    }
+//    
+//    
+//    if (sender.tag == 1003) {
+//        if (!_movie) {
+//            _movie =[[movieTableView alloc]initWithFrame:CGRectMake(0, 56, SCREEN_WIDTH, SCREEN_HEIGHT-56)];
+//        }
+//        [currentView removeFromSuperview];
+//        [self.view addSubview:_movie];
+//        currentView = _movie;
+//    }
+//    
+//    if (sender.tag == 1004) {
+//        if (!_ktv) {
+//            _ktv =[[ktvTableView alloc]initWithFrame:CGRectMake(0, 56, SCREEN_WIDTH, SCREEN_HEIGHT-56)];
+//        }
+//        [currentView removeFromSuperview];
+//        [self.view addSubview:_ktv];
+//         currentView = _ktv;
+//    }
+//    if (sender.tag == 1005) {
+//        if (!_exercise) {
+//            _exercise =[[exerciseTableView alloc]initWithFrame:CGRectMake(0, 56, SCREEN_WIDTH, SCREEN_HEIGHT-56)];
+//        }
+//        [currentView removeFromSuperview];
+//        [self.view addSubview:_exercise];
+//        currentView = _exercise;
+//    }
+//    
+//    if (sender.tag == 1006) {
+//        if (!_marry) {
+//            _marry =[[marryTableView alloc]initWithFrame:CGRectMake(0, 56, SCREEN_WIDTH, SCREEN_HEIGHT-56)];
+//        }
+//        [currentView removeFromSuperview];
+//        [self.view addSubview:_marry];
+//        currentView = _marry;
+//    }
+//    
+//    
+//    if (sender.tag == 1007) {
+//        if (!_shop) {
+//           _shop =[[shopTableView alloc]initWithFrame:CGRectMake(0, 56, SCREEN_WIDTH, SCREEN_HEIGHT-56)];
+//        }
+//        [currentView removeFromSuperview];
+//        [self.view addSubview:_shop];
+//        currentView = _shop;
+//    }
+//    
+//    if (sender.tag == 1008) {
+//        if (!_other) {
+//            _other =[[otherTableView alloc]initWithFrame:CGRectMake(0, 56, SCREEN_WIDTH, SCREEN_HEIGHT-56)];
+//        }
+//        [currentView removeFromSuperview];
+//        [self.view addSubview:_other];
+//        currentView = _other;
+//    }
+//    
+}
 
-    [[LYUserService sharedInstance] fetchLoginStateWithCompeletionBlock:^(UserLoginStateType type) {
-        if (type == UserLoginStateTypeWaitToLogin) {
-            [[LYUserService sharedInstance] jumpToLoginWithController:self.tabBarController];
-        } else {
 
-            if (collectionView == _collectionView) {
-                HomeModel *model                 = _guideArray[indexPath.item - 2];
-                LYDetailDataViewController *deta = [[LYDetailDataViewController alloc] init];
-                deta.userId                      = model.id;
-                [self.navigationController pushViewController:deta animated:YES];
-            } else {
-                HotModel *model = _hotArray[indexPath.item];
-                //        MyDispositionViewController *mdVC = [[MyDispositionViewController alloc] init];
-                //        mdVC.userId = model.userId;
-                //        [self.navigationController pushViewController:mdVC animated:YES];
-                LYDetailDataViewController *deta = [[LYDetailDataViewController alloc] init];
-                //                deta.friendId                  = [model.userId integerValue];
-                [self.navigationController pushViewController:deta animated:YES];
-            }
+//#pragma mark  ---时间转化时间戳
+//- (void)transformTimeChuo:(NSString *)time{
+//    
+//    NSDateFormatter *fom = [[NSDateFormatter alloc]init];
+//    [fom setDateStyle:NSDateFormatterMediumStyle];
+//    [fom setTimeStyle:NSDateFormatterShortStyle];
+//    [fom setDateFormat:@"YYYY-MM-dd"];
+//    NSTimeZone *zone = [NSTimeZone timeZoneWithName:@"Asia/Beijing"];
+//    [fom setTimeZone:zone];
+//    
+//    NSDate *date = [fom dateFromString:time];
+//    NSInteger timeSp = [[NSNumber numberWithDouble:[date timeIntervalSince1970]] integerValue]*1000;
+//   // NSLog(@"33333333333333333333333333333333333333时间戳:%ld",(long)timeSp);
+//}
+
+
+#pragma mark   ---------- 计算时间间隔---------
+- (NSString *)dateTimeDifferenceWithStartTime:(NSString *)startTime endTime:(NSString *)endTime{
+    
+    NSDateFormatter *date = [[NSDateFormatter alloc]init];
+    [date setDateFormat:@"yyyy-MM-dd HH:mm:ss"];
+    NSDate *startD = [date dateFromString:startTime];
+    NSDate *endD = [date dateFromString:endTime];
+    
+    NSTimeInterval start = [startD timeIntervalSince1970]*1;
+    NSTimeInterval end = [endD timeIntervalSince1970]*1;
+    NSTimeInterval value = end - start;
+    
+    
+    int second = (int)value %60;//秒
+    int minute = (int)value /60%60;
+    int house = (int)value / (24 * 3600)%3600;
+    int day = (int)value / (24 * 3600);
+    NSString *str;
+    if (day != 0) {
+        str = [NSString stringWithFormat:@"耗时%d天%d小时%d分%d秒",day,house,minute,second];
+    }else if (day==0 && house != 0) {
+        str = [NSString stringWithFormat:@"耗时%d小时%d分%d秒",house,minute,second];
+    }else if (day== 0 && house== 0 && minute!=0) {
+        str = [NSString stringWithFormat:@"耗时%d分%d秒",minute,second];
+    }else{
+        str = [NSString stringWithFormat:@"耗时%d秒",second];
+    }
+    return str;
+    
+    
+    
+    
+}
+
+
+
+
+- (void)createNavigationView {
+    
+    //导航栏背景颜色
+    self.navigationController.navigationBar.barTintColor = [UIColor colorWithHexString:@"#ffffff"];
+    
+    //导航栏字体颜色
+    self.navigationController.navigationBar.titleTextAttributes = @{NSForegroundColorAttributeName:[UIColor colorWithHexString:@"#ff5252"],NSFontAttributeName:[UIFont systemFontOfSize:18]};
+    
+    //定位按钮
+    localeBtn = [UIButton buttonWithType:UIButtonTypeRoundedRect];
+    localeBtn.frame = CGRectMake(16, 38, 60,40);
+    [localeBtn setTitle:@"杭州" forState:UIControlStateNormal];
+    localeBtn.titleLabel.font = [UIFont systemFontOfSize:14];
+    [localeBtn setTitleColor:[UIColor colorWithHexString:@"#424242"] forState:UIControlStateNormal];
+    [localeBtn addTarget:self action:@selector(locale:) forControlEvents:UIControlEventTouchUpInside];
+    
+     UIBarButtonItem *leftItem = [[UIBarButtonItem alloc]initWithCustomView:localeBtn];
+    
+    self.navigationItem.leftBarButtonItem = leftItem;
+    
+    //中间约会吧
+    UIView *titleView = [[UIView alloc]initWithFrame:CGRectMake(0, 0,91, 30)];
+    UIImageView *heartImage = [[UIImageView alloc]initWithFrame:CGRectMake(0, 4, 20, 18)];
+    heartImage.image = [UIImage imageNamed:@"m_liked"];
+    [titleView addSubview:heartImage];
+    UILabel *yueLabel = [[UILabel alloc]initWithFrame:CGRectMake(21, 0, 70, 25)];
+    yueLabel.text = @"约会吧";
+    yueLabel.font = [UIFont systemFontOfSize:18];
+    yueLabel.textColor = [UIColor colorWithHexString:@"#ff5252"];
+    [titleView addSubview:yueLabel];
+    self.navigationItem.titleView = titleView;
+    
+
+    
+    //右上角筛选按钮
+    UIButton *selectBtn = [[UIButton alloc]initWithFrame:CGRectMake(0, 0, 30, 25)];
+    [selectBtn setImage:[UIImage imageNamed:@"filter"] forState:UIControlStateNormal];
+    [selectBtn addTarget:self action:@selector(select:) forControlEvents:UIControlEventTouchUpInside];
+    UIBarButtonItem *rightItem = [[UIBarButtonItem alloc]initWithCustomView:selectBtn];
+    self.navigationItem.rightBarButtonItem = rightItem;
+    
+   
+}
+
+//筛选
+- (void)select:(UIButton *)sender{
+    
+       SearchNearbyViewController *nextV = [[SearchNearbyViewController alloc] init];
+   
+    
+    __weak __typeof(self)weakSelf = self;
+    [nextV shaiXuanText:^(NSString *placeId, NSString *arrayType, NSString *userSex) {
+        weakSelf.placeId = placeId;
+        weakSelf.arrayType = arrayType;
+        weakSelf.userSex = userSex;
+        if (self.placeId.length == 0) {
+            self.placeId = @",,";
         }
+      
+       NSArray *plaIdArr = [self.placeId componentsSeparatedByString:@","];
+        if (plaIdArr.count==3) {
+            provinceId = plaIdArr[0];
+            cityId = plaIdArr[1];
+            distriId = plaIdArr[2];
+        }else{
+            provinceId = plaIdArr[0];
+            cityId = plaIdArr[1];
+            distriId = @"0";
+        }
+//
+        [self getAppointDataIsupdData];
+        //
+        
+        
     }];
+        
+     
+        nextV.latitude                    = latitude;
+        nextV.longitude                   = longitude;
+        [self.navigationController pushViewController:nextV animated:YES];
+  
+
+    
 }
 
-- (void)collectionView:(UICollectionView *)collectionView didEndDisplayingCell:(UICollectionViewCell *)cell forItemAtIndexPath:(NSIndexPath *)indexPath {
-    [MBProgressHUD hideAllHUDsForView:self.view animated:YES];
+// 点击定位
+- (void)locale:(UIButton *)sender{
+    
+    
+
+    [self.clManager startUpdatingLocation];
 }
 
-- (void)collectionView:(UICollectionView *)collectionView willDisplayCell:(UICollectionViewCell *)cell forItemAtIndexPath:(NSIndexPath *)indexPath {
-    //    if (indexPath.item > 1 && collectionView == _collectionView) {
-    //
-    //        homeModel = _guideArray[indexPath.item - 2];
-    //        if (homeModel.isShowAction) {
-    //            homeModel.isShowAction = NO;
-    //
-    //            CGRect rect     = cell.frame;
-    //            rect.size.width = cell.frame.size.width + 3;
-    //
-    //            UIView *hideView1 = [[UIView alloc] initWithFrame:CGRectMake(0, 0, rect.size.width / 2, rect.size.height / 2)];
-    //            [cell addSubview:hideView1];
-    //            hideView1.backgroundColor = [UIColor colorWithRed:244 / 255.0 green:245 / 255.0 blue:246 / 255.0 alpha:1];
-    //
-    //            UIView *hideView2 = [[UIView alloc] initWithFrame:CGRectMake(rect.size.width / 2, 0, rect.size.width / 2, rect.size.height / 2)];
-    //            [cell addSubview:hideView2];
-    //            hideView2.backgroundColor = [UIColor colorWithRed:244 / 255.0 green:245 / 255.0 blue:246 / 255.0 alpha:1];
-    //
-    //            UIView *hideView3 = [[UIView alloc] initWithFrame:CGRectMake(0, rect.size.height / 2, rect.size.width / 2, rect.size.height / 2)];
-    //            [cell addSubview:hideView3];
-    //            hideView3.backgroundColor = [UIColor colorWithRed:244 / 255.0 green:245 / 255.0 blue:246 / 255.0 alpha:1];
-    //
-    //            UIView *hideView4 = [[UIView alloc] initWithFrame:CGRectMake(rect.size.width / 2, rect.size.height / 2, rect.size.width / 2, rect.size.height / 2)];
-    //            [cell addSubview:hideView4];
-    //            hideView4.backgroundColor = [UIColor colorWithRed:244 / 255.0 green:245 / 255.0 blue:246 / 255.0 alpha:1];
-    //
-    //
-    //            UIView *hideView5 = [[UIView alloc] initWithFrame:CGRectMake(rect.size.width / 2, 0, 0, rect.size.height / 2)];
-    //            [cell addSubview:hideView5];
-    //            hideView5.backgroundColor = [UIColor colorWithRed:244 / 255.0 green:245 / 255.0 blue:246 / 255.0 alpha:1];
-    //
-    //            UIView *hideView6 = [[UIView alloc] initWithFrame:CGRectMake(0, rect.size.height / 2, rect.size.width / 2, 0)];
-    //            [cell addSubview:hideView6];
-    //            hideView6.backgroundColor = [UIColor colorWithRed:244 / 255.0 green:245 / 255.0 blue:246 / 255.0 alpha:1];
-    //
-    //            UIView *hideView7 = [[UIView alloc] initWithFrame:CGRectMake(rect.size.width / 2, rect.size.height / 2, 0, rect.size.height / 2)];
-    //            [cell addSubview:hideView7];
-    //            hideView7.backgroundColor = [UIColor colorWithRed:244 / 255.0 green:245 / 255.0 blue:246 / 255.0 alpha:1];
-    //
-    //            UIView *hideView8 = [[UIView alloc] initWithFrame:CGRectMake(rect.size.width / 2, rect.size.height / 2, rect.size.width / 2, 0)];
-    //            [cell addSubview:hideView8];
-    //            hideView8.backgroundColor = [UIColor colorWithRed:244 / 255.0 green:245 / 255.0 blue:246 / 255.0 alpha:1];
-    //
-    //            [UIView animateWithDuration:0.6 delay:.0 options:UIViewAnimationOptionCurveEaseOut animations:^{
-    //
-    //                hideView1.frame = CGRectMake(0, 0, 0, 0);
-    //                hideView2.frame = CGRectMake(rect.size.width, 0, 0, 0);
-    //                hideView3.frame = CGRectMake(0, rect.size.height, 0, 0);
-    //                hideView4.frame = CGRectMake(rect.size.width, rect.size.height, 0, 0);
-    //
-    //                hideView5.frame = CGRectMake(0, 0, rect.size.width, 0);
-    //                hideView6.frame = CGRectMake(0, 0, 0, rect.size.height);
-    //                hideView7.frame = CGRectMake(0, rect.size.height, rect.size.width, 0);
-    //                hideView8.frame = CGRectMake(rect.size.width, 0, 0, rect.size.height);
-    //            }
-    //                completion:^(BOOL finished) {
-    //                    [hideView1 removeFromSuperview];
-    //                    [hideView2 removeFromSuperview];
-    //                    [hideView3 removeFromSuperview];
-    //                    [hideView4 removeFromSuperview];
-    //                    [hideView5 removeFromSuperview];
-    //                    [hideView6 removeFromSuperview];
-    //                    [hideView7 removeFromSuperview];
-    //                    [hideView8 removeFromSuperview];
-    //                }];
-    //        }
-    //    }
-}
+#pragma mark - CoreLocation Delegate
 
-- (CGSize)collectionView:(UICollectionView *)collectionView layout:(UICollectionViewLayout *)collectionViewLayout sizeForItemAtIndexPath:(NSIndexPath *)indexPath {
-    if (collectionView == _hotCollectionView) {
+-(void)locationManager:(CLLocationManager *)manager didUpdateLocations:(NSArray *)locations
+{
+    
 
-        return CGSizeMake(SCREEN_WIDTH, [_heightHotArr[indexPath.item] floatValue]);
-    }
 
-    return CGSizeMake(SCREEN_WIDTH, SCREEN_WIDTH);
-}
-
-#pragma mark - HomeCollectionViewCellDelegate
-- (void)homeCollectionViewCell:(HomeCollectionViewCell *)cell didClickPlayButton:(UIButton *)sender {
-    MLOG(@"homeCollectionViewCell");
-}
-
-#pragma mark - 获取城市位置
-
-- (void)locationManager:(CLLocationManager *)manager
-     didUpdateLocations:(NSArray *)locations {
-    [_clManager stopUpdatingLocation];
+    //此处locations存储了持续更新的位置坐标值，取最后一个值为最新位置，如果不想让其持续更新位置，则在此方法中获取到一个值之后让locationManager stopUpdatingLocation
     CLLocation *currentLocation = [locations lastObject];
-
-    latitude  = [NSString stringWithFormat:@"%f", currentLocation.coordinate.latitude];
-    longitude = [NSString stringWithFormat:@"%f", currentLocation.coordinate.longitude];
-
-    if (!kAppDelegate.deviceToken) {
-        kAppDelegate.deviceToken = @"bb63b19106f3108798b7a271447e40df8a75c0b7cec8d99f54b43728713edc37";
-    }
-
-    if (isAutoLogin) {
-        [[LYUserService sharedInstance] autoLoginWithController:self mobile:[[LYUserService sharedInstance] mobile] password:[[LYUserService sharedInstance] password] deviceType:@"1" deviceToken:kAppDelegate.deviceToken umengID:[LYUserService sharedInstance].userDetail.umengID longitude:longitude latitude:latitude];
-        isAutoLogin = NO;
-    }
-
-    [self getDataFromWeb];
-
+    latitude = [NSString stringWithFormat:@"%f",currentLocation.coordinate.latitude];
+    longitude = [NSString stringWithFormat:@"%f",currentLocation.coordinate.longitude];
     //停止定位
     [_clManager stopUpdatingLocation];
-
+    
     //初始化检索对象
-    self.searcher          = [[BMKGeoCodeSearch alloc] init];
+    self.searcher =[[BMKGeoCodeSearch alloc] init];
     self.searcher.delegate = self;
-
+    
     //发起反向地理编码检索
-    CLLocationCoordinate2D pt                           = (CLLocationCoordinate2D){[latitude floatValue], [longitude floatValue]};
+    CLLocationCoordinate2D pt = (CLLocationCoordinate2D){[latitude floatValue], [longitude floatValue]};
     BMKReverseGeoCodeOption *reverseGeoCodeSearchOption = [[BMKReverseGeoCodeOption alloc] init];
-    reverseGeoCodeSearchOption.reverseGeoPoint          = pt;
+    reverseGeoCodeSearchOption.reverseGeoPoint = pt;
     [self.searcher reverseGeoCode:reverseGeoCodeSearchOption];
     BOOL flag = [self.searcher reverseGeoCode:reverseGeoCodeSearchOption];
-    if (flag) {
+    if(flag)
+    {
         NSLog(@"反geo检索发送成功");
-    } else {
+    }
+    else
+    {
         NSLog(@"反geo检索发送失败");
     }
+
 }
 
-- (void)locationManager:(CLLocationManager *)manager didChangeAuthorizationStatus:(CLAuthorizationStatus)status {
-
-    if (status == kCLAuthorizationStatusAuthorizedWhenInUse) {
-        //用户允许授权,开启定位
-        [_clManager startUpdatingLocation];
-    } else {
-        //        [MBProgressHUD showError:@"用户拒绝授权,请在设置中开启"];
-        longitude = @"120.027860";
-        latitude  = @"30.245586";
-        if (!kAppDelegate.deviceToken) {
-            kAppDelegate.deviceToken = @"bb63b19106f3108798b7a271447e40df8a75c0b7cec8d99f54b43728713edc37";
-        }
-        if (isAutoLogin) {
-            [[LYUserService sharedInstance] autoLoginWithController:self mobile:[[LYUserService sharedInstance] mobile] password:[[LYUserService sharedInstance] password] deviceType:@"1" deviceToken:kAppDelegate.deviceToken umengID:[LYUserService sharedInstance].userDetail.umengID longitude:longitude latitude:latitude];
-            isAutoLogin = NO;
-        }
-        [self getDataFromWeb];
-    }
-}
-
-- (void)locationManager:(CLLocationManager *)manager didFailWithError:(NSError *)error {
-    [MBProgressHUD hideAllHUDsForView:self.view animated:YES];
-    [MBProgressHUD showError:@"定位失败,请重试"];
-
-    [self getDataFromWeb];
-}
 
 #pragma mark 代理方法返回反地理编码结果
-- (void)onGetReverseGeoCodeResult:(BMKGeoCodeSearch *)searcher result:(BMKReverseGeoCodeResult *)result errorCode:(BMKSearchErrorCode)error {
+- (void)onGetReverseGeoCodeResult:(BMKGeoCodeSearch *)searcher result:(BMKReverseGeoCodeResult *)result errorCode:(BMKSearchErrorCode)error{
+    
     if (result) {
         currentCity = [NSString stringWithFormat:@"%@", result.addressDetail.city];
-        NSLog(@"%@ - %@", result.address, result.addressDetail.streetNumber);
-    } else {
+        currentProvince = [NSString stringWithFormat:@"%@", result.addressDetail.province];
+        if ([[NSString stringWithFormat:@"%@", currentCity] isEqualToString:@"天津市"]) {
+            currentCity = @"";
+        }
+        if ([[NSString stringWithFormat:@"%@", currentCity] isEqualToString:@"上海市"]) {
+            currentCity = @"";
+        }
+        if ([[NSString stringWithFormat:@"%@", currentCity] isEqualToString:@"北京市"]) {
+            currentCity = @"";
+        }
+        if ([[NSString stringWithFormat:@"%@", currentCity] isEqualToString:@"重庆市"]) {
+            currentCity = @"";
+        }
+       
+        currentDistrict = [NSString stringWithFormat:@"%@", result.addressDetail.district];
+
+        [localeBtn setTitle:currentCity forState:UIControlStateNormal];
+        
+    }else{
         currentCity = @"定位失败";
     }
-    locLabel.text = currentCity;
+}
+//设置cell的高度
+- (CGFloat) tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath{
+    
+   appointModel *model = [self.dateTypeArr objectAtIndex:indexPath.row];
+    
+//    CGFloat height = [heightCalculator heightForCalculateheightModel:model];
+//    if (height>0) {
+//        NSLog(@"cache height");
+//        return height;
+//    }else{
+//        NSLog(@"calculate height");
+//    }
+//    AppointTableCell *cell = self.appointTableCell;
+//    cell.contentView.translatesAutoresizingMaskIntoConstraints = NO;
+//    [self configureCell:cell atIndexPath:indexPath];//必须先对Cell中的数据进行配置使动态计算时能够知道根据Cell内容计算出合适的高度
+//    
+//    /*------------------------------重点这里必须加上contentView的宽度约束不然计算出来的高度不准确-------------------------------------*/
+//    CGFloat contentViewWidth = CGRectGetWidth(self.myTableView.bounds);
+//    NSLayoutConstraint *widthFenceConstraint = [NSLayoutConstraint constraintWithItem:cell.contentView attribute:NSLayoutAttributeWidth relatedBy:NSLayoutRelationEqual toItem:nil attribute:NSLayoutAttributeNotAnAttribute multiplier:1.0 constant:contentViewWidth];
+//    [cell.contentView addConstraint:widthFenceConstraint];
+//    // Auto layout engine does its math
+//    CGFloat fittingHeight = [cell.contentView systemLayoutSizeFittingSize:UILayoutFittingCompressedSize].height;
+//    [cell.contentView removeConstraint:widthFenceConstraint];
+//    /*-------------------------------End------------------------------------*/
+//    
+//    return fittingHeight+2*1/[UIScreen mainScreen].scale;//必须加上上下分割线的高度
+    return model.cellHeight;
+   // return 567;
+}
+//#pragma mark Configure Cell Data
+//- (void)configureCell:(AppointTableCell *)cell atIndexPath:(NSIndexPath *)indexPath {
+//    
+//    cell.model = [self.dateTypeArr objectAtIndex:indexPath.row];
+//}
+- (CGFloat)tableView:(UITableView *)tableView heightForHeaderInSection:(NSInteger)section {
+   
+    return 1;
+}
+- (CGFloat)tableView:(UITableView *)tableView heightForFooterInSection:(NSInteger)section {
+    
+    return 1;
+}
+- (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
+    
+    return self.dateTypeArr.count;
 }
 
-#pragma mark 轮播图代理委托
-
-- (NSArray *)numberOfKDCycleBannerView:(KDCycleBannerView *)bannerView {
-    if (scrollImageArray.count) {
-        return scrollImageArray;
-    } else {
-        return nil;
+- (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
+    
+    AppointTableCell* cell = [tableView dequeueReusableCellWithIdentifier:@"AppointTableCell" forIndexPath:indexPath];
+  
+    cell.selectionStyle = UITableViewCellSelectionStyleNone;
+//    [self configureCell:cell atIndexPath:indexPath];
+//    cell.preservesSuperviewLayoutMargins = NO;
+//    cell.separatorInset = UIEdgeInsetsZero;
+//    cell.layoutMargins = UIEdgeInsetsZero;
+    appointModel *aModel = self.dateTypeArr[indexPath.row];
+    if (aModel) {
+        
+        
+        for (UIView *view in cell.contentView.subviews) {
+            [view removeFromSuperview];
+            
+        }
+        
+        [cell createCell:aModel placeName:[NSString stringWithFormat:@"%@%@%@",currentProvince,currentCity,currentDistrict]];
+       
+       
+     
+        //聊天
+        cell.chatBtn.tag = 1000+indexPath.row;
+        [cell.chatBtn addTarget:self action:@selector(chat:) forControlEvents:UIControlEventTouchUpInside];
+        
     }
+    
+
+    //self.height = cell.height;
+    return  cell;
 }
+#pragma mark  ---对约会感兴趣
+//- (void)instred:(UIButton *)sender{
+//    
+//    //  NSString *userId = [[NSUserDefaults standardUserDefaults]objectForKey:@"userId"];
+//    [LYHttpPoster postHttpRequestByPost:[NSString stringWithFormat:@"%@/mobile/date/addInterestDate",REQUESTHEADER] andParameter:@{@"userId":@"1000006",@"dateActivityId":@"1",@"otherUserId":@"1000001"} success:^(id successResponse) {
+//        
+//        if ([[NSString stringWithFormat:@"%@",successResponse[@"code"]] isEqualToString:@"200"]) {
+//            [MBProgressHUD showSuccess:@"感兴趣成功"];
+//        }
+//        
+//    } andFailure:^(id failureResponse) {
+//        
+//    }];
+//    
+//    
+//    
+//}
 
-- (UIViewContentMode)contentModeForImageIndex:(NSUInteger)index {
-    return UIViewContentModeScaleToFill;
-}
-
-- (void)cycleBannerView:(KDCycleBannerView *)bannerView didSelectedAtIndex:(NSUInteger)index {
-    CollectWebViewController *vc = [CollectWebViewController new];
-    vc.url                       = scrollImageActionURLArray[index];
-    [self.navigationController pushViewController:vc animated:YES];
-}
-
-//返回顶部
-- (void)bringToTop {
-    if (isNew) {
-        [_collectionView setContentOffset:CGPointMake(0, 0) animated:YES];
-    } else {
-        [_hotCollectionView setContentOffset:CGPointMake(0, 0) animated:YES];
-    }
-}
-
-#pragma mark 判断是否为空
-
-- (BOOL)isBlankString:(NSString *)string {
-    if (string == nil || string == NULL) {
-        return YES;
-    }
-    if ([string isKindOfClass:[NSNull class]]) {
-        return YES;
-    }
-    if ([[string stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceCharacterSet]] length] == 0) {
-        return YES;
-    }
-    return NO;
-}
-
-#pragma mark - UIScrollViewDelegate
-- (void)scrollViewDidScroll:(UIScrollView *)scrollView {
-    CGFloat y = scrollView.contentOffset.y;
-    if (y >= scrollView.contentSize.height - kMainScreenHeight) {
+#pragma mark  --聊天
+- (void)chat:(UIButton *)sender{
+    
+     appointModel *aModel = self.dateTypeArr[sender.tag-1000];
+    if ([[NSString stringWithFormat:@"%@",aModel.otherId]  isEqualToString:[CommonTool getUserID]]) {
+        MBProgressHUD *hud = [MBProgressHUD showHUDAddedTo:self.view animated:YES];
+        hud.mode =MBProgressHUDModeText;//显示的模式
+        hud.labelText = @"不能跟自己聊天哦～";
+        [hud hide:YES afterDelay:1];
+        //设置隐藏的时候是否从父视图中移除，默认是NO
+        hud.removeFromSuperViewOnHide = YES;
+       
         return;
-    }
-    CGFloat offSet_Y = y - _startY;
-    if (offSet_Y > 0) {
-        [UIView animateWithDuration:kNavigationHiddenAnimationDuration * 3 delay:0.0 usingSpringWithDamping:0.35 initialSpringVelocity:50 options:UIViewAnimationOptionAllowAnimatedContent animations:^{
-            //BOTTOM
-            self.publishBtn.alpha    = 0.35;
-            self.animationView.frame = CGRectMake(kMainScreenWidth / 2 - 18, kMainScreenHeight - 20 - 47, 36, 36);
-            self.publishBtn.frame    = CGRectMake(0, 0, 36, 36);
-        }
-                         completion:nil];
-    } else {
-        //        [self scrollViewWillBeginDragging:scrollView];
-        //设置恢复
-        //self.automaticallyAdjustsScrollViewInsets =NO;
-
-        [UIView animateWithDuration:kNavigationHiddenAnimationDuration * 3 delay:0.0 usingSpringWithDamping:0.35 initialSpringVelocity:50 options:UIViewAnimationOptionAllowAnimatedContent animations:^{
-            //BOTTOM
-            self.publishBtn.alpha    = 0.90;
-            self.animationView.frame = CGRectMake(kMainScreenWidth / 2 - 36, kMainScreenHeight - 88 - 44, 70, 70);
-            self.publishBtn.frame    = CGRectMake(0, 0, 70, 70);
-        }
-                         completion:nil];
+    }else{
+    ChatViewController *chatController = [[ChatViewController alloc] initWithChatter:[NSString stringWithFormat:@"qp%@",aModel.otherId]  isGroup:NO] ;
+    chatController.isContactsList2Chat = NO;
+    chatController.title = aModel.nickName;
+//        NSUserDefaults *user = [NSUserDefaults standardUserDefaults];
+//        [user setObject:[NSString stringWithFormat:@"%@%@",IMAGEHEADER,aModel.headImage] forKey:@"otherUserIcon"];
+//         [user setObject:[NSString stringWithFormat:@"%@",aModel.nickName] forKey:@"otherUserNickname"];
+    [self.navigationController pushViewController:chatController animated:YES];
+       
+        [self buyyFmdb:sender.tag-1000];
     }
 }
 
 
-- (void)scrollViewWillBeginDragging:(UIScrollView *)scrollView {
-    _startY = scrollView.contentOffset.y;
+//#pragma mark  ---获取个人信息
+//- (void)getPersonalInfo{
+//    
+//    // NSString *userId = [[NSUserDefaults standardUserDefaults]objectForKey:@"userId"];
+//    
+//    [LYHttpPoster postHttpRequestByPost:[NSString stringWithFormat:@"%@/mobile/user/getPersonalInfo",REQUESTHEADER] andParameter:@{@"userId":[CommonTool getUserID]} success:^(id successResponse) {
+//        
+//         NSLog(@"0000000000000我的资料:%@",successResponse);
+//        
+//        
+//        if ([[NSString stringWithFormat:@"%@",successResponse[@"code"]] isEqualToString:@"200"]) {
+//            
+//            NSDictionary *dataDic = successResponse[@"data"];
+//            [self saveToUserDefault:dataDic];
+//             [self  isGetFuli:[NSString stringWithFormat:@"%@",successResponse[@"data"][@"userSex"]]];
+//        }else{
+//            [MBProgressHUD showError:[NSString stringWithFormat:@"%@",successResponse[@"errorMsg"]]];
+//        }
+//        
+//    } andFailure:^(id failureResponse) {
+//        [MBProgressHUD showError:@"服务器繁忙,请重试"];
+//        NSLog(@"失败:%@",failureResponse);
+//    }];
+//    
+//}
+
+////#pragma mark   ---保存用户信息到本地
+//- (void)saveToUserDefault:(NSDictionary *)userDict {
+//    @synchronized (self) {
+//        NSUserDefaults *user = [NSUserDefaults standardUserDefaults];
+//        [user setObject:[NSString stringWithFormat:@"%@",userDict[@"userId"]] forKey:@"userId"];
+//        [user setObject:[NSString stringWithFormat:@"%@",userDict[@"userNickname"]] forKey:@"userNickname"];
+//        [user setObject:[NSString stringWithFormat:@"%@%@",IMAGEHEADER,userDict[@"userIcon"]] forKey:@"userIcon"];
+//       [user setObject:[NSString stringWithFormat:@"%@",userDict[@"userSex"]] forKey:@"userSex"];
+//        [user setObject:[NSString stringWithFormat:@"%@",userDict[@"vipLevel"]] forKey:@"vipLevel"];
+//      
+//    }
+//    
+//    
+//    
+//}
+
+-(void)buyyFmdb:(NSInteger )tag{
+    [kAppDelegate.dataBaseQueue inDatabase:^(FMDatabase *db) {
+        //如果数据库打开成功
+        if ([kAppDelegate.dataBase open]) {
+            appointModel *model = self.dateTypeArr[tag];
+            NSString *huanxinUserId = [NSString stringWithFormat:@"qp%@",model.otherId];
+//            for (MyBuddyModel *model in self.dateTypeArr) {
+                //如果用户模型在本地数据库表中没有，则插入，否则更新
+                NSString *findSql = [NSString stringWithFormat:@"SELECT * FROM '%@' WHERE userID = '%@'",@"User",huanxinUserId];
+                FMResultSet *result = [kAppDelegate.dataBase executeQuery:findSql];
+                if ([result resultCount]) { //如果查询结果有数据
+                    //更新对应数据
+                    NSString *updateSql = [NSString stringWithFormat:@"UPDATE '%@' SET name = '%@',remark = '%@',icon = '%@' WHERE userID = '%@'",@"User",model.nickName,model.remark,[NSString stringWithFormat:@"%@%@",IMAGEHEADER,model.headImage],huanxinUserId];
+                    BOOL isSuccess = [kAppDelegate.dataBase executeUpdate:updateSql];
+                    if (isSuccess) {
+                        MLOG(@"更新数据成功!");
+                    } else {
+                        MLOG(@"更新数据失败!");
+                    }
+                } else { //如果查询结果没有数据
+                    //插入相应数据
+                    NSString *insertSql = [NSString stringWithFormat:@"INSERT INTO '%@'('%@','%@','%@','%@') VALUES('%@','%@','%@','%@')",@"User",@"userID",@"name",@"remark",@"icon",huanxinUserId,model.nickName,model.remark,[NSString stringWithFormat:@"%@%@",IMAGEHEADER,model.headImage]];
+                    BOOL isSuccess = [kAppDelegate.dataBase executeUpdate:insertSql];
+                    if (isSuccess) {
+                        MLOG(@"插入数据成功!");
+                    } else {
+                        MLOG(@"插入数据失败!");
+                    }
+                }
+//            }
+            [kAppDelegate.dataBase close];
+        } else {
+            MLOG(@"\n本地数据库更新失败\n");
+        }
+    }];
+
 }
-
-
-- (void)scrollViewDidEndDragging:(UIScrollView *)scrollView willDecelerate:(BOOL)decelerate {
-    _endY = scrollView.contentOffset.y;
-}
-
+//#pragma mark   ----------时间戳转换成时间
+//- (NSString *)transformTime:(NSString *)time{
+//
+//    NSInteger num = [time integerValue]/1000;
+//
+//    NSDateFormatter *formatter = [[NSDateFormatter alloc]init];
+//    [formatter setDateStyle:NSDateFormatterMediumStyle];
+//    [formatter setTimeStyle:NSDateFormatterShortStyle];
+//    [formatter setDateFormat:@"YYYY-MM-dd HH:mm:ss"];
+//    
+//    NSDate *contime = [NSDate dateWithTimeIntervalSince1970:num];
+//    NSString *conTimeStr = [formatter stringFromDate:contime];
+//    
+//    return conTimeStr;    //2016-11-21-55
+//    
+//}
 
 @end

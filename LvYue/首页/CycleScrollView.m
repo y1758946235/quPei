@@ -127,8 +127,11 @@
     
     if (self.images.count) {
         //改变当前显示的三张图片
-        UIImageView *tempView = [[UIImageView alloc]init];
-        tempView = [self.images objectAtIndex:0];
+//        = [[UIImageView alloc]init];
+         UIImageView *tempView = [self.images objectAtIndex:0];
+        // DLK  内存泄漏修改
+//        UIImageView *tempView = [[UIImageView alloc]init];
+//        tempView = [self.images objectAtIndex:0];
         [tempView sd_setImageWithURL:[NSURL URLWithString:[NSString stringWithFormat:@"%@%@",IMAGEHEADER,self.scrollImageArray[prePage]]]];
         
         tempView = [self.images objectAtIndex:1];

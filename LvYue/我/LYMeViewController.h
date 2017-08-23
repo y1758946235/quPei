@@ -10,4 +10,6 @@
 
 @interface LYMeViewController : BaseViewController
 
+@property(nonatomic,strong)NSString *userId;
+
 @end

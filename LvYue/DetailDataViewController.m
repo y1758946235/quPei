@@ -816,11 +816,11 @@
                 if (type == UserLoginStateTypeWaitToLogin) {
                     [[LYUserService sharedInstance] jumpToLoginWithController:self];
                 } else if (type == UserLoginStateTypeAlreadyLogin) { //朋友圈
-                    FriendsCirleViewController *fri = [[FriendsCirleViewController alloc] init];
-                    fri.userId                      = [NSString stringWithFormat:@"%ld", (long) self.infoModel.id];
-                    fri.isFriendsCircle             = NO;
-                    fri.personName                  = self.infoModel.name;
-                    [self.navigationController pushViewController:fri animated:YES];
+//                    FriendsCirleViewController *fri = [[FriendsCirleViewController alloc] init];
+//                    fri.userId                      = [NSString stringWithFormat:@"%ld", (long) self.infoModel.id];
+//                    fri.isFriendsCircle             = NO;
+//                    fri.personName                  = self.infoModel.name;
+//                    [self.navigationController pushViewController:fri animated:YES];
                 }
             }];
         }

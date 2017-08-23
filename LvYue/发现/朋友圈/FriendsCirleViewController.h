@@ -11,8 +11,9 @@
 
 @interface FriendsCirleViewController : BaseViewController
 
-@property (nonatomic, strong) NSString *userId;
-@property (nonatomic, assign) BOOL isFriendsCircle; // 朋友圈|个人动态  默认YES
-@property (nonatomic, strong) NSString *personName;
+@property(nonatomic,strong)NSString * userSex;
+@property(nonatomic,strong)NSString * beginUserAge;
+@property(nonatomic,strong)NSString * endUserAge;
+
 
 @end

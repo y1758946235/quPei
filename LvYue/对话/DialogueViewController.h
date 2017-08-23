@@ -7,18 +7,22 @@
 //
 
 #import "BaseViewController.h"
-@class MessageViewController;
+
+
+@class MessageView;
+@class MyContactView;
+
 @class MyContractsViewController;
+
+
 
 @interface DialogueViewController : BaseViewController
 
-//消息控制器
-@property (nonatomic, strong) MessageViewController *messageVC;
+@property(nonatomic,strong)MessageView *mesView;
+@property(nonatomic,strong)MyContactView *contactView;
 
-//通讯录列表控制器
-@property (nonatomic, strong) MyContractsViewController *myContactVC;
 
-//通讯录消息提醒器
-@property (nonatomic, strong) UILabel *unReadLabel;
+
+
 
 @end

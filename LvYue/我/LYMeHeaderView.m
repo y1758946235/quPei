@@ -17,20 +17,18 @@
 @property (weak, nonatomic) IBOutlet UIImageView *bgImageView;
 @property (weak, nonatomic) IBOutlet UIControl *avatarControlView;
 @property (weak, nonatomic) IBOutlet UILabel *userNameLabel;
-@property (weak, nonatomic) IBOutlet UIButton *addressButton;
-@property (weak, nonatomic) IBOutlet UILabel *focusOnLabel;
-@property (weak, nonatomic) IBOutlet UILabel *fansLabel;
+@property (weak, nonatomic) IBOutlet UIButton *addressButton;   //地址按钮  不要
+@property (weak, nonatomic) IBOutlet UILabel *focusOnLabel;    //关注 不要了
+@property (weak, nonatomic) IBOutlet UILabel *fansLabel;  //粉丝   不要了
 @property (weak, nonatomic) IBOutlet UIButton *genderAgeButton;
-@property (weak, nonatomic) IBOutlet UIView *redBadgeView;
+@property (weak, nonatomic) IBOutlet UIView *redBadgeView; //不要了
 
 
 @end
 
 @implementation LYMeHeaderView
 
-- (void)dealloc {
-    [[NSNotificationCenter defaultCenter] removeObserver:self name:@"ShowFansRedBadgeNotification" object:nil];
-}
+
 
 - (void)awakeFromNib {
     [super awakeFromNib];
@@ -46,20 +44,8 @@
     self.avatarImageView.layer.borderWidth   = 6.f;
     self.avatarImageView.layer.borderColor   = RGBCOLOR(185, 184, 184).CGColor;
 
-    self.addressButton.layer.cornerRadius  = 15.f;
-    self.addressButton.layer.masksToBounds = YES;
 
-    UITapGestureRecognizer *focusLabelTap = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(tapFocusLabel:)];
-    [self.focusOnLabel addGestureRecognizer:focusLabelTap];
 
-    UITapGestureRecognizer *fansLabelTap = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(tapFansLabel:)];
-    [self.fansLabel addGestureRecognizer:fansLabelTap];
-    
-    if ([[[NSUserDefaults standardUserDefaults] valueForKey:@"ShowFansRedBadgeNotification"] boolValue]) {
-        self.redBadgeView.hidden = NO;
-    }
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(showFansRedBadge:) name:@"ShowFansRedBadgeNotification" object:nil];
-    
 }
 
 - (void)configHeaderViewDataSource:(MyDetailInfoModel *)detailModel infoModel:(MyInfoModel *)infoModel {
@@ -71,19 +57,10 @@
 
     self.userNameLabel.text = self.infoModel.name;
 
-    if (self.detailModel.cityName && self.detailModel.cityName.length > 0) {
-        self.addressButton.hidden = NO;
-        [self.addressButton setTitle:self.detailModel.cityName forState:UIControlStateNormal];
-    } else {
-        self.addressButton.hidden = YES;
-    }
+
     [self.genderAgeButton setTitle:[NSString stringWithFormat:@"%ld岁", (long) self.infoModel.age] forState:UIControlStateNormal];
     [self.genderAgeButton setImage:[UIImage imageNamed:(self.infoModel.sex ? @"女" : @"男")] forState:UIControlStateNormal];
 
-    self.focusOnLabel.text = [NSString stringWithFormat:@"关注\n%ld", (long) self.infoModel.focusNum];
-    [self.focusOnLabel sizeToFit];
-    self.fansLabel.text = [NSString stringWithFormat:@"粉丝\n%ld", (long) self.infoModel.fansNum];
-    [self.fansLabel sizeToFit];
 }
 
 - (IBAction)clickAvatarControlView:(id)sender {
@@ -92,24 +69,6 @@
     }
 }
 
-- (void)tapFocusLabel:(UITapGestureRecognizer *)tap {
-    if (self.tapFocusLabelBlock) {
-        self.tapFocusLabelBlock(tap);
-    }
-}
 
-- (void)tapFansLabel:(UITapGestureRecognizer *)tap {
-    if (self.tapFansLabelBlock) {
-        self.tapFansLabelBlock(tap);
-    }
-}
-
-- (void)showFansRedBadge:(NSNotification *)notice {
-    if ([notice.object boolValue]) {
-        self.redBadgeView.hidden = NO;
-    } else {
-        self.redBadgeView.hidden = YES;
-    }
-}
 
 @end

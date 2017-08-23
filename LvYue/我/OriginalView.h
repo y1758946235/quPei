@@ -13,4 +13,5 @@
 @property (nonatomic,strong) UILabel *timeLabel;
 @property (nonatomic,strong) UILabel *markLabel;
 @property (nonatomic,strong) UIView  *blackView;
+@property (nonatomic,strong) UIVisualEffectView  *effectView;
 @end

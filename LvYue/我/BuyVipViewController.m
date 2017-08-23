@@ -13,7 +13,7 @@
 #import "LYHttpPoster.h"
 #import "Order.h"
 #import "DataSigner.h"
-#import <AlipaySDK/AlipaySDK.h>
+
 #import "VipModel.h"
 #import "WXModel.h"
 #import "WXApi.h"
@@ -31,6 +31,7 @@
     NSString *Token;
     long token_time;
     
+    NSArray *monthArr;  //vip月数
     //内购参数
     NSString *_selectProductID; //已选的商品ID
 }
@@ -64,9 +65,9 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
 
-    
+    [self setNav];
     [self.navigationController setNavigationBarHidden:NO];
-    
+    monthArr = @[@"3个月",@"6个月",@"12个月"];
     self.sale = @"0";
     self.selectMonth = @"三个月";
     NSInteger pr = [self.vip_price integerValue];
@@ -76,14 +77,56 @@
     [[SKPaymentQueue defaultQueue] addTransactionObserver:self];
     _selectProductID = CONSTPRICE_VIP_3;
     
-    self.title = @"购买会员";
-    
-    self.table = [[UITableView alloc] initWithFrame:self.view.frame style:UITableViewStyleGrouped];
+    self.table = [[UITableView alloc] initWithFrame:CGRectMake(0, 16, SCREEN_WIDTH, SCREEN_HEIGHT-16) style:UITableViewStylePlain];
     self.table.delegate = self;
     self.table.dataSource = self;
-    //self.table.separatorStyle = UITableViewCellSeparatorStyleNone;
+    self.table.rowHeight = 48;
     [self.view addSubview:self.table];
 }
+
+
+#pragma mark   -------配置导航栏
+- (void)setNav{
+    self.title = @"购买VIP";
+    self.navigationController.navigationBar.barTintColor = [UIColor colorWithHexString:@"#ffffff"];
+    //导航栏title的颜色
+    [self.navigationController.navigationBar setTitleTextAttributes:[NSDictionary dictionaryWithObjectsAndKeys:[UIColor colorWithHexString:@"#424242"],UITextAttributeTextColor, [UIFont fontWithName:@"PingFangSC-Medium" size:18],UITextAttributeFont, nil]];
+    
+    //导航栏返回按钮
+    UIButton *button = [[UIButton alloc]initWithFrame:CGRectMake(16, 38, 28, 14)];
+    [button setTitleColor:[UIColor colorWithHexString:@"#424242"] forState:UIControlStateNormal];
+    [button setTitle:@"返回" forState:UIControlStateNormal];
+    button.titleLabel.font = [UIFont fontWithName:@"PingFangSC-Regular" size:14];
+    [button addTarget:self action:@selector(back) forControlEvents:UIControlEventTouchUpInside];
+    UIBarButtonItem *back = [[UIBarButtonItem alloc]initWithCustomView:button];
+    self.navigationItem.leftBarButtonItem = back;
+    
+    
+    UIButton *edit = [[UIButton alloc]initWithFrame:CGRectMake(SCREEN_WIDTH-16-28, 38, 56, 14)];
+    [edit setTitleColor:[UIColor colorWithHexString:@"#ff5252"] forState:UIControlStateNormal];
+    [edit setTitle:@"查看特权" forState:UIControlStateNormal];
+    edit.titleLabel.font = [UIFont fontWithName:@"PingFangSC-Regular" size:14];
+    [edit addTarget:self action:@selector(save) forControlEvents:UIControlEventTouchUpInside];
+    UIBarButtonItem *edited = [[UIBarButtonItem alloc]initWithCustomView:edit];
+    self.navigationItem.rightBarButtonItem = edited;
+    
+}
+
+
+#pragma mark   -----查看VIP特权
+- (void)save{
+    
+    
+    
+    
+}
+
+//返回
+- (void)back{
+    
+    [self.navigationController popViewControllerAnimated:YES];
+}
+
 
 - (void)dealloc {
     [[SKPaymentQueue defaultQueue] removeTransactionObserver:self];
@@ -92,129 +135,51 @@
 #pragma mark tableview代理
 
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView{
-    return 3;
+    return 1;
 }
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section{
-    if (section == 0) {
-        return 3;
-    }
-    else if (section == 1) {
-        return 3;
-    }
-    else{
-        return 1;
-    }
+//    if (section == 0) {
+//        return 3;
+//     }else {
+//        return 3;
+//    }
+    
+    return 3;
+   
 }
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath{
-   
-    CustomTableViewCell* cell  = [CustomTableViewCell cellWithTableView:tableView indexPath:indexPath];
-    cell.delegate = self;
-    if (indexPath.section == 0) { //月数
-        cell.selectBtn.selected = NO;
-        if (indexPath.row == [self.sale intValue]) { //设置默认选中
-            cell.selectBtn.selected = YES;
-        }
+    UITableViewCell *cell = [[UITableViewCell alloc]initWithStyle:UITableViewCellStyleDefault reuseIdentifier:nil];
+    if (indexPath.section==0) {
+        cell.textLabel.text = monthArr[indexPath.row];
+        cell.textLabel.textColor = [UIColor colorWithHexString:@"#424242"];
+        cell.textLabel.font = [UIFont fontWithName:@"PingFangSC-Regular" size:14];
+    }
+    if (indexPath.section==0&&indexPath.row==0) {
+        UILabel *moneyLabel = [[UILabel alloc]init];
+        moneyLabel.translatesAutoresizingMaskIntoConstraints = NO;
+        moneyLabel.textColor = [UIColor colorWithHexString:@"#ff5252"];
+        moneyLabel.font = [UIFont fontWithName:@"PingFangSC-Regular" size:14];
+        moneyLabel.text = @"¥60";
+        [cell addSubview:moneyLabel];
+        [cell addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"H:|-246-[moneyLabel]-48-|" options:0 metrics:nil views:NSDictionaryOfVariableBindings(moneyLabel)]];
+         [cell addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"V:|-16-[moneyLabel(==14)]" options:0 metrics:nil views:NSDictionaryOfVariableBindings(moneyLabel)]];
+        
+        UIButton *YiBtn = [[UIButton alloc]init];
+        YiBtn.translatesAutoresizingMaskIntoConstraints = NO;
+        [YiBtn setBackgroundImage:[UIImage imageNamed:@"select_on"] forState:UIControlStateNormal];
+        [cell addSubview:YiBtn];
+        [cell addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"H:|-284-[YiBtn(==18)]" options:0 metrics:nil views:NSDictionaryOfVariableBindings(YiBtn)]];
+        [cell addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"V:|-18-[YiBtn(==18)]" options:0 metrics:nil views:NSDictionaryOfVariableBindings(YiBtn)]];
         
     }
-    else if (indexPath.section == 1) { //支付方式
-        cell.leftPayButton.selected = NO;
-        cell.rightPayButton.selected = NO;
-//        if (indexPath.row == 1) { //在金币（3）与支付宝（0）的cell
-//            if ([self.payType integerValue] == 2) { //金币
-//                cell.leftPayButton.selected = YES;
-//                cell.rightPayButton.selected = NO;
-//            }
-//            else if ([self.payType integerValue] == 0) {//支付宝
-//                cell.leftPayButton.selected = NO;
-//                cell.rightPayButton.selected = YES;
-//            }
-//        }
-//        else if (indexPath.row == 2) { //在微信（1）与苹果（4）的cell
-//            if ([self.payType integerValue] == 1) { //微信
-//                cell.leftPayButton.selected = YES;
-//                cell.rightPayButton.selected = NO;
-//            }
-//            else if ([self.payType integerValue] == 3) {//苹果
-//                cell.leftPayButton.selected = NO;
-//                cell.rightPayButton.selected = YES;
-//            }
-//        }
-        
-        if (indexPath.row == 1) { //在金币（3）与苹果（3）的cell
-            //judge hide CoinBtn
-            cell.rightPayButton.hidden = YES;//hide //judge hide Coin
-            if ([[[NSUserDefaults standardUserDefaults] valueForKey:@"ShowGetCoinKey"] integerValue]== 0) {
-                cell.rightPayButton.hidden = YES;
-            }
-            else {
-                cell.rightPayButton.hidden = NO;
-            }
-            
-            if ([self.payType integerValue] == 2) { //金币
-                cell.leftPayButton.selected = NO;
-                cell.rightPayButton.selected = YES;
-                
-            }
-            else if ([self.payType integerValue] == 3) {//苹果
-                cell.leftPayButton.selected = YES;
-                cell.rightPayButton.selected = NO;
-            }
-        }
-        else if (indexPath.row == 2) { //在微信（1）与支付宝（0）的cell
-            if ([self.payType integerValue] == 1) { //微信
-                cell.leftPayButton.selected = YES;
-                cell.rightPayButton.selected = NO;
-            }
-            else if ([self.payType integerValue] == 0) {//支付宝
-                cell.leftPayButton.selected = NO;
-                cell.rightPayButton.selected = YES;
-            }
-            //判断隐藏
-            if ([[[NSUserDefaults standardUserDefaults] valueForKey:@"ShowGetCoinKey"] integerValue]== 0) {
-                cell.hidden = YES;
-            }
-            else {
-                cell.hidden = NO;
-            }
-            
-        }
-        
-    }
-    else { //月数与价格
-        NSInteger typeID = [self.payType integerValue];
-        
-        //设置月数
-        cell.month.text = self.selectMonth;
-        
-        //设置价格
-        switch (typeID) {
-            case 0:  {  //支付宝
-                cell.price.text = [NSString stringWithFormat:@"%@元",self.totalPrice];
-                break;
-            }
-            case 1:  {  //微信支付
-                cell.price.text = [NSString stringWithFormat:@"%@元",self.totalPrice];
-                break;
-            }
-            case 2:  {  //金币支付
-                NSInteger spendCoin = [self.totalPrice integerValue] * 100;
-                //self.totalPrice = [NSString stringWithFormat:@"%ld",(long)spendCoin];
-                cell.price.text = [NSString stringWithFormat:@"%ld金币",(long)spendCoin];
-                break;
-            }
-            case 3:  {  //苹果内购
-                cell.price.text = [NSString stringWithFormat:@"%@元",self.totalPrice];
-                break;
-            }
-            
-            default:
-                break;
-    }
-        
-    }
+    
+  
+    
     return cell;
+    
+
 }
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath{
@@ -256,30 +221,30 @@
     }
     //支付方式
     if (indexPath.section == 1) {
-//        if (indexPath.row == 0) {
-//            UIActionSheet *action = [[UIActionSheet alloc] initWithTitle:@"支付方式" delegate:self cancelButtonTitle:@"取消" destructiveButtonTitle:nil otherButtonTitles:@"支付宝",@"微信支付",@"苹果内购", nil];
-//            [action showInView:self.view];
-//        }
-//        switch (indexPath.row) {
-//            case 0:
-//            {
-//                self.payType = @"0";
-//            }
-//                break;
-//            case 1:
-//            {
-//                self.payType = @"1";
-//            }
-//                break;
-//            case 2:
-//            {
-//                self.payType = @"2";
-//            }
-//                break;
-//            default:
-//                break;
-//        }
-//        [tableView reloadData];
+        if (indexPath.row == 0) {
+            UIActionSheet *action = [[UIActionSheet alloc] initWithTitle:@"支付方式" delegate:self cancelButtonTitle:@"取消" destructiveButtonTitle:nil otherButtonTitles:@"支付宝",@"微信支付",@"苹果内购", nil];
+            [action showInView:self.view];
+        }
+        switch (indexPath.row) {
+            case 0:
+            {
+                self.payType = @"0";
+            }
+                break;
+            case 1:
+            {
+                self.payType = @"1";
+            }
+                break;
+            case 2:
+            {
+                self.payType = @"2";
+            }
+                break;
+            default:
+                break;
+        }
+        [tableView reloadData];
     }
 }
 
@@ -300,51 +265,15 @@
         return 44;
     }
 }
-
-- (UIView *)tableView:(UITableView *)tableView viewForFooterInSection:(NSInteger)section{
-    UIView *view = [[UIView alloc] init];
-    UILabel *becomeLabel = [[UILabel alloc] initWithFrame:CGRectMake(30, 20, 150, 20)];
-    becomeLabel.font = [UIFont systemFontOfSize:14.0];
-    becomeLabel.text = @"成为会员即表示同意";
-    [view addSubview:becomeLabel];
-    
-    UIButton *proBtn = [[UIButton alloc] initWithFrame:CGRectMake(150, 20, 100, 20)];
-    [proBtn.titleLabel setFont:[UIFont systemFontOfSize:14.0]];
-    [proBtn setTitleColor:RGBCOLOR(29, 189, 159) forState:UIControlStateNormal];
-    NSMutableAttributedString *str = [[NSMutableAttributedString alloc] initWithString:@"豆客会员协议"];
-    NSRange strRange = {0,[str length]};
-    [str addAttribute:NSUnderlineStyleAttributeName value:[NSNumber numberWithInteger:NSUnderlineStyleSingle] range:strRange];
-    [str addAttribute:NSForegroundColorAttributeName value:RGBCOLOR(29, 189, 159) range:strRange];
-    [proBtn setAttributedTitle:str forState:UIControlStateNormal];
-    [proBtn addTarget:self action:@selector(checkProtocol) forControlEvents:UIControlEventTouchUpInside];
-    [view addSubview:proBtn];
-    
-    UIButton *payBtn = [[UIButton alloc] initWithFrame:CGRectMake(30, 180, kMainScreenWidth - 60, 50)];
-    [payBtn setBackgroundColor:RGBACOLOR(29, 189, 159, 1)];
-    [payBtn setTitle:@"确认支付" forState:UIControlStateNormal];
-    [payBtn setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
-    [payBtn.layer setCornerRadius:4];
-    [payBtn addTarget:self action:@selector(surePay) forControlEvents:UIControlEventTouchUpInside];
-    [view addSubview:payBtn];
-    
-    if (section == 0 || section == 1) {
-        
-        return nil;
-    }
-    else{
-        return view;
-    }
-    
-}
-
-- (CGFloat)tableView:(UITableView *)tableView heightForFooterInSection:(NSInteger)section{
-    if (section == 2) {
-        return 300;
-    }
-    else{
-        return 0.1;
-    }
-}
+//WO
+//- (CGFloat)tableView:(UITableView *)tableView heightForFooterInSection:(NSInteger)section{
+//    if (section == 2) {
+//        return 300;
+//    }
+//    else{
+//        return 0.1;
+//    }
+//}
 
 #pragma mark actionsheetdelegate
 
@@ -414,11 +343,11 @@
     if ([self.payType isEqualToString:@"0"]||[self.payType isEqualToString:@"3"]) {  //苹果支付
         [self enterInAppPurchase];
     }
-//    if (_isShow) {
-//        [self pay]; //支付宝、微信支付
-//    }else {//苹果支付
-//        [self enterInAppPurchase];
-//    }
+    if (_isShow) {
+        [self pay]; //支付宝、微信支付
+    }else {//苹果支付
+        [self enterInAppPurchase];
+    }
     
     
 }
@@ -467,7 +396,7 @@
             if ([self.payType integerValue] == 0) {
                 self.vipModel = [[VipModel alloc] initWithDict:successResponse[@"data"][@"pay"]];
                 if (self.vipModel) {
-                    [self sendBuy];//支付宝支付
+//                    [self sendBuy];//支付宝支付
                     
                 }
             }
@@ -674,85 +603,6 @@
     request.sign = [NSString stringWithFormat:@"%@",self.wxModel.sign];
     request.openID = [NSString stringWithFormat:@"%@",self.wxModel.appid];
     [WXApi sendReq:request];
-}
-
-#pragma mark 支付宝
-- (void)sendBuy{
-    /*============================================================================*/
-    /*=======================需要填写商户app申请的===================================*/
-    /*============================================================================*/
-    NSString *partner = self.vipModel.partner;
-    NSString *seller = self.vipModel.seller_id;
-    NSString *privateKey = self.vipModel.rsa_key;
-    /*============================================================================*/
-    /*============================================================================*/
-    /*============================================================================*/
-
-    
-    //partner和seller获取失败,提示
-    if ([partner length] == 0 ||
-        [seller length] == 0 ||
-        [privateKey length] == 0)
-    {
-        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"提示"
-                                                        message:@"缺少partner或者seller或者私钥。"
-                                                       delegate:self
-                                              cancelButtonTitle:@"确定"
-                                              otherButtonTitles:nil];
-        [alert show];
-        return;
-    }
-    
-    /*
-     *生成订单信息及签名
-     */
-    //将商品信息赋予AlixPayOrder的成员变量
-    Order *order = [[Order alloc] init];
-    order.partner = partner;
-    order.seller = seller;
-    order.tradeNO = self.vipModel.out_trade_no; //订单ID（由商家自行制定）
-    order.productName = self.vipModel.subject; //商品标题
-    order.productDescription = self.vipModel.body; //商品描述
-    order.amount = self.vipModel.total_fee; //商品价格
-    order.notifyURL =  self.vipModel.notify_url; //回调URL
-    
-    order.service = @"mobile.securitypay.pay";
-    order.paymentType = @"1";
-    order.inputCharset = @"utf-8";
-    order.itBPay = self.vipModel.it_b_pay;
-    order.showUrl = @"m.alipay.com";
-        
-    //应用注册scheme,在AlixPayDemo-Info.plist定义URL types
-    NSString *appScheme = @"LvYue";
-    
-    //将商品信息拼接成字符串
-    NSString *orderSpec = [order description];
-    NSLog(@"orderSpec = %@",orderSpec);
-    
-    //获取私钥并将商户信息签名,外部商户可以根据情况存放私钥和签名,只需要遵循RSA签名规范,并将签名字符串base64编码和UrlEncode
-    id<DataSigner> signer = CreateRSADataSigner(privateKey);
-    NSString *signedString = [signer signString:orderSpec];
-    
-    //将签名成功字符串格式化为订单字符串,请严格按照该格式
-    NSString *orderString = nil;
-    if (signedString != nil) {
-        orderString = [NSString stringWithFormat:@"%@&sign=\"%@\"&sign_type=\"%@\"",
-                       orderSpec, signedString, @"RSA"];
-        
-        [[AlipaySDK defaultService] payOrder:orderString fromScheme:appScheme callback:^(NSDictionary *resultDic) {
-            NSLog(@"reslut = %@",resultDic);
-            if ([resultDic[@"resultStatus"] integerValue] == 9000) {
-                NSUserDefaults *user = [NSUserDefaults standardUserDefaults];
-                [user setObject:@"1" forKey:@"isVip"];
-                [user synchronize];
-                [LYUserService sharedInstance].userDetail.isVip = [user objectForKey:@"isVip"];
-                [MBProgressHUD showSuccess:@"开通成功"];
-            }
-            else{
-                [MBProgressHUD showError:@"开通失败"];
-            }
-        }];
-    }
 }
 
 

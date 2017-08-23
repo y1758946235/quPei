@@ -12,11 +12,11 @@
 
 - (id)initWithDict:(NSDictionary *)dict{
     if (self = [super init]) {
-        self.id = dict[@"id"];
-        self.level = dict[@"level"];
-        self.name = dict[@"name"];
-        self.parent_id = dict[@"parent_id"];
-        self.status = dict[@"status"];
+        self.level = dict[@"provinceId"];
+        
+        self.name = dict[@"provinceName"];
+        self.parent_id = dict[@"parentId"];
+        
     }
     return self;
 }

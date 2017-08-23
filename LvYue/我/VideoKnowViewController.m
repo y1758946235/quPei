@@ -30,15 +30,19 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
     // Do any additional setup after loading the view.
-    
     self.title = @"视频认证";
+
     [self createView];
-    [[[UIAlertView alloc] initWithTitle:nil message:@"请确认男女性别是否填写正确，视频认证后不允许修改性别。" delegate:nil cancelButtonTitle:@"确定" otherButtonTitles: nil] show];
+    
     //通过这里设置当前程序是拍照还是录制视频
     _isVideo=YES;
     [self.imagePicker setVideoMaximumDuration:15.f];
+    
 }
 
+- (void)goBack {
+    [self.navigationController popViewControllerAnimated:YES];
+}
 - (void)createView{
     UILabel *forLabel = [[UILabel alloc] init];
     forLabel.center = CGPointMake(kMainScreenWidth / 2, 130);
@@ -46,11 +50,11 @@
     forLabel.textAlignment = NSTextAlignmentCenter;
     forLabel.font = [UIFont systemFontOfSize:14.0];
     forLabel.numberOfLines = 0;
-    forLabel.text = @"为了真实性、安全性，用户通过手机录制并上传一段简短的自拍视频作为形象视频，工作人员会尽快审核认证，并作为更换形象视频的参照。\n我们努力保障用户认证的真实，但不排除误判的可能性，虽然这种可能性被降到极低的概率，因为您是理解这种认证方法的。";
+    forLabel.text = @"趣陪是真实高效的同城趣味陪伴平台，为保证用户的真实性，以及邀约见面的安全与高效，我们通过拍摄一小段您本人的真实视频来拒绝虚假。\n通过视频认证的女性用户与所有用户沟通将不需要购买权限。";
     [self.view addSubview:forLabel];
     
     UIView *bgView = [[UIView alloc] init];
-    bgView.frame = CGRectMake(forLabel.frame.origin.x, forLabel.frame.origin.y + 110, forLabel.frame.size.width, 50);
+    bgView.frame = CGRectMake(forLabel.frame.origin.x, forLabel.frame.origin.y + forLabel.frame.size.height, forLabel.frame.size.width, 50);
     bgView.backgroundColor = RGBACOLOR(245, 245, 245, 1);
     [self.view addSubview:bgView];
     
@@ -124,7 +128,8 @@
     if (!_imagePicker) {
         _imagePicker=[[UIImagePickerController alloc]init];
         _imagePicker.sourceType=UIImagePickerControllerSourceTypeCamera;//设置image picker的来源，这里设置为摄像头
-        _imagePicker.cameraDevice=UIImagePickerControllerCameraDeviceRear;//设置使用哪个摄像头，这里设置为后置摄像头
+//        _imagePicker.cameraDevice=UIImagePickerControllerCameraDeviceRear;//设置使用哪个摄像头，这里设置为后置摄像头
+        _imagePicker.cameraDevice=UIImagePickerControllerCameraDeviceFront;
         if (self.isVideo) {
             _imagePicker.mediaTypes=@[(NSString *)kUTTypeMovie];
             _imagePicker.videoQuality=UIImagePickerControllerQualityTypeMedium;

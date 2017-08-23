@@ -13,7 +13,7 @@
 #import "UMSocialQQHandler.h"
 #import "UMSocialWechatHandler.h"
 #import "UMessage.h"
-#import <AlipaySDK/AlipaySDK.h>
+
 #import "MobClick.h"
 
 @implementation AppDelegate (UMeng)
@@ -25,8 +25,9 @@
     [UMSocialData setAppKey:@"55f3983c67e58e502a00167d"];
     //由于苹果审核政策需求，建议大家对未安装客户端平台进行隐藏，在设置QQ、微信AppID之后调用下面的方法
     [UMSocialConfig hiddenNotInstallPlatforms:@[UMShareToQQ, UMShareToQzone, UMShareToWechatSession, UMShareToWechatTimeline]];
-    //设置微信AppId、appSecret，分享url
-    [UMSocialWechatHandler setWXAppId:@"wx9f84f81dac87502a" appSecret:@"5ef44653195a0bab9f2b0a337016ddb7" url:@"http://www.lantin.me/app/shopInfomationDetailShare.html"];
+    //设置微信AppId、appSecret，分享url  
+    [UMSocialWechatHandler setWXAppId:@"wx75e81a6ae929b24a" appSecret:@"6f0a4f66fe59f1567df81be6b5e90421" url:@"http://www.lantin.me/app/shopInfomationDetailShare.html"];
+//      [UMSocialWechatHandler setWXAppId:@"wx9f84f81dac87502a" appSecret:@"5ef44653195a0bab9f2b0a337016ddb7" url:@"http://www.lantin.me/app/shopInfomationDetailShare.html"];
     //设置QQAppId、appKey，分享url
     [UMSocialQQHandler setQQWithAppId:@"1104779541" appKey:@"WlnLOutWeGWDLZjO" url:@"http://www.lantin.me/app/shopInfomationDetailShare.html"];
 
@@ -87,10 +88,7 @@
 }
 
 - (BOOL)application:(UIApplication *)application openURL:(NSURL *)url sourceApplication:(NSString *)sourceApplication annotation:(id)annotation {
-    //跳转支付宝钱包进行支付，处理支付结果
-    [[AlipaySDK defaultService] processOrderWithPaymentResult:url standbyCallback:^(NSDictionary *resultDic) {
-        NSLog(@"result = %@", resultDic);
-    }];
+
     NSString *urlString = [url absoluteString];
     if ([urlString rangeOfString:@"pay"].location != NSNotFound) {
         return [WXApi handleOpenURL:url delegate:self]; //微信支付回调
@@ -108,10 +106,10 @@
             [user setObject:@"1" forKey:@"isVip"];
             [user synchronize];
             [LYUserService sharedInstance].userDetail.isVip = [user objectForKey:@"isVip"];
-            [[NSNotificationCenter defaultCenter] postNotificationName:@"WeXinPayResponse" object:@YES];
+            [[NSNotificationCenter defaultCenter] postNotificationName:@"WeXinPayResponse2" object:@YES];
             [MBProgressHUD showSuccess:@"购买成功"];
         } else {
-            [[NSNotificationCenter defaultCenter] postNotificationName:@"WeXinPayResponse" object:@NO];
+//            [[NSNotificationCenter defaultCenter] postNotificationName:@"WeXinPayResponse2" object:@NO];
             [MBProgressHUD showError:@"购买失败"];
         }
     }
@@ -120,6 +118,23 @@
 - (void)applicationDidBecomeActive:(UIApplication *)application {
     [UMSocialSnsService applicationDidBecomeActive];
 }
-
+-(void)application:(UIApplication *)application didReceiveRemoteNotification:( NSDictionary *)userInfo{
+    NSLog(@"userInfo--%@",userInfo);
+//    [UMessage didReceiveRemoteNotification:userInfo];
+    
+        UIAlertView * a = [[UIAlertView alloc] initWithTitle:@"温馨提示" message:[NSString stringWithFormat:@"%@",userInfo[@"aps"][@"alert"]] delegate:nil cancelButtonTitle:@"好" otherButtonTitles:nil, nil];
+        [a show];
+        a = nil;
+    if ( [[NSString stringWithFormat:@"%@",userInfo[@"aps"][@"messageType"]] isEqualToString:@"0"] ) {
+         [[NSNotificationCenter defaultCenter] postNotificationName:@"LY_ReloadSystemMessage" object:nil userInfo:userInfo];
+    }else{
+        [[NSNotificationCenter defaultCenter] postNotificationName:@"LY_reloadInvitaMessage" object:nil userInfo:userInfo];
+        
+    }
+    [UIApplication sharedApplication].applicationIconBadgeNumber ++;
+    
+    //更新系统消息后的点
+    [[NSNotificationCenter defaultCenter] postNotificationName:@"LY_ReloadSystemMessagePoint" object:nil];
+}
 
 @end

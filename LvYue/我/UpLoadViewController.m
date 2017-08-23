@@ -37,15 +37,46 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
 
-    self.title = @"上传到相册";
-    [self setLeftButton:nil title:@"取消" target:self action:@selector(back)];
-    [self setRightButton:[UIImage imageNamed:@"发送"] title:nil target:self action:@selector(sendClick)];
+    [self setNav];
+ 
     self.view.backgroundColor = [UIColor colorWithRed:244 / 255.0 green:245 / 255.0 blue:246 / 255.0 alpha:1];
     _imgArray                 = [NSMutableArray array];
     [self setUI];
 }
 
-- (void)sendClick {
+- (void)setNav{
+    
+    self.title = @"上传到相册";
+    //导航栏title的颜色
+    [self.navigationController.navigationBar setTitleTextAttributes:[NSDictionary dictionaryWithObjectsAndKeys:[UIColor colorWithHexString:@"#424242"],UITextAttributeTextColor, [UIFont fontWithName:@"PingFangSC-Medium" size:18],UITextAttributeFont, nil]];
+    
+    //导航栏返回按钮
+    UIButton *button = [[UIButton alloc]initWithFrame:CGRectMake(16, 38, 28, 14)];
+    [button setTitleColor:[UIColor colorWithHexString:@"#424242"] forState:UIControlStateNormal];
+    [button setTitle:@"返回" forState:UIControlStateNormal];
+    button.titleLabel.font = [UIFont fontWithName:@"PingFangSC-Regular" size:14];
+    [button addTarget:self action:@selector(goBack) forControlEvents:UIControlEventTouchUpInside];
+    UIBarButtonItem *back = [[UIBarButtonItem alloc]initWithCustomView:button];
+    self.navigationItem.leftBarButtonItem = back;
+    
+    //导航栏编辑按钮
+    UIButton *edit = [[UIButton alloc]initWithFrame:CGRectMake(SCREEN_WIDTH-16-28, 38, 56, 14)];
+    [edit setTitleColor:[UIColor colorWithHexString:@"#ff5252"] forState:UIControlStateNormal];
+    [edit setTitle:@"上传" forState:UIControlStateNormal];
+    edit.titleLabel.font = [UIFont fontWithName:@"PingFangSC-Regular" size:14];
+    [edit addTarget:self action:@selector(edit) forControlEvents:UIControlEventTouchUpInside];
+    UIBarButtonItem *edited = [[UIBarButtonItem alloc]initWithCustomView:edit];
+    self.navigationItem.rightBarButtonItem = edited;
+    
+}
+
+- (void)goBack{
+    [self.navigationController popViewControllerAnimated:YES];
+}
+
+
+#pragma mark   ---上传图片
+- (void)edit{
     if (_imgArray.count == 0) {
         [MBProgressHUD showError:@"请您添加一张相片" toView:self.view];
         return;
@@ -54,14 +85,14 @@
     [MBProgressHUD showMessage:@"正在上传，请稍后..."];
     //1. 获得七牛token
     AFHTTPRequestOperationManager *manager = [AFHTTPRequestOperationManager manager];
-
-    NSString *urlStr = [NSString stringWithFormat:@"%@/mobile/getQiniuToken", REQUESTHEADER];
+    manager.responseSerializer.acceptableContentTypes = [NSSet setWithObjects:@"application/json", nil];
+    NSString *urlStr = [NSString stringWithFormat:@"%@/mobile/config/getQiniuToken", REQUESTHEADER];
     [manager POST:urlStr parameters:@{} success:^(AFHTTPRequestOperation *operation, id responseObject) {
-        NSLog(@"获得七牛TOKEN:%@", responseObject);
+        NSLog(@"0000000000000000000000000000000获得七牛TOKEN:%@", responseObject);
 
         if ([[NSString stringWithFormat:@"%@", responseObject[@"code"]] isEqualToString:@"200"]) {
             [MBProgressHUD hideHUD];
-            NSString *token = responseObject[@"data"][@"qiniuToken"];
+            NSString *token = responseObject[@"data"];
 
             //获取当前时间
             NSDate *now = [NSDate date];
@@ -99,33 +130,34 @@
                               }
                           }
                             option:nil];
-
+                
+              
                 //3.向后台请求
-                [LYHttpPoster postHttpRequestByPost:[NSString stringWithFormat:@"%@/mobile/user/addUserImg", REQUESTHEADER]
+                [LYHttpPoster postHttpRequestByPost:[NSString stringWithFormat:@"%@/mobile/user/addUserPhoto", REQUESTHEADER]
                     andParameter:@{
-                        @"user_id": [LYUserService sharedInstance].userID,
-                        @"img_name": photoStr,
-                        @"intro": markView.text,
-                        @"isEssence": @2,
-                        @"bounty": @0
+                        //@"userId": [LYUserService sharedInstance].userID,
+                         @"userId":@"1000006",
+                        @"photoUrl": photoStr,
+                        @"photoSignature": markView.text,
+                         @"photoPrice": @0
                     }
                     success:^(id successResponse) {
                         MLOG(@"发送气质图:%@", successResponse);
-                        if ([[NSString stringWithFormat:@"%@", successResponse[@"code"]] isEqualToString:@"200"]) {
-                            [MBProgressHUD hideHUD];
-                            [MBProgressHUD showSuccess:@"提交成功"];
-                            [[NSNotificationCenter defaultCenter] postNotificationName:@"reloadDisposition" object:nil];
+                    if ([[NSString stringWithFormat:@"%@", successResponse[@"code"]] isEqualToString:@"200"]) {
+                           [MBProgressHUD hideHUD];
+                           [MBProgressHUD showSuccess:@"上传成功"];
+                        [[NSNotificationCenter defaultCenter] postNotificationName:@"reloadDisposition" object:nil];
 
                         } else {
                             [MBProgressHUD hideHUD];
-                            [MBProgressHUD showError:[NSString stringWithFormat:@"%@", successResponse[@"msg"]]];
+                            [MBProgressHUD showError:[NSString stringWithFormat:@"%@", successResponse[@"errorMsg"]]];
                         }
                     }
                     andFailure:^(id failureResponse) {
                         [MBProgressHUD hideHUD];
                         [MBProgressHUD showError:@"服务器繁忙,请重试"];
                     }];
-            }
+          }
             dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.3 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
                 [self.navigationController popViewControllerAnimated:YES];
 
@@ -133,7 +165,7 @@
         } else {
 
             [MBProgressHUD hideHUD];
-            [MBProgressHUD showError:responseObject[@"msg"]];
+            [MBProgressHUD showError:responseObject[@"errorMsg"]];
         }
     }
         failure:^(AFHTTPRequestOperation *operation, NSError *error) {

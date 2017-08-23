@@ -12,6 +12,8 @@
 
 - (id)initWithDict:(NSDictionary *)dict{
     if (self = [super init]) {
+        
+       
         self._input_charset = dict[@"_input_charset"];
         self.body = dict[@"body"];
         self.it_b_pay = dict[@"it_b_pay"];
@@ -24,6 +26,7 @@
         self.service = dict[@"service"];
         self.subject = dict[@"subject"];
         self.total_fee = dict[@"total_fee"];
+        
     }
     return self;
 }

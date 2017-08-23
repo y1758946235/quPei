@@ -428,6 +428,7 @@
 #pragma mark - UITableViewDataSource
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView {
     return self.videoArray.count;
+    
 }
 
 

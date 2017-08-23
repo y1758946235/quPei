@@ -17,13 +17,13 @@
 #import "VipModel.h"
 #import "WXApi.h"
 #import "WXModel.h"
-#import <AlipaySDK/AlipaySDK.h>
+
 #import <StoreKit/StoreKit.h>
 
 typedef NS_ENUM(NSUInteger, LYGetCoinPayType) {
-    LYGetCoinPayTypeApple  = 0,
-    LYGetCoinPayTypeAlipay = 1,
-    LYGetCoinPayTypeWeixin = 2
+//    LYGetCoinPayTypeApple  = 0,
+    LYGetCoinPayTypeAlipay = 0,
+    LYGetCoinPayTypeWeixin = 1
 };
 
 static NSString *const LYGetCoinTableViewCellIdentity = @"LYGetCoinTableViewCellIdentity";
@@ -37,7 +37,9 @@ static NSArray *LYGetCoinGetTableViewDataArray;
 SKPaymentTransactionObserver,
 SKProductsRequestDelegate
 >
-
+{
+    NSString *_orderNo;//订单编号
+}
 @property (nonatomic, strong) UITableView *tableView;
 @property (nonatomic, strong) LYGetCoinHeaderView *tableViewHeaderView;
 @property (nonatomic, strong) UIActionSheet *payActionSheet;
@@ -52,24 +54,24 @@ SKProductsRequestDelegate
 
     LYGetCoinGetTableViewDataArray = @[
         @{
-            @"coinNum": @1200,
-            @"applePayID":@"com.51xiexieni.1200_4"
+            @"coinNum": @1500,
+            @"applePayID":@"com.51xiexieni.1500_4"
         },
         @{
             @"coinNum": @3000,
             @"applePayID":@"com.51xiexieni.3000_4"
         },
         @{
-            @"coinNum": @6000,
-            @"applePayID":@"com.51xiexieni.6000_4"
+            @"coinNum": @12000,
+            @"applePayID":@"com.51xiexieni.12000_4"
         },
         @{
-            @"coinNum": @10800,
-            @"applePayID":@"com.51xiexieni.10800_4"
+            @"coinNum": @60000,
+            @"applePayID":@"com.51xiexieni.60000_4"
         },
         @{
-            @"coinNum": @21800,
-            @"applePayID":@"com.51xiexieni.21800_4"
+            @"coinNum": @180000,
+            @"applePayID":@"com.51xiexieni.180000_4"
         }
     ];
 }
@@ -84,9 +86,11 @@ SKProductsRequestDelegate
 
     self.title = @"获取金币";
 
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(p_completePay:) name:@"WeXinPayResponse" object:nil];
+//    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(p_completePay:) name:@"WeXinPayResponse" object:nil];
 
     [self.tableView reloadData];
+   
+    
 }
 
 #pragma mark TableView DataSource & Delegate
@@ -129,15 +133,15 @@ SKProductsRequestDelegate
 #pragma mark - UIActionSheetDelegate
 
 - (void)actionSheet:(UIActionSheet *)actionSheet clickedButtonAtIndex:(NSInteger)buttonIndex {
-    if ([[[NSUserDefaults standardUserDefaults] valueForKey:@"ShowGetCoinKey"] boolValue]) {
-        if (buttonIndex == 0 || buttonIndex == 1 || buttonIndex == 2) {
+//    if ([[[NSUserDefaults standardUserDefaults] valueForKey:@"ShowGetCoinKey"] boolValue]) {
+//        if (buttonIndex == 0 || buttonIndex == 1 || buttonIndex == 2) {
             [self buy:buttonIndex rowIndex:actionSheet.tag];
-        }
-    } else {
-        if (buttonIndex == 0) {
-            [self buy:buttonIndex rowIndex:actionSheet.tag];
-        }
-    }
+//        }
+//    } else {
+//        if (buttonIndex == 0) {
+//            [self buy:buttonIndex rowIndex:actionSheet.tag];
+//        }
+//    }
 }
 
 
@@ -232,7 +236,7 @@ SKProductsRequestDelegate
     
     NSString *channel;
     NSNumber *payCoinNum = @([payInfo[@"coinNum"] integerValue] / 100);
-
+  
     switch (type) {
         case LYGetCoinPayTypeAlipay: {
             channel = @"0";
@@ -241,40 +245,47 @@ SKProductsRequestDelegate
         case LYGetCoinPayTypeWeixin: {
             channel = @"1";
             break;
-        }
-        case LYGetCoinPayTypeApple: {
-            channel = @"2";
+            
+        default:
             break;
         }
+            
+//        case LYGetCoinPayTypeApple: {
+//            channel = @"2";
+//            break;
+//        }
     }
 
     [MBProgressHUD showMessage:nil toView:self.view];
-    [LYHttpPoster postHttpRequestByPost:[NSString stringWithFormat:@"%@/mobile/user/buyHongdou", REQUESTHEADER]
+    //@"orderAmount": payCoinNum,@"orderNumber":[NSString stringWithFormat:@"%@",payInfo[@"coinNum"]],
+    [LYHttpPoster postHttpRequestByPost:[NSString stringWithFormat:@"%@/mobile/order/addOrderDetail", REQUESTHEADER]
         andParameter:@{
-            @"buyer": [LYUserService sharedInstance].userID,
-            @"content": @"购买金币",
-            @"amount": payCoinNum,
+            @"userId": [CommonTool getUserID],
+            @"orderContent": @"购买金币",
+            @"orderAmount": payCoinNum,
+            @"orderNumber":[NSString stringWithFormat:@"%@",payInfo[@"coinNum"]],
             @"createIp": @"128.0.0.1",
-            @"channel": channel
+            @"orderChannel": channel
         }
         success:^(id successResponse) {
             MLOG(@"结果:%@", successResponse);
             [MBProgressHUD hideAllHUDsForView:self.view animated:YES];
             if ([[NSString stringWithFormat:@"%@", successResponse[@"code"]] isEqualToString:@"200"]) {
+                
+                _orderNo = successResponse[@"data"][@"orderDetail"][@"orderNo"];
                 switch (type) {
                     case LYGetCoinPayTypeAlipay: {
-                        [self aliPay:[[VipModel alloc] initWithDict:successResponse[@"data"][@"pay"]]]; //支付宝支付
+//                        [self aliPay:[[VipModel alloc] initWithDict:successResponse[@"data"][@"pay"]]]; //支付宝支付
                         break;
                     }
                     case LYGetCoinPayTypeWeixin: {
                         [self wxPay:[[WXModel alloc] initWithDict:successResponse[@"data"][@"pay"]]]; //微信支付
                         break;
-                    }
-                    case LYGetCoinPayTypeApple: {
-                        self.selectedAppleProductID = payInfo[@"applePayID"];
-                        [self applePay:self.selectedAppleProductID];
+                        
+                    default:
                         break;
                     }
+
                 }
             } else {
                 [MBProgressHUD hideAllHUDsForView:self.view animated:YES];
@@ -287,75 +298,6 @@ SKProductsRequestDelegate
         }];
 }
 
-- (void)aliPay:(VipModel *)vipModel {
-    [MBProgressHUD hideAllHUDsForView:self.view animated:YES];
-    /*============================================================================
-     =======================需要填写商户app申请的===================================
-     ============================================================================*/
-    NSString *partner    = vipModel.partner;
-    NSString *seller     = vipModel.seller_id;
-    NSString *privateKey = vipModel.rsa_key;
-
-    //    partner和seller获取失败,提示
-    if ([partner length] == 0 ||
-        [seller length] == 0 ||
-        [privateKey length] == 0) {
-        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"提示"
-                                                        message:@"缺少partner或者seller或者私钥。"
-                                                       delegate:self
-                                              cancelButtonTitle:@"确定"
-                                              otherButtonTitles:nil];
-        [alert show];
-        return;
-    }
-
-    /*
-     *生成订单信息及签名
-     */
-    //    将商品信息赋予AlixPayOrder的成员变量
-    Order *order             = [[Order alloc] init];
-    order.partner            = partner;
-    order.seller             = seller;
-    order.tradeNO            = vipModel.out_trade_no; //订单ID（由商家自行制定）
-    order.productName        = vipModel.subject;      //商品标题
-    order.productDescription = vipModel.body;         //商品描述
-    order.amount             = vipModel.total_fee;    //商品价格
-    order.notifyURL          = vipModel.notify_url;   //回调URL
-
-    order.service      = @"mobile.securitypay.pay";
-    order.paymentType  = @"1";
-    order.inputCharset = @"utf-8";
-    order.itBPay       = vipModel.it_b_pay;
-    order.showUrl      = @"m.alipay.com";
-
-    //应用注册scheme,在AlixPayDemo-Info.plist定义URL types
-    NSString *appScheme = @"LvYue";
-
-    //将商品信息拼接成字符串
-    NSString *orderSpec = [order description];
-    NSLog(@"orderSpec = %@", orderSpec);
-
-    //获取私钥并将商户信息签名,外部商户可以根据情况存放私钥和签名,只需要遵循RSA签名规范,并将签名字符串base64编码和UrlEncode
-    id<DataSigner> signer  = CreateRSADataSigner(privateKey);
-    NSString *signedString = [signer signString:orderSpec];
-
-    //将签名成功字符串格式化为订单字符串,请严格按照该格式
-    NSString *orderString = nil;
-    if (signedString != nil) {
-        orderString = [NSString stringWithFormat:@"%@&sign=\"%@\"&sign_type=\"%@\"",
-                                                 orderSpec, signedString, @"RSA"];
-
-        [[AlipaySDK defaultService] payOrder:orderString fromScheme:appScheme callback:^(NSDictionary *resultDic) {
-            NSLog(@"reslut = %@", resultDic);
-            if ([resultDic[@"resultStatus"] integerValue] == 9000) {
-                [MBProgressHUD showSuccess:@"购买成功"];
-                [self p_completePay:nil];
-            } else {
-                [MBProgressHUD showError:@"购买失败"];
-            }
-        }];
-    }
-}
 
 - (void)wxPay:(WXModel *)wxModel {
     //向微信注册
@@ -399,13 +341,14 @@ SKProductsRequestDelegate
         }
     }
 
-    NSDictionary *payInfo = LYGetCoinGetTableViewDataArray[self.payActionSheet.tag];
+//    NSDictionary *payInfo = LYGetCoinGetTableViewDataArray[self.payActionSheet.tag];
     
     [EageProgressHUD eage_circleWaitShown:YES];
-    [LYHttpPoster postHttpRequestByPost:[NSString stringWithFormat:@"%@/mobile/user/buyHDFinish", REQUESTHEADER]
+    [LYHttpPoster postHttpRequestByPost:[NSString stringWithFormat:@"%@/mobile/order/updateOrderDetail", REQUESTHEADER]
         andParameter:@{
-            @"user_id": [LYUserService sharedInstance].userID,
-            @"num": payInfo[@"coinNum"]
+                       @"orderNo": _orderNo,
+                       @"userCaptcha":[CommonTool getUserCaptcha],
+                       @"orderToken":[CommonTool md5:[NSString stringWithFormat:@"%@%@",_orderNo,[CommonTool getUserID]]]
         }
         success:^(id successResponse) {
             if ([[NSString stringWithFormat:@"%@", successResponse[@"code"]] isEqualToString:@"200"]) {
@@ -413,7 +356,7 @@ SKProductsRequestDelegate
                 // 更新账户余额
                 self.accountAmount += [LYGetCoinGetTableViewDataArray[self.payActionSheet.tag][@"coinNum"] integerValue];
                 self.tableViewHeaderView.accountAmount = self.accountAmount;
-                // 更新前一个页面的余额
+//                // 更新前一个页面的余额
                 self.changeAmount(self.accountAmount);
             } else {
                 [EageProgressHUD eage_circleWaitShown:NO];
@@ -460,11 +403,11 @@ SKProductsRequestDelegate
     if (!_payActionSheet) {
         _payActionSheet = ({
             UIActionSheet *actionSheet = nil;
-            if ([[[NSUserDefaults standardUserDefaults] valueForKey:@"ShowGetCoinKey"] boolValue]) {
-                actionSheet = [[UIActionSheet alloc] initWithTitle:@"获取金币" delegate:self cancelButtonTitle:@"取消" destructiveButtonTitle:nil otherButtonTitles:@"苹果内购", @"支付宝", @"微信", nil];
-            } else {
-                actionSheet = [[UIActionSheet alloc] initWithTitle:@"获取金币" delegate:self cancelButtonTitle:@"取消" destructiveButtonTitle:nil otherButtonTitles:@"苹果内购", nil];
-            }
+//            if ([[[NSUserDefaults standardUserDefaults] valueForKey:@"ShowGetCoinKey"] boolValue]) {
+                actionSheet = [[UIActionSheet alloc] initWithTitle:@"获取金币" delegate:self cancelButtonTitle:@"取消" destructiveButtonTitle:nil otherButtonTitles:@"支付宝", @"微信", nil];
+//            } else {
+//                actionSheet = [[UIActionSheet alloc] initWithTitle:@"获取金币" delegate:self cancelButtonTitle:@"取消" destructiveButtonTitle:nil otherButtonTitles:@"苹果内购", nil];
+//            }
             actionSheet;
         });
     }

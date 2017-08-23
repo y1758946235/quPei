@@ -116,7 +116,7 @@
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(autoLogin:) name:@"autoLogin" object:nil];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(findGuide:) name:@"findGuide" object:nil];
     
-    [self createTableView];
+    //[self createTableView];
     [self createNavigationView];
     [self createScrollView];//创建轮播图
     [self moreFunctionCreated];//创建菜单
@@ -465,15 +465,15 @@
     
     refreshType = @"near";
     currentPage = 1;
-    if ([[[UIDevice currentDevice] systemVersion] doubleValue] >= 8.0) {
-        //前台和后台都允许请求用户是否允许开启定位 IOS8.0以上版本需要设置环境参数
-        [_clManager requestAlwaysAuthorization];
-        [_clManager startUpdatingLocation];
-    }
-    else {
-        //如果是IOS8.0以下的版本，则可直接开启定位
-        [_clManager startUpdatingLocation];
-    }
+//    if ([[[UIDevice currentDevice] systemVersion] doubleValue] >= 8.0) {
+//        //前台和后台都允许请求用户是否允许开启定位 IOS8.0以上版本需要设置环境参数
+//        [_clManager requestAlwaysAuthorization];
+//        [_clManager startUpdatingLocation];
+//    }
+//    else {
+//        //如果是IOS8.0以下的版本，则可直接开启定位
+//        [_clManager startUpdatingLocation];
+//    }
     
     MJRefreshStateHeader *header = (MJRefreshStateHeader *)tableV.mj_header;
     [header setTitle:@"下拉可以刷新" forState:MJRefreshStateIdle];

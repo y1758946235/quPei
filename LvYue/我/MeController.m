@@ -89,30 +89,30 @@
     
     [self createTableView];
     
-
-#ifdef kEasyVersion
-    
-    self.iconArray = @[@"个人资料-1",@"个人动态-1",@"我的豆客",@"我的视频-1",@"我的气质",@"我的民宿",@"申请向导",@"全部订单-1"
-//                       ,@"我的红豆-1"
-                       ,@"设置-1"];
-    self.sbArray = @[@"个人资料",@"个人动态",@"我的豆客",@"我的视频",@"我的气质",@"我的民宿",@"身份认证",@"全部订单"
-//                     ,@"我的红豆"
-                     ,@"设置"];
-    
-#else
-    
-    self.iconArray = @[@"个人资料-1",@"个人动态-1",
-                       @"我的豆客",
-                       @"我的视频-1",@"我的气质",@"申请向导",@"成为会员-1"
-//                       ,@"全部订单-1",@"我的红豆-1"
-                       ,@"分享好友",@"设置-1"];
-    self.sbArray = @[@"个人资料",@"个人动态",
-                     @"我的豆客",
-                     @"我的视频",@"我的相册",@"身份认证",@"成为会员"
-//                     ,@"全部订单",@"我的红豆"
-                     ,@"分享好友",@"设置"];
-    
-#endif
+//
+//#ifdef kEasyVersion
+//    
+//    self.iconArray = @[@"个人资料-1",@"个人动态-1",@"我的豆客",@"我的视频-1",@"我的气质",@"我的民宿",@"申请向导",@"全部订单-1"
+//
+//                       ,@"设置-1"];
+//    self.sbArray = @[@"个人资料",@"个人动态",@"我的豆客",@"我的视频",@"我的气质",@"我的民宿",@"身份认证",@"全部订单"
+//
+//                     ,@"设置"];
+//    
+//#else
+//    
+//    self.iconArray = @[@"个人资料-1",@"个人动态-1",
+//                       @"我的豆客",
+//                       @"我的视频-1",@"我的气质",@"申请向导",@"成为会员-1"
+//
+//                       ,@"分享好友",@"设置-1"];
+//    self.sbArray = @[@"个人资料",@"个人动态",
+//                     @"我的豆客",
+//                     @"我的视频",@"我的相册",@"身份认证",@"成为会员"
+//
+//                     ,@"分享好友",@"设置"];
+//    
+//#endif
     
     self.knowArray = [[NSMutableArray alloc] init];
     
@@ -129,11 +129,7 @@
     [self.imgViewArray removeAllObjects];
     self.imgCount = 0;
     
-    //钱包btn
-    UIButton *walletBtn = [[UIButton alloc] initWithFrame:CGRectMake(SCREEN_WIDTH - 45, 35, 25, 25)];
-    [walletBtn setBackgroundImage:[UIImage imageNamed:@"钱包"] forState:UIControlStateNormal];
-    [walletBtn addTarget:self action:@selector(turnToCoin:) forControlEvents:UIControlEventTouchUpInside];
-    //[self.bgImg addSubview:walletBtn];
+ 
     
     UIView *headImageBg = [[UIView alloc] initWithFrame:CGRectMake(self.bgImg.frame.size.width / 2 - 51, 68, 102, 102)];
     headImageBg.backgroundColor = [UIColor clearColor];
@@ -170,56 +166,6 @@
     }
     [self.bgImg addSubview:vipImg];
     
-    //地区label
-    NSString *locationString = self.myDetailInfoModel.city;
-    if (!locationString) {
-        locationString = @"地点在哪儿";
-    }
-    else if ([[NSString stringWithFormat:@"%@",locationString] isEqualToString:@""]) {
-        locationString = @"未设置城市";
-    }
-    else{
-        locationString = self.myDetailInfoModel.cityName;
-    }
-    int leng = 0;
-    if ([NSString stringWithFormat:@"%@",locationString].length <= 2) {
-        leng = 50;
-    }
-    else if ([NSString stringWithFormat:@"%@",locationString].length >= 6){
-        leng = 90;
-    }
-    else{
-        leng = (int)[NSString stringWithFormat:@"%@",locationString].length * 18;
-    }
-    
-    UILabel *locationLabel = [[UILabel alloc] initWithFrame:CGRectMake(self.changeBtn.frame.origin.x - leng - 10, self.changeBtn.frame.origin.y + 55, leng, 25)];
-    locationLabel.font = [UIFont systemFontOfSize:14.0];
-    locationLabel.text = [NSString stringWithFormat:@"%@",locationString];
-    locationLabel.textColor = [UIColor whiteColor];
-    locationLabel.textAlignment = NSTextAlignmentCenter;
-    locationLabel.backgroundColor = [UIColor clearColor];
-    locationLabel.layer.masksToBounds = YES;
-    locationLabel.layer.cornerRadius = 12.5;
-    locationLabel.backgroundColor = [UIColor colorWithWhite:0.1 alpha:0.5];
-    [self.bgImg addSubview:locationLabel];
-    
-    //认证label
-    UILabel *knowLabel = [[UILabel alloc] initWithFrame:CGRectMake(self.changeBtn.frame.origin.x + 108, self.changeBtn.frame.origin.y + 33, 90, 25)];
-    knowLabel.font = [UIFont systemFontOfSize:14.0];
-    if (self.myInfoModel.type == 0) {
-        knowLabel.text = @"未认证向导";
-    }
-    else{
-        knowLabel.text = @"已认证向导";
-    }
-    knowLabel.textColor = [UIColor whiteColor];
-    knowLabel.textAlignment = NSTextAlignmentCenter;
-    knowLabel.backgroundColor = [UIColor clearColor];
-    knowLabel.layer.masksToBounds = YES;
-    knowLabel.layer.cornerRadius = 12.5;
-    knowLabel.backgroundColor = [UIColor colorWithWhite:0.1 alpha:0.5];
-#warning 未认证
-    //[self.bgImg addSubview:knowLabel];
     
     //名字label
     NSString *name;
@@ -246,7 +192,9 @@
     [self.bgImg addSubview:nameLabel];
     
     //一堆图标的view
-    UIView *iconView = [[UIView alloc] init];
+//    UIView *iconView = [[UIView alloc] init];
+    
+    //DLK  内存泄漏修改
     
     //性别图标
     UIImageView *sexImg = [[UIImageView alloc] initWithFrame:CGRectMake(self.bgImg.frame.size.width / 2 - 20, nameLabel.frame.origin.y + 34, 15, 15)];
@@ -279,88 +227,10 @@
             
         }
         else {
-            //星星图标
-            UIImageView *starImg = [[UIImageView alloc] initWithFrame:CGRectMake(5, 0, 18, 18)];
-            starImg.image = [UIImage imageNamed:@"star-3"];
-            [iconView addSubview:starImg];
-            
-            //第一个认证图标（车辆认证）
-            UIImageView *firstImg = [[UIImageView alloc] initWithFrame:CGRectMake(starImg.frame.origin.x + starImg.frame.size.width + 2, 0, 18, 18)];
-            
-            //第二个（学历认证)
-            UIImageView *secondImg = [[UIImageView alloc] initWithFrame:CGRectMake(firstImg.frame.origin.x + firstImg.frame.size.width + 2, 0, 18, 18)];
-            
-            //第三个（身份证认证)
-            UIImageView *thirdImg = [[UIImageView alloc] initWithFrame:CGRectMake(secondImg.frame.origin.x + secondImg.frame.size.width + 2, 0, 18, 18)];
-            
-            //第四个（导游认证）
-            UIImageView *fourthImg = [[UIImageView alloc] initWithFrame:CGRectMake(thirdImg.frame.origin.x + thirdImg.frame.size.width + 2, 0, 18, 18)];
-            
-            if (self.myInfoModel.auth_car == 2) {
-                [self.imgViewArray addObject:@"车"];
-                self.imgCount ++;
-            }
-            if (self.myInfoModel.auth_edu == 2) {
-                [self.imgViewArray addObject:@"学"];
-                self.imgCount ++;
-            }
-            if (self.myInfoModel.auth_identity == 2) {
-                [self.imgViewArray addObject:@"证"];
-                self.imgCount ++;
-            }
-            if (self.myInfoModel.type == 1) {
-                [self.imgViewArray addObject:@"导"];
-                self.imgCount ++;
-            }
-            
-            switch (self.imgViewArray.count) {
-                case 1:
-                {
-                    firstImg.image = [UIImage imageNamed:self.imgViewArray[0]];
-                    [iconView addSubview:firstImg];
-                }
-                    break;
-                case 2:
-                {
-                    firstImg.image = [UIImage imageNamed:self.imgViewArray[0]];
-                    secondImg.image = [UIImage imageNamed:self.imgViewArray[1]];
-                    [iconView addSubview:firstImg];
-                    [iconView addSubview:secondImg];
-                }
-                    break;
-                case 3:
-                {
-                    firstImg.image = [UIImage imageNamed:self.imgViewArray[0]];
-                    secondImg.image = [UIImage imageNamed:self.imgViewArray[1]];
-                    thirdImg.image = [UIImage imageNamed:self.imgViewArray[2]];
-                    [iconView addSubview:firstImg];
-                    [iconView addSubview:secondImg];
-                    [iconView addSubview:thirdImg];
-                }
-                    break;
-                case 4:
-                {
-                    firstImg.image = [UIImage imageNamed:self.imgViewArray[0]];
-                    secondImg.image = [UIImage imageNamed:self.imgViewArray[1]];
-                    thirdImg.image = [UIImage imageNamed:self.imgViewArray[2]];
-                    fourthImg.image = [UIImage imageNamed:self.imgViewArray[3]];
-                    [iconView addSubview:firstImg];
-                    [iconView addSubview:secondImg];
-                    [iconView addSubview:thirdImg];
-                    [iconView addSubview:fourthImg];
-                }
-                    break;
-                default:
-                    break;
-            }
-            
-            
-            //    iconView.center = CGPointMake(self.bgImg.frame.size.width / 2, self.changeBtn.frame.origin.y + self.changeBtn.frame.size.height + 20);
-            iconView.frame = CGRectMake(nameLabel.frame.origin.x + rect.size.width + 3, self.changeBtn.frame.origin.y + self.changeBtn.frame.size.height + 10, 63 + 20 * self.imgViewArray.count, 20);
-            [self.bgImg addSubview:iconView];
 
-        }
-    }];
+
+       }
+   }];
 
     
 }
@@ -436,27 +306,8 @@
 }
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section{
-    if (section == 0) {       //我的账户
-        return 1;
-    }
-    if (section == 1) {       //个人资料
-#ifdef kEasyVersion
-        
-        return 6;
-        
-#endif
-        return 5;
-    }
-    else if (section == 2){   //身份认证
-#ifdef kEasyVersion
-        return 1;
-#else
-        return 2;
-#endif
-    }
-    else{                    //设置
-        return 2;
-    }
+
+    return 1;
 }
 
 - (CGFloat)tableView:(UITableView *)tableView heightForHeaderInSection:(NSInteger)section{
@@ -495,6 +346,7 @@
     if ((indexPath.section == 1 && indexPath.row == 2) || (indexPath.section == 2&&indexPath.row == 1)) {
         cell.hidden = YES;
     }
+  
     return cell;
 }
 
@@ -507,12 +359,10 @@
         else {
             MyInfomationViewController *myinfo = [[MyInfomationViewController alloc] init];
             if (indexPath.section == 0) {       //我的账户
-                [self turnToAccount];
-//                UIAlertView* alertView = [[UIAlertView alloc] initWithTitle:nil message:@"下一版本功能" delegate:self cancelButtonTitle:@"知道了" otherButtonTitles:nil];
-//                [alertView show];
-                
+               [self turnToAccount];
+
             }
-            if (indexPath.section == 1) {       //个人资料
+            if (indexPath.section == 0&&indexPath.row==1) {       //个人资料
                 switch (indexPath.row) {
                     case 0:
                     {
@@ -553,13 +403,13 @@
                         
                     case 1:
                     {
-                        FriendsCirleViewController *friendsCirleViewController = [[FriendsCirleViewController alloc]init];
-                        [friendsCirleViewController setHidesBottomBarWhenPushed:YES];
-                        friendsCirleViewController.title = @"个人动态";
-                        friendsCirleViewController.userId = [LYUserService sharedInstance].userID;
-                        friendsCirleViewController.isFriendsCircle = NO;
-                        friendsCirleViewController.personName = self.myInfoModel.name;
-                        [self.navigationController pushViewController:friendsCirleViewController animated:YES];
+//                        FriendsCirleViewController *friendsCirleViewController = [[FriendsCirleViewController alloc]init];
+//                        [friendsCirleViewController setHidesBottomBarWhenPushed:YES];
+//                        friendsCirleViewController.title = @"个人动态";
+//                        friendsCirleViewController.userId = [LYUserService sharedInstance].userID;
+//                        friendsCirleViewController.isFriendsCircle = NO;
+//                        friendsCirleViewController.personName = self.myInfoModel.name;
+                        //[self.navigationController pushViewController:friendsCirleViewController animated:YES];
                     }
                         break;
                     case 2:
@@ -629,20 +479,7 @@
             }
             else if (indexPath.section == 3){
                 switch (indexPath.row) {
-                        //            case 0: //订单
-                        //            {
-                        //                AllOrderViewController *order = [[AllOrderViewController alloc] init];
-                        //                [self.navigationController pushViewController:order animated:YES];
-                        //            }
-                        //                break;
-                        //            case 1: //红豆
-                        //            {
-                        //                MyRedBeanViewController *red = [[MyRedBeanViewController alloc] init];
-                        //                red.alipay = self.myDetailInfoModel.alipay_id;
-                        //                red.weixin = self.myDetailInfoModel.weixin_id;
-                        //                [self.navigationController pushViewController:red animated:YES];
-                        //            }
-                        //                break;
+                        
                     case 0:
                     {
                         //设置微信

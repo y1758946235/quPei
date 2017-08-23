@@ -14,6 +14,7 @@
 
 - (void)awakeFromNib {
     // Initialization code
+ 
     self.timeStampLabel.layer.cornerRadius = 5.0;
     self.timeStampLabel.clipsToBounds = YES;
     self.messageLabel.superview.layer.cornerRadius = 10.0;
@@ -42,8 +43,8 @@
 }
 
 - (void)fillDataWithModel:(SystemMessageModel *)model {
-    self.messageLabel.text = model.content;
-    self.timeStampLabel.text = model.timeStamp;
+    self.messageLabel.text =[NSString stringWithFormat:@"%@",model.content] ;
+    self.timeStampLabel.text = [CommonTool timestampSwitchTime:[model.timeStamp doubleValue]/1000 andFormatter:@"YYYY-MM-dd hh:mm:ss"]  ;
 }
 
 - (void)lookAll:(UIGestureRecognizer *)ges{

@@ -12,11 +12,28 @@
 
 - (instancetype)initWithDict:(NSDictionary *)dict {
     if (self = [super init]) {
-        self.content = dict[@"content"];
-        self.timeStamp = dict[@"create_time"];
+        self.content = dict[@"messageContent"];
+        self.timeStamp = dict[@"createTime"]  ;
         self.messageID = dict[@"id"];
         self.title = dict[@"title"];
+        if ([CommonTool dx_isNullOrNilWithObject:self.messageID ]) {
+            self.messageID  =@"";
+        }
+        if ([CommonTool dx_isNullOrNilWithObject:self.title ]) {
+            self.title  =@"";
+        }
+        self.userIcon = dict[@"userIcon"];
+        self.userId = dict[@"userId"];
+        self.userNickname = dict[@"userNickname"];
+        
+        CGRect size = [self.content boundingRectWithSize:CGSizeMake(SCREEN_WIDTH-96, CGFLOAT_MAX) options:NSStringDrawingUsesLineFragmentOrigin attributes:@{NSFontAttributeName:[UIFont systemFontOfSize:16]} context:nil];
+        self.descriptionHeight =  size.size.height;
+        self.descriptionWieth =  size.size.width;
+        
+        self.cellHeight =  self.descriptionHeight+60;
     }
+    
+
     return self;
 }
 

@@ -29,9 +29,19 @@
 
 //初始化导航栏
 - (void)initWithNavigationBar{
-    
+   
+
     self.navigationController.navigationBarHidden = NO;
-    self.navigationController.navigationBar.barTintColor = UIColorWithRGBA(29, 189, 159, 1);
+    [self.navigationController.navigationBar setTitleTextAttributes:[NSDictionary dictionaryWithObjectsAndKeys:[UIColor colorWithHexString:@"#424242"],UITextAttributeTextColor, [UIFont fontWithName:@"PingFangSC-Medium" size:18],UITextAttributeFont, nil]];
+    self.navigationController.navigationBar.barTintColor = [UIColor colorWithHexString:@"#ffffff"];
+    //导航栏返回按钮
+    UIButton *button = [[UIButton alloc]initWithFrame:CGRectMake(16, 38, 28, 14)];
+    [button setTitleColor:[UIColor colorWithHexString:@"#424242"] forState:UIControlStateNormal];
+    [button setTitle:@"返回" forState:UIControlStateNormal];
+    button.titleLabel.font = [UIFont fontWithName:@"PingFangSC-Regular" size:14];
+    [button addTarget:self action:@selector(goBack) forControlEvents:UIControlEventTouchUpInside];
+    UIBarButtonItem *back = [[UIBarButtonItem alloc]initWithCustomView:button];
+    self.navigationItem.leftBarButtonItem = back;
     
     //导航栏
     UIButton *rightBtn = [[UIButton alloc]initWithFrame:CGRectMake(0,0,44,28)];
@@ -41,7 +51,9 @@
     [rightBtn addTarget:self action:@selector(deletePhoto) forControlEvents:UIControlEventTouchUpInside];
     self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc]initWithCustomView:rightBtn];
 }
-
+-(void)goBack{
+    [self.navigationController popViewControllerAnimated:YES];
+}
 //删除该照片
 - (void)deletePhoto{
     

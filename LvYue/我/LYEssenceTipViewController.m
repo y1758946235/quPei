@@ -1,10 +1,9 @@
-//
+
 //  LYEssenceTipViewController.m
 //  LvYue
-//
+
 //  Created by KentonYu on 16/8/1.
 //  Copyright © 2016年 OLFT. All rights reserved.
-//
 
 #import "FXBlurView.h"
 #import "LYBlurImageCache.h"
@@ -22,8 +21,6 @@
 @property (nonatomic, copy) NSString *avatarURL;     // 头像地址
 @property (nonatomic, copy) NSString *userName;      // 用户名
 @property (nonatomic, copy) NSString *accountAmount; // 余额
-
-
 @property (nonatomic, strong) UIScrollView *scrollView;
 
 @property (nonatomic, strong) UIImageView *avatarImageView;
@@ -54,14 +51,14 @@
         if (buttonIndex == 1) {
             // 金币不够则跳转充值界面
             if ([self.accountAmount integerValue] < self.tipAmount) {
-                UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"豆客" message:@"账户金币不足，请先充值" delegate:self cancelButtonTitle:@"取消" otherButtonTitles:@"获取金币", nil];
+                UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"趣陪" message:@"账户金币不足，请先充值" delegate:self cancelButtonTitle:@"取消" otherButtonTitles:@"获取金币", nil];
                 [alert show];
                 return;
             }
-
+       NSString *userId = [[NSUserDefaults standardUserDefaults]objectForKey:@"userId"];
             [LYHttpPoster postHttpRequestByPost:[NSString stringWithFormat:@"%@/mobile/user/gotoEssenceImg", REQUESTHEADER]
                 andParameter:@{
-                    @"user_id": [LYUserService sharedInstance].userID,
+                    @"user_id": userId,
                     @"img_id": self.bulrImageID
                 }
                 success:^(id successResponse) {
@@ -152,7 +149,7 @@
 
 - (void)p_tipToWatch:(id)sender {
 
-    UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"豆客" message:[NSString stringWithFormat:@"确认要打赏%d金币查看该相片吗？", self.tipAmount] delegate:self cancelButtonTitle:@"取消" otherButtonTitles:@"确认", nil];
+    UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"趣陪" message:[NSString stringWithFormat:@"确认要打赏%d金币查看该相片吗？", self.tipAmount] delegate:self cancelButtonTitle:@"取消" otherButtonTitles:@"确认", nil];
     alert.tag          = 101; // 点击打赏查看按钮的弹框
     [alert show];
 }

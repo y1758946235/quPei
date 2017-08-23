@@ -10,6 +10,7 @@
 
 @interface VipModel : NSObject
 
+
 @property (nonatomic,strong) NSString *_input_charset;
 @property (nonatomic,strong) NSString *body;
 @property (nonatomic,strong) NSString *it_b_pay;

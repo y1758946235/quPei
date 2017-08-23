@@ -8,10 +8,19 @@
 
 #import <UIKit/UIKit.h>
 #import "BaseViewController.h"
-
+typedef void (^ShaiXuanTextBlock)(NSString *placeId,NSString *arrayType,NSString *userSex);
 @interface SearchNearbyViewController : BaseViewController<UITableViewDelegate,UITableViewDataSource>
 
 @property(nonatomic,strong)NSString *latitude;
 @property(nonatomic,strong)NSString *longitude;
 
+@property(nonatomic,copy)NSString *placee;
+@property(nonatomic,copy)NSString *placeId;
+@property(nonatomic,copy)NSString *arrayType;
+@property(nonatomic,copy)NSString *userSex;
+
+
+@property (nonatomic, copy) ShaiXuanTextBlock shaiXuanTextBlock;
+
+- (void)shaiXuanText:(ShaiXuanTextBlock)block;
 @end

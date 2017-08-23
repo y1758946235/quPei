@@ -43,7 +43,7 @@
     // _created_at == Thu Oct 16 17:06:25 +0800 2014
     //读取当前的日期格式，然后自动转化为yyyy-MM-dd HH:mm:ss 0000
     fmt.dateFormat = @"yyyy-MM-dd HH:mm:ss";
-#warning  如果是真机调试，转换这种欧美时间，需要设置locale
+   // #warning  如果是真机调试，转换这种欧美时间，需要设置locale
     fmt.locale = [[NSLocale alloc] initWithLocaleIdentifier:@"en_US"];
     //微博的创建日期
     NSDate *creatDate = [fmt dateFromString:self.publishTime];

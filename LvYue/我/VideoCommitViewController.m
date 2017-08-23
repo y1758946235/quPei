@@ -79,13 +79,13 @@
 
     [MBProgressHUD showMessage:@"正在上传，请稍后..."];
 
-    [LYHttpPoster postHttpRequestByPost:[NSString stringWithFormat:@"%@/mobile/getQiniuToken", REQUESTHEADER] andParameter:@{} success:^(id successResponse) {
+    [LYHttpPoster postHttpRequestByPost:[NSString stringWithFormat:@"%@/mobile/config/getQiniuToken", REQUESTHEADER] andParameter:@{} success:^(id successResponse) {
         MLOG(@"结果:%@", successResponse);
         if ([[NSString stringWithFormat:@"%@", successResponse[@"code"]] isEqualToString:@"200"]) {
 
             NSData *videoData = [[NSData alloc] initWithContentsOfFile:self.urlPath];
 
-            NSString *token = successResponse[@"data"][@"qiniuToken"];
+             NSString *token = successResponse[@"data"];
 
             //获取当前时间
             NSDate *now = [NSDate date];
@@ -100,8 +100,8 @@
             NSInteger minute                = [dateComponent minute];
             NSInteger second                = [dateComponent second];
 
-            NSString *locationString = [NSString stringWithFormat:@"iosLvYueVideo%d%d%d%d%d%d/形象视频.mp4", year, month, day, hour, minute, second];
-
+//            NSString *locationString = [NSString stringWithFormat:@"iosLvYueVideo%d%d%d%d%d%d/形象视频.mp4", year, month, day, hour, minute, second];
+ NSString *locationString = [NSString stringWithFormat:@"iosLvYueVideo%d%d%d%d%d%d.mp4", year, month, day, hour, minute, second];
             NSLog(@"时间:%@", locationString);
 
             //七牛上传视频
@@ -115,10 +115,9 @@
                               [MBProgressHUD showError:@"上传失败"];
                           } else {
                               //服务器获取图片
-                              [LYHttpPoster postHttpRequestByPost:[NSString stringWithFormat:@"%@/mobile/user/certify", REQUESTHEADER] andParameter:@{ @"token": token,
-                                                                                                                                                       @"userId": [LYUserService sharedInstance].userID,
-                                                                                                                                                       @"certifyType": @"0",
-                                                                                                                                                       @"photos": locationString }
+                              [LYHttpPoster postHttpRequestByPost:[NSString stringWithFormat:@"%@/mobile/user/updateUserVideo", REQUESTHEADER] andParameter:@{ 
+                                                                                                                                                       @"userId": [CommonTool getUserID],
+                                                                                                                                                       @"userVideo": locationString }
                                   success:^(id successResponse) {
                                       MLOG(@"结果:%@", successResponse);
                                       if ([[NSString stringWithFormat:@"%@", successResponse[@"code"]] isEqualToString:@"200"]) {
@@ -131,7 +130,7 @@
 
                                       } else {
                                           [MBProgressHUD hideHUD];
-                                          [MBProgressHUD showError:[NSString stringWithFormat:@"%@", successResponse[@"msg"]]];
+                                          [MBProgressHUD showError:[NSString stringWithFormat:@"%@", successResponse[@"errorMsg"]]];
                                       }
                                   }
                                   andFailure:^(id failureResponse) {

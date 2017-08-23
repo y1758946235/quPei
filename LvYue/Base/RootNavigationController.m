@@ -13,6 +13,7 @@
 #import "NewHomeViewController.h"
 #import "LYHomeViewController.h"
 #import "LYMeViewController.h"
+#import "DynamicViewController.h"
 
 //朋友圈
 #import "FriendsCirleViewController.h"
@@ -31,22 +32,11 @@
 
 
 //重写push方法
-- (void)pushViewController:(UIViewController *)viewController animated:(BOOL)animated {
+- (void)pushViewController:(UIViewController *)viewController animated:(BOOL)animated
+{
     
-//    if (([viewController isMemberOfClass:[LYHomeViewController class]]) || [viewController isMemberOfClass:[DialogueViewController class]] || [viewController isMemberOfClass:[SearchViewController class]] || [viewController isMemberOfClass:[MeController class]]||[viewController isMemberOfClass:[VideoListViewController class]]) {
-//        
-//        //调用父类的push
-//        [super pushViewController:viewController animated:animated];
-//        
-//    } else {
-//        
-//        //在跳转时自动隐藏tabBar
-//        [viewController setHidesBottomBarWhenPushed:YES];
-//        
-//        //调用父类的push
-//        [super pushViewController:viewController animated:animated];
-//    }
-    if (([viewController isMemberOfClass:[LYHomeViewController class]]) || [viewController isMemberOfClass:[DialogueViewController class]] || [viewController isMemberOfClass:[FriendsCirleViewController class]] || [viewController isMemberOfClass:[MeController class]]|| [viewController isMemberOfClass:[LYMeViewController class]] ||[viewController isMemberOfClass:[VideoListViewController class]]) {
+
+    if (([viewController isMemberOfClass:[LYHomeViewController class]]) || [viewController isMemberOfClass:[FriendsCirleViewController class]] || [viewController isMemberOfClass:[DynamicViewController class]] || [viewController isMemberOfClass:[DialogueViewController class]]|| [viewController isMemberOfClass:[LYMeViewController class]] ||[viewController isMemberOfClass:[VideoListViewController class]]) {
         
         //调用父类的push
         [super pushViewController:viewController animated:animated];
@@ -63,8 +53,8 @@
     
 }
 
-
-+ (void)initialize {
++ (void)initialize
+{
     
     /***-----------------------标题文字风格样式的设置--------------------***/
     

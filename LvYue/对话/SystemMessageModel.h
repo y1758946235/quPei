@@ -22,6 +22,17 @@
 
 @property (nonatomic,strong) NSString *title;//标题
 
+@property (nonatomic, copy ) NSString *userId;//
+
+@property (nonatomic, copy ) NSString *userIcon;//userNickname
+
+@property (nonatomic, copy ) NSString *userNickname;
+
+@property (nonatomic,assign) CGFloat  descriptionHeight;
+@property (nonatomic,assign) CGFloat  descriptionWieth;
+
+@property (nonatomic,assign) CGFloat  cellHeight;
+
 - (instancetype)initWithDict:(NSDictionary *)dict;
 
 + (instancetype)systemMessageModelWithDict:(NSDictionary *)dict;

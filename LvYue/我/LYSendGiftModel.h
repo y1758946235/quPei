@@ -14,6 +14,7 @@
 @property (nonatomic, copy) NSString *giftName;
 @property (nonatomic, assign) NSInteger giftPrice;
 @property (nonatomic, strong) NSURL *giftIconURL;
+@property (nonatomic, strong) NSURL *giftWord;//礼物单位
 
 + (instancetype)initWithDic:(NSDictionary *)dic;
 

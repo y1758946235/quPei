@@ -7,6 +7,7 @@
 //
 
 #import "BaseViewController.h"
+@class MyContractsViewController;
 
 typedef NS_ENUM(NSUInteger, LYFocusOnAndFansViewControllerType) {
     LYFocusOnAndFansViewControllerTypeFocusOn = 0,
@@ -16,5 +17,6 @@ typedef NS_ENUM(NSUInteger, LYFocusOnAndFansViewControllerType) {
 @interface LYFocusOnAndFansViewController : BaseViewController
 
 @property (nonatomic, assign) LYFocusOnAndFansViewControllerType type;
-
+@property(nonatomic,strong)MyContractsViewController *contactVC;
+@property(nonatomic,strong)LYFocusOnAndFansViewController *focuVC;
 @end

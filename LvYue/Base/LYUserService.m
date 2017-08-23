@@ -46,7 +46,7 @@ static LYUserService *userService;
 #pragma mark - 重载用户信息
 - (void)reloadUserInfo {
     NSUserDefaults *user = [NSUserDefaults standardUserDefaults];
-    self.userID = [user objectForKey:@"userID"];
+    self.userID = [user objectForKey:@"userId"];
     self.mobile = [user objectForKey:@"mobile"];
     self.password = [user objectForKey:@"password"];
     //加载用户详细信息
@@ -73,12 +73,16 @@ static LYUserService *userService;
 - (void)jumpToLoginWithController:(UIViewController *)vc {
     if (!ISIPHONE4 && !ISIPHONE5) {
         LoginViewController *dest = [[LoginViewController alloc] init];
-//        [vc presentViewController:dest animated:YES completion:nil];
-        KEYWINDOW.rootViewController = [[RootNavigationController alloc] initWithRootViewController:dest];
+        [vc presentViewController:dest animated:YES completion:nil];
+//        [vc.navigationController pushViewController:dest animated:YES];
+        
+//        KEYWINDOW.rootViewController = [[RootNavigationController alloc] initWithRootViewController:dest];
     }else {
         NewLoginViewController *dest = [[NewLoginViewController alloc] init];
-//        [vc presentViewController:dest animated:YES completion:nil];
-        KEYWINDOW.rootViewController = [[RootNavigationController alloc] initWithRootViewController:dest];
+        [vc presentViewController:dest animated:YES completion:nil];
+//        KEYWINDOW.rootViewController = [[RootNavigationController alloc] initWithRootViewController:dest];
+        [vc.navigationController pushViewController:dest animated:YES];
+
     }
 }
 
@@ -97,15 +101,24 @@ static LYUserService *userService;
             [userDefaults setObject:@"" forKey:@"auth_identity"];
             [userDefaults setObject:@"" forKey:@"auth_video"];
             [userDefaults setObject:@"" forKey:@"userID"];
+            [userDefaults setObject:@"" forKey:@"userCaptcha"];
             [userDefaults setObject:@"" forKey:@"umengID"];
             [userDefaults setObject:@"" forKey:@"mobile"];
             [userDefaults setObject:@"" forKey:@"userName"];
+            [userDefaults setObject:@"" forKey:@"userNickname"];
+             [userDefaults setObject:@"" forKey:@"userIcon"];
+            [userDefaults setObject:@"" forKey:@"userSex"];
+            [userDefaults setObject:@"" forKey:@"otherUserIcon"];
             [userDefaults setObject:@"" forKey:@"sex"];
             [userDefaults setObject:@"" forKey:@"userType"];
             [userDefaults setObject:@"" forKey:@"isVip"];
             [userDefaults setObject:@"" forKey:@"password"];
             [userDefaults setObject:@"" forKey:@"alipay_Id"];
             [userDefaults setObject:@"" forKey:@"weixin_Id"];
+            [userDefaults setObject:@"" forKey:@"alterViewtypeUser"];
+            [userDefaults setObject:@"" forKey:@"lastText"];
+            [userDefaults setObject:@"" forKey:@"lastInviteText"];
+//             [userDefaults setObject:@"" forKey:@"getIsFirstGotoChatVC"];
             [userDefaults synchronize];
             
             //清除单例数据
@@ -123,14 +136,14 @@ static LYUserService *userService;
             service.userDetail.isVip = @"";
             
             //将登录界面设置为RootController
-            
-            if (!ISIPHONE4 && !ISIPHONE5) {
-                LoginViewController *loginVC = [[LoginViewController alloc] init];
-                KEYWINDOW.rootViewController = [[RootNavigationController alloc] initWithRootViewController:loginVC];
-            }else {
-                NewLoginViewController *loginVC = [[NewLoginViewController alloc] init];
-                KEYWINDOW.rootViewController = [[RootNavigationController alloc] initWithRootViewController:loginVC];
-            }
+            [CommonTool gotoLogin];
+//            if (!ISIPHONE4 && !ISIPHONE5) {
+//                LoginViewController *loginVC = [[LoginViewController alloc] init];
+//                KEYWINDOW.rootViewController = [[RootNavigationController alloc] initWithRootViewController:loginVC];
+//            }else {
+//                NewLoginViewController *loginVC = [[NewLoginViewController alloc] init];
+//                KEYWINDOW.rootViewController = [[RootNavigationController alloc] initWithRootViewController:loginVC];
+//            }
             
             //执行回调块
             if (compeletionBlock) {

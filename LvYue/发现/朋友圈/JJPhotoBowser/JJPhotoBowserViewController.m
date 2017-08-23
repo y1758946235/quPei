@@ -25,6 +25,8 @@
     NSInteger _index;
 
     BOOL _isDouble;//是否双击
+    
+    UIActionSheet *action;
 }
 @property (nonatomic,strong) UIButton *saveBtn;
 @end
@@ -222,16 +224,19 @@
     if (_isCircle){
         
         //轮播
-        [_leftPhotoView.imageView sd_setImageWithURL:[NSURL URLWithString:_imageData[(index-1)%_imageData.count]] placeholderImage:[UIImage imageNamed:@"加载失败" ] completed:nil];
-        [_rightPhotoView.imageView sd_setImageWithURL:[NSURL URLWithString:_imageData[(index+1)%_imageData.count]] placeholderImage:[UIImage imageNamed:@"加载失败" ] completed:nil];
-        [_centerPhotoView.imageView sd_setImageWithURL:[NSURL URLWithString:_imageData[index%_imageData.count]] placeholderImage:[UIImage imageNamed:@"加载失败" ] completed:nil];
+//        [_leftPhotoView.imageView sd_setImageWithURL:[NSURL URLWithString:_imageData[(index-1)%_imageData.count]] placeholderImage:[UIImage imageNamed:@"加载失败" ] completed:nil];
+//        [_rightPhotoView.imageView sd_setImageWithURL:[NSURL URLWithString:_imageData[(index+1)%_imageData.count]] placeholderImage:[UIImage imageNamed:@"加载失败" ] completed:nil];
+//        [_centerPhotoView.imageView sd_setImageWithURL:[NSURL URLWithString:_imageData[index%_imageData.count]] placeholderImage:[UIImage imageNamed:@"加载失败" ] completed:nil];
+        [_leftPhotoView.imageView sd_setImageWithURL:_imageData[(index-1)%_imageData.count] placeholderImage:[UIImage imageNamed:@"加载失败" ] completed:nil];
+        [_rightPhotoView.imageView sd_setImageWithURL:_imageData[(index+1)%_imageData.count] placeholderImage:[UIImage imageNamed:@"加载失败" ] completed:nil];
+        [_centerPhotoView.imageView sd_setImageWithURL:_imageData[index%_imageData.count] placeholderImage:[UIImage imageNamed:@"加载失败" ] completed:nil];
     }else{
     
         //不轮播
         photoView = [_scrollView viewWithTag:(100 + index)];
         __block UIActivityIndicatorView *activityIndicator;
         
-        [photoView.imageView sd_setImageWithURL:[NSURL URLWithString:_imageData[index]] placeholderImage:[UIImage imageNamed:@"加载失败" ] options:SDWebImageRetryFailed progress:^(NSInteger receivedSize, NSInteger expectedSize) {
+        [photoView.imageView sd_setImageWithURL:_imageData[index] placeholderImage:[UIImage imageNamed:@"加载失败" ] options:SDWebImageRetryFailed progress:^(NSInteger receivedSize, NSInteger expectedSize) {
             if (!activityIndicator)
             {
                 dispatch_async(dispatch_get_main_queue(), ^{
@@ -287,8 +292,11 @@
 - (void)saveImagef:(UITapGestureRecognizer *)sender {
     
     [photoView removeGestureRecognizer:sender];
+    if (!action) {
+        action = [[UIActionSheet alloc] initWithTitle:nil delegate:self cancelButtonTitle:@"取消" destructiveButtonTitle:nil otherButtonTitles:@"保存图片", nil];
+    }
+   
     
-    UIActionSheet *action = [[UIActionSheet alloc] initWithTitle:nil delegate:self cancelButtonTitle:@"取消" destructiveButtonTitle:nil otherButtonTitles:@"保存图片", nil];
     [action showInView:self.view];
     
     [photoView addGestureRecognizer:sender];
@@ -309,7 +317,11 @@
         photoView = [_scrollView viewWithTag:(100 + _index)];
         UIImage *image = photoView.imageView.image;
         UIImageWriteToSavedPhotosAlbum(image, self, @selector(image:didFinishSavingWithError:contextInfo:), NULL);
+        
+        [actionSheet removeFromSuperview];
     }
+    
+    
 }
 
 #pragma mark - UIScrollViewDelegate

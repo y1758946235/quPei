@@ -12,10 +12,11 @@
 
 + (instancetype)initWithDic:(NSDictionary *)dic {
     LYSendGiftModel *gift = [[LYSendGiftModel alloc] init];
-    gift.giftId           = [dic[@"id"] integerValue];
-    gift.giftName         = dic[@"name"];
-    gift.giftPrice        = [dic[@"price"] integerValue];
-    gift.giftIconURL      = [NSURL URLWithString:[NSString stringWithFormat:@"%@%@", IMAGEHEADER, dic[@"icon"]]];
+    gift.giftId           = [dic[@"giftId"] integerValue];
+    gift.giftName         = dic[@"giftName"];
+    gift.giftPrice        = [dic[@"giftPrice"] integerValue];
+    gift.giftIconURL      = [NSURL URLWithString:[NSString stringWithFormat:@"%@%@", IMAGEHEADER, dic[@"giftIcon"]]];
+    gift.giftWord         = dic[@"giftWord"];
     return gift;
 }
 

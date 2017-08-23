@@ -30,9 +30,13 @@
 //        self.getCoinLabel.hidden = YES;
 //        return;
 //    }
-    
+   
     self.getCoinLabel.layer.cornerRadius  = 5.f;
     self.getCoinLabel.layer.masksToBounds = YES;
+    
+    self.userNameLabel.textColor = [UIColor colorWithHexString:@"#ff5252"];
+    
+    
 }
 
 - (void)configData:(NSString *)userName avatarImageURL:(NSString *)avatarImageURL accountAmount:(NSString *)accountAmount {
@@ -43,7 +47,8 @@
         accountAmount = @"加载中";
     }
     NSMutableAttributedString *attrStr = [[NSMutableAttributedString alloc] initWithString:[NSString stringWithFormat:@"余额:%@", accountAmount]];
-    [attrStr addAttribute:NSForegroundColorAttributeName value:RGBCOLOR(17, 198, 173) range:NSMakeRange(3, accountAmount.length)];
+//    [attrStr addAttribute:NSForegroundColorAttributeName value:RGBCOLOR(17, 198, 173) range:NSMakeRange(3, accountAmount.length)];
+     [attrStr addAttribute:NSForegroundColorAttributeName value:[UIColor colorWithHexString:@"#525252"] range:NSMakeRange(3, accountAmount.length)];
     self.coinLabel.attributedText = [attrStr copy];
 }
 

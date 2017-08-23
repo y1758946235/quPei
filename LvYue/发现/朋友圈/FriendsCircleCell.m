@@ -21,6 +21,7 @@
 }
 
 @end
+
 @implementation FriendsCircleCell
 
 - (id)initWithStyle:(UITableViewCellStyle)style reuseIdentifier:(NSString *)reuseIdentifier{

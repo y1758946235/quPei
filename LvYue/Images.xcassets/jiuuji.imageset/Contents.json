@@ -2,13 +2,13 @@
   "images" : [
     {
       "idiom" : "universal",
-      "scale" : "1x",
-      "filename" : "jiuuji.png"
+      "filename" : "jiuuji.png",
+      "scale" : "1x"
     },
     {
       "idiom" : "universal",
-      "scale" : "2x",
-      "filename" : "jiuuji@2x.png"
+      "filename" : "jiuuji@2x.png",
+      "scale" : "2x"
     },
     {
       "idiom" : "universal",
